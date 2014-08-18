@@ -1,0 +1,67 @@
+ul {
+	padding: 0;
+	margin: 0;
+}
+
+.fn-clear:before,
+.fn-clear:after {
+    display: table;
+    content: "";
+}
+
+.fn-clear:after {
+    clear: both;
+}
+
+.fn-none {
+	display: none;
+}
+
+.content {
+	position: relative;
+	height: 460px;
+}
+
+.ztree {
+	position: absolute;
+	width: 20%;
+	height: 440px;
+	overflow: auto;
+}
+
+#dirRMenu, #fileRMenu {
+	position: absolute;
+	border: 1px solid #DDD;
+	background-color: #444;
+	color: #FFF;
+}
+
+#dirRMenu li, #fileRMenu li {
+	padding: 5px 10px;
+	cursor: pointer;
+	font-size: 12px;
+}
+
+
+.edit-panel {
+	position: absolute;
+	width: 80%;
+	left: 20%;
+}
+
+.output {
+	width: 49%
+}
+
+.shell {
+	float: right;
+	width: 49%
+}
+
+.shellInput, .shellOutput {	
+	width: 99%
+}
+
+.shellOutput {
+	height: 125px;
+}

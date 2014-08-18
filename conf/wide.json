@@ -1,0 +1,12 @@
+{
+    "Server": "{IP}:7070",
+    "StaticServer": "http://{IP}:7070",
+    "EditorChannel": "ws://{IP}:7070",
+    "OutputChannel": "ws://{IP}:7070",
+    "ShellChannel": "ws://{IP}:7070",
+    "StaticResourceVersion": "",
+    "ContextPath": "",
+    "StaticPath": "",
+    "RuntimeMode": "dev",
+    "GOPATH": "{pwd}/data"
+}

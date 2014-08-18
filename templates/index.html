@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Wide</title>
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/codemirror.css">
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/addon/hint/show-hint.css">
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/theme/lesser-dark.css">
+
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/ztree/zTreeStyle.css">
+
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/css/base.css">
+    </head>
+    <body>
+        <div class="content">
+            <ul id="files" class="ztree"></ul>
+
+            <!-- 目录右键菜单 -->
+            <div id="dirRMenu" class="fn-none">
+                <ul>
+                    <li onclick="tree.newFile();">create file....</li>
+                    <li onclick="tree.newDir();">create dir....</li>
+                    <li onclick="tree.removeIt();">delete it....</li>
+                </ul>
+            </div>
+
+            <!-- 文件右键菜单 -->
+            <div id="fileRMenu" class="fn-none">
+                <ul>
+                    <li onclick="tree.removeIt();">delete it....</li>
+                </ul>
+            </div>
+
+            <div class="edit-panel">
+                <textarea id="code" name="code"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <button id="saveBtn" onclick="wide.save()">Save</button>
+            <button id="fmtBtn" onclick="wide.fmt()">Format</button>
+            <button id="runBtn" onclick="wide.run()">Run</button>
+        </div>
+
+        <div>
+            <textarea id="output" class="output" rows="10"></textarea>
+
+            <div class="shell">
+                <div>
+                    <input id="shellInput" class="shellInput" placeholder=" Command...." />
+                </div>
+
+                <textarea id="shellOutput" class="shellOutput" rows="8"></textarea>
+            </div>
+        </div>
+
+        <script type="text/javascript">
+            var config = {
+                channel: {
+                    editor: '{{.Wide.EditorChannel}}',
+                    shell: '{{.Wide.ShellChannel}}'
+                }
+            };
+        </script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>
+
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/codemirror.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/addon/hint/show-hint.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/go/go.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/xml/xml.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/htmlmixed/htmlmixed.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/javascript/javascript.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/markdown/markdown.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/css/css.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/shell/shell.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/sql/sql.js"></script>
+
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/editor.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/tree.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/wide.js"></script>
+    </body>
+
+</html>
