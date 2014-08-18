@@ -2,7 +2,7 @@ package file
 
 import (
 	"encoding/json"
-	"github.com/88250/wide/conf"
+	"github.com/b3log/wide/conf"
 	"github.com/golang/glog"
 	"io/ioutil"
 	"net/http"

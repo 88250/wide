@@ -2,7 +2,7 @@ package output
 
 import (
 	"encoding/json"
-	"github.com/88250/wide/session"
+	"github.com/b3log/wide/session"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 	"io"

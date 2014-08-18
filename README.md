@@ -23,9 +23,9 @@ A simple <b>W</b>eb **IDE** for golang.
 
 ## License ##
 
-Copyright (c) 2014, Liang Ding (http://88250.b3log.org)
+Copyright (c) 2014, B3log Team (http://b3log.org)
 
-Licensed under the [Apache License 2.0](https://github.com/88250/wide/blob/master/LICENSE).
+Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/master/LICENSE).
 
 ## Credits ##
 

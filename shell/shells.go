@@ -1,8 +1,8 @@
 package shell
 
 import (
-	"github.com/88250/wide/conf"
-	"github.com/88250/wide/session"
+	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/session"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 	"net/http"

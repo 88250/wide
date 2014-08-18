@@ -5,12 +5,12 @@ package main
 //
 
 import (
-	"github.com/88250/wide/conf"
-	"github.com/88250/wide/editor"
-	"github.com/88250/wide/file"
-	"github.com/88250/wide/output"
-	"github.com/88250/wide/session"
-	"github.com/88250/wide/shell"
+	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/editor"
+	"github.com/b3log/wide/file"
+	"github.com/b3log/wide/output"
+	"github.com/b3log/wide/session"
+	"github.com/b3log/wide/shell"
 	"github.com/golang/glog"
 	"html/template"
 	"math/rand"

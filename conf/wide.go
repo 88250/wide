@@ -3,7 +3,7 @@ package conf
 import (
 	"encoding/json"
 	"flag"
-	"github.com/88250/wide/util"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"io/ioutil"
 	"os"

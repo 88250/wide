@@ -3,8 +3,8 @@ package editor
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/88250/wide/session"
-	"github.com/88250/wide/util"
+	"github.com/b3log/wide/session"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 	"net/http"
