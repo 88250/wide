@@ -1,9 +1,5 @@
 package main
 
-// TODO:
-// 1. 编辑锁
-//
-
 import (
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
