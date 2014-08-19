@@ -1,9 +1,14 @@
 var tree = {
+    fileTree: {},
     newFile: function() {
         $("#dirRMenu ul").hide();
         var name = prompt("Name", "");
+        if (!name) {
+            return false;
+        }
+
         var request = {
-            path: wide.curFile + '/' + name,
+            path: wide.curNode.path + '/' + name,
             fileType: "f"
         };
         $.ajax({
@@ -12,17 +17,24 @@ var tree = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function(data) {
-                if (data.succ) {
-                    console.log(data);
+                if (!data.succ) {
+                    return false;
                 }
+                tree.fileTree.addNodes(wide.curNode, [{
+                        "name": name
+                    }]);
             }
         });
     },
     newDir: function() {
         $("#dirRMenu ul").hide();
         var name = prompt("Name", "");
+        if (!name) {
+            return false;
+        }
+
         var request = {
-            path: wide.curFile + '/' + name,
+            path: wide.curNode.path + '/' + name,
             fileType: "d"
         };
         $.ajax({
@@ -31,20 +43,26 @@ var tree = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function(data) {
-                if (data.succ) {
-                    console.log(data);
+                if (!data.succ) {
+                    return false;
                 }
+                // TODO: 换成我们风格的 class
+                tree.fileTree.addNodes(wide.curNode, [{
+                        "name": name,
+                        "iconSkin": "ico_close "
+                    }]);
             }
         });
     },
     removeIt: function() {
         $("#dirRMenu ul").hide();
         $("#fileRMenu ul").hide();
+
         if (!confirm("Remove it?")) {
             return;
         }
         var request = {
-            path: wide.curFile + '/' + name
+            path: wide.curNode.path
         };
         $.ajax({
             type: 'POST',
@@ -52,9 +70,10 @@ var tree = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function(data) {
-                if (data.succ) {
-                    console.log(data);
+                if (!data.succ) {
+                    return false;
                 }
+                tree.fileTree.removeNode(wide.curNode);
             }
         });
     },
@@ -74,7 +93,7 @@ var tree = {
                         callback: {
                             onRightClick: function(event, treeId, treeNode) {
                                 if (treeNode) {
-                                    wide.curFile = treeNode.path;
+                                    wide.curNode = treeNode;
                                     if ("f" === treeNode.type) { // 如果右击了文件
                                         $("#fileRMenu ul").show();
                                         fileRMenu.css({"top": event.clientY + "px", "left": event.clientX + "px", "display": "block"});
@@ -85,7 +104,7 @@ var tree = {
                                 }
                             },
                             onClick: function(event, treeId, treeNode, clickFlag) {
-                                wide.curFile = treeNode.path;
+                                wide.curNode = treeNode;
                                 if ("f" === treeNode.type) { // 如果单击了文件
                                     var request = {
                                         path: treeNode.path
@@ -106,8 +125,8 @@ var tree = {
                             }
                         }
                     };
-                    fileTree = $.fn.zTree.init($("#files"), setting, data.root.children);
-                    fileTree.expandAll(true);
+                    tree.fileTree = $.fn.zTree.init($("#files"), setting, data.root.children);
+                    tree.fileTree.expandAll(true);
                 }
             }
         });
