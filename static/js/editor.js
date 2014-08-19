@@ -50,7 +50,7 @@ var editors = {
             if ($it.hasClass("current")) {
                 return false;
             }
-            
+
             var id = $it.data("id");
 
             $tabs.children("span").removeClass("current");
@@ -58,14 +58,21 @@ var editors = {
 
             $it.addClass("current");
             $("#editor" + id).parent().show();
-            
+
             // set tree node selected
             var node = tree.fileTree.getNodeByTId(id);
             tree.fileTree.selectNode(node);
             wide.curNode = node;
+
+            for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                if (editors.data[i].id === id) {
+                     wide.curEditor = editors.data[i].editor;
+                    break;
+                }
+            }
         });
     },
-    _selectTab: function(id) {
+    _selectTab: function(id, editor) {
         var $tabsPanel = $(".edit-panel .tabs-panel"),
                 $tabs = $(".edit-panel .tabs");
 
@@ -79,12 +86,13 @@ var editors = {
 
         $tabs.children("span[data-id='" + id + "']").addClass("current");
         $("#editor" + id).parent().show();
+        wide.curEditor = editor;
     },
     newEditor: function(data) {
         var id = wide.curNode.tId;
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             if (editors.data[i].id === id) {
-                editors._selectTab(id);
+                editors._selectTab(id, editors.data[i].editor);
                 return false;
             }
         }
