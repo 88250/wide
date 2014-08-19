@@ -37,7 +37,8 @@ shellWS.onerror = function(e) {
 };
 
 var wide = {
-    curFile: "",
+    curNode: "",
+    curEditor: "",
     init: function() {
         $('#shellInput').keydown(function(event) {
             if (13 === event.which) {
@@ -61,8 +62,8 @@ var wide = {
     },
     save: function() {
         var request = {
-            "file": wide.curFile,
-            "code": editor.getValue()
+            "file": wide.curNode.path,
+            "code": wide.curEditor.getValue()
         };
         $.ajax({
             type: 'POST',
@@ -76,8 +77,8 @@ var wide = {
     },
     run: function() {
         var request = {
-            "file": wide.curFile,
-            "code": editor.getValue()
+            "file": wide.curNode.path,
+            "code": wide.curEditor.getValue()
         };
         $.ajax({
             type: 'POST',
@@ -94,10 +95,10 @@ var wide = {
     },
     fmt: function() {
         var request = {
-            "file": wide.curFile,
-            "code": editor.getValue(),
-            "cursorLine": editor.getCursor().line,
-            "cursorCh": editor.getCursor().ch
+            "file": wide.curNode.path,
+            "code": wide.curEditor.getValue(),
+            "cursorLine": wide.curEditor.getCursor().line,
+            "cursorCh": wide.curEditor.getCursor().ch
         };
         $.ajax({
             type: 'POST',
@@ -106,7 +107,7 @@ var wide = {
             dataType: "json",
             success: function(data) {
                 if (data.succ) {
-                    editor.setValue(data.code);
+                    wide.curEditor.setValue(data.code);
                 }
             }
         });

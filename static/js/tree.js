@@ -115,10 +115,10 @@ var tree = {
                                         data: JSON.stringify(request),
                                         dataType: "json",
                                         success: function(data) {
-                                            if (data.succ) {
-                                                editor.setValue(data.content);
-                                                editor.setOption("mode", data.mode);
+                                            if (!data.succ) {
+                                                return false;
                                             }
+                                            editors.newEditor(data);
                                         }
                                     });
                                 }
@@ -126,6 +126,7 @@ var tree = {
                         }
                     };
                     tree.fileTree = $.fn.zTree.init($("#files"), setting, data.root.children);
+                    // TODO: remove
                     tree.fileTree.expandAll(true);
                 }
             }
