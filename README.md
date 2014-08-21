@@ -11,7 +11,8 @@ A simple <b>W</b>eb **IDE** for golang.
 * Run & Output
 * Multiplayer
 * Navigation & Jump (TBD)
-* Shell
+* Shell (TBD: interactive)
+* Debug (TBD)
 
 ## Setup ##
 
