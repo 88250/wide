@@ -67,7 +67,7 @@ var wide = {
         };
         $.ajax({
             type: 'POST',
-            url: '/save',
+            url: '/file/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function(data) {
