@@ -5,9 +5,30 @@ outputWS.onopen = function() {
 outputWS.onmessage = function(e) {
     console.log('[output onmessage]' + e.data);
     var data = JSON.parse(e.data);
+
     if ('init-output' !== data.cmd) {
         $('#output').val($('#output').val() + data.output);
-    }
+    } 
+	
+	if ('build' == data.cmd) {
+		if ('run' === data.nextCmd) {
+			var request = {
+				"executable": data.executable
+			};
+			
+			$.ajax({ 
+	        	type: 'POST',
+	            url: '/run',
+	            data: JSON.stringify(request),
+	            dataType: "json",
+	            beforeSend: function(data) {
+	                $('#output').val('');
+	            },
+	            success: function(data) {
+	            }
+	        });
+		}
+	}
 };
 outputWS.onclose = function(e) {
     console.log('[output onclose] disconnected (' + e.code + ')');
@@ -80,16 +101,21 @@ var wide = {
             "file": wide.curNode.path,
             "code": wide.curEditor.getValue()
         };
+		
         $.ajax({
             type: 'POST',
-            url: '/run',
+            url: '/build',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function(data) {
                 $('#output').val('');
             },
             success: function(data) {
-                console.log(data);
+				executable = data.executable;
+
+                if (data.succ) {
+					
+				}
             }
         });
     },

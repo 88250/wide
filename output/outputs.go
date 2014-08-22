@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"runtime"
+	"strings"
 )
 
 var outputWS = map[string]*websocket.Conn{}
@@ -41,31 +43,11 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := args["file"].(string)
+	filePath := args["executable"].(string)
+	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
 
-	fout, err := os.Create(filePath)
-
-	if nil != err {
-		glog.Error(err)
-		http.Error(w, err.Error(), 500)
-
-		return
-	}
-
-	code := args["code"].(string)
-
-	fout.WriteString(code)
-
-	if err := fout.Close(); nil != err {
-		glog.Error(err)
-		http.Error(w, err.Error(), 500)
-
-		return
-	}
-
-	argv := []string{"run", filePath}
-
-	cmd := exec.Command("go", argv...)
+	cmd := exec.Command(filePath)
+	cmd.Dir = curDir
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
@@ -112,6 +94,107 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+	}(rand.Int())
+
+	ret, _ := json.Marshal(map[string]interface{}{"succ": true})
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(ret)
+}
+
+func BuildHandler(w http.ResponseWriter, r *http.Request) {
+	session, _ := session.Store.Get(r, "wide-session")
+	sid := session.Values["id"].(string)
+
+	decoder := json.NewDecoder(r.Body)
+
+	var args map[string]interface{}
+
+	if err := decoder.Decode(&args); err != nil {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	filePath := args["file"].(string)
+	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+
+	fout, err := os.Create(filePath)
+
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	code := args["code"].(string)
+
+	fout.WriteString(code)
+
+	if err := fout.Close(); nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	suffix := ""
+	if "windows" == runtime.GOOS {
+		suffix = ".exe"
+	}
+	executable := "main" + suffix
+	argv := []string{"build", "-o", executable, filePath}
+
+	cmd := exec.Command("go", argv...)
+	cmd.Dir = curDir
+
+	glog.Info("go build ", filePath)
+
+	stdout, err := cmd.StdoutPipe()
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	reader := io.MultiReader(stdout, stderr)
+
+	cmd.Start()
+
+	go func(runningId int) {
+		glog.Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)
+
+		// 一次性读取
+		buf := make([]byte, 1024*8)
+		count, _ := reader.Read(buf)
+
+		channelRet := map[string]interface{}{}
+
+		channelRet["output"] = string(buf[:count])
+		channelRet["cmd"] = "build"
+		channelRet["nextCmd"] = "run"
+		channelRet["executable"] = curDir + string(os.PathSeparator) + executable
+
+		if nil != outputWS[sid] {
+			glog.Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
+
+			err := outputWS[sid].WriteJSON(&channelRet)
+			if nil != err {
+				glog.Error(err)
+			}
+		}
+
 	}(rand.Int())
 
 	ret, _ := json.Marshal(map[string]interface{}{"succ": true})

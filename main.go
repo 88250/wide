@@ -40,6 +40,7 @@ func main() {
 
 	http.HandleFunc("/", indexHandler)
 
+	http.HandleFunc("/build", output.BuildHandler)
 	http.HandleFunc("/run", output.RunHandler)
 	http.HandleFunc("/output/ws", output.WSHandler)
 
