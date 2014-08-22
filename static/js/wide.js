@@ -6,14 +6,10 @@ outputWS.onopen = function() {
 outputWS.onmessage = function(e) {
     console.log('[output onmessage]' + e.data);
     var data = JSON.parse(e.data);
-
+	
     if ('run' === data.cmd) {
-		console.log('run: ' + data.cmd);
-		
         $('#output').val($('#output').val() + data.output);
-    } else if ('build' === data.cmd) {
-		console.log('build: ' + data.cmd);
-		
+    } else if ('build' === data.cmd) {				
         $('#output').val(data.output);
 		
 		if (0 != data.output.length) { // 说明编译有错误输出
