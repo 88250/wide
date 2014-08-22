@@ -1,4 +1,4 @@
-var outputWS = new WebSocket(config.channel.editor + '/output/ws');
+var outputWS = new WebSocket(config.channel.output + '/output/ws');
 outputWS.onopen = function() {
     console.log('[output onopen] connected');
 };

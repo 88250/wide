@@ -48,7 +48,7 @@ var editors = {
 		
 		CodeMirror.commands.autocompleteAfterDot = function(cm) {
 			var cur = cm.getCursor();
-			console.log(cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur));
+			// console.log(cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur));
 			
 			// var token = cm.getTokenAt(cm.getCursor());
 			
