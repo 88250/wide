@@ -6,7 +6,16 @@ var editors = {
     },
     _initAutocomplete: function() {
         CodeMirror.registerHelper("hint", "go", function(editor, options) {
-            var cur = editor.getCursor();
+			var word = /[\w$]+/
+			
+            var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
+			
+			var start = cur.ch, end = start;
+		    while (end < curLine.length && word.test(curLine.charAt(end))) ++end;
+		    while (start && word.test(curLine.charAt(start - 1))) --start;
+		    var curWord = start != end && curLine.slice(start, end);
+			
+			console.log(curWord)
 
             var request = {
                 code: editor.getValue(),
@@ -27,19 +36,71 @@ var editors = {
                 dataType: "json",
                 success: function(data) {
                     var autocompleteArray = data[1];
-
-                    for (var i = 0; i < autocompleteArray.length; i++) {
-                        autocompleteHints[i] = autocompleteArray[i].name;
-                    }
+					
+					if (autocompleteArray) {
+	                    for (var i = 0; i < autocompleteArray.length; i++) {
+	                        autocompleteHints[i] = autocompleteArray[i].name;
+	                    }
+					}
                 }
             });
 
-            return {list: autocompleteHints, from: cur, to: cur};
+            return {list: autocompleteHints, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+        });
+		
+		
+		CodeMirror.registerHelper("hint", "anyword", function(editor, options) {
+			var WORD = /[\w$]+/, RANGE = 500;
+			
+           	var word = options && options.word || WORD;
+		    var range = options && options.range || RANGE;
+		    var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
+		    var start = cur.ch, end = start;
+		    while (end < curLine.length && word.test(curLine.charAt(end))) ++end;
+		    while (start && word.test(curLine.charAt(start - 1))) --start;
+		    var curWord = start != end && curLine.slice(start, end);
+		
+		    var list = [], seen = {};
+		    var re = new RegExp(word.source, "g");
+		    for (var dir = -1; dir <= 1; dir += 2) {
+		      var line = cur.line, endLine = Math.min(Math.max(line + dir * range, editor.firstLine()), editor.lastLine()) + dir;
+		      for (; line != endLine; line += dir) {
+		        var text = editor.getLine(line), m;
+		        while (m = re.exec(text)) {
+		          if (line == cur.line && m[0] === curWord) continue;
+		          if ((!curWord || m[0].lastIndexOf(curWord, 0) == 0) && !Object.prototype.hasOwnProperty.call(seen, m[0])) {
+		            seen[m[0]] = true;
+		            list.push(m[0]);
+		          }
+		        }
+		      }
+		    }
+			
+			console.log(list);
+			
+		    return {list: list, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
         });
 
-        CodeMirror.commands.autocomplete = function(cm) {
-            cm.showHint({hint: CodeMirror.hint.go});
+        CodeMirror.commands.anyword = function(cm) {
+            cm.showHint({hint: CodeMirror.hint.anyword, completeSingle: false});
         };
+		
+		CodeMirror.commands.autocompleteAfterDot = function(cm) {
+			var cur = cm.getCursor();
+			console.log(cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur));
+			
+			var tok = cm.getTokenAt(cm.getCursor());
+			console.log(tok)
+			
+			
+			setTimeout(function() {
+          		if (!cm.state.completionActive) {
+            		cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
+				}
+        	}, 100)
+			
+			return CodeMirror.Pass;
+		};
     },
     _initTabs: function() {
         var $tabsPanel = $(".edit-panel .tabs-panel"),
@@ -111,7 +172,8 @@ var editors = {
             theme: 'lesser-dark',
 			indentUnit: 4,
             extraKeys: {
-                "Ctrl-\\": "autocomplete"
+                "Ctrl-\\": "anyword",
+				".": "autocompleteAfterDot"
             }
         });
         editor.setSize('100%', 450);
