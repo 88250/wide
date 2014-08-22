@@ -69,7 +69,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	cmd.Start()
 
-	rec := map[string]interface{}{}
+	channelRet := map[string]interface{}{}
 
 	go func(runningId int) {
 		glog.Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
@@ -83,10 +83,11 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 				break
 			} else {
-				rec["output"] = string(buf[:count])
+				channelRet["output"] = string(buf[:count])
+				channelRet["cmd"] = "run"
 
 				if nil != outputWS[sid] {
-					err := outputWS[sid].WriteJSON(&rec)
+					err := outputWS[sid].WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
 						break
@@ -150,7 +151,12 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", argv...)
 	cmd.Dir = curDir
 
-	glog.Info("go build ", filePath)
+	glog.Infof("go build -o %s %s", executable, filePath)
+
+	executable = curDir + string(os.PathSeparator) + executable
+
+	// 先把可执行文件删了
+	os.RemoveAll(executable)
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
@@ -184,7 +190,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet["output"] = string(buf[:count])
 		channelRet["cmd"] = "build"
 		channelRet["nextCmd"] = "run"
-		channelRet["executable"] = curDir + string(os.PathSeparator) + executable
+		channelRet["executable"] = executable
 
 		if nil != outputWS[sid] {
 			glog.Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)

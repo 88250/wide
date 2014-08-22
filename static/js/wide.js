@@ -2,13 +2,24 @@ var outputWS = new WebSocket(config.channel.output + '/output/ws');
 outputWS.onopen = function() {
     console.log('[output onopen] connected');
 };
+
 outputWS.onmessage = function(e) {
     console.log('[output onmessage]' + e.data);
     var data = JSON.parse(e.data);
 
-    if ('init-output' !== data.cmd) {
+    if ('run' === data.cmd) {
+		console.log('run: ' + data.cmd);
+		
         $('#output').val($('#output').val() + data.output);
-    } 
+    } else if ('build' === data.cmd) {
+		console.log('build: ' + data.cmd);
+		
+        $('#output').val(data.output);
+		
+		if (0 != data.output.length) { // 说明编译有错误输出
+			return;
+		}
+    }
 	
 	if ('build' == data.cmd) {
 		if ('run' === data.nextCmd) {
@@ -22,9 +33,10 @@ outputWS.onmessage = function(e) {
 	            data: JSON.stringify(request),
 	            dataType: "json",
 	            beforeSend: function(data) {
-	                $('#output').val('');
+					$('#output').val('');
 	            },
-	            success: function(data) {
+	            success: function(data) {					
+					
 	            }
 	        });
 		}
