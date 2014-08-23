@@ -56,7 +56,7 @@ var editors = {
           		if (!cm.state.completionActive) {
             		cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
 				}
-        	}, 100)
+        	}, 50)
 			
 			return CodeMirror.Pass;
 		};
