@@ -12,7 +12,7 @@ import (
 	"strings"
 )
 
-type Conf struct {
+type conf struct {
 	Server                string
 	StaticServer          string
 	EditorChannel         string
@@ -25,7 +25,7 @@ type Conf struct {
 	GOPATH                string
 }
 
-var Wide Conf
+var Wide conf
 
 func init() {
 	flag.Set("logtostderr", "true")
