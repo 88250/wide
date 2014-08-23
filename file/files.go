@@ -182,6 +182,7 @@ func walk(path string, info os.FileInfo, node *FileNode) {
 
 		if fio.IsDir() {
 			child.Type = "d"
+
 			walk(fpath, fio, &child)
 		} else {
 			child.Type = "f"
@@ -199,7 +200,21 @@ func listFiles(dirname string) []string {
 
 	sort.Strings(names)
 
-	return names
+	dirs := []string{}
+	files := []string{}
+
+	// 目录靠前，文件靠后
+	for _, name := range names {
+		fio, _ := os.Lstat(filepath.Join(dirname, name))
+
+		if fio.IsDir() {
+			dirs = append(dirs, name)
+		} else {
+			files = append(files, name)
+		}
+	}
+
+	return append(dirs, files...)
 }
 
 func getEditorMode(filenameExtension string) string {
