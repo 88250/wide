@@ -2,7 +2,7 @@ package conf
 
 import (
 	"encoding/json"
-	"flag"
+	_ "github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"io/ioutil"
@@ -28,10 +28,6 @@ type conf struct {
 var Wide conf
 
 func init() {
-	flag.Set("logtostderr", "true")
-
-	flag.Parse()
-
 	bytes, _ := ioutil.ReadFile("conf/wide.json")
 
 	err := json.Unmarshal(bytes, &Wide)

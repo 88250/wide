@@ -4,6 +4,7 @@ import (
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
 	"github.com/b3log/wide/file"
+	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/shell"
@@ -15,6 +16,8 @@ import (
 )
 
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	model := map[string]interface{}{"Wide": conf.Wide, "i18n": i18n.GetLangs(r)}
+
 	session, _ := session.Store.Get(r, "wide-session")
 
 	if session.IsNew {
@@ -32,7 +35,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	t.Execute(w, map[string]interface{}{"Wide": conf.Wide})
+	t.Execute(w, model)
 }
 
 func main() {
