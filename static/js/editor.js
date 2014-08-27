@@ -5,16 +5,17 @@ var editors = {
         editors._initTabs();
     },
     _initAutocomplete: function() {
-        CodeMirror.registerHelper("hint", "go", function(editor, options) {
-			var word = /[\w$]+/
-			
+        CodeMirror.registerHelper("hint", "go", function(editor) {
+            var word = /[\w$]+/;
+
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
-			
-			var start = cur.ch, end = start;
-		    while (end < curLine.length && word.test(curLine.charAt(end))) ++end;
-		    while (start && word.test(curLine.charAt(start - 1))) --start;
-		    var curWord = start != end && curLine.slice(start, end);
-			
+
+            var start = cur.ch, end = start;
+            while (end < curLine.length && word.test(curLine.charAt(end)))
+                ++end;
+            while (start && word.test(curLine.charAt(start - 1)))
+                --start;
+
             var request = {
                 code: editor.getValue(),
                 cursorLine: editor.getCursor().line,
@@ -34,36 +35,31 @@ var editors = {
                 dataType: "json",
                 success: function(data) {
                     var autocompleteArray = data[1];
-					
-					if (autocompleteArray) {
-	                    for (var i = 0; i < autocompleteArray.length; i++) {
-	                        autocompleteHints[i] = autocompleteArray[i].name;
-	                    }
-					}
+
+                    if (autocompleteArray) {
+                        for (var i = 0; i < autocompleteArray.length; i++) {
+                            autocompleteHints[i] = autocompleteArray[i].name;
+                        }
+                    }
                 }
             });
 
             return {list: autocompleteHints, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
         });
-		
-		CodeMirror.commands.autocompleteAfterDot = function(cm) {
-			var cur = cm.getCursor();
-			// console.log(cm.getRange(CodeMirror.Pos(cur.line, cur.ch - 1), cur));
-			
-			// var token = cm.getTokenAt(cm.getCursor());
-			
-			setTimeout(function() {
-          		if (!cm.state.completionActive) {
-            		cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
-				}
-        	}, 50)
-			
-			return CodeMirror.Pass;
-		};
-		
-		CodeMirror.commands.autocompleteAnyWord = function(cm) {
-        	cm.showHint({hint: CodeMirror.hint.auto});
-      	}
+
+        CodeMirror.commands.autocompleteAfterDot = function(cm) {
+            setTimeout(function() {
+                if (!cm.state.completionActive) {
+                    cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
+                }
+            }, 50);
+
+            return CodeMirror.Pass;
+        };
+
+        CodeMirror.commands.autocompleteAnyWord = function(cm) {
+            cm.showHint({hint: CodeMirror.hint.auto});
+        };
     },
     _initTabs: function() {
         var $tabsPanel = $(".edit-panel .tabs-panel"),
@@ -90,7 +86,7 @@ var editors = {
 
             for (var i = 0, ii = editors.data.length; i < ii; i++) {
                 if (editors.data[i].id === id) {
-                     wide.curEditor = editors.data[i].editor;
+                    wide.curEditor = editors.data[i].editor;
                     break;
                 }
             }
@@ -133,10 +129,10 @@ var editors = {
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
             theme: 'lesser-dark',
-			indentUnit: 4,
+            indentUnit: 4,
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
-				".": "autocompleteAfterDot"
+                ".": "autocompleteAfterDot"
             }
         });
         editor.setSize('100%', 450);
