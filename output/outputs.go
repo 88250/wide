@@ -2,6 +2,7 @@ package output
 
 import (
 	"encoding/json"
+	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
@@ -151,6 +152,9 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", argv...)
 	cmd.Dir = curDir
 
+	// 设置环境变量（设置当前用户的 GOPATH 等）
+	setCmdEnv(cmd)
+
 	glog.Infof("go build -o %s %s", executable, filePath)
 
 	executable = curDir + string(os.PathSeparator) + executable
@@ -207,4 +211,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(ret)
+}
+
+func setCmdEnv(cmd *exec.Cmd) {
+	cmd.Env = append(cmd.Env, "GOPATH="+conf.Wide.GOPATH, "GOROOT="+os.Getenv("GOROOT"))
 }
