@@ -214,5 +214,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func setCmdEnv(cmd *exec.Cmd) {
-	cmd.Env = append(cmd.Env, "GOPATH="+conf.Wide.GOPATH, "GOROOT="+os.Getenv("GOROOT"))
+	// TODO: 使用用户自己的仓库路径设置 GOPATH
+	cmd.Env = append(cmd.Env, "GOPATH="+conf.Wide.Repos, "GOROOT="+os.Getenv("GOROOT"))
 }

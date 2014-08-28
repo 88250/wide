@@ -8,5 +8,6 @@
     "ContextPath": "",
     "StaticPath": "",
     "RuntimeMode": "dev",
-    "GOPATH": "{pwd}/data"
+    "Repos": "{pwd}/data/repos/src",
+    "UserRepos": "{pwd}/data/user_repos/{user}/src"
 }

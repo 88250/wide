@@ -15,10 +15,10 @@ import (
 func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 
-	root := FileNode{"projects", conf.Wide.GOPATH, "d", []*FileNode{}}
-	fileInfo, _ := os.Lstat(conf.Wide.GOPATH)
+	root := FileNode{"projects", conf.Wide.Repos, "d", []*FileNode{}}
+	fileInfo, _ := os.Lstat(conf.Wide.Repos)
 
-	walk(conf.Wide.GOPATH, fileInfo, &root)
+	walk(conf.Wide.Repos, fileInfo, &root)
 
 	data["root"] = root
 

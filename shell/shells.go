@@ -96,8 +96,9 @@ func pipeCommands(commands ...*exec.Cmd) string {
 }
 
 func setCmdEnv(cmd *exec.Cmd) {
-	cmd.Env = append(cmd.Env, "TERM=xterm", "GOPATH="+conf.Wide.GOPATH,
+	// TODO: 使用用户自己的仓库路径设置 GOPATH
+	cmd.Env = append(cmd.Env, "TERM=xterm", "GOPATH="+conf.Wide.Repos,
 		"GOROOT="+os.Getenv("GOROOT"))
 
-	cmd.Dir = conf.Wide.GOPATH
+	cmd.Dir = conf.Wide.Repos
 }
