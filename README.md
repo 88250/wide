@@ -14,6 +14,9 @@ A simple <b>W</b>eb **IDE** for golang.
 * Shell (TBD: interactive)
 * Debug (TBD)
 
+## Demos ##
+* [20140823](http://b3log.org/wide/demo/20140823.html)
+
 ## Setup ##
 
 0. Wide works fine with `Linux`, other platforms are unsupported
