@@ -19,7 +19,6 @@ A simple <b>W</b>eb **IDE** for golang.
 
 ## Setup ##
 
-0. Wide works fine with `Linux`, other platforms are unsupported
 1. Downloads source
 2. Compiles wide with `go build` 
 3. Configures `conf/wide.json`
