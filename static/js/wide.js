@@ -6,37 +6,37 @@ outputWS.onopen = function() {
 outputWS.onmessage = function(e) {
     console.log('[output onmessage]' + e.data);
     var data = JSON.parse(e.data);
-	
+
     if ('run' === data.cmd) {
         $('#output').val($('#output').val() + data.output);
-    } else if ('build' === data.cmd) {				
+    } else if ('build' === data.cmd) {
         $('#output').val(data.output);
-		
-		if (0 != data.output.length) { // 说明编译有错误输出
-			return;
-		}
+
+        if (0 !== data.output.length) { // 说明编译有错误输出
+            return;
+        }
     }
-	
-	if ('build' == data.cmd) {
-		if ('run' === data.nextCmd) {
-			var request = {
-				"executable": data.executable
-			};
-			
-			$.ajax({ 
-	        	type: 'POST',
-	            url: '/run',
-	            data: JSON.stringify(request),
-	            dataType: "json",
-	            beforeSend: function(data) {
-					$('#output').val('');
-	            },
-	            success: function(data) {					
-					
-	            }
-	        });
-		}
-	}
+
+    if ('build' === data.cmd) {
+        if ('run' === data.nextCmd) {
+            var request = {
+                "executable": data.executable
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/run',
+                data: JSON.stringify(request),
+                dataType: "json",
+                beforeSend: function(data) {
+                    $('#output').val('');
+                },
+                success: function(data) {
+
+                }
+            });
+        }
+    }
 };
 outputWS.onclose = function(e) {
     console.log('[output onclose] disconnected (' + e.code + ')');
@@ -66,8 +66,8 @@ shellWS.onerror = function(e) {
 };
 
 var wide = {
-    curNode: "",
-    curEditor: "",
+    curNode: undefined,
+    curEditor: undefined,
     init: function() {
         $('#shellInput').keydown(function(event) {
             if (13 === event.which) {
@@ -109,7 +109,7 @@ var wide = {
             "file": wide.curNode.path,
             "code": wide.curEditor.getValue()
         };
-		
+
         $.ajax({
             type: 'POST',
             url: '/build',
@@ -119,11 +119,11 @@ var wide = {
                 $('#output').val('');
             },
             success: function(data) {
-				executable = data.executable;
+                executable = data.executable;
 
                 if (data.succ) {
-					
-				}
+
+                }
             }
         });
     },

@@ -1,6 +1,23 @@
+body {
+    font-size: 13px;
+    margin: 0;
+}
+
 ul {
     padding: 0;
     margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.fn-left {
+    float: left;
+}
+
+.fn-right {
+    float: right;
 }
 
 .fn-clear:before,
@@ -44,20 +61,11 @@ ul {
 
 
 .edit-panel {
-    background-color: #262626;
+    border: 1px solid #262626;
     height: 450px;
     left: 20%;
     position: absolute;
     width: 80%;
-}
-
-.edit-panel .tabs span {
-    background-color: #FFF;
-    cursor: pointer;
-}
-
-.edit-panel .tabs span.current {
-    background-color: #EEEEEE;
 }
 
 .output {
@@ -76,3 +84,18 @@ ul {
 .shellOutput {
     height: 80px;
 }
+
+/* start tabs */
+.tabs > div {
+    background-color: #FFF;
+    float: left;
+}
+
+.tabs > div.current {
+    background-color: #EEEEEE;
+}
+
+.tabs .ico-close {
+    cursor: pointer;
+}
+/* end tabs */

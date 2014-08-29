@@ -2,7 +2,56 @@ var editors = {
     data: [],
     init: function() {
         editors._initAutocomplete();
-        editors._initTabs();
+        editors.tabs = new Tabs({
+            id: ".edit-panel",
+            clickAfter: function(id) {
+                // set tree node selected
+                var node = tree.fileTree.getNodeByTId(id);
+                tree.fileTree.selectNode(node);
+                wide.curNode = node;
+
+                for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                    if (editors.data[i].id === id) {
+                        wide.curEditor = editors.data[i].editor;
+                        break;
+                    }
+                }
+            },
+            removeAfter: function(id, nextId) {
+                for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                    if (editors.data[i].id === id) {
+                        editors.data.splice(i, 1);
+                        break;
+                    }
+                }
+
+                if (!nextId) {
+                    // 不存在打开的编辑器
+                    // remove selected tree node
+                    tree.fileTree.cancelSelectedNode();
+                    wide.curNode = undefined;
+
+                    wide.curEditor = undefined;
+                    return false;
+                }
+                
+                if (nextId === editors.tabs.getCurrentId()) {
+                    return false;
+                }
+
+                // set tree node selected
+                var node = tree.fileTree.getNodeByTId(nextId);
+                tree.fileTree.selectNode(node);
+                wide.curNode = node;
+
+                for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                    if (editors.data[i].id === nextId) {
+                        wide.curEditor = editors.data[i].editor;
+                        break;
+                    }
+                }
+            }
+        });
     },
     _initAutocomplete: function() {
         CodeMirror.registerHelper("hint", "go", function(editor) {
@@ -61,70 +110,21 @@ var editors = {
             cm.showHint({hint: CodeMirror.hint.auto});
         };
     },
-    _initTabs: function() {
-        var $tabsPanel = $(".edit-panel .tabs-panel"),
-                $tabs = $(".edit-panel .tabs");
-
-        $tabs.on("click", "span", function() {
-            var $it = $(this);
-            if ($it.hasClass("current")) {
-                return false;
-            }
-
-            var id = $it.data("id");
-
-            $tabs.children("span").removeClass("current");
-            $tabsPanel.children("div").hide();
-
-            $it.addClass("current");
-            $("#editor" + id).parent().show();
-
-            // set tree node selected
-            var node = tree.fileTree.getNodeByTId(id);
-            tree.fileTree.selectNode(node);
-            wide.curNode = node;
-
-            for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                if (editors.data[i].id === id) {
-                    wide.curEditor = editors.data[i].editor;
-                    break;
-                }
-            }
-        });
-    },
-    _selectTab: function(id, editor) {
-        var $tabsPanel = $(".edit-panel .tabs-panel"),
-                $tabs = $(".edit-panel .tabs");
-
-        var $currentTab = $tabs.children(".current");
-        if ($currentTab.data("id") === id) {
-            return false;
-        }
-
-        $tabs.children("span").removeClass("current");
-        $tabsPanel.children("div").hide();
-
-        $tabs.children("span[data-id='" + id + "']").addClass("current");
-        $("#editor" + id).parent().show();
-        wide.curEditor = editor;
-    },
     newEditor: function(data) {
         var id = wide.curNode.tId;
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             if (editors.data[i].id === id) {
-                editors._selectTab(id, editors.data[i].editor);
+                editors.tabs.setCurrent(id);
+                wide.curEditor = editor;
                 return false;
             }
         }
 
-        var $tabsPanel = $(".edit-panel .tabs-panel"),
-                $tabs = $(".edit-panel .tabs");
-
-        $tabs.children("span").removeClass("current");
-        $tabsPanel.children("div").hide();
-
-        $tabsPanel.append('<div><textarea id="editor' + id + '" name="code"></textarea></div>');
-        $tabs.append('<span data-id="' + id + '" class="current">' + wide.curNode.name + '</span>');
+        editors.tabs.add({
+            id: id,
+            title: '<span title="' + wide.curNode.path + '">' + wide.curNode.name + '</span>',
+            content: '<textarea id="editor' + id + '"></textarea>'
+        });
 
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
@@ -135,7 +135,7 @@ var editors = {
                 ".": "autocompleteAfterDot"
             }
         });
-        editor.setSize('100%', 450);
+        editor.setSize('100%', 430);
         editor.setValue(data.content);
         editor.setOption("mode", data.mode);
 

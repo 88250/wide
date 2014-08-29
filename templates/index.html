@@ -13,26 +13,32 @@
     </head>
     <body>
         <div class="content">
-            <ul id="files" class="ztree"></ul>
+            <div class="side">
+                <ul id="files" class="ztree"></ul>
 
-            <!-- 目录右键菜单 -->
-            <div id="dirRMenu" class="fn-none">
-                <ul>
-                    <li onclick="tree.newFile();">create file....</li>
-                    <li onclick="tree.newDir();">create dir....</li>
-                    <li onclick="tree.removeIt();">delete it....</li>
-                </ul>
+                <!-- 目录右键菜单 -->
+                <div id="dirRMenu" class="fn-none">
+                    <ul>
+                        <li onclick="tree.newFile();">create file....</li>
+                        <li onclick="tree.newDir();">create dir....</li>
+                        <li onclick="tree.removeIt();">delete it....</li>
+                    </ul>
+                </div>
+
+                <!-- 文件右键菜单 -->
+                <div id="fileRMenu" class="fn-none">
+                    <ul>
+                        <li onclick="tree.removeIt();">delete it....</li>
+                    </ul>
+                </div>
             </div>
 
-            <!-- 文件右键菜单 -->
-            <div id="fileRMenu" class="fn-none">
-                <ul>
-                    <li onclick="tree.removeIt();">delete it....</li>
-                </ul>
-            </div>
 
             <div class="edit-panel">
-                <div class="tabs"></div>
+                <div class="edit-header fn-clear">
+                    <div class="tabs fn-left"></div>
+                    <span class="fn-right">全屏</span>
+                </div>
                 <div class="tabs-panel"></div>
             </div>
         </div>
@@ -60,7 +66,7 @@
                 channel: {
                     editor: '{{.Wide.EditorChannel}}',
                     shell: '{{.Wide.ShellChannel}}',
-					output: '{{.Wide.OutputChannel}}'
+                    output: '{{.Wide.OutputChannel}}'
                 }
             };
         </script>
@@ -70,7 +76,7 @@
 
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/codemirror.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/addon/hint/show-hint.js"></script>
-		<script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/addon/hint/anyword-hint.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/addon/hint/anyword-hint.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/go/go.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/xml/xml.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/htmlmixed/htmlmixed.js"></script>
@@ -80,6 +86,7 @@
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/shell/shell.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/mode/sql/sql.js"></script>
 
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/tabs.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/editor.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/tree.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/wide.js"></script>
