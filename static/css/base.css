@@ -86,9 +86,17 @@ ul {
 }
 
 /* start tabs */
+.tabs {
+    height: 20px;
+    overflow: hidden;
+    width: 97%;
+}
+
 .tabs > div {
     background-color: #FFF;
     float: left;
+    border-left: 1px solid #DDD;
+    padding: 2px 5px;
 }
 
 .tabs > div.current {
