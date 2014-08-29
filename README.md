@@ -22,7 +22,7 @@ A simple <b>W</b>eb **IDE** for golang.
 1. Downloads source
 2. Compiles wide with `go build` 
 3. Configures `conf/wide.json`
-4. Runs the executable `wide`
+4. Runs the executable `wide` or `wide.exe`
 
 ## License ##
 
