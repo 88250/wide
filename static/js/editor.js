@@ -32,9 +32,10 @@ var editors = {
                     wide.curNode = undefined;
 
                     wide.curEditor = undefined;
+                    $(".ico-fullscreen").hide();
                     return false;
                 }
-                
+
                 if (nextId === editors.tabs.getCurrentId()) {
                     return false;
                 }
@@ -52,6 +53,9 @@ var editors = {
                 }
             }
         });
+    },
+    fullscreen: function() {
+        wide.curEditor.setOption("fullScreen", true);
     },
     _initAutocomplete: function() {
         CodeMirror.registerHelper("hint", "go", function(editor) {
@@ -111,6 +115,7 @@ var editors = {
         };
     },
     newEditor: function(data) {
+        $(".ico-fullscreen").show();
         var id = wide.curNode.tId;
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             if (editors.data[i].id === id) {
@@ -132,7 +137,15 @@ var editors = {
             indentUnit: 4,
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
-                ".": "autocompleteAfterDot"
+                ".": "autocompleteAfterDot",
+                "Esc": function(cm) {
+                    if (cm.getOption("fullScreen")) {
+                        cm.setOption("fullScreen", false);
+                    }
+                },
+                "F11": function(cm) {
+                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                }
             }
         });
         editor.setSize('100%', 430);
@@ -144,9 +157,6 @@ var editors = {
             "editor": editor,
             "id": id
         });
-    },
-    removeEditor: function() {
-
     }
 };
 

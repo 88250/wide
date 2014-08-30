@@ -3,9 +3,10 @@
     <head>
         <meta charset="UTF-8">
         <title>{{.i18n.wide}}</title>
-        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/codemirror.css">
-        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/addon/hint/show-hint.css">
-        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.4/theme/lesser-dark.css">
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/codemirror.css">
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/show-hint.css">
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/display/fullscreen.css">
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/theme/lesser-dark.css">
 
         <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/ztree/zTreeStyle.css">
 
@@ -37,7 +38,7 @@
             <div class="edit-panel">
                 <div class="edit-header fn-clear">
                     <div class="tabs fn-left"></div>
-                    <span class="fn-right">全屏</span>
+                    <span class="fn-none fn-right ico-fullscreen" onclick="editors.fullscreen()">全屏</span>
                 </div>
                 <div class="tabs-panel"></div>
             </div>
@@ -77,6 +78,7 @@
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/codemirror.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/show-hint.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/anyword-hint.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/display/fullscreen.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/mode/go/go.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/mode/xml/xml.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/mode/htmlmixed/htmlmixed.js"></script>
