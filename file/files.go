@@ -3,6 +3,7 @@ package file
 import (
 	"encoding/json"
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/session"
 	"github.com/golang/glog"
 	"io/ioutil"
 	"net/http"
@@ -13,9 +14,17 @@ import (
 )
 
 func GetFiles(w http.ResponseWriter, r *http.Request) {
+	session, _ := session.Store.Get(r, "wide-session")
+
+	username := session.Values["name"].(string)
+
+	glog.Info(username)
+
+	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
+
 	data := map[string]interface{}{"succ": true}
 
-	root := FileNode{"projects", conf.Wide.Repos, "d", []*FileNode{}}
+	root := FileNode{"projects", userRepos, "d", []*FileNode{}}
 	fileInfo, _ := os.Lstat(conf.Wide.Repos)
 
 	walk(conf.Wide.Repos, fileInfo, &root)
