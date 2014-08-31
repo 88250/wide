@@ -21,11 +21,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 
 	if session.IsNew {
-		// TODO: 以 daniel 作为用户登录
+		// TODO: 以 admin 作为用户登录
 		name := conf.Wide.Users[0].Name
 		glog.Infof("[%s] logged in", name)
 
-		session.Values["name"] = name
+		session.Values["username"] = name
 		session.Values["id"] = strconv.Itoa(rand.Int())
 	}
 
@@ -44,6 +44,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	conf.Load()
+
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
 	http.HandleFunc("/", indexHandler)
@@ -64,6 +66,9 @@ func main() {
 	http.HandleFunc("/shell/ws", shell.WSHandler)
 
 	http.HandleFunc("/autocomplete", editor.AutocompleteHandler)
+
+	http.HandleFunc("/user/new", user.AddUser)
+	http.HandleFunc("/user/repos/init", user.InitGitRepos)
 
 	glog.Infof("Wide is running [%s]", conf.Wide.Server)
 

@@ -12,8 +12,9 @@ import (
 	"strings"
 )
 
-type user struct {
-	Name string
+type User struct {
+	Name     string
+	Password string
 }
 
 type conf struct {
@@ -28,12 +29,35 @@ type conf struct {
 	RuntimeMode           string
 	Repos                 string
 	UserRepos             string
-	Users                 []user
+	Users                 []User
 }
 
 var Wide conf
+var rawWide conf
 
-func init() {
+func Save() bool {
+	// 可变部分
+	rawWide.Users = Wide.Users
+
+	// 原始配置文件内容
+	bytes, err := json.MarshalIndent(rawWide, "", "    ")
+
+	if nil != err {
+		glog.Error(err)
+
+		return false
+	}
+
+	if err = ioutil.WriteFile("conf/wide.json", bytes, 0644); nil != err {
+		glog.Error(err)
+
+		return false
+	}
+
+	return true
+}
+
+func Load() {
 	bytes, _ := ioutil.ReadFile("conf/wide.json")
 
 	err := json.Unmarshal(bytes, &Wide)
@@ -42,6 +66,9 @@ func init() {
 
 		os.Exit(-1)
 	}
+
+	// 保存未经变量替换处理的原始配置文件，用于写回时
+	json.Unmarshal(bytes, &rawWide)
 
 	ip, err := util.Net.LocalIP()
 	if err != nil {

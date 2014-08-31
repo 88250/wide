@@ -16,7 +16,7 @@ import (
 func GetFiles(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 
-	username := session.Values["name"].(string)
+	username := session.Values["username"].(string)
 
 	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
 
