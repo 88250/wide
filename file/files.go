@@ -203,11 +203,16 @@ func listFiles(dirname string) []string {
 	dirs := []string{}
 	files := []string{}
 
-	// 目录靠前，文件靠后
+	// 排序：目录靠前，文件靠后
 	for _, name := range names {
 		fio, _ := os.Lstat(filepath.Join(dirname, name))
 
 		if fio.IsDir() {
+			// 排除 .git 目录
+			if ".git" == fio.Name() {
+				continue
+			}
+
 			dirs = append(dirs, name)
 		} else {
 			files = append(files, name)

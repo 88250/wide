@@ -126,8 +126,7 @@ var tree = {
                         }
                     };
                     tree.fileTree = $.fn.zTree.init($("#files"), setting, data.root.children);
-                    // TODO: remove
-                    tree.fileTree.expandAll(true);
+                    // tree.fileTree.expandAll(true);
                 }
             }
         });

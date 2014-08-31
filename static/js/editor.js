@@ -75,9 +75,6 @@ var editors = {
                 cursorCh: editor.getCursor().ch
             };
 
-            // XXX: 回调有问题，暂时不使用 WS 协议
-            //editorWS.send(JSON.stringify(request));
-
             var autocompleteHints = [];
 
             $.ajax({
