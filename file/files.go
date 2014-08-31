@@ -18,8 +18,6 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	username := session.Values["name"].(string)
 
-	glog.Info(username)
-
 	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
 
 	data := map[string]interface{}{"succ": true}

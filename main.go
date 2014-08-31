@@ -65,6 +65,8 @@ func main() {
 
 	http.HandleFunc("/autocomplete", editor.AutocompleteHandler)
 
+	glog.Infof("Wide is running [%s]", conf.Wide.Server)
+
 	err := http.ListenAndServe(conf.Wide.Server, nil)
 	if err != nil {
 		glog.Fatal(err)
