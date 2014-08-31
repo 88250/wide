@@ -6,8 +6,8 @@ import (
 	"github.com/b3log/wide/file"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/output"
-	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/shell"
+	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
 	"html/template"
 	"math/rand"
@@ -18,7 +18,7 @@ import (
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	model := map[string]interface{}{"Wide": conf.Wide, "i18n": i18n.GetLangs(r)}
 
-	session, _ := session.Store.Get(r, "wide-session")
+	session, _ := user.Session.Get(r, "wide-session")
 
 	if session.IsNew {
 		// TODO: 以 daniel 作为用户登录

@@ -3,7 +3,7 @@ package editor
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/b3log/wide/session"
+	"github.com/b3log/wide/user"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
@@ -16,7 +16,7 @@ import (
 var editorWS = map[string]*websocket.Conn{}
 
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := session.Store.Get(r, "wide-session")
+	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	editorWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)

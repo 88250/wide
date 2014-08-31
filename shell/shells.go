@@ -2,7 +2,7 @@ package shell
 
 import (
 	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/session"
+	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 	"net/http"
@@ -14,7 +14,7 @@ import (
 var shellWS = map[string]*websocket.Conn{}
 
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := session.Store.Get(r, "wide-session")
+	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	shellWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)

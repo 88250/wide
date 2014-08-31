@@ -3,7 +3,7 @@ package file
 import (
 	"encoding/json"
 	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/session"
+	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
 	"io/ioutil"
 	"net/http"
@@ -14,7 +14,7 @@ import (
 )
 
 func GetFiles(w http.ResponseWriter, r *http.Request) {
-	session, _ := session.Store.Get(r, "wide-session")
+	session, _ := user.Session.Get(r, "wide-session")
 
 	username := session.Values["name"].(string)
 

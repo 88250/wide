@@ -3,7 +3,7 @@ package output
 import (
 	"encoding/json"
 	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/session"
+	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 	"io"
@@ -18,7 +18,7 @@ import (
 var outputWS = map[string]*websocket.Conn{}
 
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := session.Store.Get(r, "wide-session")
+	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	outputWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -30,7 +30,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RunHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := session.Store.Get(r, "wide-session")
+	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	decoder := json.NewDecoder(r.Body)
@@ -105,7 +105,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func BuildHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := session.Store.Get(r, "wide-session")
+	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	decoder := json.NewDecoder(r.Body)
