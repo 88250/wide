@@ -141,6 +141,12 @@ var editors = {
 			
 			return CodeMirror.Pass;					
 		};
+		
+		CodeMirror.commands.gotoLine = function(cm) {
+			var line = prompt("Go To Line: ", "0");			
+			
+            cm.setCursor(CodeMirror.Pos(line - 1, 0));
+        };
     },
     newEditor: function(data) {
         $(".ico-fullscreen").show();
@@ -178,7 +184,8 @@ var editors = {
 				"'['": "autocompleteRightPart", 
 				"'{'": "autocompleteRightPart", 
 				"'\"'": "autocompleteRightPart", 
-				"'''": "autocompleteRightPart", 
+				"'''": "autocompleteRightPart",
+				"Ctrl-G": "gotoLine"
             }
         });
         editor.setSize('100%', 430);
