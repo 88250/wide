@@ -21,6 +21,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := session.Store.Get(r, "wide-session")
 
 	if session.IsNew {
+		// TODO: 以 daniel 作为用户登录
+		name := conf.Wide.Users[0].Name
+		glog.Infof("[%s] logged in", name)
+
+		session.Values["name"] = name
 		session.Values["id"] = strconv.Itoa(rand.Int())
 	}
 

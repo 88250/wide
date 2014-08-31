@@ -9,5 +9,10 @@
     "StaticPath": "",
     "RuntimeMode": "dev",
     "Repos": "{pwd}/data/repos/src",
-    "UserRepos": "{pwd}/data/user_repos/{user}/src"
+    "UserRepos": "{pwd}/data/user_repos/{user}/src",
+    "Users": [{
+        "Name": "daniel"
+    }, {
+        "Name": "vanessa"
+    }]
 }

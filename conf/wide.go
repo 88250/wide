@@ -12,6 +12,10 @@ import (
 	"strings"
 )
 
+type user struct {
+	Name string
+}
+
 type conf struct {
 	Server                string
 	StaticServer          string
@@ -24,6 +28,7 @@ type conf struct {
 	RuntimeMode           string
 	Repos                 string
 	UserRepos             string
+	Users                 []user
 }
 
 var Wide conf
