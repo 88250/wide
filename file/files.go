@@ -25,9 +25,9 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 
 	root := FileNode{"projects", userRepos, "d", []*FileNode{}}
-	fileInfo, _ := os.Lstat(conf.Wide.Repos)
+	fileInfo, _ := os.Lstat(userRepos)
 
-	walk(conf.Wide.Repos, fileInfo, &root)
+	walk(userRepos, fileInfo, &root)
 
 	data["root"] = root
 
