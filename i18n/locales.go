@@ -42,12 +42,12 @@ func init() {
 }
 
 func GetLangs(r *http.Request) map[string]interface{} {
-	locale := getLocale(r)
+	locale := GetLocale(r)
 
 	return Locales[locale].Langs
 }
 
-func getLocale(r *http.Request) string {
+func GetLocale(r *http.Request) string {
 	// TODO: 从请求中获取 locale
 	return "zh_CN"
 }
