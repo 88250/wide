@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 	"io"
@@ -30,6 +31,9 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func RunHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
@@ -39,7 +43,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -53,7 +57,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -61,7 +65,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	stderr, err := cmd.StderrPipe()
 	if nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -97,14 +101,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}(rand.Int())
-
-	ret, _ := json.Marshal(map[string]interface{}{"succ": true})
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
 }
 
 func BuildHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
@@ -114,7 +116,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -126,7 +128,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -137,7 +139,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -160,9 +162,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	executable = curDir + string(os.PathSeparator) + executable
 
 	// 先把可执行文件删了
-	os.RemoveAll(executable)
+	err = os.RemoveAll(executable)
+	if nil != err {
+		glog.Info(err)
+		data["succ"] = false
 
-	data := map[string]interface{}{"succ": true}
+		return
+	}
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
@@ -180,41 +186,36 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reader := io.MultiReader(stdout, stderr)
+	if data["succ"].(bool) {
+		reader := io.MultiReader(stdout, stderr)
 
-	cmd.Start()
+		cmd.Start()
 
-	go func(runningId int) {
-		glog.Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)
+		go func(runningId int) {
+			glog.Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)
 
-		// 一次性读取
-		buf := make([]byte, 1024*8)
-		count, _ := reader.Read(buf)
+			// 一次性读取
+			buf := make([]byte, 1024*8)
+			count, _ := reader.Read(buf)
 
-		channelRet := map[string]interface{}{}
+			channelRet := map[string]interface{}{}
 
-		channelRet["output"] = string(buf[:count])
-		channelRet["cmd"] = "build"
-		channelRet["nextCmd"] = "run"
-		channelRet["executable"] = executable
+			channelRet["output"] = string(buf[:count])
+			channelRet["cmd"] = "build"
+			channelRet["nextCmd"] = "run"
+			channelRet["executable"] = executable
 
-		glog.Info(outputWS)
-		glog.Info(sid)
-		if nil != outputWS[sid] {
-			glog.Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
+			if nil != outputWS[sid] {
+				glog.Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
 
-			err := outputWS[sid].WriteJSON(&channelRet)
-			if nil != err {
-				glog.Error(err)
+				err := outputWS[sid].WriteJSON(&channelRet)
+				if nil != err {
+					glog.Error(err)
+				}
 			}
-		}
 
-	}(rand.Int())
-
-	ret, _ := json.Marshal(data)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
+		}(rand.Int())
+	}
 }
 
 func setCmdEnv(cmd *exec.Cmd) {

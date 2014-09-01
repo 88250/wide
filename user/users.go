@@ -3,6 +3,7 @@ package user
 import (
 	"encoding/json"
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"net/http"
 	"strings"
@@ -15,13 +16,16 @@ const (
 )
 
 func AddUser(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	decoder := json.NewDecoder(r.Body)
 
 	var args map[string]interface{}
 
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -29,34 +33,25 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	username := args["username"].(string)
 	password := args["password"].(string)
 
-	data := map[string]interface{}{"succ": true}
-
 	msg := addUser(username, password)
 	if USER_CREATED != msg {
 		data["succ"] = false
 		data["msg"] = msg
 	}
-
-	ret, _ := json.Marshal(data)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
 }
 
 func InitGitRepos(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	session, _ := Session.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
 	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
 
-	data := map[string]interface{}{"succ": true}
-
 	// TODO: git clone
 
 	glog.Infof("Git Cloned from [%s] to [%s]", conf.Wide.Repos, userRepos)
-
-	ret, _ := json.Marshal(data)
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
 }
 
 func addUser(username, password string) string {

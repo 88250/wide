@@ -11,6 +11,7 @@ import (
 	"os"
 	"os/exec"
 	"strconv"
+	"strings"
 )
 
 var editorWS = map[string]*websocket.Conn{}
@@ -45,7 +46,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 		line := int(args["cursorLine"].(float64))
 		ch := int(args["cursorCh"].(float64))
 
-		offset := util.Editor.GetCursorOffset(code, line, ch)
+		offset := getCursorOffset(code, line, ch)
 
 		// glog.Infof("offset: %d", offset)
 
@@ -72,13 +73,16 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func FmtHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	decoder := json.NewDecoder(r.Body)
 
 	var args map[string]interface{}
 
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -89,7 +93,7 @@ func FmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -100,7 +104,7 @@ func FmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -112,15 +116,13 @@ func FmtHandler(w http.ResponseWriter, r *http.Request) {
 	bytes, _ := cmd.Output()
 	output := string(bytes)
 
-	succ := true
 	if "" == output {
-		succ = false
+		data["succ"] = false
+
+		return
 	}
 
-	ret, _ := json.Marshal(map[string]interface{}{"succ": succ, "code": string(output)})
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
+	data["code"] = string(output)
 }
 
 func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
@@ -139,7 +141,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	line := int(args["cursorLine"].(float64))
 	ch := int(args["cursorCh"].(float64))
 
-	offset := util.Editor.GetCursorOffset(code, line, ch)
+	offset := getCursorOffset(code, line, ch)
 
 	// glog.Infof("offset: %d", offset)
 
@@ -158,4 +160,16 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(output.Bytes())
+}
+
+func getCursorOffset(code string, line, ch int) (offset int) {
+	lines := strings.Split(code, "\n")
+
+	for i := 0; i < line; i++ {
+		offset += len(lines[i])
+	}
+
+	offset += line + ch
+
+	return
 }

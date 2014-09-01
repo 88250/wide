@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"io/ioutil"
 	"net/http"
@@ -14,13 +15,14 @@ import (
 )
 
 func GetFiles(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	session, _ := user.Session.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
 
 	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
-
-	data := map[string]interface{}{"succ": true}
 
 	root := FileNode{"projects", userRepos, "d", []*FileNode{}}
 	fileInfo, _ := os.Lstat(userRepos)
@@ -28,15 +30,11 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	walk(userRepos, fileInfo, &root)
 
 	data["root"] = root
-
-	ret, _ := json.Marshal(data)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
 }
 
 func GetFile(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
 
 	decoder := json.NewDecoder(r.Body)
 
@@ -44,14 +42,12 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
 
 	path := args["path"].(string)
-
-	idx := strings.LastIndex(path, ".")
 
 	buf, _ := ioutil.ReadFile(path)
 
@@ -68,7 +64,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 		data["succ"] = false
 		data["msg"] = "Can't open a binary file :("
 	} else {
-
+		idx := strings.LastIndex(path, ".")
 		data["content"] = string(buf)
 
 		extension := ""
@@ -78,21 +74,19 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 		data["mode"] = getEditorMode(extension)
 	}
-
-	ret, _ := json.Marshal(data)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
 }
 
 func SaveFile(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	decoder := json.NewDecoder(r.Body)
 
 	var args map[string]interface{}
 
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -103,7 +97,7 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -114,30 +108,26 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
-
-	ret, _ := json.Marshal(map[string]interface{}{"succ": true})
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
 }
 
 func NewFile(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	decoder := json.NewDecoder(r.Body)
 
 	var args map[string]interface{}
 
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
-
-	data := map[string]interface{}{"succ": true}
 
 	path := args["path"].(string)
 	fileType := args["fileType"].(string)
@@ -145,37 +135,28 @@ func NewFile(w http.ResponseWriter, r *http.Request) {
 	if !createFile(path, fileType) {
 		data["succ"] = false
 	}
-
-	ret, _ := json.Marshal(data)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
 }
 
 func RemoveFile(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
 	decoder := json.NewDecoder(r.Body)
 
 	var args map[string]interface{}
 
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
-
-	data := map[string]interface{}{"succ": true}
 
 	path := args["path"].(string)
 
 	if !removeFile(path) {
 		data["succ"] = false
 	}
-
-	ret, _ := json.Marshal(data)
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(ret)
 }
 
 type FileNode struct {
