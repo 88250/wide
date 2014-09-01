@@ -20,14 +20,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := user.Session.Get(r, "wide-session")
 
-	// TODO: if session.IsNew {
-	// TODO: 以 admin 作为用户登录
-	name := conf.Wide.Users[0].Name
-	glog.Infof("[%s] logged in", name)
+	if session.IsNew {
+		// TODO: 以 admin 作为用户登录
+		name := conf.Wide.Users[0].Name
+		glog.Infof("[%s] logged in", name)
 
-	session.Values["username"] = name
-	session.Values["id"] = strconv.Itoa(rand.Int())
-	//	}
+		session.Values["username"] = name
+		session.Values["id"] = strconv.Itoa(rand.Int())
+	}
 
 	session.Save(r, w)
 

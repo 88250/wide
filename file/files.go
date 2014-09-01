@@ -36,6 +36,8 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetFile(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+
 	decoder := json.NewDecoder(r.Body)
 
 	var args map[string]interface{}
@@ -53,16 +55,29 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	buf, _ := ioutil.ReadFile(path)
 
-	content := string(buf)
-
-	data := map[string]interface{}{"succ": true}
-	data["content"] = content
-
-	extension := ""
-	if 0 <= idx {
-		extension = path[idx:]
+	isBinary := false
+	// 判断是否是二进制文件
+	for _, b := range buf {
+		if 0 == b { // 包含 0 字节就认为是二进制文件
+			isBinary = true
+		}
 	}
-	data["mode"] = getEditorMode(extension)
+
+	if isBinary {
+		// 是二进制文件的话前端编辑器不打开
+		data["succ"] = false
+		data["msg"] = "Can't open a binary file :("
+	} else {
+
+		data["content"] = string(buf)
+
+		extension := ""
+		if 0 <= idx {
+			extension = path[idx:]
+		}
+
+		data["mode"] = getEditorMode(extension)
+	}
 
 	ret, _ := json.Marshal(data)
 

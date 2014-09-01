@@ -116,6 +116,8 @@ var tree = {
                                         dataType: "json",
                                         success: function(data) {
                                             if (!data.succ) {
+												alert(data.msg);
+												
                                                 return false;
                                             }
                                             editors.newEditor(data);

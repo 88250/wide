@@ -162,10 +162,12 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	// 先把可执行文件删了
 	os.RemoveAll(executable)
 
+	data := map[string]interface{}{"succ": true}
+
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -173,7 +175,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	stderr, err := cmd.StderrPipe()
 	if nil != err {
 		glog.Error(err)
-		http.Error(w, err.Error(), 500)
+		data["succ"] = false
 
 		return
 	}
@@ -196,6 +198,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet["nextCmd"] = "run"
 		channelRet["executable"] = executable
 
+		glog.Info(outputWS)
+		glog.Info(sid)
 		if nil != outputWS[sid] {
 			glog.Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
 
@@ -207,7 +211,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	}(rand.Int())
 
-	ret, _ := json.Marshal(map[string]interface{}{"succ": true})
+	ret, _ := json.Marshal(data)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(ret)
