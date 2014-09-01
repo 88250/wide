@@ -167,6 +167,7 @@ var editors = {
 
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
+			styleActiveLine: true,
             theme: 'lesser-dark',
             indentUnit: 4,
             extraKeys: {
