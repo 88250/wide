@@ -51,8 +51,25 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	buf, _ := ioutil.ReadFile(path)
 
+	idx := strings.LastIndex(path, ".")
+	extension := ""
+	if 0 <= idx {
+		extension = path[idx:]
+	}
+
+	// 通过文件扩展名判断是否是图片文件（图片在浏览器里新建 tab 打开）
+	if isImg(extension) {
+		data["mode"] = "img"
+
+		path2 := strings.Replace(path, "\\", "/", -1)
+		idx = strings.Index(path2, "/data/user_repos")
+		data["path"] = path2[idx:]
+
+		return
+	}
+
 	isBinary := false
-	// 判断是否是二进制文件
+	// 判断是否是其他二进制文件
 	for _, b := range buf {
 		if 0 == b { // 包含 0 字节就认为是二进制文件
 			isBinary = true
@@ -64,14 +81,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 		data["succ"] = false
 		data["msg"] = "Can't open a binary file :("
 	} else {
-		idx := strings.LastIndex(path, ".")
 		data["content"] = string(buf)
-
-		extension := ""
-		if 0 <= idx {
-			extension = path[idx:]
-		}
-
 		data["mode"] = getEditorMode(extension)
 	}
 }
@@ -274,7 +284,6 @@ func createFile(path, fileType string) bool {
 
 		return true
 	default:
-
 		glog.Infof("Unsupported file type [%s]", fileType)
 
 		return false
@@ -291,4 +300,15 @@ func removeFile(path string) bool {
 	glog.Infof("Removed [%s]", path)
 
 	return true
+}
+
+func isImg(extension string) bool {
+	ext := strings.ToLower(extension)
+
+	switch ext {
+	case ".jpg", ".jpeg", ".bmp", ".gif", ".png", ".svg", ".ico":
+		return true
+	default:
+		return false
+	}
 }

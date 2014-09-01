@@ -120,6 +120,14 @@ var tree = {
 												
                                                 return false;
                                             }
+											
+											if ("img" == data.mode) { // 是图片文件的话新建 tab 打开
+												// 最好是开 tab，但这个最终取决于浏览器设置
+												var w = window.open(data.path);
+												
+												return false;
+											}
+											
                                             editors.newEditor(data);
                                         }
                                     });

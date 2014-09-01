@@ -49,6 +49,9 @@ func main() {
 	// 静态资源
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
+	// 库资源
+	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
+
 	// IDE 首页
 	http.HandleFunc("/", indexHandler)
 
