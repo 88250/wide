@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Wide - 搭建服务器</title>
+        
+    </head>
+    <body>
+        <h1>搭建服务器</h1>
+
+		<h2>基础配置</h2>
+		<ol>
+			<li>下载 Wide 安装包</li>
+			<li>解压到安装路径 {wide}，例如 /root/wide</li>
+			<li>配置 {wide}/conf/wide.json（可选）</li>
+		</ol>
+		现在已经可以使用用户 admin，密码 admin 登录使用了。
+
+		<h2>多用户配置</h2>
+		前提：需要安装 git。
+		<ol>
+			<li>初始化主库：在 {wide}/data/workspace/src 下执行 git init</li>
+			<li>添加用户：修改 {wide}/conf/wide.json 中的 Users</li>
+			<li>添加用户库：在 {wide}/data/user_workspaces/{user}/ 中 git clone 主库</li>
+		</ol>
+    </body>
+</html>
