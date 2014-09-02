@@ -62,7 +62,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 		data["mode"] = "img"
 
 		path2 := strings.Replace(path, "\\", "/", -1)
-		idx = strings.Index(path2, "/data/user_repos")
+		idx = strings.Index(path2, "/data/user_workspaces")
 		data["path"] = path2[idx:]
 
 		return
