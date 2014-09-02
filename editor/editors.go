@@ -3,6 +3,7 @@ package editor
 import (
 	"bytes"
 	"encoding/json"
+	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/user"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
@@ -137,6 +138,9 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	//session, _ := user.Session.Get(r, "wide-session")
+	//username := session.Values["username"].(string)
+
 	code := args["code"].(string)
 	line := int(args["cursorLine"].(float64))
 	ch := int(args["cursorCh"].(float64))
@@ -150,6 +154,10 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	var output bytes.Buffer
 
 	cmd := exec.Command("gocode", argv...)
+
+	// 设置环境变量（设置当前用户的 GOPATH 等）
+	// FIXME: setCmdEnv(cmd, username)
+
 	cmd.Stdout = &output
 
 	stdin, _ := cmd.StdinPipe()
@@ -172,4 +180,23 @@ func getCursorOffset(code string, line, ch int) (offset int) {
 	offset += line + ch
 
 	return
+}
+
+func setCmdEnv(cmd *exec.Cmd, username string) {
+	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
+	userWorkspace := userRepos[:strings.LastIndex(userRepos, "/src")]
+
+	glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
+
+	masterWorkspace := conf.Wide.Repos[:strings.LastIndex(conf.Wide.Repos, "/src")]
+	glog.Infof("Master workspace [%s]", masterWorkspace)
+
+	GOPATH := os.Getenv("GOPATH")
+	glog.Infof("Env GOPATH [%s]", GOPATH)
+
+	cmd.Env = append(cmd.Env,
+		"GOPATH="+userWorkspace+string(os.PathListSeparator)+
+			masterWorkspace+string(os.PathListSeparator)+
+			GOPATH,
+		"GOROOT="+os.Getenv("GOROOT"))
 }

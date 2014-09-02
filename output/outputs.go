@@ -109,6 +109,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
+	username := session.Values["username"].(string)
 
 	decoder := json.NewDecoder(r.Body)
 
@@ -155,7 +156,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	cmd.Dir = curDir
 
 	// 设置环境变量（设置当前用户的 GOPATH 等）
-	setCmdEnv(cmd)
+	setCmdEnv(cmd, username)
 
 	glog.Infof("go build -o %s %s", executable, filePath)
 
@@ -218,7 +219,18 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func setCmdEnv(cmd *exec.Cmd) {
-	// TODO: 使用用户自己的仓库路径设置 GOPATH
-	cmd.Env = append(cmd.Env, "GOPATH="+conf.Wide.Repos, "GOROOT="+os.Getenv("GOROOT"))
+func setCmdEnv(cmd *exec.Cmd, username string) {
+	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
+	userWorkspace := userRepos[:strings.LastIndex(userRepos, "/src")]
+
+	// glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
+
+	masterWorkspace := conf.Wide.Repos[:strings.LastIndex(conf.Wide.Repos, "/src")]
+	// glog.Infof("Master workspace [%s]", masterWorkspace)
+
+	cmd.Env = append(cmd.Env,
+		"GOPATH="+userWorkspace+string(os.PathListSeparator)+
+			masterWorkspace+string(os.PathListSeparator)+
+			os.Getenv("GOPATH"),
+		"GOROOT="+os.Getenv("GOROOT"))
 }
