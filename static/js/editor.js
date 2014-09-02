@@ -66,10 +66,10 @@ var editors = {
             var start = cur.ch, end = start;
             while (end < curLine.length && word.test(curLine.charAt(end))) {
                 ++end;
-			}
+            }
             while (start && word.test(curLine.charAt(start - 1))) {
                 --start;
-			}
+            }
             var request = {
                 code: editor.getValue(),
                 cursorLine: cur.line,
@@ -111,41 +111,44 @@ var editors = {
         CodeMirror.commands.autocompleteAnyWord = function(cm) {
             cm.showHint({hint: CodeMirror.hint.auto});
         };
-		
-		CodeMirror.commands.autocompleteRightPart = function(cm) {
-			setTimeout(function() {
-				var cur = cm.getCursor();
-				var curLine = cm.getLine(cur.line);											
-				var curChar = curLine.charAt(cur.ch - 1);
-			
-				replacement = '';
-				
-				switch (curChar) {
-					case '(': 
-						replacement = ')';
-						break;
-					case '[': 
-						replacement = ']';
-						break;	
-					case '{': 
-						replacement = '}';
-						break;
-					default: // " or '
-						replacement = curChar;
-						break;			
-				}
-				
-          		cm.replaceRange(replacement, CodeMirror.Pos(cur.line, cur.ch));    	
-				cm.setCursor(CodeMirror.Pos(cur.line, cur.ch));    	
-          	}, 50);						
-			
-			return CodeMirror.Pass;					
-		};
-		
-		CodeMirror.commands.gotoLine = function(cm) {
-			var line = prompt("Go To Line: ", "0");			
-			
+
+        CodeMirror.commands.autocompleteRightPart = function(cm) {
+            setTimeout(function() {
+                var cur = cm.getCursor();
+                var curLine = cm.getLine(cur.line);
+                var curChar = curLine.charAt(cur.ch - 1);
+
+                replacement = '';
+
+                switch (curChar) {
+                    case '(':
+                        replacement = ')';
+                        break;
+                    case '[':
+                        replacement = ']';
+                        break;
+                    case '{':
+                        replacement = '}';
+                        break;
+                    default: // " or '
+                        replacement = curChar;
+                        break;
+                }
+
+                cm.replaceRange(replacement, CodeMirror.Pos(cur.line, cur.ch));
+                cm.setCursor(CodeMirror.Pos(cur.line, cur.ch));
+            }, 50);
+
+            return CodeMirror.Pass;
+        };
+
+        CodeMirror.commands.gotoLine = function(cm) {
+            var line = prompt("Go To Line: ", "0");
+
             cm.setCursor(CodeMirror.Pos(line - 1, 0));
+        };
+
+        CodeMirror.commands.doNothing = function(cm) {
         };
     },
     newEditor: function(data) {
@@ -167,7 +170,7 @@ var editors = {
 
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
-			styleActiveLine: true,
+            styleActiveLine: true,
             theme: 'lesser-dark',
             indentUnit: 4,
             extraKeys: {
@@ -181,12 +184,14 @@ var editors = {
                 "F11": function(cm) {
                     cm.setOption("fullScreen", !cm.getOption("fullScreen"));
                 },
-				"'('": "autocompleteRightPart", 
-				"'['": "autocompleteRightPart", 
-				"'{'": "autocompleteRightPart", 
-				"'\"'": "autocompleteRightPart", 
-				"'''": "autocompleteRightPart",
-				"Ctrl-G": "gotoLine"
+                "'('": "autocompleteRightPart",
+                "'['": "autocompleteRightPart",
+                "'{'": "autocompleteRightPart",
+                "'\"'": "autocompleteRightPart",
+                "'''": "autocompleteRightPart",
+                "Ctrl-G": "gotoLine",
+                "Ctrl-E": "deleteLine",
+                "Ctrl-D": "doNothing" // 取消默认的 deleteLine
             }
         });
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-header").height());
