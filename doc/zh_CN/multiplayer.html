@@ -3,17 +3,48 @@
     <head>
         <meta charset="UTF-8">
         <title>Wide - 多用户</title>
-        
+
     </head>
     <body>
         <h1>多用户</h1>
-		支持多个用户同时使用一个 Wide 服务器，每个用户有自己独立的源代码仓库，编码/运行/调式都是在自己的用户空间中进行，不会影响其他用户。
+        <p>
+            支持多个用户同时使用一个 Wide 服务器，每个用户有自己独立的源代码仓库，编码/运行/调式都是在自己的工作空间中进行，不会影响其他用户。
+        </p>
 
-		<h2>源代码仓库</h2>
-		使用 git 作为源码版本控制系统，data/workspace/src 是主库，每个用户的源码仓库都 clone 自主库。
-		
-		<h2>运行时</h2>		
-		用户在运行程序时进程是跑在服务器上的，所以多用户同时运行程序时最常见的问题就是资源冲突，比如网络端口。
-		目前 Wide 解决不了这个问题，只能靠用户自己进行规避。
+        <h2>工作空间</h2>
+        <p>
+            一个工作空间由下面几个部分组成：
+        </p>
+        <ul>
+            <li>源代码仓库：data/user_workspaces/{user}/src</li>
+            <li>GOPATH：data/user_workspaces/{user}</li>
+        </ul>
+        <p>
+            这和 golang 本身 <a href="https://golang.org/doc/code.html#Workspaces" target="_blank">workspaces</a> 的设计保持一致：每个用户的 GOPATH 指定了其工作空间的路径。
+        </p>
+        <h2>版本控制</h2>
+        <p>
+            推荐（不强制）使用 git 作为源码版本控制系统，data/workspace/src 是主库，每个用户的源码仓库都克隆自主库。
+            但为了保证各个用户源代码仓库的协作（更新/合并），最好还是使用一个分布式版本控制系统，因为这样的 VCS 和 Wide 更合拍。
+        </p>
+
+        <h2>运行时</h2>	
+        <p>
+            用户在运行程序时进程是跑在服务器上的，所以多用户同时运行程序时最常见的问题就是资源冲突（比如网络端口），目前这个问题只能靠用户自行规避。
+        </p>
+
+        <h2>一些细节</h2>
+        <h3>GOPATH</h3>
+        <p>
+            用户的工作空间虽然是某个具体的目录（data/user_workspaces/{user}），但实际上 Wide 在处理 GOPATH 时是指定了多个目录的：
+        </p>
+        <ol>
+            <li>data/user_workspaces/{user}</li>
+            <li>data/workspace</li>
+            <li>操作系统环境变量 GOPATH 路径</li>
+        </ol>
+        <p>
+            这样做是为了方便构建，非常有利于团队开发。
+        </p>
     </body>
 </html>
