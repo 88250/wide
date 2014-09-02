@@ -21,12 +21,15 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 
 	if session.IsNew {
-		// TODO: 以 admin 作为用户登录
+		// TODO: 写死以 admin 作为用户登录
 		name := conf.Wide.Users[0].Name
-		glog.Infof("[%s] logged in", name)
 
 		session.Values["username"] = name
 		session.Values["id"] = strconv.Itoa(rand.Int())
+		// 一天过期
+		session.Options.MaxAge = 60 * 60 * 24
+
+		glog.Infof("Created a session [%s] for user [%s]", session.Values["id"].(string), name)
 	}
 
 	session.Save(r, w)
