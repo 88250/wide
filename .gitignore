@@ -1,6 +1,6 @@
 /wide.exe
 /wide
 
-/data/repos/*
-/data/user_repos/*
+/data/workspace/*
+/data/user_workspaces/*
 
