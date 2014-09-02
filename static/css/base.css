@@ -1,3 +1,4 @@
+/* start reset & function */
 body {
     font-size: 13px;
     margin: 0;
@@ -33,18 +34,63 @@ ul {
 .fn-none {
     display: none;
 }
+/* end reset & function */
+
+/* start framework */
+.menu {
+    border-bottom: 1px solid #DDD;
+}
 
 .content {
     position: relative;
-    height: 460px;
+}
+
+.side {
+    width: 20%;
+    position: absolute;
+    border-right: 1px solid #DDD;
+    height: 100%;
 }
 
 .ztree {
     position: absolute;
-    width: 20%;
-    height: 440px;
     overflow: auto;
+    width: 100%;
+    padding: 0;
 }
+
+.main {
+    width: 80%;
+    position: absolute;
+    left: 20%;
+}
+
+.edit-panel {
+    border-bottom: 1px solid #ddd;
+    width: 100%
+}
+
+.footer {
+    border-top: 1px solid #DDD;
+}
+/* end framework */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #dirRMenu, #fileRMenu {
     position: absolute;
@@ -58,34 +104,6 @@ ul {
     cursor: pointer;
     font-size: 12px;
 }
-
-
-.edit-panel {
-    border: 1px solid #262626;
-    height: 450px;
-    left: 20%;
-    position: absolute;
-    width: 80%;
-}
-
-.output {
-    width: 49%
-}
-
-.shell {
-	display: none;
-    float: right;
-    width: 49%
-}
-
-.shellInput, .shellOutput {	
-    width: 99%
-}
-
-.shellOutput {
-    height: 80px;
-}
-
 /* start tabs */
 .tabs {
     height: 20px;

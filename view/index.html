@@ -13,55 +13,57 @@
         <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/css/base.css">
     </head>
     <body>
+        <div class="menu">
+            <a href="/doc/{{.locale}}/index.html" target="_blank">Help</a>
+        </div>
+
         <div class="content">
             <div class="side">
-                <ul id="files" class="ztree"></ul>
+                <div class="side-1">
+                    <ul id="files" class="ztree"></ul>
 
-                <!-- 目录右键菜单 -->
-                <div id="dirRMenu" class="fn-none">
-                    <ul>
-                        <li onclick="tree.newFile();">create file....</li>
-                        <li onclick="tree.newDir();">create dir....</li>
-                        <li onclick="tree.removeIt();">delete it....</li>
-                    </ul>
+                    <!-- 目录右键菜单 -->
+                    <div id="dirRMenu" class="fn-none">
+                        <ul>
+                            <li onclick="tree.newFile();">create file....</li>
+                            <li onclick="tree.newDir();">create dir....</li>
+                            <li onclick="tree.removeIt();">delete it....</li>
+                        </ul>
+                    </div>
+
+                    <!-- 文件右键菜单 -->
+                    <div id="fileRMenu" class="fn-none">
+                        <ul>
+                            <li onclick="tree.removeIt();">delete it....</li>
+                        </ul>
+                    </div>
                 </div>
-
-                <!-- 文件右键菜单 -->
-                <div id="fileRMenu" class="fn-none">
-                    <ul>
-                        <li onclick="tree.removeIt();">delete it....</li>
-                    </ul>
+                <div class="side-2">
                 </div>
             </div>
 
-
-            <div class="edit-panel">
-                <div class="edit-header fn-clear">
-                    <div class="tabs fn-left"></div>
-                    <span class="fn-none fn-right ico-fullscreen" onclick="editors.fullscreen()">全屏</span>
+            <div class="main">
+                <div class="edit-panel">
+                    <div class="edit-header fn-clear">
+                        <div class="tabs fn-left"></div>
+                        <span class="fn-none fn-right ico-fullscreen" onclick="editors.fullscreen()">全屏</span>
+                    </div>
+                    <div class="tabs-panel"></div>
                 </div>
-                <div class="tabs-panel"></div>
+
+                <div class="output">
+                    <div>
+                        <button onclick="wide.save()">Save</button>
+                        <button onclick="wide.fmt()">Format</button>
+                        <button onclick="wide.run()">Build & Run</button>
+                    </div>
+                    <textarea id="output" rows="7"></textarea>
+                </div>
             </div>
         </div>
 
-        <div>
-            <button id="saveBtn" onclick="wide.save()">Save</button>
-            <button id="fmtBtn" onclick="wide.fmt()">Format</button>
-            <button id="runBtn" onclick="wide.run()">Build & Run</button>
-        </div>
-
-        <div>
-            <textarea id="output" class="output" rows="7"></textarea>
-			
-            <div class="shell">
-                <div>
-                    <input id="shellInput" class="shellInput" placeholder=" Command...." />
-                </div>
-
-                <textarea id="shellOutput" class="shellOutput" rows="8"></textarea>
-            </div>
-			
-			<a href="/doc/{{.locale}}/index.html" target="_blank">Help</a>
+        <div class="footer">
+            copyright 88250 & vanessa
         </div>
 
         <script type="text/javascript">
@@ -78,7 +80,7 @@
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>
 
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/codemirror.js"></script>
-		<script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/selection/active-line.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/selection/active-line.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/show-hint.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/anyword-hint.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/display/fullscreen.js"></script>

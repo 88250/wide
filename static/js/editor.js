@@ -189,7 +189,7 @@ var editors = {
 				"Ctrl-G": "gotoLine"
             }
         });
-        editor.setSize('100%', 430);
+        editor.setSize('100%', $(".edit-panel").height() - $(".edit-header").height());
         editor.setValue(data.content);
         editor.setOption("mode", data.mode);
 

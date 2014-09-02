@@ -68,7 +68,14 @@ shellWS.onerror = function(e) {
 var wide = {
     curNode: undefined,
     curEditor: undefined,
+    _initLayout: function () {
+        var mainH = $(window).height() - $(".menu").height() - $(".footer").height();
+        $(".content, .ztree").height(mainH);
+        
+        $(".edit-panel").height(mainH - $(".output").height());
+    },
     init: function() {
+        this._initLayout();
         $('#shellInput').keydown(function(event) {
             if (13 === event.which) {
                 var input = {
