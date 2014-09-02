@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
 	"github.com/b3log/wide/file"
@@ -12,10 +13,20 @@ import (
 	"html/template"
 	"math/rand"
 	"net/http"
+	"runtime"
 	"strconv"
 )
 
+// Wide 中唯一一个 init 函数.
+func init() {
+	flag.Set("logtostderr", "true")
+
+	flag.Parse()
+}
+
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	i18n.Load()
+
 	model := map[string]interface{}{"Wide": conf.Wide, "i18n": i18n.GetLangs(r), "locale": i18n.GetLocale(r)}
 
 	session, _ := user.Session.Get(r, "wide-session")
@@ -48,6 +59,10 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	conf.Load()
+
+	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
+
+	defer glog.Flush()
 
 	// 静态资源
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))

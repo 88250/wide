@@ -69,7 +69,7 @@ var wide = {
     curNode: undefined,
     curEditor: undefined,
     _initLayout: function () {
-        var mainH = $(window).height() - $(".menu").height() - $(".footer").height();
+        var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2;
         $(".content, .ztree").height(mainH);
         
         $(".edit-panel").height(mainH - $(".output").height());

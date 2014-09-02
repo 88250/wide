@@ -13,8 +13,16 @@
         <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/css/base.css">
     </head>
     <body>
-        <div class="menu">
-            <a href="/doc/{{.locale}}/index.html" target="_blank">Help</a>
+        <div class="menu fn-clear">
+            <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.file}}</a>
+            <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.run}}</a>
+            <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.debug}}</a>
+            <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.help}}</a>
+            <div class="toolbars fn-right">
+                <button onclick="wide.save()">{{.i18n.save}}</button>
+                <button onclick="wide.fmt()">{{.i18n.format}}</button>
+                <button onclick="wide.run()">{{.i18n.build_n_run}}</button>
+            </div>
         </div>
 
         <div class="content">
@@ -25,16 +33,16 @@
                     <!-- 目录右键菜单 -->
                     <div id="dirRMenu" class="fn-none">
                         <ul>
-                            <li onclick="tree.newFile();">create file....</li>
-                            <li onclick="tree.newDir();">create dir....</li>
-                            <li onclick="tree.removeIt();">delete it....</li>
+                            <li onclick="tree.newFile();">{{.i18n.create_file}}</li>
+                            <li onclick="tree.newDir();">{{.i18n.create_file}}</li>
+                            <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
                         </ul>
                     </div>
 
                     <!-- 文件右键菜单 -->
                     <div id="fileRMenu" class="fn-none">
                         <ul>
-                            <li onclick="tree.removeIt();">delete it....</li>
+                            <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
                         </ul>
                     </div>
                 </div>
@@ -46,24 +54,19 @@
                 <div class="edit-panel">
                     <div class="edit-header fn-clear">
                         <div class="tabs fn-left"></div>
-                        <span class="fn-none fn-right ico-fullscreen" onclick="editors.fullscreen()">全屏</span>
+                        <span class="fn-none fn-right ico-fullscreen" onclick="editors.fullscreen()">{{.i18n.full_screen}}</span>
                     </div>
                     <div class="tabs-panel"></div>
                 </div>
 
                 <div class="output">
-                    <div>
-                        <button onclick="wide.save()">Save</button>
-                        <button onclick="wide.fmt()">Format</button>
-                        <button onclick="wide.run()">Build & Run</button>
-                    </div>
-                    <textarea id="output" rows="7"></textarea>
+                    <textarea id="output" rows="8"></textarea>
                 </div>
             </div>
         </div>
 
         <div class="footer">
-            copyright 88250 & vanessa
+            |
         </div>
 
         <script type="text/javascript">

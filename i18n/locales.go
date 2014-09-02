@@ -2,7 +2,6 @@ package i18n
 
 import (
 	"encoding/json"
-	"flag"
 	"github.com/golang/glog"
 	"io/ioutil"
 	"net/http"
@@ -18,11 +17,7 @@ type locale struct {
 // 所有的 locales.
 var Locales = map[string]locale{}
 
-func init() {
-	flag.Set("logtostderr", "true")
-
-	flag.Parse()
-
+func Load() {
 	// TODO: 加载所有语言配置
 	bytes, _ := ioutil.ReadFile("i18n/zh_CN.json")
 

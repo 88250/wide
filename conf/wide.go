@@ -26,6 +26,7 @@ type conf struct {
 	StaticResourceVersion string
 	ContextPath           string
 	StaticPath            string
+	MaxProcs              int
 	RuntimeMode           string
 	Repos                 string
 	UserRepos             string

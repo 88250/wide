@@ -1,4 +1,14 @@
 {
-    "wide": "Wide"
-
+    "wide": "Wide",
+    "file": "文件",
+    "run": "运行",
+    "debug": "调试",
+    "help": "帮助",
+    "create_file": "创建文件",
+    "create_dir": "创建目录",
+    "delete": "删除",
+    "save": "保存",
+    "format": "格式化",
+    "build_n_run": "构建 & 运行",
+    "full_screen": "全屏"
 }
