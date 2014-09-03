@@ -198,7 +198,7 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 	GOPATH := os.Getenv("GOPATH")
 	glog.Infof("Env GOPATH [%s]", GOPATH)
 
-	// TODO: 用户工作空间环境变量设置
+	// FIXME: 这个地方和 gocode 取环境变量有冲突，估计需要修改 gocode
 
 	//cmd.Env = append(cmd.Env,
 	//	"GOPATH="+GOPATH+string(os.PathListSeparator)+
