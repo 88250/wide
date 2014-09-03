@@ -8,9 +8,9 @@ outputWS.onmessage = function(e) {
     var data = JSON.parse(e.data);
 
     if ('run' === data.cmd) {
-        $('#output').val($('#output').val() + data.output);
+        $('#output').text($('#output').text() + data.output);
     } else if ('build' === data.cmd) {
-        $('#output').val(data.output);
+        $('#output').text(data.output);
 
         if (0 !== data.output.length) { // 说明编译有错误输出
             return;
@@ -29,7 +29,7 @@ outputWS.onmessage = function(e) {
                 data: JSON.stringify(request),
                 dataType: "json",
                 beforeSend: function(data) {
-                    $('#output').val('');
+                    $('#output').text('');
                 },
                 success: function(data) {
 
@@ -123,7 +123,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function(data) {
-                $('#output').val('');
+                $('#output').text('');
             },
             success: function(data) {
                 executable = data.executable;

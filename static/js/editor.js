@@ -53,6 +53,11 @@ var editors = {
                 }
             }
         });
+        
+        
+        $(".edit-header .tabs").on("dblclick", "div", function () {
+            editors.fullscreen();
+        });
     },
     fullscreen: function() {
         wide.curEditor.setOption("fullScreen", true);
@@ -157,7 +162,7 @@ var editors = {
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             if (editors.data[i].id === id) {
                 editors.tabs.setCurrent(id);
-                wide.curEditor = editor;
+                wide.curEditor = editors.data[i].editor;
                 return false;
             }
         }

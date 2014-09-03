@@ -18,6 +18,7 @@
             <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.run}}</a>
             <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.debug}}</a>
             <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.help}}</a>
+            <span class="fn-none ico-fullscreen" onclick="editors.fullscreen()">{{.i18n.full_screen}}</span>
             <div class="toolbars fn-right">
                 <button onclick="wide.save()">{{.i18n.save}}</button>
                 <button onclick="wide.fmt()">{{.i18n.format}}</button>
@@ -31,7 +32,7 @@
                     <ul id="files" class="ztree"></ul>
 
                     <!-- 目录右键菜单 -->
-                    <div id="dirRMenu" class="fn-none">
+                    <div id="dirRMenu" class="menu-r fn-none">
                         <ul>
                             <li onclick="tree.newFile();">{{.i18n.create_file}}</li>
                             <li onclick="tree.newDir();">{{.i18n.create_file}}</li>
@@ -40,7 +41,7 @@
                     </div>
 
                     <!-- 文件右键菜单 -->
-                    <div id="fileRMenu" class="fn-none">
+                    <div id="fileRMenu" class="menu-r fn-none">
                         <ul>
                             <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
                         </ul>
@@ -54,13 +55,20 @@
                 <div class="edit-panel">
                     <div class="edit-header fn-clear">
                         <div class="tabs fn-left"></div>
-                        <span class="fn-none fn-right ico-fullscreen" onclick="editors.fullscreen()">{{.i18n.full_screen}}</span>
                     </div>
                     <div class="tabs-panel"></div>
                 </div>
 
                 <div class="output">
-                    <textarea id="output" rows="8"></textarea>
+                    <div class="tabs">
+                        <div class="current" data-index="files_3">
+                            <span title="Output">Output</span>
+                            <span class="ico-close">X</span>
+                        </div>
+                    </div>
+                    <div class="tabs-panel">
+                        <div id="output"></div>
+                    </div>
                 </div>
             </div>
         </div>
