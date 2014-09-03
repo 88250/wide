@@ -200,4 +200,10 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 
 	// TODO: 用户工作空间环境变量设置
 
+	//cmd.Env = append(cmd.Env,
+	//	"GOPATH="+GOPATH+string(os.PathListSeparator)+
+	//		userWorkspace+string(os.PathListSeparator)+
+	//		masterWorkspace,
+	//	"GOROOT="+os.Getenv("GOROOT"),
+	//	"PATH="+os.Getenv("PATH"))
 }
