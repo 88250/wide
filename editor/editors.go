@@ -11,6 +11,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 )
@@ -138,8 +139,8 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//session, _ := user.Session.Get(r, "wide-session")
-	//username := session.Values["username"].(string)
+	session, _ := user.Session.Get(r, "wide-session")
+	username := session.Values["username"].(string)
 
 	code := args["code"].(string)
 	line := int(args["cursorLine"].(float64))
@@ -151,23 +152,25 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
 
-	var output bytes.Buffer
-
 	cmd := exec.Command("gocode", argv...)
 
 	// 设置环境变量（设置当前用户的 GOPATH 等）
-	// FIXME: setCmdEnv(cmd, username)
-
-	cmd.Stdout = &output
+	setCmdEnv(cmd, username)
 
 	stdin, _ := cmd.StdinPipe()
-	cmd.Start()
 	stdin.Write([]byte(code))
 	stdin.Close()
-	cmd.Wait()
+
+	output, err := cmd.CombinedOutput()
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
 
 	w.Header().Set("Content-Type", "application/json")
-	w.Write(output.Bytes())
+	w.Write(output)
 }
 
 func getCursorOffset(code string, line, ch int) (offset int) {
@@ -185,18 +188,16 @@ func getCursorOffset(code string, line, ch int) (offset int) {
 func setCmdEnv(cmd *exec.Cmd, username string) {
 	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
 	userWorkspace := userRepos[:strings.LastIndex(userRepos, "/src")]
-
+	userWorkspace = filepath.FromSlash(userWorkspace)
 	glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
 
 	masterWorkspace := conf.Wide.Repos[:strings.LastIndex(conf.Wide.Repos, "/src")]
+	masterWorkspace = filepath.FromSlash(masterWorkspace)
 	glog.Infof("Master workspace [%s]", masterWorkspace)
 
 	GOPATH := os.Getenv("GOPATH")
 	glog.Infof("Env GOPATH [%s]", GOPATH)
 
-	cmd.Env = append(cmd.Env,
-		"GOPATH="+userWorkspace+string(os.PathListSeparator)+
-			masterWorkspace+string(os.PathListSeparator)+
-			GOPATH,
-		"GOROOT="+os.Getenv("GOROOT"))
+	// TODO: 用户工作空间环境变量设置
+
 }
