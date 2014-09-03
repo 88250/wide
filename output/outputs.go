@@ -229,7 +229,7 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 	// glog.Infof("Master workspace [%s]", masterWorkspace)
 
 	cmd.Env = append(cmd.Env,
-		"GOPATH="+GOPATH+string(os.PathListSeparator)+
+		"GOPATH="+os.Getenv("GOPATH")+string(os.PathListSeparator)+
 			userWorkspace+string(os.PathListSeparator)+
 			masterWorkspace,
 		"GOROOT="+os.Getenv("GOROOT"))
