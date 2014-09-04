@@ -199,6 +199,17 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			buf := make([]byte, 1024*8)
 			count, _ := reader.Read(buf)
 
+			if 0 == count { // 说明构建成功，没有错误信息输出
+				go func() { // 运行 go install，生成的库用于 gocode lib-path
+					cmd := exec.Command("go", "install")
+					cmd.Dir = curDir
+
+					setCmdEnv(cmd, username)
+
+					cmd.Start()
+				}()
+			}
+
 			channelRet := map[string]interface{}{}
 
 			channelRet["output"] = string(buf[:count])
@@ -223,14 +234,9 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
 	userWorkspace := userRepos[:strings.LastIndex(userRepos, "/src")]
 
-	// glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
-
-	masterWorkspace := conf.Wide.Repos[:strings.LastIndex(conf.Wide.Repos, "/src")]
-	// glog.Infof("Master workspace [%s]", masterWorkspace)
-
 	cmd.Env = append(cmd.Env,
-		"GOPATH="+os.Getenv("GOPATH")+string(os.PathListSeparator)+
-			userWorkspace+string(os.PathListSeparator)+
-			masterWorkspace,
-		"GOROOT="+os.Getenv("GOROOT"))
+		"GOPATH="+userWorkspace,
+		"GOOS="+runtime.GOOS,
+		"GOARCH="+runtime.GOARCH,
+		"GOROOT="+runtime.GOROOT())
 }
