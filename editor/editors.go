@@ -12,6 +12,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 )
@@ -150,12 +151,31 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset: %d", offset)
 
-	argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
+	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
+	userWorkspace := userRepos[:strings.LastIndex(userRepos, "/src")]
+	userWorkspace = filepath.FromSlash(userWorkspace)
+	//glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
+	userLib := userWorkspace + string(os.PathSeparator) + "pkg" + string(os.PathSeparator) +
+		runtime.GOOS + "_" + runtime.GOARCH
 
-	cmd := exec.Command("gocode", argv...)
+	masterWorkspace := conf.Wide.Repos[:strings.LastIndex(conf.Wide.Repos, "/src")]
+	masterWorkspace = filepath.FromSlash(masterWorkspace)
+	//glog.Infof("Master workspace [%s]", masterWorkspace)
+	masterLib := masterWorkspace + string(os.PathSeparator) + "pkg" + string(os.PathSeparator) +
+		runtime.GOOS + "_" + runtime.GOARCH
 
-	// 设置环境变量（设置当前用户的 GOPATH 等）
-	setCmdEnv(cmd, username)
+	libPath := userLib + string(os.PathListSeparator) + masterLib
+	//glog.Infof("gocode set lib-path %s", libPath)
+
+	argv := []string{"set", "lib-path", libPath}
+	exec.Command("gocode", argv...).Start()
+
+	//argv = []string{"set", "autobuild", "true"}
+	//cmd := exec.Command("gocode", argv...)
+	//cmd.Start()
+
+	argv = []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
+	cmd = exec.Command("gocode", argv...)
 
 	stdin, _ := cmd.StdinPipe()
 	stdin.Write([]byte(code))
@@ -183,27 +203,4 @@ func getCursorOffset(code string, line, ch int) (offset int) {
 	offset += line + ch
 
 	return
-}
-
-func setCmdEnv(cmd *exec.Cmd, username string) {
-	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
-	userWorkspace := userRepos[:strings.LastIndex(userRepos, "/src")]
-	userWorkspace = filepath.FromSlash(userWorkspace)
-	glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
-
-	masterWorkspace := conf.Wide.Repos[:strings.LastIndex(conf.Wide.Repos, "/src")]
-	masterWorkspace = filepath.FromSlash(masterWorkspace)
-	glog.Infof("Master workspace [%s]", masterWorkspace)
-
-	GOPATH := os.Getenv("GOPATH")
-	glog.Infof("Env GOPATH [%s]", GOPATH)
-
-	// FIXME: 这个地方和 gocode 取环境变量有冲突，估计需要修改 gocode
-
-	//cmd.Env = append(cmd.Env,
-	//	"GOPATH="+GOPATH+string(os.PathListSeparator)+
-	//		userWorkspace+string(os.PathListSeparator)+
-	//		masterWorkspace,
-	//	"GOROOT="+os.Getenv("GOROOT"),
-	//	"PATH="+os.Getenv("PATH"))
 }
