@@ -1,3 +1,4 @@
+// Wide 配置相关，所有配置（包括用户配置）都是保存在 wide.json 中.
 package conf
 
 import (

@@ -16,8 +16,8 @@ outputWS.onmessage = function(e) {
             return;
         }
     } else if ('go get' === data.cmd) {
-		$('#output').text($('#output').text() + data.output);
-	}
+        $('#output').text($('#output').text() + data.output);
+    }
 
     if ('build' === data.cmd) {
         if ('run' === data.nextCmd) {
@@ -48,45 +48,17 @@ outputWS.onerror = function(e) {
     console.log('[output onerror] ' + e);
 };
 
-var shellWS = new WebSocket(config.channel.shell + '/shell/ws');
-shellWS.onopen = function() {
-    console.log('[shell onopen] connected');
-};
-shellWS.onmessage = function(e) {
-    console.log('[shell onmessage]' + e.data);
-    var data = JSON.parse(e.data);
-    if ('init-shell' !== data.cmd) {
-        $('#shellOutput').val(data.output);
-    }
-};
-shellWS.onclose = function(e) {
-    console.log('[shell onclose] disconnected (' + e.code + ')');
-    delete shellWS;
-};
-shellWS.onerror = function(e) {
-    console.log('[shell onerror] ' + e);
-};
-
 var wide = {
     curNode: undefined,
     curEditor: undefined,
-    _initLayout: function () {
+    _initLayout: function() {
         var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2;
         $(".content, .ztree").height(mainH);
-        
+
         $(".edit-panel").height(mainH - $(".output").height());
     },
     init: function() {
         this._initLayout();
-        $('#shellInput').keydown(function(event) {
-            if (13 === event.which) {
-                var input = {
-                    cmd: $('#shellInput').val()
-                };
-                shellWS.send(JSON.stringify(input));
-                $('#shellInput').val('');
-            }
-        });
 
         $("body").bind("mousedown", function(event) {
             if (!(event.target.id === "dirRMenu" || $(event.target).closest("#dirRMenu").length > 0)) {
@@ -127,11 +99,11 @@ var wide = {
             beforeSend: function(data) {
                 $('#output').text('');
             },
-            success: function(data) {    
+            success: function(data) {
             }
         });
     },
-	goget: function() {
+    goget: function() {
         var request = {
             "file": wide.curNode.path
         };

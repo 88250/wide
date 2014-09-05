@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{.i18n.wide}}</title>
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/css/shell.css?{{.Wide.StaticResourceVersion}}">
+    </head>
+    <body>
+        <input id="shellInput" />
+        
+        <div>
+            <textarea id="shellOutput" rows="10" ></textarea>
+        </div>
+        
+        <script type="text/javascript">
+            var config = {
+                channel: {
+                    shell: '{{.Wide.ShellChannel}}'
+                }
+            };
+        </script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
+
+
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/shell.js?{{.Wide.StaticResourceVersion}}"></script>        
+    </body>
+</html>

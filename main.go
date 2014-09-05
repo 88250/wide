@@ -93,6 +93,7 @@ func main() {
 
 	// Shell
 	http.HandleFunc("/shell/ws", shell.WSHandler)
+	http.HandleFunc("/shell", shell.IndexHandler)
 
 	// 用户
 	http.HandleFunc("/user/new", user.AddUser)

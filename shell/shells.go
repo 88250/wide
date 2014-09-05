@@ -2,19 +2,58 @@ package shell
 
 import (
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
+	"html/template"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
+	"runtime"
+	"strconv"
 	"strings"
 )
 
 var shellWS = map[string]*websocket.Conn{}
 
+func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	i18n.Load()
+
+	model := map[string]interface{}{"Wide": conf.Wide, "i18n": i18n.GetLangs(r), "locale": i18n.GetLocale(r)}
+
+	session, _ := user.Session.Get(r, "wide-session")
+
+	if session.IsNew {
+		// TODO: 写死以 admin 作为用户登录
+		name := conf.Wide.Users[0].Name
+
+		session.Values["username"] = name
+		session.Values["id"] = strconv.Itoa(rand.Int())
+		// 一天过期
+		session.Options.MaxAge = 60 * 60 * 24
+
+		glog.Infof("Created a session [%s] for user [%s]", session.Values["id"].(string), name)
+	}
+
+	session.Save(r, w)
+
+	t, err := template.ParseFiles("view/shell.html")
+
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	t.Execute(w, model)
+}
+
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
+	username := session.Values["username"].(string)
 	sid := session.Values["id"].(string)
 
 	shellWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -58,7 +97,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		output := ""
 		if !strings.Contains(inputCmd, "clear") {
-			output = pipeCommands(commands...)
+			output = pipeCommands(username, commands...)
 		}
 
 		ret = map[string]interface{}{"output": output, "cmd": "shell-output"}
@@ -70,9 +109,9 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func pipeCommands(commands ...*exec.Cmd) string {
+func pipeCommands(username string, commands ...*exec.Cmd) string {
 	for i, command := range commands[:len(commands)-1] {
-		setCmdEnv(command)
+		setCmdEnv(command, username)
 
 		out, err := command.StdoutPipe()
 
@@ -85,9 +124,10 @@ func pipeCommands(commands ...*exec.Cmd) string {
 	}
 
 	last := commands[len(commands)-1]
-	setCmdEnv(last)
+	setCmdEnv(last, username)
 
 	out, err := last.Output()
+
 	if err != nil {
 		return err.Error()
 	}
@@ -95,10 +135,16 @@ func pipeCommands(commands ...*exec.Cmd) string {
 	return string(out)
 }
 
-func setCmdEnv(cmd *exec.Cmd) {
-	// TODO: 使用用户自己的仓库路径设置 GOPATH
-	cmd.Env = append(cmd.Env, "TERM=xterm", "GOPATH="+conf.Wide.Workspace,
-		"GOROOT="+os.Getenv("GOROOT"))
+func setCmdEnv(cmd *exec.Cmd, username string) {
+	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
-	cmd.Dir = conf.Wide.Workspace
+	cmd.Env = append(cmd.Env,
+		"TERM=xterm",
+		"GOPATH="+userWorkspace,
+		"GOOS="+runtime.GOOS,
+		"GOARCH="+runtime.GOARCH,
+		"GOROOT="+runtime.GOROOT(),
+		"PATH="+os.Getenv("PATH"))
+
+	cmd.Dir = userWorkspace
 }
