@@ -23,7 +23,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	username := session.Values["username"].(string)
 	userSrc := conf.Wide.GetUserWorkspace(username) + string(os.PathSeparator) + "src"
 
-	root := FileNode{Name: "projects", Path: userSrc, IconSkin: ".ico-ztree-dir", Type: "d", FileNodes: []*FileNode{}}
+	root := FileNode{Name: "projects", Path: userSrc, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
 	fileInfo, _ := os.Lstat(userSrc)
 
 	walk(userSrc, fileInfo, &root)
@@ -195,7 +195,7 @@ func walk(path string, info os.FileInfo, node *FileNode) {
 
 		if fio.IsDir() {
 			child.Type = "d"
-			child.IconSkin = "ico-ztree-dir"
+			child.IconSkin = "ico-ztree-dir "
 
 			walk(fpath, fio, &child)
 		} else {
@@ -246,23 +246,27 @@ func listFiles(dirname string) []string {
 
 func getIconSkin(filenameExtension string) string {
 	if "" == filenameExtension {
-		return ".ico-ztree-other"
+		return "ico-ztree-other "
 	}
 
 	switch filenameExtension {
 	case ".json":
-		return "ico-ztree-js"
+		return "ico-ztree-js "
 	case ".txt":
-		return "ico-ztree-text"
+		return "ico-ztree-text "
 	case ".properties":
-		return "ico-ztree-pro"
+		return "ico-ztree-pro "
+        case ".html":
+        case ".htm":
+		return "ico-ztree-html " 
 	default:
 		if isImg(filenameExtension) {
-			return ".ico-ztree-img"
+			return "ico-ztree-img "
 		}
 
-		return ".ico-ztree-" + filenameExtension[1:]
+		return "ico-ztree-" + filenameExtension[1:] + " "
 	}
+        return ""
 }
 
 func getEditorMode(filenameExtension string) string {

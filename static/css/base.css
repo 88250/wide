@@ -38,6 +38,27 @@ ul {
 }
 /* end reset & function */
 
+/* start frame */
+.frame {
+    position: absolute;
+    border: 1px solid #5F5F5F;
+    background-color: #F8F8F8;
+    width: 340px;
+    z-index: 5;
+}
+
+.frame li {
+    padding: 0 5px;
+    line-height: 25px;
+    cursor: pointer;
+}
+
+.frame li:hover {
+    background-color: #3875D7;
+    color: #FFF;
+}
+/* end frame */
+
 /* start tabs */
 .tabs {
     height: 20px;
@@ -98,28 +119,6 @@ ul {
     background-color: #F0F0F0;
 }
 /* end framework */
-
-
-/* start side */
-.menu-r {
-    position: absolute;
-    border: 1px solid #5F5F5F;
-    background-color: #F8F8F8;
-    width: 340px;
-    z-index: 2;
-}
-
-.menu-r li {
-    padding: 0 5px;
-    line-height: 25px;
-    cursor: pointer;
-}
-
-.menu-r li:hover {
-    background-color: #3875D7;
-    color: #FFF;
-}
-/* end side */
 
 /* start editor */
 .edit-panel {

@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/js/lib/ztree/zTreeStyle.css">
 
         <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/css/base.css?{{.Wide.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/css/side.css?{{.Wide.StaticResourceVersion}}">
     </head>
     <body>
         <div class="menu fn-clear">
@@ -33,7 +34,7 @@
                     <ul id="files" class="ztree"></ul>
 
                     <!-- 目录右键菜单 -->
-                    <div id="dirRMenu" class="menu-r fn-none">
+                    <div id="dirRMenu" class="frame fn-none">
                         <ul>
                             <li onclick="tree.newFile();">{{.i18n.create_file}}</li>
                             <li onclick="tree.newDir();">{{.i18n.create_dir}}</li>
@@ -42,7 +43,7 @@
                     </div>
 
                     <!-- 文件右键菜单 -->
-                    <div id="fileRMenu" class="menu-r fn-none">
+                    <div id="fileRMenu" class="frame fn-none">
                         <ul>
                             <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
                         </ul>

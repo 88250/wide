@@ -1,0 +1,64 @@
+/* start tree */
+.ztree li a.curSelectedNode {
+    background-color: #3875D7;
+    border-color: #3875D7;
+    color: #FFF;
+    height: 18px;
+}
+
+.ztree li a:hover {
+    text-decoration: none;
+}
+
+.ztree li > a > span.button {
+    background-image: url("../images/ico-file.png");
+}
+
+.ico-ztree-dir {
+    background-position: -2px -23px;
+}
+
+.ico-ztree-html {
+    background-position: -3px -2px;
+}
+
+.ico-ztree-go {
+    background-position: -22px -2px;
+}
+
+.ico-ztree-css {
+    background-position: -42px -2px;
+}
+
+.ico-ztree-img {
+    background-position: -62px -2px;
+}
+
+.ico-ztree-other {
+    background-position: -82px -2px;
+}
+
+.ico-ztree-text {
+    background-position: -102px -2px;
+}
+
+.ico-ztree-sql {
+    background-position: -123px -2px;
+}
+
+.ico-ztree-pro {
+    background-position: -142px -2px;
+}
+
+.ico-ztree-md {
+    background-position: -161px -2px;
+}
+
+.ico-ztree-js {
+    background-position: -182px -2px;
+}
+
+.ico-ztree-xml {
+    background-position: -202px -2px;
+}
+/* end tree */
