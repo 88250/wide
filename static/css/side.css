@@ -1,8 +1,8 @@
 /* start tree */
 .ztree li a.curSelectedNode {
-    background-color: #3875D7;
-    border-color: #3875D7;
-    color: #FFF;
+    background-color: #3875d7;
+    border-width: 0;
+    color: #fff;
     height: 18px;
 }
 
@@ -10,8 +10,14 @@
     text-decoration: none;
 }
 
+.ztree li > a > span.button,
+.ztree li > a > span.button.ico-ztree-dir {
+    margin-right: 2px;
+}
+
 .ztree li > a > span.button {
     background-image: url("../images/ico-file.png");
+    margin-right: 0;
 }
 
 .ico-ztree-dir {
