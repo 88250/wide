@@ -9,6 +9,7 @@
     "delete": "删除",
     "save": "保存",
     "format": "格式化",
+	"goget": "go get",
     "build_n_run": "构建 & 运行",
     "full_screen": "全屏"
 }

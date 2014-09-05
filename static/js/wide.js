@@ -125,12 +125,24 @@ var wide = {
             beforeSend: function(data) {
                 $('#output').text('');
             },
+            success: function(data) {    
+            }
+        });
+    },
+	goget: function() {
+        var request = {
+            "file": wide.curNode.path
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/go/get',
+            data: JSON.stringify(request),
+            dataType: "json",
+            beforeSend: function(data) {
+                $('#output').text('');
+            },
             success: function(data) {
-                executable = data.executable;
-
-                if (data.succ) {
-
-                }
             }
         });
     },

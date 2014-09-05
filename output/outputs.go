@@ -155,7 +155,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", argv...)
 	cmd.Dir = curDir
 
-	// 设置环境变量（设置当前用户的 GOPATH 等）
 	setCmdEnv(cmd, username)
 
 	glog.Infof("go build -o %s %s", executable, filePath)
@@ -233,6 +232,82 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GoGetHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	session, _ := user.Session.Get(r, "wide-session")
+	sid := session.Values["id"].(string)
+	username := session.Values["username"].(string)
+
+	decoder := json.NewDecoder(r.Body)
+
+	var args map[string]interface{}
+
+	if err := decoder.Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	filePath := args["file"].(string)
+	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+
+	cmd := exec.Command("go", "get")
+	cmd.Dir = curDir
+
+	setCmdEnv(cmd, username)
+
+	stdout, err := cmd.StdoutPipe()
+	if nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	reader := io.MultiReader(stdout, stderr)
+
+	cmd.Start()
+
+	channelRet := map[string]interface{}{}
+
+	go func(runningId int) {
+		glog.Infof("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
+
+		for {
+			buf := make([]byte, 1024)
+			count, err := reader.Read(buf)
+
+			if nil != err || 0 == count {
+				glog.Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
+
+				break
+			} else {
+				channelRet["output"] = string(buf[:count])
+				channelRet["cmd"] = "run"
+
+				if nil != outputWS[sid] {
+					err := outputWS[sid].WriteJSON(&channelRet)
+					if nil != err {
+						glog.Error(err)
+						break
+					}
+				}
+			}
+		}
+	}(rand.Int())
+}
+
 func setCmdEnv(cmd *exec.Cmd, username string) {
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
@@ -240,5 +315,9 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 		"GOPATH="+userWorkspace,
 		"GOOS="+runtime.GOOS,
 		"GOARCH="+runtime.GOARCH,
-		"GOROOT="+runtime.GOROOT())
+		"GOROOT="+runtime.GOROOT(),
+		"PATH="+os.Getenv("PATH"))
+
+	//"TERM="+os.Getenv("COMSPEC"),
+	//"ComSpec="+os.Getenv("ComSpec")
 }
