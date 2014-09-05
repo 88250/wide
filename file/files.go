@@ -47,21 +47,16 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string)
-
 	buf, _ := ioutil.ReadFile(path)
 
-	idx := strings.LastIndex(path, ".")
-	extension := ""
-	if 0 <= idx {
-		extension = path[idx:]
-	}
+	extension := filepath.Ext(path)
 
 	// 通过文件扩展名判断是否是图片文件（图片在浏览器里新建 tab 打开）
 	if isImg(extension) {
 		data["mode"] = "img"
 
 		path2 := strings.Replace(path, "\\", "/", -1)
-		idx = strings.Index(path2, "/data/user_workspaces")
+		idx := strings.Index(path2, "/data/user_workspaces")
 		data["path"] = path2[idx:]
 
 		return
@@ -171,7 +166,7 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 type FileNode struct {
 	Name      string      `json:"name"`
 	Path      string      `json:"path"`
-	IconSkin  string      `json:"iconSkin"`
+	IconSkin  string      `json:"iconSkin"` // 值的末尾应该有一个空格
 	Type      string      `json:"type"`
 	FileNodes []*FileNode `json:"children"`
 }
@@ -200,14 +195,9 @@ func walk(path string, info os.FileInfo, node *FileNode) {
 			walk(fpath, fio, &child)
 		} else {
 			child.Type = "f"
+			ext := filepath.Ext(fpath)
 
-			idx := strings.LastIndex(fpath, ".")
-			extension := ""
-			if 0 <= idx {
-				extension = fpath[idx:]
-			}
-
-			child.IconSkin = getIconSkin(extension)
+			child.IconSkin = getIconSkin(ext)
 		}
 	}
 
@@ -250,6 +240,8 @@ func getIconSkin(filenameExtension string) string {
 	}
 
 	switch filenameExtension {
+	case ".gitignore":
+		return "ico-ztree-other "
 	case ".json":
 		return "ico-ztree-js "
 	case ".txt":
