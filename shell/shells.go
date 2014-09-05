@@ -113,20 +113,20 @@ func pipeCommands(username string, commands ...*exec.Cmd) string {
 	for i, command := range commands[:len(commands)-1] {
 		setCmdEnv(command, username)
 
-		out, err := command.StdoutPipe()
-
+		stdout, err := command.StdoutPipe()
 		if nil != err {
 			return err.Error()
 		}
 
 		command.Start()
-		commands[i+1].Stdin = out
+
+		commands[i+1].Stdin = stdout
 	}
 
 	last := commands[len(commands)-1]
 	setCmdEnv(last, username)
 
-	out, err := last.Output()
+	out, err := last.CombinedOutput()
 
 	if err != nil {
 		return err.Error()
@@ -139,7 +139,7 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
 	cmd.Env = append(cmd.Env,
-		"TERM=xterm",
+		"TERM="+os.Getenv("TERM"),
 		"GOPATH="+userWorkspace,
 		"GOOS="+runtime.GOOS,
 		"GOARCH="+runtime.GOARCH,
