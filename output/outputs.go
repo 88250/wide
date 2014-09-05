@@ -294,7 +294,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 				break
 			} else {
 				channelRet["output"] = string(buf[:count])
-				channelRet["cmd"] = "run"
+				channelRet["cmd"] = "go get"
 
 				if nil != outputWS[sid] {
 					err := outputWS[sid].WriteJSON(&channelRet)

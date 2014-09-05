@@ -15,7 +15,9 @@ outputWS.onmessage = function(e) {
         if (0 !== data.output.length) { // 说明编译有错误输出
             return;
         }
-    }
+    } else if ('go get' === data.cmd) {
+		$('#output').text($('#output').text() + data.output);
+	}
 
     if ('build' === data.cmd) {
         if ('run' === data.nextCmd) {
