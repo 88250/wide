@@ -36,6 +36,14 @@ type conf struct {
 var Wide conf
 var rawWide conf
 
+func (this *conf) GetWorkspace() string {
+	return filepath.FromSlash(this.Workspace)
+}
+
+func (this *conf) GetUserWorkspace(username string) string {
+	return filepath.FromSlash(this.UserWorkspaces) + string(os.PathSeparator) + username
+}
+
 func Save() bool {
 	// 可变部分
 	rawWide.Users = Wide.Users
