@@ -46,10 +46,8 @@ var tree = {
                 if (!data.succ) {
                     return false;
                 }
-                // TODO: 换成我们风格的 class
                 tree.fileTree.addNodes(wide.curNode, [{
-                        "name": name,
-                        "iconSkin": "ico_close "
+                        "name": name
                     }]);
             }
         });
