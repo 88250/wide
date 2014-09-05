@@ -231,8 +231,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func setCmdEnv(cmd *exec.Cmd, username string) {
-	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
-	userWorkspace := userRepos[:strings.LastIndex(userRepos, "/src")]
+	userWorkspace := conf.Wide.UserWorkspaces + string(os.PathSeparator) + username
 
 	cmd.Env = append(cmd.Env,
 		"GOPATH="+userWorkspace,

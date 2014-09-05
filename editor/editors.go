@@ -11,7 +11,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -151,15 +150,13 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset: %d", offset)
 
-	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
-	userWorkspace := userRepos[:strings.LastIndex(userRepos, "/src")]
-	userWorkspace = filepath.FromSlash(userWorkspace)
+	userWorkspace := conf.Wide.UserWorkspaces + string(os.PathSeparator) + username
+
 	//glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
 	userLib := userWorkspace + string(os.PathSeparator) + "pkg" + string(os.PathSeparator) +
 		runtime.GOOS + "_" + runtime.GOARCH
 
-	masterWorkspace := conf.Wide.Repos[:strings.LastIndex(conf.Wide.Repos, "/src")]
-	masterWorkspace = filepath.FromSlash(masterWorkspace)
+	masterWorkspace := conf.Wide.Workspace
 	//glog.Infof("Master workspace [%s]", masterWorkspace)
 	masterLib := masterWorkspace + string(os.PathSeparator) + "pkg" + string(os.PathSeparator) +
 		runtime.GOOS + "_" + runtime.GOARCH

@@ -9,8 +9,8 @@
     "StaticPath": "",
     "MaxProcs": 4,
     "RuntimeMode": "dev",
-    "Repos": "{pwd}/data/workspace/src",
-    "UserRepos": "{pwd}/data/user_workspaces/{user}/src",
+    "Workspace": "{pwd}/data/workspace",
+    "UserWorkspaces": "{pwd}/data/user_workspaces",
     "Users": [
         {
             "Name": "admin",

@@ -28,8 +28,8 @@ type conf struct {
 	StaticPath            string
 	MaxProcs              int
 	RuntimeMode           string
-	Repos                 string
-	UserRepos             string
+	Workspace             string
+	UserWorkspaces        string
 	Users                 []User
 }
 
@@ -91,8 +91,8 @@ func Load() {
 	pwd = pwd[:strings.LastIndex(pwd, string(os.PathSeparator))]
 	glog.Infof("pwd [%s]", pwd)
 
-	Wide.Repos = strings.Replace(Wide.Repos, "{pwd}", pwd, 1)
-	Wide.UserRepos = strings.Replace(Wide.UserRepos, "{pwd}", pwd, 1)
+	Wide.Workspace = strings.Replace(Wide.Workspace, "{pwd}", pwd, 1)
+	Wide.UserWorkspaces = strings.Replace(Wide.UserWorkspaces, "{pwd}", pwd, 1)
 
 	glog.Info("Conf: \n" + string(bytes))
 }

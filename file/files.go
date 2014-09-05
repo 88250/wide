@@ -21,8 +21,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
-
-	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
+	userRepos := conf.Wide.UserWorkspaces + string(os.PathSeparator) + username + string(os.PathSeparator) + "src"
 
 	root := FileNode{"projects", userRepos, "d", []*FileNode{}}
 	fileInfo, _ := os.Lstat(userRepos)

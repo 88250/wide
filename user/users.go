@@ -6,7 +6,7 @@ import (
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"net/http"
-	"strings"
+	"os"
 )
 
 const (
@@ -47,11 +47,11 @@ func InitGitRepos(w http.ResponseWriter, r *http.Request) {
 	session, _ := Session.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
-	userRepos := strings.Replace(conf.Wide.UserRepos, "{user}", username, -1)
+	userRepos := conf.Wide.UserWorkspaces + string(os.PathSeparator) + username + string(os.PathSeparator) + "src"
 
 	// TODO: git clone
 
-	glog.Infof("Git Cloned from [%s] to [%s]", conf.Wide.Repos, userRepos)
+	glog.Infof("Git Cloned from [%s] to [%s]", conf.Wide.Workspace+string(os.PathSeparator)+"src", userRepos)
 }
 
 func addUser(username, password string) string {
