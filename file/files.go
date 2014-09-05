@@ -256,9 +256,8 @@ func getIconSkin(filenameExtension string) string {
 		return "ico-ztree-text "
 	case ".properties":
 		return "ico-ztree-pro "
-        case ".html":
-        case ".htm":
-		return "ico-ztree-html " 
+	case ".htm":
+		return "ico-ztree-html "
 	default:
 		if isImg(filenameExtension) {
 			return "ico-ztree-img "
@@ -266,7 +265,7 @@ func getIconSkin(filenameExtension string) string {
 
 		return "ico-ztree-" + filenameExtension[1:] + " "
 	}
-        return ""
+	return ""
 }
 
 func getEditorMode(filenameExtension string) string {
