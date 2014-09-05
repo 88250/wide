@@ -206,7 +206,10 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 					setCmdEnv(cmd, username)
 
-					cmd.Start()
+					out, _ := cmd.CombinedOutput()
+					if len(out) > 0 {
+						glog.Warning(string(out))
+					}
 				}()
 			}
 
