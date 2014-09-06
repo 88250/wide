@@ -117,36 +117,6 @@ var editors = {
             cm.showHint({hint: CodeMirror.hint.auto});
         };
 
-        CodeMirror.commands.autocompleteRightPart = function(cm) {
-            setTimeout(function() {
-                var cur = cm.getCursor();
-                var curLine = cm.getLine(cur.line);
-                var curChar = curLine.charAt(cur.ch - 1);
-
-                replacement = '';
-
-                switch (curChar) {
-                    case '(':
-                        replacement = ')';
-                        break;
-                    case '[':
-                        replacement = ']';
-                        break;
-                    case '{':
-                        replacement = '}';
-                        break;
-                    default: // " or '
-                        replacement = curChar;
-                        break;
-                }
-
-                cm.replaceRange(replacement, CodeMirror.Pos(cur.line, cur.ch));
-                cm.setCursor(CodeMirror.Pos(cur.line, cur.ch));
-            }, 50);
-
-            return CodeMirror.Pass;
-        };
-
         CodeMirror.commands.gotoLine = function(cm) {
             var line = prompt("Go To Line: ", "0");
 
@@ -178,6 +148,7 @@ var editors = {
 
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
+            autoCloseBrackets: true,
             highlightSelectionMatches: {showToken: /\w/},
             rulers: rulers,
             styleActiveLine: true,
@@ -194,11 +165,6 @@ var editors = {
                 "F11": function(cm) {
                     cm.setOption("fullScreen", !cm.getOption("fullScreen"));
                 },
-                "'('": "autocompleteRightPart",
-                "'['": "autocompleteRightPart",
-                "'{'": "autocompleteRightPart",
-                "'\"'": "autocompleteRightPart",
-                "'''": "autocompleteRightPart",
                 "Ctrl-G": "gotoLine",
                 "Ctrl-E": "deleteLine",
                 "Ctrl-D": "doNothing" // 取消默认的 deleteLine
