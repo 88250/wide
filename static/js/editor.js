@@ -154,6 +154,7 @@ var editors = {
             styleActiveLine: true,
             theme: 'lesser-dark',
             indentUnit: 4,
+            foldGutter: true,
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
                 ".": "autocompleteAfterDot",
@@ -174,10 +175,14 @@ var editors = {
         editor.setValue(data.content);
         editor.setOption("mode", data.mode);
 
-        editor.setOption("gutters", ["CodeMirror-lint-markers"]);
+        editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
 
         if ("application/json" === data.mode) {
             editor.setOption("lint", true);
+        }
+        
+        if ("application/xml" === data.mode || "text/html" === data.mode) {
+            editor.setOption("autoCloseTags", true);
         }
 
         wide.curEditor = editor;
