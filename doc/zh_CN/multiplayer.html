@@ -31,19 +31,6 @@
         <p>
             用户在运行程序时进程是跑在服务器上的，所以多用户同时运行程序时最常见的问题就是资源冲突（比如网络端口），目前这个问题只能靠用户自行规避。
         </p>
-
-        <h2>一些细节</h2>
-        <h3>GOPATH</h3>
-        <p>
-            用户的工作空间虽然是某个具体的目录（data/user_workspaces/{user}），但实际上 Wide 在处理 GOPATH 时是指定了多个目录的：
-        </p>
-        <ol>
-            <li>data/user_workspaces/{user}</li>
-            <li>data/workspace</li>
-            <li>操作系统环境变量 GOPATH 路径</li>
-        </ol>
-        <p>
-            这样做是为了方便构建，非常有利于团队开发。
-        </p>
+        
     </body>
 </html>
