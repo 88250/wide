@@ -8,11 +8,11 @@ A simple <b>W</b>eb **IDE** for golang.
 * Code Highlight
 * Autocomplete
 * Format
-* Run & Output
+* Run & Debug
 * Multiplayer
-* Navigation & Jump (TBD)
-* Shell (TBD: interactive)
-* Debug (TBD)
+* Navigation & Jump
+* Shell
+* Git
 
 ## Demos ##
 * [20140823](http://b3log.org/wide/demo/20140823.html)
