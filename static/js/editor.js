@@ -172,7 +172,7 @@ var editors = {
             title: '<span title="' + wide.curNode.path + '">' + wide.curNode.name + '</span>',
             content: '<textarea id="editor' + id + '"></textarea>'
         });
-        
+
         rulers = [];
         rulers.push({color: "#ccc", column: 120, lineStyle: "dashed"});
 
@@ -207,6 +207,12 @@ var editors = {
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-header").height());
         editor.setValue(data.content);
         editor.setOption("mode", data.mode);
+                
+        editor.setOption("gutters", ["CodeMirror-lint-markers"]);
+        
+        if ("application/json" === data.mode) {
+            editor.setOption("lint", true);
+        }
 
         wide.curEditor = editor;
         editors.data.push({
