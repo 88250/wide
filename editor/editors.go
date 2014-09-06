@@ -74,7 +74,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func FmtHandler(w http.ResponseWriter, r *http.Request) {
+func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 

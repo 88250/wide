@@ -127,9 +127,12 @@ var wide = {
             "cursorLine": wide.curEditor.getCursor().line,
             "cursorCh": wide.curEditor.getCursor().ch
         };
+		
+		// TODO: HTML/XML/JSON 格式化处理
+		
         $.ajax({
             type: 'POST',
-            url: '/fmt',
+            url: '/go/fmt',
             data: JSON.stringify(request),
             dataType: "json",
             success: function(data) {

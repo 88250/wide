@@ -88,7 +88,7 @@ func main() {
 
 	// 编辑器
 	http.HandleFunc("/editor/ws", editor.WSHandler)
-	http.HandleFunc("/fmt", editor.FmtHandler)
+	http.HandleFunc("/go/fmt", editor.GoFmtHandler)
 	http.HandleFunc("/autocomplete", editor.AutocompleteHandler)
 
 	// Shell
