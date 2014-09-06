@@ -13,6 +13,7 @@ A simple <b>W</b>eb **IDE** for golang.
 * Navigation & Jump
 * Shell
 * Git integration
+* Web development
 
 ## Demos ##
 * [20140823](http://b3log.org/wide/demo/20140823.html)
