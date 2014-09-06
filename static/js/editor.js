@@ -53,9 +53,9 @@ var editors = {
                 }
             }
         });
-        
-        
-        $(".edit-header .tabs").on("dblclick", "div", function () {
+
+
+        $(".edit-header .tabs").on("dblclick", "div", function() {
             editors.fullscreen();
         });
     },
@@ -172,9 +172,14 @@ var editors = {
             title: '<span title="' + wide.curNode.path + '">' + wide.curNode.name + '</span>',
             content: '<textarea id="editor' + id + '"></textarea>'
         });
+        
+        rulers = [];
+        rulers.push({color: "#ccc", column: 120, lineStyle: "dashed"});
 
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
+            highlightSelectionMatches: {showToken: /\w/},
+            rulers: rulers,
             styleActiveLine: true,
             theme: 'lesser-dark',
             indentUnit: 4,
