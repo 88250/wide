@@ -235,7 +235,7 @@ func listFiles(dirname string) []string {
 }
 
 func getIconSkin(filenameExtension string) string {
-	if "" == filenameExtension {
+	if "" == filenameExtension || ".exe" == filenameExtension {
 		return "ico-ztree-other "
 	}
 
@@ -263,25 +263,25 @@ func getIconSkin(filenameExtension string) string {
 func getEditorMode(filenameExtension string) string {
 	switch filenameExtension {
 	case ".go":
-		return "go"
+		return "text/x-go"
 	case ".html":
-		return "htmlmixed"
+		return "text/html"
 	case ".md":
-		return "markdown"
+		return "text/x-markdown"
 	case ".js":
-		return "javascript"
+		return "text/javascript"
 	case ".json":
 		return "application/json"
 	case ".css":
-		return "css"
+		return "text/css"
 	case ".xml":
-		return "xml"
+		return "application/xml"
 	case ".sh":
-		return "shell"
+		return "text/x-sh"
 	case ".sql":
-		return "sql"
+		return "text/x-sql"
 	default:
-		return "text"
+		return "text/plain"
 	}
 }
 

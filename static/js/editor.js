@@ -173,9 +173,9 @@ var editors = {
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-header").height());
         editor.setValue(data.content);
         editor.setOption("mode", data.mode);
-                
+
         editor.setOption("gutters", ["CodeMirror-lint-markers"]);
-        
+
         if ("application/json" === data.mode) {
             editor.setOption("lint", true);
         }
