@@ -268,8 +268,10 @@ func getEditorMode(filenameExtension string) string {
 		return "htmlmixed"
 	case ".md":
 		return "markdown"
-	case ".js", ".json":
+	case ".js":
 		return "javascript"
+	case ".json":
+		return "application/json"
 	case ".css":
 		return "css"
 	case ".xml":
