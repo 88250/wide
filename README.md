@@ -12,7 +12,7 @@ A simple <b>W</b>eb **IDE** for golang.
 * Multiplayer
 * Navigation & Jump
 * Shell
-* Git
+* Git integration
 
 ## Demos ##
 * [20140823](http://b3log.org/wide/demo/20140823.html)
