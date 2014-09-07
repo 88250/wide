@@ -2,6 +2,12 @@ package main
 
 import (
 	"flag"
+	"html/template"
+	"math/rand"
+	"net/http"
+	"runtime"
+	"strconv"
+
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
 	"github.com/b3log/wide/file"
@@ -10,11 +16,6 @@ import (
 	"github.com/b3log/wide/shell"
 	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
-	"html/template"
-	"math/rand"
-	"net/http"
-	"runtime"
-	"strconv"
 )
 
 // Wide 中唯一一个 init 函数.
@@ -90,6 +91,7 @@ func main() {
 	http.HandleFunc("/editor/ws", editor.WSHandler)
 	http.HandleFunc("/go/fmt", editor.GoFmtHandler)
 	http.HandleFunc("/autocomplete", editor.AutocompleteHandler)
+	http.HandleFunc("/html/fmt", editor.HTMLFmtHandler)
 
 	// Shell
 	http.HandleFunc("/shell/ws", shell.WSHandler)

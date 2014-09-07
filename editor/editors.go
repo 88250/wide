@@ -3,17 +3,18 @@ package editor
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/user"
-	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
-	"github.com/gorilla/websocket"
 	"net/http"
 	"os"
 	"os/exec"
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/util"
+	"github.com/golang/glog"
+	"github.com/gorilla/websocket"
 )
 
 var editorWS = map[string]*websocket.Conn{}
@@ -103,7 +104,6 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	code := args["code"].(string)
 
 	fout.WriteString(code)
-
 	if err := fout.Close(); nil != err {
 		glog.Error(err)
 		data["succ"] = false
@@ -112,19 +112,27 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	argv := []string{filePath}
-
 	cmd := exec.Command("gofmt", argv...)
 
 	bytes, _ := cmd.Output()
 	output := string(bytes)
-
 	if "" == output {
 		data["succ"] = false
 
 		return
 	}
 
-	data["code"] = string(output)
+	code = string(output)
+	data["code"] = code
+
+	fout, err = os.Create(filePath)
+	fout.WriteString(code)
+	if err := fout.Close(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
 }
 
 func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
