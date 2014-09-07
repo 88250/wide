@@ -160,6 +160,18 @@ var wide = {
                 });
 
                 break;
+            case "application/json":
+                try {
+                    // 在客户端浏览器中进行 JSON 格式化
+                    var json = JSON.parse(wide.curEditor.getValue());
+                    wide.curEditor.setValue(JSON.stringify(json, "", "    "));
+                    
+                    this.save();
+                } catch (e) {
+                    delete e;
+                }
+
+                break;
             default :
                 // TODO: XML/JSON 格式化处理
                 break;
