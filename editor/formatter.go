@@ -39,7 +39,6 @@ func HTMLFmtHandler(w http.ResponseWriter, r *http.Request) {
 	code := args["code"].(string)
 
 	fout.WriteString(code)
-
 	if err := fout.Close(); nil != err {
 		glog.Error(err)
 		data["succ"] = false
@@ -48,12 +47,21 @@ func HTMLFmtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	output := gohtml.Format(code)
-
 	if "" == output {
 		data["succ"] = false
 
 		return
 	}
 
-	data["code"] = string(output)
+	code = string(output)
+	data["code"] = code
+
+	fout, err = os.Create(filePath)
+	fout.WriteString(code)
+	if err := fout.Close(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
 }

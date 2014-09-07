@@ -23,10 +23,10 @@
             <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.help}}</a>
             <span class="fn-none ico-fullscreen" onclick="editors.fullscreen()">{{.i18n.full_screen}}</span>
             <div class="toolbars fn-right">
-				<button onclick="wide.run()">{{.i18n.build_n_run}}</button>
+                <button onclick="wide.run()">{{.i18n.build_n_run}}</button>
                 <button onclick="wide.save()">{{.i18n.save}}</button>
                 <button onclick="wide.fmt()">{{.i18n.format}}</button>               
-				<button onclick="wide.goget()">{{.i18n.goget}}</button>    
+                <button onclick="wide.goget()">{{.i18n.goget}}</button>    
             </div>
         </div>
 
@@ -93,6 +93,7 @@
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>                
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/underscore.string-2.3.3/underscore.string.min.js"></script>
 
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/codemirror.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/addon/lint/lint.js"></script>
@@ -120,7 +121,7 @@
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/mode/css/css.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/mode/shell/shell.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/codemirror-4.5/mode/sql/sql.js"></script>
-        
+
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lint/json-lint.js?{{.Wide.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/tabs.js?{{.Wide.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/editor.js?{{.Wide.StaticResourceVersion}}"></script>

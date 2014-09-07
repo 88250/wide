@@ -121,26 +121,51 @@ var wide = {
         });
     },
     fmt: function() {
+        var path = wide.curNode.path;
+        var mode = wide.curNode.mode;
+
         var request = {
-            "file": wide.curNode.path,
+            "file": path,
             "code": wide.curEditor.getValue(),
             "cursorLine": wide.curEditor.getCursor().line,
             "cursorCh": wide.curEditor.getCursor().ch
         };
-		
-		// TODO: HTML/XML/JSON 格式化处理
-		
-        $.ajax({
-            type: 'POST',
-            url: '/go/fmt',
-            data: JSON.stringify(request),
-            dataType: "json",
-            success: function(data) {
-                if (data.succ) {
-                    wide.curEditor.setValue(data.code);
-                }
-            }
-        });
+
+        switch (mode) {
+            case "text/x-go":
+                $.ajax({
+                    type: 'POST',
+                    url: '/go/fmt',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.succ) {
+                            wide.curEditor.setValue(data.code);
+                        }
+                    }
+                });
+
+                break;
+            case "text/html":
+                $.ajax({
+                    type: 'POST',
+                    url: '/html/fmt',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.succ) {
+                            wide.curEditor.setValue(data.code);
+                        }
+                    }
+                });
+
+                break;
+            default :
+                // TODO: XML/JSON 格式化处理
+                break;
+        }
+
+
     }
 };
 

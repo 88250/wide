@@ -2,16 +2,17 @@ package file
 
 import (
 	"encoding/json"
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/user"
-	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 	"io/ioutil"
 	"net/http"
 	"os"
 	"path/filepath"
 	"sort"
 	"strings"
+
+	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/util"
+	"github.com/golang/glog"
 )
 
 func GetFiles(w http.ResponseWriter, r *http.Request) {
@@ -168,6 +169,7 @@ type FileNode struct {
 	Path      string      `json:"path"`
 	IconSkin  string      `json:"iconSkin"` // 值的末尾应该有一个空格
 	Type      string      `json:"type"`
+	Mode      string      `json:"mode"`
 	FileNodes []*FileNode `json:"children"`
 }
 
@@ -198,6 +200,7 @@ func walk(path string, info os.FileInfo, node *FileNode) {
 			ext := filepath.Ext(fpath)
 
 			child.IconSkin = getIconSkin(ext)
+			child.Mode = getEditorMode(ext)
 		}
 	}
 
