@@ -1,10 +1,9 @@
-# Wide #
+# Wide
 
-## Intro ##
+## Intro
 A simple <b>W</b>eb **IDE** for golang.
 
-## Motivation ##
-
+## Motivation
 * There are a few of GO IDEs, and no one developed by Go itself, this is a nice try
 * Web based IDE:
   * Developer needs a browser only
@@ -22,8 +21,7 @@ A simple <b>W</b>eb **IDE** for golang.
   * No team development experience 
 * A try for commercial open source: a version customized for an enterprise, coreesponding to its development flow  
 
-## Features ##
-
+## Features
 * Code Highlight
 * Autocomplete
 * Format
@@ -34,11 +32,10 @@ A simple <b>W</b>eb **IDE** for golang.
 * Git integration
 * Web development
 
-## Demos ##
+## Demos
 * [20140823](http://b3log.org/wide/demo/20140823.html)
 
-## Setup ##
-
+## Setup
 1. Downloads source
 2. Compiles wide with `go build` 
 3. Configures `conf/wide.json`
@@ -47,14 +44,12 @@ A simple <b>W</b>eb **IDE** for golang.
 ## Known Issues
 * [Shell is not available on Windows](https://github.com/b3log/wide/issues/32)
 
-## License ##
-
+## License
 Copyright (c) 2014, B3log Team (http://b3log.org)
 
 Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/master/LICENSE).
 
-## Credits ##
-
+## Credits
 * [golang](http://golang.org)
 * [CodeMirror](https://github.com/marijnh/CodeMirror)
 * [zTree](https://github.com/zTree/zTree_v3) 
