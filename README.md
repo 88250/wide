@@ -44,6 +44,9 @@ A simple <b>W</b>eb **IDE** for golang.
 3. Configures `conf/wide.json`
 4. Runs the executable `wide` or `wide.exe`
 
+## Known Issues
+* [Shell is not available on Windows](https://github.com/b3log/wide/issues/32)
+
 ## License ##
 
 Copyright (c) 2014, B3log Team (http://b3log.org)
