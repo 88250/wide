@@ -3,14 +3,15 @@ package conf
 
 import (
 	"encoding/json"
-	_ "github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"strings"
+
+	_ "github.com/b3log/wide/i18n"
+	"github.com/b3log/wide/util"
+	"github.com/golang/glog"
 )
 
 type User struct {
@@ -87,7 +88,7 @@ func Load() {
 		os.Exit(-1)
 	}
 
-	glog.Infof("IP [%s]", ip)
+	glog.V(3).Infof("IP [%s]", ip)
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", ip, 1)
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", ip, 1)
 	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{IP}", ip, 1)
@@ -98,10 +99,10 @@ func Load() {
 	file, _ := exec.LookPath(os.Args[0])
 	pwd, _ := filepath.Abs(file)
 	pwd = pwd[:strings.LastIndex(pwd, string(os.PathSeparator))]
-	glog.Infof("pwd [%s]", pwd)
+	glog.V(3).Infof("pwd [%s]", pwd)
 
 	Wide.Workspace = strings.Replace(Wide.Workspace, "{pwd}", pwd, 1)
 	Wide.UserWorkspaces = strings.Replace(Wide.UserWorkspaces, "{pwd}", pwd, 1)
 
-	glog.Info("Conf: \n" + string(bytes))
+	glog.V(3).Info("Conf: \n" + string(bytes))
 }

@@ -21,6 +21,7 @@ import (
 // Wide 中唯一一个 init 函数.
 func init() {
 	flag.Set("logtostderr", "true")
+	flag.Set("v", "1")
 
 	flag.Parse()
 }
@@ -105,7 +106,7 @@ func main() {
 	// 文档
 	http.Handle("/doc/", http.StripPrefix("/doc/", http.FileServer(http.Dir("doc"))))
 
-	glog.Infof("Wide is running [%s]", conf.Wide.Server)
+	glog.V(0).Infof("Wide is running [%s]", conf.Wide.Server)
 
 	err := http.ListenAndServe(conf.Wide.Server, nil)
 	if err != nil {

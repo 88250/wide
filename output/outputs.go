@@ -2,11 +2,6 @@ package output
 
 import (
 	"encoding/json"
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/user"
-	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
-	"github.com/gorilla/websocket"
 	"io"
 	"math/rand"
 	"net/http"
@@ -14,6 +9,12 @@ import (
 	"os/exec"
 	"runtime"
 	"strings"
+
+	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/util"
+	"github.com/golang/glog"
+	"github.com/gorilla/websocket"
 )
 
 var outputWS = map[string]*websocket.Conn{}
@@ -27,7 +28,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	ret := map[string]interface{}{"output": "Ouput initialized", "cmd": "init-output"}
 	outputWS[sid].WriteJSON(&ret)
 
-	glog.Infof("Open a new [Output] with session [%s], %d", sid, len(outputWS))
+	glog.V(4).Infof("Open a new [Output] with session [%s], %d", sid, len(outputWS))
 }
 
 func RunHandler(w http.ResponseWriter, r *http.Request) {
@@ -77,14 +78,14 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	go func(runningId int) {
-		glog.Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
+		glog.V(3).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
 
 		for {
 			buf := make([]byte, 1024)
 			count, err := reader.Read(buf)
 
 			if nil != err || 0 == count {
-				glog.Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
+				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
 
 				break
 			} else {
@@ -157,7 +158,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	setCmdEnv(cmd, username)
 
-	glog.Infof("go build -o %s %s", executable, filePath)
+	glog.V(5).Infof("go build -o %s %s", executable, filePath)
 
 	executable = curDir + string(os.PathSeparator) + executable
 
@@ -192,7 +193,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		cmd.Start()
 
 		go func(runningId int) {
-			glog.Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)
+			glog.V(3).Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)
 
 			// 一次性读取
 			buf := make([]byte, 1024*8)
@@ -220,7 +221,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			channelRet["executable"] = executable
 
 			if nil != outputWS[sid] {
-				glog.Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
+				glog.V(3).Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
 
 				err := outputWS[sid].WriteJSON(&channelRet)
 				if nil != err {
@@ -282,14 +283,14 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	go func(runningId int) {
-		glog.Infof("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
+		glog.V(3).Infof("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
 
 		for {
 			buf := make([]byte, 1024)
 			count, err := reader.Read(buf)
 
 			if nil != err || 0 == count {
-				glog.Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
+				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
 
 				break
 			} else {

@@ -2,10 +2,11 @@ package i18n
 
 import (
 	"encoding/json"
-	"github.com/golang/glog"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/golang/glog"
 )
 
 type locale struct {
@@ -33,7 +34,7 @@ func Load() {
 	}
 
 	Locales["zh_CN"] = zhCN
-	glog.Info("Loaded [zh_CN] locale configuration")
+	glog.V(5).Info("Loaded [zh_CN] locale configuration")
 }
 
 func GetLangs(r *http.Request) map[string]interface{} {
