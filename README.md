@@ -21,6 +21,7 @@ A simple <b>W</b>eb **IDE** for golang.
   * LiteIDE: only run one process at the same time; no modern user interface 
   * No team development experience 
 * A try for commercial open source: a version customized for an enterprise, coreesponding to its development flow  
+
 ## Features ##
 
 * Code Highlight
