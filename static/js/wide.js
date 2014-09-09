@@ -7,12 +7,24 @@ outputWS.onmessage = function(e) {
     console.log('[output onmessage]' + e.data);
     var data = JSON.parse(e.data);
 
+    if (goLintFound) {
+        goLintFound = [];
+    }
+
     if ('run' === data.cmd) {
         $('#output').text($('#output').text() + data.output);
     } else if ('build' === data.cmd) {
         $('#output').text(data.output);
 
         if (0 !== data.output.length) { // 说明编译有错误输出
+            for (var i = 0; i < data.lints.length; i++) {
+                var lint = data.lints[i];
+
+                goLintFound.push({from: CodeMirror.Pos(lint.lineNo, 0),
+                    to: CodeMirror.Pos(lint.lineNo, 0),
+                    message: lint.msg});
+            }
+
             return;
         }
     } else if ('go get' === data.cmd) {
@@ -165,7 +177,7 @@ var wide = {
                     // 在客户端浏览器中进行 JSON 格式化
                     var json = JSON.parse(wide.curEditor.getValue());
                     wide.curEditor.setValue(JSON.stringify(json, "", "    "));
-                    
+
                     this.save();
                 } catch (e) {
                     delete e;

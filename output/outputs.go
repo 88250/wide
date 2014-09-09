@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
+	"strconv"
 	"strings"
 
 	"github.com/b3log/wide/conf"
@@ -199,6 +200,12 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			buf := make([]byte, 1024*8)
 			count, _ := reader.Read(buf)
 
+			channelRet := map[string]interface{}{}
+			channelRet["output"] = string(buf[:count])
+			channelRet["cmd"] = "build"
+			channelRet["nextCmd"] = "run"
+			channelRet["executable"] = executable
+
 			if 0 == count { // 说明构建成功，没有错误信息输出
 				go func() { // 运行 go install，生成的库用于 gocode lib-path
 					cmd := exec.Command("go", "install")
@@ -213,15 +220,28 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				}()
 			} else { // 构建失败
 				// 解析错误信息，返回给编辑器 gutter lint
+				lines := strings.Split(string(buf[:count]), "\n")[1:]
+				lints := []map[string]interface{}{}
 
+				for _, line := range lines {
+					if len(line) <= 1 {
+						continue
+					}
+
+					file := line[:strings.Index(line, ":")]
+					left := line[strings.Index(line, ":")+1:]
+					lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
+					msg := left[strings.Index(left, ":")+2:]
+
+					lint := map[string]interface{}{}
+					lint["file"] = file
+					lint["lineNo"] = lineNo - 1
+					lint["msg"] = msg
+					lints = append(lints, lint)
+				}
+
+				channelRet["lints"] = lints
 			}
-
-			channelRet := map[string]interface{}{}
-
-			channelRet["output"] = string(buf[:count])
-			channelRet["cmd"] = "build"
-			channelRet["nextCmd"] = "run"
-			channelRet["executable"] = executable
 
 			if nil != outputWS[sid] {
 				glog.V(3).Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
