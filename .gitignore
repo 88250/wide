@@ -1,4 +1,5 @@
-/**/*.exe
+/wide.exe
+/wide
 
 /data/workspace/bin/
 /data/workspace/pkg/
