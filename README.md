@@ -22,15 +22,15 @@ A simple <b>W</b>eb **IDE** for golang.
 * A try for commercial open source: a version customized for an enterprise, coreesponding to its development work flow  
 
 ## Features
-* Code Highlight
-* Autocomplete
-* Format
-* Run & Debug
-* Multiplayer
-* Navigation & Jump
-* Shell
-* Git integration
-* Web development
+* Code Highlight, Folding: Go/HTML/JavaScript/Markdown etc.
+* Autocomplete: Go/HTML etc.
+* Format: Go/HTML/JSON etc.
+* Run & Debug: run/debug multiple processes at the same time
+* Multiplayer: a real team development experience
+* Navigation, Jump to declaration, Find usages, File search etc.
+* Shell: run command on the server
+* Git integration: git command on the web
+* Web development: Frontend devlopment (HTML/JS/CSS) all in one
 
 ## Demos
 * [20140823](http://b3log.org/wide/demo/20140823.html)
