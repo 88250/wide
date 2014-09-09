@@ -79,6 +79,7 @@ func main() {
 	http.HandleFunc("/build", output.BuildHandler)
 	http.HandleFunc("/run", output.RunHandler)
 	http.HandleFunc("/go/get", output.GoGetHandler)
+	http.HandleFunc("/go/install", output.GoInstallHandler)
 	http.HandleFunc("/output/ws", output.WSHandler)
 
 	// 文件树

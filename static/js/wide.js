@@ -13,7 +13,7 @@ outputWS.onmessage = function(e) {
 
     if ('run' === data.cmd) {
         $('#output').text($('#output').text() + data.output);
-    } else if ('build' === data.cmd) {
+    } else if ('build' === data.cmd || 'go install' === data.cmd) {
         $('#output').text(data.output);
 
         if (0 !== data.output.length) { // 说明编译有错误输出            
@@ -27,7 +27,7 @@ outputWS.onmessage = function(e) {
 
             return;
         }
-    } else if ('go get' === data.cmd) {
+    } else if ('go get' === data.cmd || 'go install' === data.cmd) {
         $('#output').text($('#output').text() + data.output);
     }
 
@@ -93,7 +93,6 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function(data) {
-                console.log(data);
             }
         });
     },
@@ -123,6 +122,24 @@ var wide = {
         $.ajax({
             type: 'POST',
             url: '/go/get',
+            data: JSON.stringify(request),
+            dataType: "json",
+            beforeSend: function(data) {
+                $('#output').text('');
+            },
+            success: function(data) {
+            }
+        });
+    },
+    goinstall: function() {
+        var request = {
+            "file": wide.curNode.path,
+            "code": wide.curEditor.getValue()
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/go/install',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function(data) {

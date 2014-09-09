@@ -257,6 +257,128 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	session, _ := user.Session.Get(r, "wide-session")
+	sid := session.Values["id"].(string)
+	username := session.Values["username"].(string)
+
+	decoder := json.NewDecoder(r.Body)
+
+	var args map[string]interface{}
+
+	if err := decoder.Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	filePath := args["file"].(string)
+	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+
+	fout, err := os.Create(filePath)
+
+	if nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	code := args["code"].(string)
+
+	fout.WriteString(code)
+
+	if err := fout.Close(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	cmd := exec.Command("go", "install")
+	cmd.Dir = curDir
+
+	setCmdEnv(cmd, username)
+
+	glog.V(5).Infof("go install %s", curDir)
+
+	stdout, err := cmd.StdoutPipe()
+	if nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	if data["succ"].(bool) {
+		reader := io.MultiReader(stdout, stderr)
+
+		cmd.Start()
+
+		go func(runningId int) {
+			glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
+
+			// 一次性读取
+			buf := make([]byte, 1024*8)
+			count, _ := reader.Read(buf)
+
+			channelRet := map[string]interface{}{}
+			channelRet["output"] = string(buf[:count])
+			channelRet["cmd"] = "go install"
+
+			if 0 == count { // 说明构建成功，没有错误信息输出
+				glog.Info("go install succ")
+			} else { // 构建失败
+				// 解析错误信息，返回给编辑器 gutter lint
+				lines := strings.Split(string(buf[:count]), "\n")[1:]
+				lints := []map[string]interface{}{}
+
+				for _, line := range lines {
+					if len(line) <= 1 {
+						continue
+					}
+
+					file := line[:strings.Index(line, ":")]
+					left := line[strings.Index(line, ":")+1:]
+					lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
+					msg := left[strings.Index(left, ":")+2:]
+
+					lint := map[string]interface{}{}
+					lint["file"] = file
+					lint["lineNo"] = lineNo - 1
+					lint["msg"] = msg
+					lint["severity"] = "error" // warning
+					lints = append(lints, lint)
+				}
+
+				channelRet["lints"] = lints
+			}
+
+			if nil != outputWS[sid] {
+				glog.V(3).Infof("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
+
+				err := outputWS[sid].WriteJSON(&channelRet)
+				if nil != err {
+					glog.Error(err)
+				}
+			}
+
+		}(rand.Int())
+	}
+}
+
 func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
