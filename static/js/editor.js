@@ -177,7 +177,7 @@ var editors = {
 
         editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
 
-        if ("application/json" === data.mode) {
+        if ("text/x-go" === data.mode || "application/json" === data.mode) {
             editor.setOption("lint", true);
         }
         

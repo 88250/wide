@@ -211,6 +211,9 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 						glog.Warning(string(out))
 					}
 				}()
+			} else { // 构建失败
+				// 解析错误信息，返回给编辑器 gutter lint
+
 			}
 
 			channelRet := map[string]interface{}{}
