@@ -1,4 +1,9 @@
 /**/*.exe
 
-/data/workspace/
-/data/user_workspaces/
+/data/workspace/bin/
+/data/workspace/pkg/
+/data/workspace/src/
+
+/data/user_workspaces/*/bin/
+/data/user_workspaces/*/pkg/
+/data/user_workspaces/*/src/
