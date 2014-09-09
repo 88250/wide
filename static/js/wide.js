@@ -24,9 +24,12 @@ outputWS.onmessage = function(e) {
                     to: CodeMirror.Pos(lint.lineNo, 0),
                     message: lint.msg, severity: lint.severity});
             }
-
-            return;
         }
+
+        // 触发一次 gutter lint
+        CodeMirror.signal(wide.curEditor, "change", wide.curEditor);
+
+        return;
     } else if ('go get' === data.cmd || 'go install' === data.cmd) {
         $('#output').text($('#output').text() + data.output);
     }
