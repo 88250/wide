@@ -31,6 +31,7 @@ A simple <b>W</b>eb **IDE** for golang.
 * Shell: run command on the server
 * Git integration: git command on the web
 * Web development: Frontend devlopment (HTML/JS/CSS) all in one
+* Go tool: go get/install/fmt etc.
 
 ## Demos
 * [20140823](http://b3log.org/wide/demo/20140823.html)
