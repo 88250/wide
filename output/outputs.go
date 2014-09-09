@@ -338,9 +338,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 			channelRet["output"] = string(buf[:count])
 			channelRet["cmd"] = "go install"
 
-			if 0 == count { // 说明构建成功，没有错误信息输出
-				glog.Info("go install succ")
-			} else { // 构建失败
+			if 0 != count { // 构建失败
 				// 解析错误信息，返回给编辑器 gutter lint
 				lines := strings.Split(string(buf[:count]), "\n")[1:]
 				lints := []map[string]interface{}{}
