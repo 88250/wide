@@ -19,7 +19,7 @@ A simple <b>W</b>eb **IDE** for golang.
   * Plug-in (goclipse, etc.): the need for the original IDE support, not professional
   * LiteIDE: only run one process at the same time; no modern user interface 
   * No team development experience 
-* A try for commercial open source: a version customized for an enterprise, coreesponding to its development flow  
+* A try for commercial open source: a version customized for an enterprise, coreesponding to its development work flow  
 
 ## Features
 * Code Highlight
