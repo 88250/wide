@@ -237,6 +237,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 					lint["file"] = file
 					lint["lineNo"] = lineNo - 1
 					lint["msg"] = msg
+					lint["severity"] = "error" // warning
 					lints = append(lints, lint)
 				}
 

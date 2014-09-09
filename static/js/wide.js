@@ -16,13 +16,13 @@ outputWS.onmessage = function(e) {
     } else if ('build' === data.cmd) {
         $('#output').text(data.output);
 
-        if (0 !== data.output.length) { // 说明编译有错误输出
+        if (0 !== data.output.length) { // 说明编译有错误输出            
             for (var i = 0; i < data.lints.length; i++) {
                 var lint = data.lints[i];
 
                 goLintFound.push({from: CodeMirror.Pos(lint.lineNo, 0),
                     to: CodeMirror.Pos(lint.lineNo, 0),
-                    message: lint.msg});
+                    message: lint.msg, severity: lint.severity});
             }
 
             return;
