@@ -1,2 +1,4 @@
 /**/*.exe
 
+/data/workspace/
+/data/user_workspaces/
