@@ -17,9 +17,9 @@ A simple <b>W</b>eb **IDE** for golang.
 * Currently more popular Go IDE has some defects or regrets: 
   * Text editor (vim/emacs/sublime/Atom, etc.): For the Go newbie is too complex 
   * Plug-in (goclipse, etc.): the need for the original IDE support, not professional
-  * LiteIDE: only run one process at the same time; no modern user interface 
+  * LiteIDE: no modern user interface :p
   * No team development experience 
-* A try for commercial open source: a version customized for an enterprise, coreesponding to its development work flow  
+* A try for commercial-open source: versions customized for enterprises, close to their development work flows respectively
 
 ## Features
 * Code Highlight, Folding: Go/HTML/JavaScript/Markdown etc.
