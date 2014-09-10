@@ -83,6 +83,12 @@ var wide = {
             if (!(event.target.id === "fileRMenu" || $(event.target).closest("#fileRMenu").length > 0)) {
                 $("#fileRMenu").hide();
             }
+
+            if (!($(event.target).closest(".frame").length > 0 || event.target.className === "frame")) {
+                $(".frame").hide();
+                $(".menu > ul > li > a, .menu > ul> li > span").unbind("mouseover");
+                menu.subMenu();
+            }
         });
     },
     save: function() {
@@ -216,4 +222,5 @@ var wide = {
 $(document).ready(function() {
     wide.init();
     tree.init();
+    menu.init();
 });

@@ -45,6 +45,7 @@ ul {
     background-color: #F8F8F8;
     width: 340px;
     z-index: 5;
+    display: none;
 }
 
 .frame li {
@@ -119,6 +120,21 @@ ul {
     background-color: #F0F0F0;
 }
 /* end framework */
+
+/* start menu */
+.menu > ul > li {
+    float: left;
+}
+
+.menu > ul > li > a,
+.menu > ul > li > span {
+    color: #000;
+    font-size: 12px;
+    line-height: 24px;
+    padding: 5px;
+    text-decoration: none;
+}
+/* end menu */
 
 /* start editor */
 .edit-panel {

@@ -17,17 +17,64 @@
     </head>
     <body>
         <div class="menu fn-clear">
-            <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.file}}</a>
-            <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.run}}</a>
-            <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.debug}}</a>
-            <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.help}}</a>
-            <span class="fn-none ico-fullscreen" onclick="editors.fullscreen()">{{.i18n.full_screen}}</span>
+            <ul class="fn-cleaer">
+                <li>
+                    <span>{{.i18n.file}}</span>
+                    <div class="frame">
+                        <ul>
+                            <li>
+                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.file}}</a>
+                            </li>
+                            <li>
+                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.file}}</a>
+                            </li>
+                            <li>
+                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.file}}</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <span>{{.i18n.run}}</span>
+                    <div class="frame">
+                        <ul>
+                            <li>
+                                <span>{{.i18n.run}}</span>
+                            </li>
+                            <li>
+                                <span>{{.i18n.run}}</span>
+                            </li>
+                            <li>
+                                <span>{{.i18n.run}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <span>{{.i18n.debug}}</span>
+                    <div class="frame">
+                        <ul>
+                            <li>
+                                <span>{{.i18n.run}}</span>
+                            </li>
+                            <li>
+                                <span>{{.i18n.run}}</span>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.help}}</a>
+                </li>
+            </ul>
+
             <div class="toolbars fn-right">
                 <button onclick="wide.run()">{{.i18n.build_n_run}}</button>
                 <button onclick="wide.save()">{{.i18n.save}}</button>
                 <button onclick="wide.fmt()">{{.i18n.format}}</button>
                 <button onclick="wide.goget()">{{.i18n.goget}}</button>
                 <button onclick="wide.goinstall()">{{.i18n.goinstall}}</button>
+                <span class="fn-none ico-fullscreen" onclick="editors.fullscreen()">{{.i18n.full_screen}}</span>
             </div>
         </div>
 
@@ -37,7 +84,7 @@
                     <ul id="files" class="ztree"></ul>
 
                     <!-- 目录右键菜单 -->
-                    <div id="dirRMenu" class="frame fn-none">
+                    <div id="dirRMenu" class="frame">
                         <ul>
                             <li onclick="tree.newFile();">{{.i18n.create_file}}</li>
                             <li onclick="tree.newDir();">{{.i18n.create_dir}}</li>
@@ -46,7 +93,7 @@
                     </div>
 
                     <!-- 文件右键菜单 -->
-                    <div id="fileRMenu" class="frame fn-none">
+                    <div id="fileRMenu" class="frame">
                         <ul>
                             <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
                         </ul>
@@ -129,5 +176,6 @@
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/editor.js?{{.Wide.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/tree.js?{{.Wide.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/wide.js?{{.Wide.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/menu.js?{{.Wide.StaticResourceVersion}}"></script>
     </body>
 </html>
