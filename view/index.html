@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="{{.Wide.StaticServer}}/static/css/side.css?{{.Wide.StaticResourceVersion}}">
     </head>
     <body>
+        <!-- 主菜单 -->
         <div class="menu fn-clear">
             <ul class="fn-cleaer">
                 <li>
@@ -23,13 +24,19 @@
                     <div class="frame">
                         <ul>
                             <li>
-                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.file}}</a>
+                                <span onclick="wide.saveFile()">{{.i18n.save}}</span>
                             </li>
                             <li>
-                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.file}}</a>
+                                <span onclick="wide.saveAllFiles()">{{.i18n.save_all_files}}</span>
                             </li>
                             <li>
-                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.file}}</a>
+                                <span onclick="wide.closeFile()">{{.i18n.close_file}}</span>
+                            </li>
+                            <li>
+                                <span onclick="wide.closeAllFiles()">{{.i18n.close_all_files}}</span>
+                            </li>
+                            <li>
+                                <span onclick="wide.exit()">{{.i18n.exit}}</span>
                             </li>
                         </ul>
                     </div>
@@ -39,14 +46,14 @@
                     <div class="frame">
                         <ul>
                             <li>
-                                <span>{{.i18n.run}}</span>
+                                <span onclick="wide.run()">{{.i18n.build_n_run}}</span>
                             </li>
                             <li>
-                                <span>{{.i18n.run}}</span>
+                                <span onclick="wide.goget()">{{.i18n.goget}}</span>
                             </li>
                             <li>
-                                <span>{{.i18n.run}}</span>
-                            </li>
+                                <span onclick="wide.goinstall()">{{.i18n.goinstall}}</span>
+                            </li>      
                         </ul>
                     </div>
                 </li>
@@ -55,16 +62,26 @@
                     <div class="frame">
                         <ul>
                             <li>
-                                <span>{{.i18n.run}}</span>
-                            </li>
-                            <li>
-                                <span>{{.i18n.run}}</span>
+                                <span>{{.i18n.debug}}</span>
                             </li>
                         </ul>
                     </div>
                 </li>
                 <li>
-                    <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.help}}</a>
+                    <span>{{.i18n.help}}</span>
+                    <div class="frame">
+                        <ul>
+                            <li>
+                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.wide_doc}}</a>
+                            </li>
+                            <li>
+                                <a href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.report_issues}}</a>
+                            </li>
+                            <li>
+                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.about}}</a>
+                            </li>
+                        </ul>
+                    </div>                    
                 </li>
             </ul>
 
@@ -72,8 +89,6 @@
                 <button onclick="wide.run()">{{.i18n.build_n_run}}</button>
                 <button onclick="wide.save()">{{.i18n.save}}</button>
                 <button onclick="wide.fmt()">{{.i18n.format}}</button>
-                <button onclick="wide.goget()">{{.i18n.goget}}</button>
-                <button onclick="wide.goinstall()">{{.i18n.goinstall}}</button>
                 <span class="fn-none ico-fullscreen" onclick="editors.fullscreen()">{{.i18n.full_screen}}</span>
             </div>
         </div>

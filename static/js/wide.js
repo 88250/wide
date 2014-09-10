@@ -28,8 +28,6 @@ outputWS.onmessage = function(e) {
 
         // 触发一次 gutter lint
         CodeMirror.signal(wide.curEditor, "change", wide.curEditor);
-
-        return;
     } else if ('go get' === data.cmd || 'go install' === data.cmd) {
         $('#output').text($('#output').text() + data.output);
     }
@@ -91,7 +89,7 @@ var wide = {
             }
         });
     },
-    save: function() {
+    saveFile: function() {
         var request = {
             "file": wide.curNode.path,
             "code": wide.curEditor.getValue()
@@ -104,6 +102,18 @@ var wide = {
             success: function(data) {
             }
         });
+    },
+    saveAllFiles: function() {
+        // TODO: save all
+    },
+    closeFile: function() {
+        // TODO: save all
+    },
+    closeAllFiles: function() {
+        // TODO: save all
+    },
+    exit: function() {
+        // TODO: exit
     },
     run: function() {
         var request = {
