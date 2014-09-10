@@ -5,11 +5,11 @@ A simple <b>W</b>eb **IDE** for golang.
 
 ## Motivation
 * There are a few of GO IDEs, and no one developed by Go itself, this is a nice try
-* Web based IDE:
+* **Web based** IDE:
   * Developer needs a browser only
   * Cross-platform, even on mobile devices
   * For the geeks
-* Team IDE:
+* **Team** IDE:
   * Safe and reliable: the project source code stored on the server in real time, the developer's machine crashes without losing any source code 
   * Unified environment: server unified development environment configuration, the developer machine without any additional configuration 
   * Out of the box: 5 minutes to setup a server then open browser to develop, debug
@@ -19,7 +19,7 @@ A simple <b>W</b>eb **IDE** for golang.
   * Plug-in (goclipse, etc.): the need for the original IDE support, not professional
   * LiteIDE: no modern user interface :p
   * No team development experience 
-* A try for commercial-open source: versions customized for enterprises, close to their development work flows respectively
+* A try for **commercial-open source**: versions customized for enterprises, close to their development work flows respectively
 
 ## Features
 * Code Highlight, Folding: Go/HTML/JavaScript/Markdown etc.
