@@ -36,11 +36,12 @@ A simple <b>W</b>eb **IDE** for golang.
 ## Demos
 * [20140823](http://b3log.org/wide/demo/20140823.html)
 
-## Setup
+## Setup from sources
 1. Downloads source
-2. Compiles wide with `go build` 
-3. Configures `conf/wide.json`
-4. Runs the executable `wide` or `wide.exe`
+2. Gets dependencies with `go get`
+3. Compiles wide with `go build` 
+4. Configures `conf/wide.json`
+5. Runs the executable `wide` or `wide.exe`
 
 ## Known Issues
 * [Shell is not available on Windows](https://github.com/b3log/wide/issues/32)
