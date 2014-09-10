@@ -34,7 +34,9 @@ A simple <b>W</b>eb **IDE** for golang.
 * Go tool: go get/install/fmt etc.
 
 ## Demos
-* [20140823](http://b3log.org/wide/demo/20140823.html)
+
+* 20140910, png ![](http://b3log.org/wide/demo/20140910.png)
+* [20140823, swf](http://b3log.org/wide/demo/20140823.html)
 
 ## Setup from sources
 1. Downloads source
