@@ -25,17 +25,18 @@
                         <ul>
                             <li>
                                 <span onclick="wide.saveFile()">{{.i18n.save}}</span>
-                            </li>
-                            <li class="hr"></li>
+                            </li>                            
                             <li>
                                 <span onclick="wide.saveAllFiles()">{{.i18n.save_all_files}}</span>
                             </li>
+                            <li class="hr"></li>
                             <li>
                                 <span onclick="wide.closeFile()">{{.i18n.close_file}}</span>
                             </li>
                             <li>
                                 <span onclick="wide.closeAllFiles()">{{.i18n.close_all_files}}</span>
                             </li>
+                            <li class="hr"></li>
                             <li>
                                 <span onclick="wide.exit()">{{.i18n.exit}}</span>
                             </li>
@@ -49,6 +50,7 @@
                             <li>
                                 <span onclick="wide.run()">{{.i18n.build_n_run}}</span>
                             </li>
+                            <li class="hr"></li>
                             <li>
                                 <span onclick="wide.goget()">{{.i18n.goget}}</span>
                             </li>
@@ -74,9 +76,13 @@
                         <ul>
                             <li>
                                 <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.wide_doc}}</a>
-                            </li>
+                            </li>                            
                             <li>
                                 <a href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.report_issues}}</a>
+                            </li>
+                            <li class="hr"></li>
+                            <li>
+                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.start_page}}</a>
                             </li>
                             <li>
                                 <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.about}}</a>
