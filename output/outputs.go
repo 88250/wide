@@ -462,7 +462,4 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 		"GOARCH="+runtime.GOARCH,
 		"GOROOT="+runtime.GOROOT(),
 		"PATH="+os.Getenv("PATH"))
-
-	//"TERM="+os.Getenv("COMSPEC"),
-	//"ComSpec="+os.Getenv("ComSpec")
 }

@@ -12,6 +12,7 @@ import (
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 )
@@ -97,7 +98,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset: %d", offset)
 
-	userWorkspace := conf.Wide.UserWorkspaces + string(os.PathSeparator) + username
+	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
 	//glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
 	userLib := userWorkspace + string(os.PathSeparator) + "pkg" + string(os.PathSeparator) +
@@ -116,6 +117,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("gocode", argv...)
 	cmd.Start()
 
+	//gocode 试验性质特性：自动构建
 	//argv = []string{"set", "autobuild", "true"}
 	//cmd := exec.Command("gocode", argv...)
 	//cmd.Start()
@@ -139,6 +141,73 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(output)
 }
 
+func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	session, _ := user.Session.Get(r, "wide-session")
+	username := session.Values["username"].(string)
+
+	decoder := json.NewDecoder(r.Body)
+
+	var args map[string]interface{}
+
+	if err := decoder.Decode(&args); err != nil {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	filePath := args["file"].(string)
+	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+	filename := filePath[strings.LastIndex(filePath, string(os.PathSeparator))+1:]
+
+	fout, err := os.Create(filePath)
+
+	if nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	code := args["code"].(string)
+	fout.WriteString(code)
+
+	if err := fout.Close(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	line := int(args["cursorLine"].(float64))
+	ch := int(args["cursorCh"].(float64))
+
+	offset := getCursorOffset(code, line, ch)
+
+	// liteide_stub type -cursor main.go:318 -def .
+	glog.Info(filename, offset)
+
+	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
+	cmd := exec.Command("liteide_stub", argv...)
+	cmd.Dir = curDir
+
+	setCmdEnv(cmd, username)
+
+	output, err := cmd.CombinedOutput()
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	// TODO: 解析返回
+	glog.Info(string(output))
+}
+
 func getCursorOffset(code string, line, ch int) (offset int) {
 	lines := strings.Split(code, "\n")
 
@@ -149,4 +218,15 @@ func getCursorOffset(code string, line, ch int) (offset int) {
 	offset += line + ch
 
 	return
+}
+
+func setCmdEnv(cmd *exec.Cmd, username string) {
+	userWorkspace := conf.Wide.GetUserWorkspace(username)
+
+	cmd.Env = append(cmd.Env,
+		"GOPATH="+userWorkspace,
+		"GOOS="+runtime.GOOS,
+		"GOARCH="+runtime.GOARCH,
+		"GOROOT="+runtime.GOROOT(),
+		"PATH="+os.Getenv("PATH"))
 }

@@ -125,6 +125,26 @@ var editors = {
 
         CodeMirror.commands.doNothing = function(cm) {
         };
+
+        CodeMirror.commands.jumpToDecl = function(cm) {
+            var cur = wide.curEditor.getCursor();
+
+            var request = {
+                file: wide.curNode.path,
+                code: wide.curEditor.getValue(),
+                cursorLine: cur.line,
+                cursorCh: cur.ch
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/finddecl',
+                data: JSON.stringify(request),
+                dataType: "json",
+                success: function(data) {
+                }
+            });
+        };
     },
     newEditor: function(data) {
         $(".ico-fullscreen").show();
@@ -169,7 +189,8 @@ var editors = {
                 },
                 "Ctrl-G": "gotoLine",
                 "Ctrl-E": "deleteLine",
-                "Ctrl-D": "doNothing" // 取消默认的 deleteLine
+                "Ctrl-D": "doNothing", // 取消默认的 deleteLine
+                "Ctrl-B": "jumpToDecl"
             }
         });
 
