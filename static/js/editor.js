@@ -149,6 +149,7 @@ var editors = {
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
             autoCloseBrackets: true,
+            matchBrackets: true,
             highlightSelectionMatches: {showToken: /\w/},
             rulers: rulers,
             styleActiveLine: true,
@@ -171,6 +172,15 @@ var editors = {
                 "Ctrl-D": "doNothing" // 取消默认的 deleteLine
             }
         });
+
+        editor.on('cursorActivity', function(cm) {
+            var cursor = cm.getCursor();
+
+            $("#footer-cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
+            // TODO: 关闭 tab 的时候要重置
+            // TODO: 保存当前编辑器光标位置，切换 tab 的时候要设置回来
+        });
+
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-header").height());
         editor.setValue(data.content);
         editor.setOption("mode", data.mode);
@@ -180,7 +190,7 @@ var editors = {
         if ("text/x-go" === data.mode || "application/json" === data.mode) {
             editor.setOption("lint", true);
         }
-        
+
         if ("application/xml" === data.mode || "text/html" === data.mode) {
             editor.setOption("autoCloseTags", true);
         }
