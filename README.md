@@ -33,6 +33,9 @@ A simple <b>W</b>eb **IDE** for golang.
 * Web development: Frontend devlopment (HTML/JS/CSS) all in one
 * Go tool: go get/install/fmt etc.
 
+## Documents
+* [中文文档](http://b3log.github.io/wide/doc/zh_CN/index.html)
+
 ## Demos
 
 * 20140910, png ![](http://b3log.org/wide/demo/20140910.png)
