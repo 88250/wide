@@ -149,6 +149,7 @@ var editors = {
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
             autoCloseBrackets: true,
+            matchBrackets: true,
             highlightSelectionMatches: {showToken: /\w/},
             rulers: rulers,
             styleActiveLine: true,
