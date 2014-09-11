@@ -36,6 +36,31 @@ ul {
 .fn-none {
     display: none;
 }
+
+@font-face {
+    font-family: 'icomoon';
+    src:url('fonts/icomoon.eot?35cb2z');
+    src:url('fonts/icomoon.eot?#iefix35cb2z') format('embedded-opentype'),
+        url('fonts/icomoon.woff?35cb2z') format('woff'),
+        url('fonts/icomoon.ttf?35cb2z') format('truetype'),
+        url('fonts/icomoon.svg?35cb2z#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+font-ico {
+	font-family: 'icomoon';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+
+	/* Better Font Rendering =========== */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
 /* end reset & function */
 
 /* start frame */
@@ -43,7 +68,7 @@ ul {
     position: absolute;
     border: 1px solid #5F5F5F;
     background-color: #F8F8F8;
-    width: 340px;
+    width: 320px;
     z-index: 5;
     display: none;
 }
@@ -57,6 +82,22 @@ ul {
 .frame li:hover {
     background-color: #3875D7;
     color: #FFF;
+}
+
+.frame a {
+    color: #000;
+    text-decoration: none;
+}
+
+.frame li:hover a,
+.frame a:hover {
+    color: #FFF;
+}
+
+.frame .hr {
+    background-color: #bdbdbd;
+    height: 1px;
+    margin: 0 1px;
 }
 /* end frame */
 
