@@ -23,22 +23,22 @@
                     <span>{{.i18n.file}}</span>
                     <div class="frame">
                         <ul>
-                            <li>
-                                <span onclick="wide.saveFile()">{{.i18n.save}}</span>
+                            <li onclick="wide.saveFile()">
+                                <span>{{.i18n.save}}</span>
                             </li>                            
-                            <li>
-                                <span onclick="wide.saveAllFiles()">{{.i18n.save_all_files}}</span>
+                            <li onclick="wide.saveAllFiles()">
+                                <span>{{.i18n.save_all_files}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li>
-                                <span onclick="wide.closeFile()">{{.i18n.close_file}}</span>
+                            <li onclick="wide.closeFile()">
+                                <span>{{.i18n.close_file}}</span>
                             </li>
-                            <li>
-                                <span onclick="wide.closeAllFiles()">{{.i18n.close_all_files}}</span>
+                            <li onclick="wide.closeAllFiles()">
+                                <span>{{.i18n.close_all_files}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li>
-                                <span onclick="wide.exit()">{{.i18n.exit}}</span>
+                            <li onclick="wide.exit()">
+                                <span>{{.i18n.exit}}</span>
                             </li>
                         </ul>
                     </div>
@@ -47,15 +47,15 @@
                     <span>{{.i18n.run}}</span>
                     <div class="frame">
                         <ul>
-                            <li>
-                                <span onclick="wide.run()">{{.i18n.build_n_run}}</span>
+                            <li onclick="wide.run()">
+                                <span>{{.i18n.build_n_run}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li>
-                                <span onclick="wide.goget()">{{.i18n.goget}}</span>
+                            <li onclick="wide.goget()">
+                                <span>{{.i18n.goget}}</span>
                             </li>
-                            <li>
-                                <span onclick="wide.goinstall()">{{.i18n.goinstall}}</span>
+                            <li onclick="wide.goinstall()">
+                                <span>{{.i18n.goinstall}}</span>
                             </li>      
                         </ul>
                     </div>
@@ -74,18 +74,18 @@
                     <span>{{.i18n.help}}</span>
                     <div class="frame">
                         <ul>
-                            <li>
-                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.wide_doc}}</a>
+                            <li onclick="window.open('/doc/{{.locale}}/index.html')">
+                                <span>{{.i18n.wide_doc}}</span>
                             </li>                            
                             <li>
                                 <a href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.report_issues}}</a>
                             </li>
                             <li class="hr"></li>
-                            <li>
-                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.start_page}}</a>
+                            <li onclick="window.open('/doc/{{.locale}}/index.html')">
+                                <span>{{.i18n.start_page}}</span>
                             </li>
-                            <li>
-                                <a href="/doc/{{.locale}}/index.html" target="_blank">{{.i18n.about}}</a>
+                            <li onclick="window.open('/doc/{{.locale}}/index.html')">
+                                <span>{{.i18n.about}}</span>
                             </li>
                         </ul>
                     </div>                    
@@ -153,14 +153,13 @@
         </div>
 
         <script type="text/javascript">
-            var config = {
-                channel: {
+                    var config = {
+                    channel: {
                     editor: '{{.Wide.EditorChannel}}',
-                    shell: '{{.Wide.ShellChannel}}',
-                    output: '{{.Wide.OutputChannel}}'
-                }
-            };
-        </script>
+                            shell: '{{.Wide.ShellChannel}}',
+                            output: '{{.Wide.OutputChannel}}'
+                    }
+                    };        </script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>                
