@@ -60,5 +60,6 @@ Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/maste
 * [golang](http://golang.org)
 * [CodeMirror](https://github.com/marijnh/CodeMirror)
 * [zTree](https://github.com/zTree/zTree_v3) 
+* [LiteIDE](https://github.com/visualfc/liteide)
 * [gocode](https://github.com/nsf/gocode)
 * [Gorilla](https://github.com/gorilla)
