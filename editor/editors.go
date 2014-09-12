@@ -19,6 +19,14 @@ import (
 
 var editorWS = map[string]*websocket.Conn{}
 
+// 代码片段. 这个结构可用于“查找使用”、“文件搜索”的返回值.
+type snippet struct {
+	Path     string   `json:"path"`     // 文件路径
+	Line     int      `json:"lline"`    // 行号
+	Ch       int      `json:"ch"`       // 列号
+	Contents []string `json:"contents"` // 代码行
+}
+
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
@@ -291,21 +299,17 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	founds := strings.Split(result, "\n")
-	usages := []interface{}{}
+	usages := []snippet{}
 	for _, found := range founds {
 		found = strings.TrimSpace(found)
 
 		part := found[:strings.LastIndex(found, ":")]
 		cursorSep := strings.LastIndex(part, ":")
 		path := found[:cursorSep]
-		cursorLine := found[cursorSep+1 : strings.LastIndex(found, ":")]
-		cursorCh := found[strings.LastIndex(found, ":")+1:]
+		cursorLine, _ := strconv.Atoi(found[cursorSep+1 : strings.LastIndex(found, ":")])
+		cursorCh, _ := strconv.Atoi(found[strings.LastIndex(found, ":")+1:])
 
-		usage := map[string]string{}
-		usage["path"] = path
-		usage["cursorLine"] = cursorLine
-		usage["cursorCh"] = cursorCh
-
+		usage := snippet{Path: path, Line: cursorLine, Ch: cursorCh /* TODO: 获取附近的代码片段 */}
 		usages = append(usages, usage)
 	}
 
