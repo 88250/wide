@@ -35,7 +35,7 @@ outputWS.onmessage = function(e) {
     if ('build' === data.cmd) {
         if ('run' === data.nextCmd) {
             var request = {
-                "executable": data.executable
+                executable: data.executable
             };
 
             $.ajax({
@@ -91,8 +91,8 @@ var wide = {
     },
     saveFile: function() {
         var request = {
-            "file": wide.curNode.path,
-            "code": wide.curEditor.getValue()
+            file: wide.curNode.path,
+            code: wide.curEditor.getValue()
         };
         $.ajax({
             type: 'POST',
@@ -117,8 +117,8 @@ var wide = {
     },
     run: function() {
         var request = {
-            "file": wide.curNode.path,
-            "code": wide.curEditor.getValue()
+            file: wide.curNode.path,
+            code: wide.curEditor.getValue()
         };
 
         $.ajax({
@@ -135,7 +135,7 @@ var wide = {
     },
     goget: function() {
         var request = {
-            "file": wide.curNode.path
+            file: wide.curNode.path
         };
 
         $.ajax({
@@ -152,8 +152,8 @@ var wide = {
     },
     goinstall: function() {
         var request = {
-            "file": wide.curNode.path,
-            "code": wide.curEditor.getValue()
+            file: wide.curNode.path,
+            code: wide.curEditor.getValue()
         };
 
         $.ajax({
@@ -173,10 +173,10 @@ var wide = {
         var mode = wide.curNode.mode;
 
         var request = {
-            "file": path,
-            "code": wide.curEditor.getValue(),
-            "cursorLine": wide.curEditor.getCursor().line,
-            "cursorCh": wide.curEditor.getCursor().ch
+            file: path,
+            code: wide.curEditor.getValue(),
+            cursorLine: wide.curEditor.getCursor().line,
+            cursorCh: wide.curEditor.getCursor().ch
         };
 
         switch (mode) {
