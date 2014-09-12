@@ -13,7 +13,7 @@ A simple <b>W</b>eb **IDE** for golang.
   * Developer needs a browser only
   * Cross-platform, even on mobile devices
   * For the geeks
-* A try for **commercial-open source**: versions customized for enterprises, close to their development work flows respectively
+* A try for commercial-open source: versions customized for enterprises, close to their development work flows respectively
 * Currently more popular Go IDE has some defects or regrets: 
   * Text editor (vim/emacs/sublime/Atom, etc.): For the Go newbie is too complex 
   * Plug-in (goclipse, etc.): the need for the original IDE support, not professional
