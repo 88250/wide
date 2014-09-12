@@ -146,9 +146,6 @@ var editors = {
                         return;
                     }
 
-                    // 打开一个新编辑器并定位到跳转的行列
-                    var line = data.cursorLine;
-
                     var request = {
                         path: data.path
                     };
@@ -166,6 +163,9 @@ var editors = {
                             }
 
                             // FIXME: V, 这个可能不在文件树里，但是也需要打开一个编辑器
+                            // 打开一个新编辑器并定位到跳转的行列
+                            var line = data.cursorLine;
+                            var ch = data.cursorCh;
                             editors.newEditor(data);
                         }
                     });
