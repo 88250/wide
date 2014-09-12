@@ -53,10 +53,10 @@ $.extend(Tabs.prototype, {
             prevId = currentId;
         } else {
             prevId = this.obj._prevId;
-            this.setCurrent(prevId);
         }
-
+        
         this.obj.removeAfter(id, prevId);
+        this.setCurrent(prevId);
     },
     getCurrentId: function() {
         var $tabs = this.obj._$tabs;

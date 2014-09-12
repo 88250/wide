@@ -91,7 +91,7 @@ var wide = {
     },
     saveFile: function() {
         var request = {
-            file: wide.curNode.path,
+            file: $(".edit-header .current span:eq(0)").attr("title"),
             code: wide.curEditor.getValue()
         };
         $.ajax({
@@ -117,7 +117,7 @@ var wide = {
     },
     run: function() {
         var request = {
-            file: wide.curNode.path,
+            file: $(".edit-header .current span:eq(0)").attr("title"),
             code: wide.curEditor.getValue()
         };
 
@@ -135,7 +135,7 @@ var wide = {
     },
     goget: function() {
         var request = {
-            file: wide.curNode.path
+            file: $(".edit-header .current span:eq(0)").attr("title")
         };
 
         $.ajax({
@@ -152,7 +152,7 @@ var wide = {
     },
     goinstall: function() {
         var request = {
-            file: wide.curNode.path,
+            file: $(".edit-header .current span:eq(0)").attr("title"),
             code: wide.curEditor.getValue()
         };
 
@@ -169,7 +169,7 @@ var wide = {
         });
     },
     fmt: function() {
-        var path = wide.curNode.path;
+        var path = $(".edit-header .current span:eq(0)").attr("title");
         var mode = wide.curNode.mode;
 
         var request = {
