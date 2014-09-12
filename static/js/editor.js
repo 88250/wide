@@ -130,7 +130,7 @@ var editors = {
             var cur = wide.curEditor.getCursor();
 
             var request = {
-                file: $tabs.children(".current").data("index"),
+                file: $(".edit-header .current").data("index"),
                 code: wide.curEditor.getValue(),
                 cursorLine: cur.line,
                 cursorCh: cur.ch
