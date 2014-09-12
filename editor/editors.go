@@ -1,3 +1,4 @@
+// 编辑器操作.
 package editor
 
 import (
@@ -149,6 +150,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(output)
 }
 
+// 查找声明.
 func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -230,6 +232,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	data["cursorCh"] = cursorCh
 }
 
+// 查找使用.
 func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)

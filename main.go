@@ -26,6 +26,7 @@ func init() {
 	flag.Parse()
 }
 
+// Wide 首页.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
 

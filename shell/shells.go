@@ -1,11 +1,7 @@
+// Shell.
 package shell
 
 import (
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/user"
-	"github.com/golang/glog"
-	"github.com/gorilla/websocket"
 	"html/template"
 	"math/rand"
 	"net/http"
@@ -14,6 +10,12 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+
+	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/i18n"
+	"github.com/b3log/wide/user"
+	"github.com/golang/glog"
+	"github.com/gorilla/websocket"
 )
 
 var shellWS = map[string]*websocket.Conn{}

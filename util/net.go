@@ -1,3 +1,4 @@
+// 工具.
 package util
 
 import (
@@ -7,9 +8,10 @@ import (
 
 type mynet struct{}
 
+// 网络工具.
 var Net = mynet{}
 
-func (mynet) LocalIP() (string, error) {
+func (*mynet) LocalIP() (string, error) {
 	tt, err := net.Interfaces()
 
 	if err != nil {

@@ -1,3 +1,4 @@
+// 文件树操作.
 package file
 
 import (
@@ -57,6 +58,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data["root"] = root
 }
 
+// 编辑器打开一个文件.
 func GetFile(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -106,6 +108,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 保存文件.
 func SaveFile(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -144,6 +147,7 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 新建文件/目录.
 func NewFile(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -167,6 +171,7 @@ func NewFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 删除文件/目录.
 func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -189,6 +194,7 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 文件节点，用于构造文件树.
 type FileNode struct {
 	Name      string      `json:"name"`
 	Path      string      `json:"path"`
@@ -198,7 +204,7 @@ type FileNode struct {
 	FileNodes []*FileNode `json:"children"`
 }
 
-// 遍历指定的 path 构造文件树.
+// 遍历指定的路径，构造文件树.
 func walk(path string, node *FileNode) {
 	files := listFiles(path)
 

@@ -1,12 +1,14 @@
+// 用户操作.
 package user
 
 import (
 	"encoding/json"
+	"net/http"
+	"os"
+
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
-	"net/http"
-	"os"
 )
 
 const (
@@ -15,6 +17,7 @@ const (
 	USER_CREATE_FAILED = "user create failed"
 )
 
+// 添加用户.
 func AddUser(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -40,6 +43,7 @@ func AddUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 初始化用户 git 仓库.
 func InitGitRepos(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)

@@ -1,3 +1,4 @@
+// 构建、运行、go tool 操作.
 package output
 
 import (
@@ -32,6 +33,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	glog.V(4).Infof("Open a new [Output] with session [%s], %d", sid, len(outputWS))
 }
 
+// 运行一个可执行文件.
 func RunHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -105,6 +107,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}(rand.Int())
 }
 
+// 构建可执行文件.
 func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -257,6 +260,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// go install.
 func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -377,6 +381,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// go get.
 func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
