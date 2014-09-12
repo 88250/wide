@@ -93,7 +93,8 @@ func main() {
 	http.HandleFunc("/editor/ws", editor.WSHandler)
 	http.HandleFunc("/go/fmt", editor.GoFmtHandler)
 	http.HandleFunc("/autocomplete", editor.AutocompleteHandler)
-	http.HandleFunc("/finddecl", editor.FindDeclarationHandler)
+	http.HandleFunc("/find/decl", editor.FindDeclarationHandler)
+	http.HandleFunc("/find/usages", editor.FindUsagesHandler)
 	http.HandleFunc("/html/fmt", editor.HTMLFmtHandler)
 	http.HandleFunc("/json/fmt", editor.JSONFmtHandler)
 

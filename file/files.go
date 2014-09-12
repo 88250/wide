@@ -193,7 +193,7 @@ type FileNode struct {
 	Name      string      `json:"name"`
 	Path      string      `json:"path"`
 	IconSkin  string      `json:"iconSkin"` // 值的末尾应该有一个空格
-	Type      string      `json:"type"`
+	Type      string      `json:"type"`     // "f"：文件，"d"：文件夹
 	Mode      string      `json:"mode"`
 	FileNodes []*FileNode `json:"children"`
 }

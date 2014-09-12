@@ -138,7 +138,7 @@ var editors = {
 
             $.ajax({
                 type: 'POST',
-                url: '/finddecl',
+                url: '/find/decl',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function(data) {
@@ -172,6 +172,33 @@ var editors = {
                 }
             });
         };
+
+        CodeMirror.commands.findUsages = function(cm) {
+            var cur = wide.curEditor.getCursor();
+
+            var request = {
+                file: wide.curNode.path,
+                code: wide.curEditor.getValue(),
+                cursorLine: cur.line,
+                cursorCh: cur.ch
+            };
+
+            $.ajax({
+                type: 'POST',
+                url: '/find/usages',
+                data: JSON.stringify(request),
+                dataType: "json",
+                success: function(data) {
+                    console.log(data);
+
+                    if (!data.succ) {
+                        return;
+                    }
+
+
+                }
+            });
+        };
     },
     newEditor: function(data) {
         $(".ico-fullscreen").show();
@@ -186,7 +213,7 @@ var editors = {
 
         editors.tabs.add({
             id: id,
-            title: '<span title="' + wide.curNode.path + '"><span class="' 
+            title: '<span title="' + wide.curNode.path + '"><span class="'
                     + wide.curNode.iconSkin + 'ico"></span>' + wide.curNode.name + '</span>',
             content: '<textarea id="editor' + id + '"></textarea>'
         });
@@ -218,7 +245,8 @@ var editors = {
                 "Ctrl-G": "gotoLine",
                 "Ctrl-E": "deleteLine",
                 "Ctrl-D": "doNothing", // 取消默认的 deleteLine
-                "Ctrl-B": "jumpToDecl"
+                "Ctrl-B": "jumpToDecl",
+                "Alt-F7": "findUsages"
             }
         });
 

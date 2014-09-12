@@ -222,6 +222,98 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	data["cursorCh"] = cursorCh
 }
 
+func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	session, _ := user.Session.Get(r, "wide-session")
+	username := session.Values["username"].(string)
+
+	decoder := json.NewDecoder(r.Body)
+
+	var args map[string]interface{}
+
+	if err := decoder.Decode(&args); err != nil {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	filePath := args["file"].(string)
+	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+	filename := filePath[strings.LastIndex(filePath, string(os.PathSeparator))+1:]
+
+	fout, err := os.Create(filePath)
+
+	if nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	code := args["code"].(string)
+	fout.WriteString(code)
+
+	if err := fout.Close(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	line := int(args["cursorLine"].(float64))
+	ch := int(args["cursorCh"].(float64))
+
+	offset := getCursorOffset(code, line, ch)
+
+	// TODO: 目前是调用 liteide_stub 工具来查找使用，后续需要重新实现
+	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
+	cmd := exec.Command("liteide_stub", argv...)
+	cmd.Dir = curDir
+
+	setCmdEnv(cmd, username)
+
+	output, err := cmd.CombinedOutput()
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	result := strings.TrimSpace(string(output))
+	if "" == result {
+		data["succ"] = false
+
+		return
+	}
+
+	founds := strings.Split(result, "\n")
+	usages := []interface{}{}
+	for _, found := range founds {
+		found = strings.TrimSpace(found)
+
+		part := found[:strings.LastIndex(found, ":")]
+		cursorSep := strings.LastIndex(part, ":")
+		path := found[:cursorSep]
+		cursorLine := found[cursorSep+1 : strings.LastIndex(found, ":")]
+		cursorCh := found[strings.LastIndex(found, ":")+1:]
+
+		usage := map[string]string{}
+		usage["path"] = path
+		usage["cursorLine"] = cursorLine
+		usage["cursorCh"] = cursorCh
+
+		usages = append(usages, usage)
+	}
+
+	// glog.Infof("%s\n%s\n%s\n%s", found, path, cursorLine, cursorCh)
+
+	data["usages"] = usages
+}
+
 func getCursorOffset(code string, line, ch int) (offset int) {
 	lines := strings.Split(code, "\n")
 
