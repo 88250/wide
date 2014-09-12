@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sort"
 	"strings"
 
@@ -15,6 +16,8 @@ import (
 	"github.com/golang/glog"
 )
 
+// 构造用户工作空间文件树.
+// 将 Go API 源码包（$GOROOT/src/pkg）也作为子节点，这样能方便用户查看 Go API 源码.
 func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -25,9 +28,30 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	userSrc := conf.Wide.GetUserWorkspace(username) + string(os.PathSeparator) + "src"
 
 	root := FileNode{Name: "projects", Path: userSrc, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
-	fileInfo, _ := os.Lstat(userSrc)
 
-	walk(userSrc, fileInfo, &root)
+	// 构造 Go API 节点
+	apiPath := runtime.GOROOT() + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "pkg"
+	apiNode := FileNode{Name: "Go API", Path: apiPath, FileNodes: []*FileNode{}}
+	go func() {
+		fio, _ := os.Lstat(apiPath)
+		if fio.IsDir() {
+			apiNode.Type = "d"
+			apiNode.IconSkin = "ico-ztree-dir "
+
+			walk(apiPath, &apiNode)
+		} else {
+			apiNode.Type = "f"
+			ext := filepath.Ext(apiPath)
+
+			apiNode.IconSkin = getIconSkin(ext)
+			apiNode.Mode = getEditorMode(ext)
+		}
+	}()
+
+	// 构造用户工作空间文件树
+	walk(userSrc, &root)
+	// 添加 Go API 节点
+	root.FileNodes = append(root.FileNodes, &apiNode)
 
 	data["root"] = root
 }
@@ -173,7 +197,8 @@ type FileNode struct {
 	FileNodes []*FileNode `json:"children"`
 }
 
-func walk(path string, info os.FileInfo, node *FileNode) {
+// 遍历指定的 path，构造文件树.
+func walk(path string, node *FileNode) {
 	files := listFiles(path)
 
 	for _, filename := range files {
@@ -194,7 +219,7 @@ func walk(path string, info os.FileInfo, node *FileNode) {
 			child.Type = "d"
 			child.IconSkin = "ico-ztree-dir "
 
-			walk(fpath, fio, &child)
+			walk(fpath, &child)
 		} else {
 			child.Type = "f"
 			ext := filepath.Ext(fpath)
