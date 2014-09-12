@@ -36,6 +36,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 		fio, _ := os.Lstat(apiPath)
 		if fio.IsDir() {
 			apiNode.Type = "d"
+			// TOOD: Go API 用另外的样式
 			apiNode.IconSkin = "ico-ztree-dir "
 
 			walk(apiPath, &apiNode)
