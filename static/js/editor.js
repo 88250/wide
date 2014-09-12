@@ -186,7 +186,8 @@ var editors = {
 
         editors.tabs.add({
             id: id,
-            title: '<span title="' + wide.curNode.path + '">' + wide.curNode.name + '</span>',
+            title: '<span title="' + wide.curNode.path + '"><span class="' 
+                    + wide.curNode.iconSkin + 'ico"></span>' + wide.curNode.name + '</span>',
             content: '<textarea id="editor' + id + '"></textarea>'
         });
 

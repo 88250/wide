@@ -93,10 +93,10 @@
             </ul>
 
             <div class="toolbars fn-right">
-                <button onclick="wide.run()">{{.i18n.build_n_run}}</button>
-                <button onclick="wide.save()">{{.i18n.save}}</button>
-                <button onclick="wide.fmt()">{{.i18n.format}}</button>
-                <span class="fn-none ico-fullscreen" onclick="editors.fullscreen()">{{.i18n.full_screen}}</span>
+                <span onclick="wide.run()" class="font-ico icon-buildrun" title="{{.i18n.build_n_run}}"></span>
+                <span onclick="wide.save()" title="{{.i18n.save}}" class="font-ico ico-save"></span>
+                <span onclick="wide.fmt()" class="ico-format font-ico" title="{{.i18n.format}}"></span>
+                <span class="fn-none font-ico ico-fullscreen" onclick="editors.fullscreen()" title="{{.i18n.full_screen}}"></span>
             </div>
         </div>
 
@@ -137,7 +137,6 @@
                     <div class="tabs">
                         <div class="current" data-index="files_3">
                             <span title="Output">Output</span>
-                            <span class="ico-close">X</span>
                         </div>
                     </div>
                     <div class="tabs-panel">
@@ -159,7 +158,7 @@
                             shell: '{{.Wide.ShellChannel}}',
                             output: '{{.Wide.OutputChannel}}'
                     }
-                    };        </script>
+                    };</script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
         <script type="text/javascript" src="{{.Wide.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>                

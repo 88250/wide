@@ -33,7 +33,7 @@ $.extend(Tabs.prototype, {
         $tabsPanel.children("div").hide();
 
         $tabs.append('<div class="current" data-index="' + data.id + '">'
-                + data.title + '<span class="ico-close"> X</span></div>');
+                + data.title + '<span class="ico-close font-ico"></span></div>');
         $tabsPanel.append('<div data-index="' + data.id + '">' + data.content
                 + '</div>');
     },
