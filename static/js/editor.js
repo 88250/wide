@@ -142,6 +142,33 @@ var editors = {
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function(data) {
+                    if (!data.succ) {
+                        return;
+                    }
+
+                    // 打开一个新编辑器并定位到跳转的行列
+                    var line = data.cursorLine;
+
+                    var request = {
+                        path: data.path
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/file',
+                        data: JSON.stringify(request),
+                        dataType: "json",
+                        success: function(data) {
+                            if (!data.succ) {
+                                alert(data.msg);
+
+                                return false;
+                            }
+
+                            // FIXME: V, 这个可能不在文件树里，但是也需要打开一个编辑器
+                            editors.newEditor(data);
+                        }
+                    });
                 }
             });
         };

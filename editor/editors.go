@@ -187,9 +187,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	offset := getCursorOffset(code, line, ch)
 
-	// liteide_stub type -cursor main.go:318 -def .
-	glog.Info(filename, offset)
-
+	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
 	cmd := exec.Command("liteide_stub", argv...)
 	cmd.Dir = curDir
@@ -204,8 +202,24 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: 解析返回
-	glog.Info(string(output))
+	found := strings.TrimSpace(string(output))
+	if "" == found {
+		data["succ"] = false
+
+		return
+	}
+
+	part := found[:strings.LastIndex(found, ":")]
+	cursorSep := strings.LastIndex(part, ":")
+	path := found[:cursorSep]
+	cursorLine := found[cursorSep+1 : strings.LastIndex(found, ":")]
+	cursorCh := found[strings.LastIndex(found, ":")+1:]
+
+	// glog.Infof("%s\n%s\n%s\n%s", found, path, cursorLine, cursorCh)
+
+	data["path"] = path
+	data["cursorLine"] = cursorLine
+	data["cursorCh"] = cursorCh
 }
 
 func getCursorOffset(code string, line, ch int) (offset int) {
