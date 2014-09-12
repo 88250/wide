@@ -198,7 +198,7 @@ type FileNode struct {
 	FileNodes []*FileNode `json:"children"`
 }
 
-// 遍历指定的 path，构造文件树.
+// 遍历指定的 path 构造文件树.
 func walk(path string, node *FileNode) {
 	files := listFiles(path)
 
@@ -264,20 +264,16 @@ func listFiles(dirname string) []string {
 }
 
 func getIconSkin(filenameExtension string) string {
-	if "" == filenameExtension || ".exe" == filenameExtension {
-		return "ico-ztree-other "
-	}
-
 	switch filenameExtension {
-	case ".gitignore":
+	case ".gitignore", "", ".exe", ".s":
 		return "ico-ztree-other "
-	case ".json":
+	case ".json", ".js":
 		return "ico-ztree-js "
 	case ".txt":
 		return "ico-ztree-text "
 	case ".properties":
 		return "ico-ztree-pro "
-	case ".htm":
+	case ".htm", ".html":
 		return "ico-ztree-html "
 	default:
 		if isImg(filenameExtension) {
