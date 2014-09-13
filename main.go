@@ -21,7 +21,7 @@ import (
 // Wide 中唯一一个 init 函数.
 func init() {
 	flag.Set("logtostderr", "true")
-	flag.Set("v", "5")
+	flag.Set("v", "1")
 
 	conf.Load()
 
