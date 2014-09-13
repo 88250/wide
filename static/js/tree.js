@@ -1,4 +1,14 @@
 var tree = {
+    getTIdByPath: function (path) {
+       var nodes = tree.fileTree.transformToArray(tree.fileTree.getNodes());
+        for (var i = 0, ii = nodes.length; i < ii; i++) {
+            if (nodes[i].path === path) {
+                return nodes[i].tId;
+            }
+        }
+        
+        return undefined;
+    },
     fileTree: undefined,
     _isParents: function(tId, parentTId) {
         var node = tree.fileTree.getNodeByTId(tId);

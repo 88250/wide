@@ -161,7 +161,6 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 
 	var args map[string]interface{}
-
 	if err := decoder.Decode(&args); err != nil {
 		glog.Error(err)
 		http.Error(w, err.Error(), 500)
@@ -169,11 +168,11 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
-	filename := filePath[strings.LastIndex(filePath, string(os.PathSeparator))+1:]
+	path := args["path"].(string)
+	curDir := path[:strings.LastIndex(path, string(os.PathSeparator))]
+	filename := path[strings.LastIndex(path, string(os.PathSeparator))+1:]
 
-	fout, err := os.Create(filePath)
+	fout, err := os.Create(path)
 
 	if nil != err {
 		glog.Error(err)
@@ -196,6 +195,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	ch := int(args["cursorCh"].(float64))
 
 	offset := getCursorOffset(code, line, ch)
+	glog.Infof("offset [%d]", offset)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
@@ -221,11 +221,11 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	part := found[:strings.LastIndex(found, ":")]
 	cursorSep := strings.LastIndex(part, ":")
-	path := found[:cursorSep]
+	path = found[:cursorSep]
 	cursorLine := found[cursorSep+1 : strings.LastIndex(found, ":")]
 	cursorCh := found[strings.LastIndex(found, ":")+1:]
 
-	// glog.Infof("%s\n%s\n%s\n%s", found, path, cursorLine, cursorCh)
+	glog.Infof("Find Decl [path: %s, cursor(%s:%s)]", path, cursorLine, cursorCh)
 
 	data["path"] = path
 	data["cursorLine"] = cursorLine
@@ -316,21 +316,31 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 		usages = append(usages, usage)
 	}
 
-	// glog.Infof("%s\n%s\n%s\n%s", found, path, cursorLine, cursorCh)
-
 	data["usages"] = usages
 }
 
+// 计算光标偏移位置.
+// line 指定了行号（第一行为 0），ch 指定了列号（第一列为 0）.
 func getCursorOffset(code string, line, ch int) (offset int) {
 	lines := strings.Split(code, "\n")
 
+	// 计算前几行长度
 	for i := 0; i < line; i++ {
 		offset += len(lines[i])
 	}
 
-	offset += line + ch
+	// 计算当前行、当前列长度
+	curLine := lines[line]
+	var buffer bytes.Buffer
+	r := []rune(curLine)
+	for i := 0; i < ch; i++ {
+		buffer.WriteString(string(r[i]))
+	}
 
-	return
+	offset += line                 // 加换行符
+	offset += len(buffer.String()) // 加当前行列偏移
+
+	return offset
 }
 
 func setCmdEnv(cmd *exec.Cmd, username string) {

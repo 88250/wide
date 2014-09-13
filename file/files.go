@@ -105,6 +105,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 	} else {
 		data["content"] = string(buf)
 		data["mode"] = getEditorMode(extension)
+		data["path"] = path
 	}
 }
 

@@ -16,6 +16,8 @@ var editors = {
                         break;
                     }
                 }
+
+                wide.curEditor.focus();
             },
             removeAfter: function(id, nextId) {
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
@@ -130,7 +132,7 @@ var editors = {
             var cur = wide.curEditor.getCursor();
 
             var request = {
-                file: $(".edit-header .current").data("index"),
+                path: $(".edit-header .current > span:eq(0)").attr("title"),
                 code: wide.curEditor.getValue(),
                 cursorLine: cur.line,
                 cursorCh: cur.ch
@@ -145,6 +147,9 @@ var editors = {
                     if (!data.succ) {
                         return;
                     }
+
+                    var cursorLine = data.cursorLine;
+                    var cursorCh = data.cursorCh;
 
                     var request = {
                         path: data.path
@@ -162,10 +167,12 @@ var editors = {
                                 return false;
                             }
 
-                            // FIXME: V, 这个可能不在文件树里，但是也需要打开一个编辑器
-                            // 打开一个新编辑器并定位到跳转的行列
-                            var line = data.cursorLine;
-                            var ch = data.cursorCh;
+                            var tId = tree.getTIdByPath(data.path);
+                            wide.curNode = tree.fileTree.getNodeByTId(tId);
+                            tree.fileTree.selectNode(wide.curNode);
+
+                            data.cursorLine = cursorLine;
+                            data.cursorCh = cursorCh;
                             editors.newEditor(data);
                         }
                     });
@@ -200,13 +207,24 @@ var editors = {
             });
         };
     },
+    // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
     newEditor: function(data) {
         $(".ico-fullscreen").show();
         var id = wide.curNode.tId;
+
+        // 光标位置
+        var cursor = CodeMirror.Pos(0, 0);
+        if (data.cursorLine && data.cursorCh) {
+            cursor = CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1);
+        }
+
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             if (editors.data[i].id === id) {
                 editors.tabs.setCurrent(id);
                 wide.curEditor = editors.data[i].editor;
+                wide.curEditor.setCursor(cursor);
+                wide.curEditor.focus();
+
                 return false;
             }
         }
@@ -218,11 +236,12 @@ var editors = {
             content: '<textarea id="editor' + id + '"></textarea>'
         });
 
-        rulers = [];
+        var rulers = [];
         rulers.push({color: "#ccc", column: 120, lineStyle: "dashed"});
 
         var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
             lineNumbers: true,
+            autofocus: true,
             autoCloseBrackets: true,
             matchBrackets: true,
             highlightSelectionMatches: {showToken: /\w/},
@@ -261,6 +280,8 @@ var editors = {
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-header").height());
         editor.setValue(data.content);
         editor.setOption("mode", data.mode);
+
+        editor.setCursor(cursor);
 
         editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
 
