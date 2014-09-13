@@ -63,6 +63,7 @@ var editors = {
     },
     fullscreen: function() {
         wide.curEditor.setOption("fullScreen", true);
+        wide.curEditor.focus();
     },
     _initAutocomplete: function() {
         CodeMirror.registerHelper("hint", "go", function(editor) {
@@ -274,7 +275,6 @@ var editors = {
 
             $("#footer-cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             // TODO: 关闭 tab 的时候要重置
-            // TODO: 保存当前编辑器光标位置，切换 tab 的时候要设置回来
         });
 
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-header").height());

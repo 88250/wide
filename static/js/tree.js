@@ -205,13 +205,6 @@ var tree = {
     },
     _onClick: function(treeNode) {
         if (wide.curNode) {
-            var id = wide.curNode.tId;
-            if (id === treeNode.tId) {
-                // 再次点击当前选中节点
-                return false;
-            }
-
-
             for (var i = 0, ii = editors.data.length; i < ii; i++) {
                 // 该节点文件已经打开
                 if (editors.data[i].id === treeNode.tId) {
