@@ -15,8 +15,9 @@ import (
 )
 
 type User struct {
-	Name     string
-	Password string
+	Name      string
+	Password  string
+	Workspace string // 指定了该用户的 GOPATH 路径
 }
 
 type conf struct {
@@ -30,24 +31,27 @@ type conf struct {
 	StaticPath            string
 	MaxProcs              int
 	RuntimeMode           string
-	Workspace             string
-	UserWorkspaces        string
+	Pwd                   string
 	Users                 []User
 }
 
 var Wide conf
 var rawWide conf
 
-func (this *conf) GetWorkspace() string {
-	return filepath.FromSlash(this.Workspace)
-}
-
+// 获取 username 指定的用户的工作空间路径.
 func (this *conf) GetUserWorkspace(username string) string {
-	return filepath.FromSlash(this.UserWorkspaces) + string(os.PathSeparator) + username
+	for _, user := range Wide.Users {
+		if user.Name == username {
+			ret := strings.Replace(user.Workspace, "{Pwd}", Wide.Pwd, 1)
+			return filepath.FromSlash(ret)
+		}
+	}
+
+	return ""
 }
 
 func Save() bool {
-	// 可变部分
+	// 只有 Users 是可以通过界面修改的，其他属性只能手工维护 wide.json 配置文件
 	rawWide.Users = Wide.Users
 
 	// 原始配置文件内容
@@ -99,10 +103,8 @@ func Load() {
 	file, _ := exec.LookPath(os.Args[0])
 	pwd, _ := filepath.Abs(file)
 	pwd = pwd[:strings.LastIndex(pwd, string(os.PathSeparator))]
+	Wide.Pwd = pwd
 	glog.V(3).Infof("pwd [%s]", pwd)
-
-	Wide.Workspace = strings.Replace(Wide.Workspace, "{pwd}", pwd, 1)
-	Wide.UserWorkspaces = strings.Replace(Wide.UserWorkspaces, "{pwd}", pwd, 1)
 
 	glog.V(3).Info("Conf: \n" + string(bytes))
 }

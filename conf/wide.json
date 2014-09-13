@@ -9,12 +9,12 @@
     "StaticPath": "",
     "MaxProcs": 4,
     "RuntimeMode": "dev",
-    "Workspace": "{pwd}/data/workspace",
-    "UserWorkspaces": "{pwd}/data/user_workspaces",
+    "Pwd": "{pwd}",
     "Users": [
         {
             "Name": "admin",
-            "Password": "admin"
+            "Password": "admin",
+            "Workspace": "{Pwd}/data/user_workspaces/admin"
         }
     ]
 }

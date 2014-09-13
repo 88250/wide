@@ -51,11 +51,11 @@ func InitGitRepos(w http.ResponseWriter, r *http.Request) {
 	session, _ := Session.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
-	userRepos := conf.Wide.UserWorkspaces + string(os.PathSeparator) + username + string(os.PathSeparator) + "src"
+	userRepos := conf.Wide.GetUserWorkspace(username) + string(os.PathSeparator) + "src"
+
+	glog.Info(userRepos)
 
 	// TODO: git clone
-
-	glog.Infof("Git Cloned from [%s] to [%s]", conf.Wide.Workspace+string(os.PathSeparator)+"src", userRepos)
 }
 
 func addUser(username, password string) string {
@@ -69,7 +69,8 @@ func addUser(username, password string) string {
 		}
 	}
 
-	newUser := conf.User{Name: username, Password: password}
+	// FIXME: 新建用户时保存工作空间
+	newUser := conf.User{Name: username, Password: password, Workspace: ""}
 	conf.Wide.Users = append(conf.Wide.Users, newUser)
 
 	if !conf.Save() {

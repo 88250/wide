@@ -13,20 +13,9 @@
 
         <h2>工作空间</h2>
         <p>
-            一个工作空间由下面几个部分组成：
+            Wide 的工作空间就是 Go 中的 <a href="https://golang.org/doc/code.html#Workspaces" target="_blank">workspaces</a>，每个用户的工作空间路径可在 wide.json 中进行配置。
         </p>
-        <ul>
-            <li>源代码仓库：data/user_workspaces/{user}/src</li>
-            <li>GOPATH：data/user_workspaces/{user}</li>
-        </ul>
-        <p>
-            这和 golang 本身 <a href="https://golang.org/doc/code.html#Workspaces" target="_blank">workspaces</a> 的设计保持一致：每个用户的 GOPATH 指定了其工作空间的路径。
-        </p>
-        <h2>版本控制</h2>
-        <p>
-            使用 git 作为源码版本控制系统，data/workspace/src 是主库，每个用户的源码仓库都克隆自主库。            
-        </p>
-
+        
         <h2>运行时</h2>	
         <p>
             用户在运行程序时进程是跑在服务器上的，所以多用户同时运行程序时最常见的问题就是资源冲突（比如网络端口），目前这个问题只能靠用户自行规避。

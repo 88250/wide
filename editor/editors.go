@@ -114,12 +114,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	userLib := userWorkspace + string(os.PathSeparator) + "pkg" + string(os.PathSeparator) +
 		runtime.GOOS + "_" + runtime.GOARCH
 
-	masterWorkspace := conf.Wide.Workspace
-	//glog.Infof("Master workspace [%s]", masterWorkspace)
-	masterLib := masterWorkspace + string(os.PathSeparator) + "pkg" + string(os.PathSeparator) +
-		runtime.GOOS + "_" + runtime.GOARCH
-
-	libPath := userLib + string(os.PathListSeparator) + masterLib
+	libPath := userLib
 	//glog.Infof("gocode set lib-path %s", libPath)
 
 	// FIXME: 使用 gocode set lib-path 在多工作空间环境下肯定是有问题的，需要考虑其他实现方式
