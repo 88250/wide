@@ -27,8 +27,6 @@ type conf struct {
 	OutputChannel         string
 	ShellChannel          string
 	StaticResourceVersion string
-	ContextPath           string
-	StaticPath            string
 	MaxProcs              int
 	RuntimeMode           string
 	Pwd                   string

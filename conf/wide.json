@@ -5,8 +5,6 @@
     "OutputChannel": "ws://{IP}:7070",
     "ShellChannel": "ws://{IP}:7070",
     "StaticResourceVersion": "201409032040",
-    "ContextPath": "",
-    "StaticPath": "",
     "MaxProcs": 4,
     "RuntimeMode": "dev",
     "Pwd": "{pwd}",

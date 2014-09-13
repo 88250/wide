@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Wide - 配置</title>
+
+    </head>
+    <body>
+        <h1>配置</h1>
+
+        <pre>
+{
+    "Server": "{IP}:7070", 运行的 IP，端口   
+    "StaticServer": "http://{IP}:7070", 静态资源服务 IP，端口
+    "EditorChannel": "ws://{IP}:7070", 编辑器消息通道
+    "OutputChannel": "ws://{IP}:7070", 输出窗口消息通道
+    "ShellChannel": "ws://{IP}:7070", Shell 消息通道
+    "StaticResourceVersion": "201409032040", 静态资源版本    
+    "MaxProcs": 4, Go 协程并行处理数量，可等于 Go CPU 核数
+    "RuntimeMode": "dev", 运行模式，dev 为开发模式，prod 为生产模式
+    "Pwd": "{pwd}", 工作目录，设置为 "{pwd}" 将自动获取
+    "Users": [
+        {
+            "Name": "admin", 用户名
+            "Password": "admin", 用户密码
+            "Workspace": "{Pwd}/data/user_workspaces/admin" 用户工作空间（GOPATH）
+        }
+    ]
+}
+        </pre>
+    </body>
+</html>
