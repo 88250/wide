@@ -84,6 +84,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 自动完成（代码补全）.
 func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 
