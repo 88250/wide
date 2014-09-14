@@ -16,6 +16,9 @@ import (
 	"github.com/b3log/wide/shell"
 	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
+
+	_ "github.com/88250/ide_stub" // 运行时依赖，用于跳转到声明、查找使用等功能
+	_ "github.com/nsf/gocode"     // 运行时依赖，用于代码自动完成
 )
 
 // Wide 中唯一一个 init 函数.

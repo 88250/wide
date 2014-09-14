@@ -12,8 +12,8 @@
         <ol>
             <li>下载 Wide 安装包</li>
             <li>解压到安装路径 {wide}，例如 /root/wide</li>
-            <li>配置 {wide}/conf/wide.json（<a href="conf.html">配置项说明</a>）</li>
-        </ol>   
+            <li>配置 {wide}/conf/<a href="conf.html">wide.json</a>（可选，默认配置应该可以工作）</li>
+        </ol>
 
         <h2>多用户配置</h2>
         前提：需要安装 git。
@@ -21,6 +21,22 @@
             <li>初始化主库：在 {wide}/data/workspace/src 下执行 git init</li>
             <li>添加用户：修改 {wide}/conf/wide.json 中的 Users</li>
             <li>添加用户库：在 {wide}/data/user_workspaces/{user}/ 中 git clone 主库</li>
+        </ol>
+
+        <h2>从源码安装</h2>
+        前提：
+        <ol>
+            <li>搭建好 Go 开发环境</li>
+            <li>安装好 git</li>
+        </ol>
+
+        步骤：
+        <ol>                         
+            <li>通过 git clone 或下载 zip 包方式获取 Wide 源码（项目地址：<a href="https://github.com/b3log/wide">https://github.com/b3log/wide</a>）</li>
+            <li>获取 Wide 依赖：go get -u</li>
+            <li>编译 Wide：go build</li>
+            <li>配置 {wide}/conf/<a href="conf.html">wide.json</a>（可选，默认配置应该可以工作）</li>
+            <li>运行可执行文件 wide 或 wide.exe</li>
         </ol>
     </body>
 </html>
