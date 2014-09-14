@@ -288,6 +288,17 @@ var wide = {
 
                 return;
             }
+
+            if (event.altKey && event.shiftKey && event.which === 70) { // Alt+Shift+F 格式化当前编辑器文件
+                if (!wide.curNode) {
+                    return false;
+                }
+
+                wide.fmt();
+                event.preventDefault();
+
+                return;
+            }
         });
     }
 };
