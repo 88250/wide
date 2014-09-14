@@ -299,6 +299,13 @@ var wide = {
 
                 return;
             }
+
+            if (event.which === 117) { // F6 构建并运行
+                wide.run();
+                event.preventDefault();
+
+                return;
+            }
         });
     }
 };
