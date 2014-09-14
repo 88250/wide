@@ -106,13 +106,13 @@ var wide = {
         });
     },
     saveAllFiles: function () {
-        // TODO: save all
+        // TODO: save all files
     },
     closeFile: function () {
-        // TODO: save all
+        // TODO: close file
     },
     closeAllFiles: function () {
-        // TODO: save all
+        // TODO: close all files
     },
     exit: function () {
         // TODO: exit
@@ -229,12 +229,12 @@ var wide = {
     },
     _bindKey: function () {
         $("#files").keydown(function (event) {
-            if (!wide.curNode) {
-                return false;
-            }
-
             switch (event.which) {
                 case 13: // 回车
+                    if (!wide.curNode) {
+                        return false;
+                    }
+
                     if (wide.curNode.iconSkin === "ico-ztree-dir ") { // 选中节点是目录
                         // 不做任何处理
                         return false;
@@ -245,11 +245,19 @@ var wide = {
 
                     break;
                 case 38: // 上
+                    if (!wide.curNode) {
+                        return false;
+                    }
+
                     tree.fileTree.selectNode(wide.curNode.getPreNode());
                     wide.curNode = wide.curNode.getPreNode();
                     $("#files").focus();
                     break;
                 case 40: // 下
+                    if (!wide.curNode) {
+                        return false;
+                    }
+
                     // TODO: 处理滚动条，递归获取下一个
                     tree.fileTree.selectNode(wide.curNode.getNextNode());
                     wide.curNode = wide.curNode.getNextNode();
@@ -259,11 +267,26 @@ var wide = {
         });
 
         $(document).keydown(function (event) {
-            if (event.ctrlKey && event.which === 49) { // Ctrl+1 焦点切换到文件树 
-
+            if (event.ctrlKey && event.which === 49) { // Ctrl+1 焦点切换到文件树
                 // 有些元素需设置 tabindex 为 -1 时才可以 focus
                 $("#files").focus();
                 event.preventDefault();
+
+                return;
+            }
+
+            if (event.ctrlKey && event.which === 52) { // Ctrl+4 焦点切换到输出窗口                
+                $("#output").focus();
+                event.preventDefault();
+
+                return;
+            }
+
+            if (event.ctrlKey && event.which === 83) { // Ctrl+S 保存当前编辑器文件
+                wide.saveFile();
+                event.preventDefault();
+
+                return;
             }
         });
     }
