@@ -46,7 +46,7 @@ A simple <b>W</b>eb **IDE** for golang.
 
 ## Setup from sources
 1. Downloads source
-2. Gets dependencies with `go get`
+2. Gets dependencies with `go get -u`
 3. Compiles wide with `go build` 
 4. Configures `conf/wide.json`
 5. Runs the executable `wide` or `wide.exe`
