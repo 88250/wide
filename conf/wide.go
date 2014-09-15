@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"time"
 
 	"github.com/b3log/wide/event"
 	_ "github.com/b3log/wide/i18n"
@@ -38,35 +39,42 @@ type conf struct {
 var Wide conf
 var rawWide conf
 
-// 检查 Wide 运行环境.
+// 定时检查 Wide 运行环境.
 // 如果是特别严重的问题（比如 $GOPATH 不存在）则退出进程。另一些不太严重的问题（比如 gocode 不存在）则放入全局通知队列。
-func (*conf) CheckEnv() {
-	if "" == os.Getenv("GOPATH") {
-		glog.Fatal("Not found $GOPATH")
-		os.Exit(-1)
-	}
+func CheckEnv() {
+	go func() {
+		for {
 
-	if "" == os.Getenv("GOROOT") {
-		glog.Fatal("Not found $GOROOT")
+			if "" == os.Getenv("GOPATH") {
+				glog.Fatal("Not found $GOPATH")
+				os.Exit(-1)
+			}
 
-		os.Exit(-1)
-	}
+			if "" == os.Getenv("GOROOT") {
+				glog.Fatal("Not found $GOROOT")
 
-	gocode := Wide.GetGocode()
-	cmd := exec.Command(gocode, "close")
-	_, err := cmd.Output()
-	if nil != err {
-		event.EventQueue <- event.EvtGocodeNotFount
-		glog.Warningf("Not found gocode [%s]", gocode)
-	}
+				os.Exit(-1)
+			}
 
-	ide_stub := Wide.GetIDEStub()
-	cmd = exec.Command(ide_stub, "version")
-	_, err = cmd.Output()
-	if nil != err {
-		event.EventQueue <- event.EvtIDEStubNotFound
-		glog.Warningf("Not found ide_stub [%s]", ide_stub)
-	}
+			gocode := Wide.GetGocode()
+			cmd := exec.Command(gocode, "close")
+			_, err := cmd.Output()
+			if nil != err {
+				event.EventQueue <- event.EvtGocodeNotFount
+				glog.Warningf("Not found gocode [%s]", gocode)
+			}
+
+			ide_stub := Wide.GetIDEStub()
+			cmd = exec.Command(ide_stub, "version")
+			_, err = cmd.Output()
+			if nil != err {
+				event.EventQueue <- event.EvtIDEStubNotFound
+				glog.Warningf("Not found ide_stub [%s]", ide_stub)
+			}
+
+			time.Sleep(time.Second * 2)
+		}
+	}()
 }
 
 // 获取 username 指定的用户的工作空间路径.
@@ -140,9 +148,6 @@ func Save() bool {
 
 // 加载 Wide 配置.
 func Load() {
-	// 检查 Wide 运行环境
-	Wide.CheckEnv()
-
 	bytes, _ := ioutil.ReadFile("conf/wide.json")
 
 	err := json.Unmarshal(bytes, &Wide)

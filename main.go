@@ -13,6 +13,7 @@ import (
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/file"
 	"github.com/b3log/wide/i18n"
+	"github.com/b3log/wide/notification"
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/shell"
 	"github.com/b3log/wide/user"
@@ -31,6 +32,9 @@ func init() {
 
 	// 加载配置
 	conf.Load()
+
+	// 定时检查 Wide 运行环境
+	conf.CheckEnv()
 }
 
 // Wide 首页.
@@ -107,6 +111,9 @@ func main() {
 	// Shell
 	http.HandleFunc("/shell/ws", shell.WSHandler)
 	http.HandleFunc("/shell", shell.IndexHandler)
+
+	// 通知
+	http.HandleFunc("/notification/ws", notification.WSHandler)
 
 	// 用户
 	http.HandleFunc("/user/new", user.AddUser)

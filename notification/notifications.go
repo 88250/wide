@@ -6,9 +6,10 @@ import (
 	"os"
 	"os/exec"
 	"runtime"
-	"strings"
+	"time"
 
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
@@ -22,25 +23,42 @@ type Notification struct {
 	Message  string
 }
 
+// 一个用户会话的 WebSocket 通道结构.
+type WSChannel struct {
+	Conn *websocket.Conn // WebSocket 连接
+	Time time.Time       // 该通道最近一次使用时间
+}
+
 // 通知通道.
-var notificationWS = map[string]*websocket.Conn{}
+// <username, {<sid1, WSChannel1>, <sid2, WSChannel2>}>
+var notificationWSs = map[string]map[string]WSChannel{}
 
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 	sid := session.Values["id"].(string)
 
-	notificationWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)
+	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
+	wsChan := WSChannel{Conn: conn, Time: time.Now()}
+
+	wsChans := notificationWSs[username]
+	if nil == wsChans {
+		wsChans = map[string]WSChannel{}
+	}
+
+	wsChans[sid] = wsChan
 
 	ret := map[string]interface{}{"output": "Notification initialized", "cmd": "init-notification"}
-	notificationWS[sid].WriteJSON(&ret)
+	wsChan.Conn.WriteJSON(&ret)
 
-	glog.Infof("Open a new [Notification] with session [%s], %d", sid, len(notificationWS))
+	glog.Infof("Open a new [Notification] with session [%s], %d", sid, len(wsChans))
+
+	event.InitUserQueue(sid)
 
 	input := map[string]interface{}{}
 
 	for {
-		if err := notificationWS[sid].ReadJSON(&input); err != nil {
+		if err := wsChan.Conn.ReadJSON(&input); err != nil {
 			if err.Error() == "EOF" {
 				return
 			}
@@ -49,35 +67,16 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			glog.Error("Shell WS ERROR: " + err.Error())
+			glog.Error("Notification WS ERROR: " + err.Error())
 			return
 		}
 
-		inputCmd := input["cmd"].(string)
-
-		cmds := strings.Split(inputCmd, "|")
-		commands := []*exec.Cmd{}
-		for _, cmdWithArgs := range cmds {
-			cmdWithArgs = strings.TrimSpace(cmdWithArgs)
-			cmdWithArgs := strings.Split(cmdWithArgs, " ")
-			args := []string{}
-			if len(cmdWithArgs) > 1 {
-				args = cmdWithArgs[1:]
-			}
-
-			cmd := exec.Command(cmdWithArgs[0], args...)
-			commands = append(commands, cmd)
-		}
-
 		output := ""
-		if !strings.Contains(inputCmd, "clear") {
-			output = pipeCommands(username, commands...)
-		}
 
-		ret = map[string]interface{}{"output": output, "cmd": "shell-output"}
+		ret = map[string]interface{}{"output": output, "cmd": "notification-output"}
 
-		if err := notificationWS[sid].WriteJSON(&ret); err != nil {
-			glog.Error("Shell WS ERROR: " + err.Error())
+		if err := wsChan.Conn.WriteJSON(&ret); err != nil {
+			glog.Error("Notification WS ERROR: " + err.Error())
 			return
 		}
 	}
