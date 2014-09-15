@@ -272,7 +272,7 @@ func listFiles(dirname string) []string {
 
 func getIconSkin(filenameExtension string) string {
 	switch filenameExtension {
-	case ".gitignore", "", ".exe", ".s":
+	case ".gitignore", "", ".exe", ".s", ".tar", ".zip", ".rar", ".gz": // 不支持显示图标的文件
 		return "ico-ztree-other "
 	case ".json", ".js":
 		return "ico-ztree-js "

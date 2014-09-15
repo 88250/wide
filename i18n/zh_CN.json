@@ -21,5 +21,7 @@
     "goget": "go get",
     "goinstall": "go install",
     "build_n_run": "构建 & 运行",
-    "full_screen": "全屏"
+    "full_screen": "全屏",
+    "notification_2": "没有检查到 gocode，这将会导致 [自动完成] 失效",
+    "notification_3": "没有检查到 ide_stub，这将会导致 [跳转到声明]、[查找使用] 失效"
 }

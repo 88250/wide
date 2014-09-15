@@ -44,7 +44,6 @@ var rawWide conf
 func CheckEnv() {
 	go func() {
 		for {
-
 			if "" == os.Getenv("GOPATH") {
 				glog.Fatal("Not found $GOPATH")
 				os.Exit(-1)
@@ -60,7 +59,7 @@ func CheckEnv() {
 			cmd := exec.Command(gocode, "close")
 			_, err := cmd.Output()
 			if nil != err {
-				event.EventQueue <- event.EvtGocodeNotFount
+				event.EventQueue <- event.EvtCodeGocodeNotFound
 				glog.Warningf("Not found gocode [%s]", gocode)
 			}
 
@@ -68,11 +67,12 @@ func CheckEnv() {
 			cmd = exec.Command(ide_stub, "version")
 			_, err = cmd.Output()
 			if nil != err {
-				event.EventQueue <- event.EvtIDEStubNotFound
+				event.EventQueue <- event.EvtCodeIDEStubNotFound
 				glog.Warningf("Not found ide_stub [%s]", ide_stub)
 			}
 
-			time.Sleep(time.Second * 2)
+			// 7 分钟进行一次检查
+			time.Sleep(time.Minute * 7)
 		}
 	}()
 }
