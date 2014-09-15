@@ -275,7 +275,10 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	// TODO: 目前是调用 liteide_stub 工具来查找使用，后续需要重新实现
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
-	cmd := exec.Command("liteide_stub", argv...)
+
+	ide_stub := os.Getenv("GOPATH") + string(os.PathSeparator) +
+		os.Getenv("OS") + string(os.PathSeparator) + os.Getenv("GOARCH") + string(os.PathSeparator) + "ide_stub"
+	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)
