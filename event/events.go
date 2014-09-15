@@ -24,9 +24,11 @@ type Event struct {
 var EventQueue = make(chan int, MaxQueueLength)
 
 // 用户事件队列.
+// <sid, chan>
 var UserEventQueues = map[string]chan int{}
 
 // 用户事件处理器集.
+// <sid, *Handlers>
 var UserEventHandlers = map[string]*Handlers{}
 
 // 加载事件处理.
@@ -76,12 +78,15 @@ func InitUserQueue(sid string, handlers ...Handler) {
 	}()
 }
 
+// 事件处理接口.
 type Handler interface {
 	Handle(event *Event)
 }
 
+// 函数指针包装.
 type HandleFunc func(event *Event)
 
+// 事件处理默认实现.
 func (fn HandleFunc) Handle(event *Event) {
 	fn(event)
 }
