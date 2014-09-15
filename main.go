@@ -10,6 +10,7 @@ import (
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
+	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/file"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/output"
@@ -20,12 +21,16 @@ import (
 
 // Wide 中唯一一个 init 函数.
 func init() {
+	// 默认启动参数
 	flag.Set("logtostderr", "true")
 	flag.Set("v", "1")
-
-	conf.Load()
-
 	flag.Parse()
+
+	// 加载事件处理
+	event.Load()
+
+	// 加载配置
+	conf.Load()
 }
 
 // Wide 首页.

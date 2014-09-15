@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/b3log/wide/event"
 	_ "github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
@@ -36,6 +37,38 @@ type conf struct {
 
 var Wide conf
 var rawWide conf
+
+// 检查 Wide 运行环境.
+// 如果是特别严重的问题（比如 $GOPATH 不存在）则退出进程。另一些不太严重的问题（比如 gocode 不存在）则放入全局通知队列。
+func (*conf) CheckEnv() {
+	if "" == os.Getenv("GOPATH") {
+		glog.Fatal("Not found $GOPATH")
+		os.Exit(-1)
+	}
+
+	if "" == os.Getenv("GOROOT") {
+		glog.Fatal("Not found $GOROOT")
+
+		os.Exit(-1)
+	}
+
+	gocode := Wide.GetGocode()
+	cmd := exec.Command(gocode, "close")
+	_, err := cmd.Output()
+	if nil != err {
+		event.EventQueue <- event.EvtGocodeNotFount
+		glog.Warning("Not found gocode")
+	}
+
+	ide_stub := Wide.GetIDEStub()
+	cmd = exec.Command(ide_stub, "version")
+	_, err = cmd.Output()
+	if nil != err {
+		glog.Info(err)
+		event.EventQueue <- event.EvtIDEStubNotFound
+		glog.Warning("Not found ide_stub")
+	}
+}
 
 // 获取 username 指定的用户的工作空间路径.
 func (*conf) GetUserWorkspace(username string) string {
@@ -71,6 +104,7 @@ func (*conf) GetIDEStub() string {
 	}
 }
 
+// 保存 Wide 配置.
 func Save() bool {
 	// 只有 Users 是可以通过界面修改的，其他属性只能手工维护 wide.json 配置文件
 	rawWide.Users = Wide.Users
@@ -93,7 +127,11 @@ func Save() bool {
 	return true
 }
 
+// 加载 Wide 配置.
 func Load() {
+	// 检查 Wide 运行环境
+	Wide.CheckEnv()
+
 	bytes, _ := ioutil.ReadFile("conf/wide.json")
 
 	err := json.Unmarshal(bytes, &Wide)

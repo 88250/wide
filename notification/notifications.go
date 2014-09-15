@@ -1,5 +1,5 @@
 // 通知.
-package notifications
+package notification
 
 import (
 	"net/http"
@@ -22,6 +22,7 @@ type Notification struct {
 	Message  string
 }
 
+// 通知通道.
 var notificationWS = map[string]*websocket.Conn{}
 
 func WSHandler(w http.ResponseWriter, r *http.Request) {
