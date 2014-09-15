@@ -32,11 +32,16 @@
 
         步骤：
         <ol>                         
-            <li>通过 git clone 或下载 zip 包方式获取 Wide 源码（项目地址：<a href="https://github.com/b3log/wide">https://github.com/b3log/wide</a>）</li>
-            <li>获取 Wide 依赖：go get -u</li>
-            <li>编译 Wide：go build</li>
+            <li>通过 <code>git clone</code> 或下载 zip 包方式获取 Wide 源码（项目地址：<a href="https://github.com/b3log/wide">https://github.com/b3log/wide</a>）</li>
+            <li>获取依赖，在 Wide 源码目录下执行：
+                <ul>
+                    <li><code>go get -u</code></li>
+                    <li><code>go get -u github.com/88250/ide_stub</code></li>
+                    <li><code>go get -u github.com/nsf/gocode</code></li>
+                </ul>
+            <li>编译：在 Wide 源码目录下执行 <code>go build</code></li>
             <li>配置 {wide}/conf/<a href="conf.html">wide.json</a>（可选，默认配置应该可以工作）</li>
-            <li>运行可执行文件 wide 或 wide.exe</li>
+            <li>运行可执行文件 wide 或 wide.exe</li>            
         </ol>
     </body>
 </html>
