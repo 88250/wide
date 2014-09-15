@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 
 	_ "github.com/b3log/wide/i18n"
@@ -37,7 +38,7 @@ var Wide conf
 var rawWide conf
 
 // 获取 username 指定的用户的工作空间路径.
-func (this *conf) GetUserWorkspace(username string) string {
+func (*conf) GetUserWorkspace(username string) string {
 	for _, user := range Wide.Users {
 		if user.Name == username {
 			ret := strings.Replace(user.Workspace, "{Pwd}", Wide.Pwd, 1)
@@ -46,6 +47,28 @@ func (this *conf) GetUserWorkspace(username string) string {
 	}
 
 	return ""
+}
+
+// 获取 gocode 路径.
+func (*conf) GetGocode() string {
+	if "" != os.Getenv("GOARCH") {
+		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+			runtime.GOOS + "_" + os.Getenv("GOARCH") + string(os.PathSeparator) + "gocode"
+	} else {
+		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+			"gocode"
+	}
+}
+
+// 获取 ide_stub 路径.
+func (*conf) GetIDEStub() string {
+	if "" != os.Getenv("GOARCH") {
+		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+			runtime.GOOS + "_" + os.Getenv("GOARCH") + string(os.PathSeparator) + "ide_stub"
+	} else {
+		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+			"ide_stub"
+	}
 }
 
 func Save() bool {

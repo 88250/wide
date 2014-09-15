@@ -62,8 +62,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		// glog.Infof("offset: %d", offset)
 
-		gocode := os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-			os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + string(os.PathSeparator) + "gocode"
+		gocode := conf.Wide.GetGocode()
 		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
 
 		var output bytes.Buffer
@@ -122,8 +121,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	//glog.Infof("gocode set lib-path %s", libPath)
 
 	// FIXME: 使用 gocode set lib-path 在多工作空间环境下肯定是有问题的，需要考虑其他实现方式
-	gocode := os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-		os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + string(os.PathSeparator) + "gocode"
+	gocode := conf.Wide.GetGocode()
 	argv := []string{"set", "lib-path", libPath}
 	cmd := exec.Command(gocode, argv...)
 	cmd.Start()
@@ -200,8 +198,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	// glog.Infof("offset [%d]", offset)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
-	ide_stub := os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-		os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + string(os.PathSeparator) + "ide_stub"
+	ide_stub := conf.Wide.GetIDEStub()
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
@@ -282,8 +279,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找使用，后续需要重新实现
-	ide_stub := os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-		os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + string(os.PathSeparator) + "ide_stub"
+	ide_stub := conf.Wide.GetIDEStub()
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
