@@ -266,6 +266,12 @@ var editors = {
                 "Ctrl-E": "deleteLine",
                 "Ctrl-D": "doNothing", // 取消默认的 deleteLine
                 "Ctrl-B": "jumpToDecl",
+                "Ctrl-S": function () {
+                      wide.saveFile();
+                },
+                "Alt-Shift-F": function () {
+                     wide.fmt();
+                },
                 "Alt-F7": "findUsages"
             }
         });
