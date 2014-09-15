@@ -57,16 +57,15 @@ func (*conf) CheckEnv() {
 	_, err := cmd.Output()
 	if nil != err {
 		event.EventQueue <- event.EvtGocodeNotFount
-		glog.Warning("Not found gocode")
+		glog.Warningf("Not found gocode [%s]", gocode)
 	}
 
 	ide_stub := Wide.GetIDEStub()
 	cmd = exec.Command(ide_stub, "version")
 	_, err = cmd.Output()
 	if nil != err {
-		glog.Info(err)
 		event.EventQueue <- event.EvtIDEStubNotFound
-		glog.Warning("Not found ide_stub")
+		glog.Warningf("Not found ide_stub [%s]", ide_stub)
 	}
 }
 
@@ -84,9 +83,15 @@ func (*conf) GetUserWorkspace(username string) string {
 
 // 获取 gocode 路径.
 func (*conf) GetGocode() string {
-	if "" != os.Getenv("GOARCH") {
-		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-			runtime.GOOS + "_" + os.Getenv("GOARCH") + string(os.PathSeparator) + "gocode"
+	binDir := os.Getenv("GOBIN")
+	if "" != binDir {
+		return binDir + string(os.PathSeparator) + "gocode"
+	}
+
+	binDir = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+		runtime.GOOS + "_" + os.Getenv("GOARCH")
+	if isExist(binDir) {
+		return binDir + string(os.PathSeparator) + "gocode"
 	} else {
 		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
 			"gocode"
@@ -95,9 +100,15 @@ func (*conf) GetGocode() string {
 
 // 获取 ide_stub 路径.
 func (*conf) GetIDEStub() string {
-	if "" != os.Getenv("GOARCH") {
-		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-			runtime.GOOS + "_" + os.Getenv("GOARCH") + string(os.PathSeparator) + "ide_stub"
+	binDir := os.Getenv("GOBIN")
+	if "" != binDir {
+		return binDir + string(os.PathSeparator) + "ide_stub"
+	}
+
+	binDir = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+		runtime.GOOS + "_" + os.Getenv("GOARCH")
+	if isExist(binDir) {
+		return binDir + string(os.PathSeparator) + "ide_stub"
 	} else {
 		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
 			"ide_stub"
@@ -166,4 +177,12 @@ func Load() {
 	glog.V(3).Infof("pwd [%s]", pwd)
 
 	glog.V(3).Info("Conf: \n" + string(bytes))
+}
+
+// 检查文件或目录是否存在.
+// 如果由 filename 指定的文件或目录存在则返回 true，否则返回 false.
+func isExist(filename string) bool {
+	_, err := os.Stat(filename)
+
+	return err == nil || os.IsExist(err)
 }
