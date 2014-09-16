@@ -33,25 +33,25 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	// 构造 Go API 节点
 	apiPath := runtime.GOROOT() + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "pkg"
 	apiNode := FileNode{Name: "Go API", Path: apiPath, FileNodes: []*FileNode{}}
+
+	goapiBuildOKSignal := make(chan bool)
 	go func() {
-		fio, _ := os.Lstat(apiPath)
-		if fio.IsDir() {
-			apiNode.Type = "d"
-			// TOOD: Go API 用另外的样式
-			apiNode.IconSkin = "ico-ztree-dir "
+		apiNode.Type = "d"
+		// TOOD: Go API 用另外的样式
+		apiNode.IconSkin = "ico-ztree-dir "
 
-			walk(apiPath, &apiNode)
-		} else {
-			apiNode.Type = "f"
-			ext := filepath.Ext(apiPath)
+		walk(apiPath, &apiNode)
 
-			apiNode.IconSkin = getIconSkin(ext)
-			apiNode.Mode = getEditorMode(ext)
-		}
+		// 放行信号
+		close(goapiBuildOKSignal)
 	}()
 
 	// 构造用户工作空间文件树
 	walk(userSrc, &root)
+
+	// 等待放行
+	<-goapiBuildOKSignal
+
 	// 添加 Go API 节点
 	root.FileNodes = append(root.FileNodes, &apiNode)
 
