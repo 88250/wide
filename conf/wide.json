@@ -12,7 +12,7 @@
         {
             "Name": "admin",
             "Password": "admin",
-            "Workspace": "{Pwd}/data/user_workspaces/admin"
+            "Workspace": "{pwd}/data/user_workspaces/admin"
         }
     ]
 }

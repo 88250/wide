@@ -40,7 +40,7 @@ var Wide conf
 var rawWide conf
 
 // 定时检查 Wide 运行环境.
-// 如果是特别严重的问题（比如 $GOPATH 不存在）则退出进程。另一些不太严重的问题（比如 gocode 不存在）则放入全局通知队列。
+// 如果是特别严重的问题（比如 $GOPATH 不存在）则退出进程，另一些不太严重的问题（比如 gocode 不存在）则放入全局通知队列.
 func CheckEnv() {
 	go func() {
 		for {
@@ -81,7 +81,7 @@ func CheckEnv() {
 func (*conf) GetUserWorkspace(username string) string {
 	for _, user := range Wide.Users {
 		if user.Name == username {
-			ret := strings.Replace(user.Workspace, "{Pwd}", Wide.Pwd, 1)
+			ret := strings.Replace(user.Workspace, "{pwd}", Wide.Pwd, 1)
 			return filepath.FromSlash(ret)
 		}
 	}
