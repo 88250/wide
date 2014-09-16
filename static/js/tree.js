@@ -1,12 +1,52 @@
 var tree = {
-    getTIdByPath: function (path) {
-       var nodes = tree.fileTree.transformToArray(tree.fileTree.getNodes());
+    // 递归获取当前节点展开中的最后一个节点
+    getCurrentNodeLastNode: function(node) {
+        var returnNode = node.children[node.children.length - 1];
+        if (returnNode.open) {
+            return tree.getCurrentNodeLastNode(returnNode);
+        } else {
+            return returnNode;
+        }
+    },
+    // 按照树展现获取下一个节点
+    getNextShowNode: function(node) {
+        if (node.level !== 0) {
+            if (node.getParentNode().getNextNode()) {
+                return node.getParentNode().getNextNode();
+            } else {
+                return tree.getNextShowNode(node.getParentNode());
+            }
+        } else {
+            return node.getNextNode();
+        }
+    },
+    isBottomNode: function(node) {
+        if (node.open) {
+            return false;
+        }
+
+        if (node.getParentNode()) {
+            if (node.getParentNode().isLastNode) {
+                return tree.isBottomNode(node.getParentNode());
+            } else {
+                return false;
+            }
+        } else {
+            if (node.isLastNode) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    },
+    getTIdByPath: function(path) {
+        var nodes = tree.fileTree.transformToArray(tree.fileTree.getNodes());
         for (var i = 0, ii = nodes.length; i < ii; i++) {
             if (nodes[i].path === path) {
                 return nodes[i].tId;
             }
         }
-        
+
         return undefined;
     },
     fileTree: undefined,

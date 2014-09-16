@@ -235,23 +235,18 @@ ul {
 /* end editor */
 
 /* start output */
-.output .tabs {
+.bottom-window-group .tabs {
     background-color: #CAD3E3;
     border-top: 1px solid #8E97A7;
     border-bottom: 1px solid #8E97A7;
 }
 
-.output .tabs > div {
-    background-color: #B5BDCC;
-    border-left-color: #9096A2;
+.bottom-window-group .tabs > div {
+    cursor: pointer;
 }
 
-.output .tabs > div.current {
-    background-color: #8B99B3;
-    color: #FFF;
-}
-
-#output {
+#output, 
+#notification {
     border-width: 0;
     color: #555555;
     height: 130px;

@@ -26,6 +26,9 @@ var hotkeys = {
         // TODO: 滚动处理
         $("#files").keydown(function(event) {
             switch (event.which) {
+                case 46: // 删除
+                    tree.removeIt();
+                    break;
                 case 13: // 回车
                     if (!wide.curNode) {
                         return false;
@@ -60,8 +63,8 @@ var hotkeys = {
                         var preNode = wide.curNode.getPreNode();
                         if (preNode && preNode.iconSkin === "ico-ztree-dir "
                                 && preNode.open) {
-                            // 当前节点的上一个节点是目录且打开时
-                            node = preNode.children[preNode.children.length - 1];
+                            // 当前节点的上一个节点是目录且打开时，获取打开节点中的最后一个节点
+                            node = tree.getCurrentNodeLastNode(preNode);
                         }
                     }
 
@@ -75,8 +78,7 @@ var hotkeys = {
                     if (!wide.curNode) { // 没有选中节点时，默认选中第一个
                         node = tree.fileTree.getNodeByTId("files_1");
                     } else {
-                        if (wide.curNode && wide.curNode.isLastNode && !wide.curNode.open
-                                && wide.curNode.getParentNode().isLastNode) {
+                        if (wide.curNode && tree.isBottomNode(wide.curNode)) {
                             // 当前节点为最底部的节点
                             return false;
                         }
@@ -87,10 +89,11 @@ var hotkeys = {
                             node = wide.curNode.children[0];
                         }
 
-                        if (wide.curNode.isLastNode && wide.curNode.level !== 0
-                                && wide.curNode.getParentNode().getNextNode()) {
-                            // 当前节点为最后一个节点，但其父节点还有下一个节点
-                            node = wide.curNode.getParentNode().getNextNode();
+                        var nextShowNode = tree.getNextShowNode(wide.curNode);
+                        if (wide.curNode.isLastNode && wide.curNode.level !== 0 && !wide.curNode.open
+                                && nextShowNode) {
+                            // 当前节点为最后一个叶子节点，但其父或祖先节点还有下一个节点
+                            node = nextShowNode;
                         }
                     }
 

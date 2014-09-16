@@ -133,20 +133,29 @@
                     <div class="tabs-panel"></div>
                 </div>
 
-                <div class="output">
+                <div class="bottom-window-group">
                     <div class="tabs">
-                        <div class="current" data-index="files_3">
+                        <div class="current" data-index="output">
                             <span title="Output">Output</span>
+                        </div>
+                        <div data-index="search">
+                            <span title="Search">Search</span>
+                        </div>
+                        <div data-index="notification">
+                            <span title="Notification">Notification</span>
                         </div>
                     </div>
                     <div class="tabs-panel">
-                        <textarea id="output"></textarea>
+                        <div data-index="output">
+                            <textarea id="output"></textarea>
+                        </div>
+                        <div class="fn-none" data-index="search">
+                        </div>
+                        <div class="fn-none" data-index="notification">
+                            <textarea id="notification"></textarea>
+                        </div>
                     </div>
                 </div>
-
-
-
-                <textarea id="notification"></textarea>
             </div>
         </div>
 
