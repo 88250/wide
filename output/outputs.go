@@ -110,6 +110,9 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 						glog.Error(err)
 						break
 					}
+
+					// 更新通道最近使用时间
+					wsChannel.Time = time.Now()
 				}
 			}
 		}
@@ -264,6 +267,9 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				if nil != err {
 					glog.Error(err)
 				}
+
+				// 更新通道最近使用时间
+				wsChannel.Time = time.Now()
 			}
 
 		}(rand.Int())
@@ -386,6 +392,9 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 				if nil != err {
 					glog.Error(err)
 				}
+
+				// 更新通道最近使用时间
+				wsChannel.Time = time.Now()
 			}
 
 		}(rand.Int())
@@ -465,6 +474,9 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 						glog.Error(err)
 						break
 					}
+
+					// 更新通道最近使用时间
+					wsChannel.Time = time.Now()
 				}
 			}
 		}

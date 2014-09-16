@@ -61,6 +61,7 @@ func event2Notification(e *event.Event) {
 
 	wsChannel.Conn.WriteJSON(&notification)
 
+	// 更新通道最近使用时间
 	wsChannel.Time = time.Now()
 }
 
@@ -106,5 +107,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 			glog.Error("Notification WS ERROR: " + err.Error())
 			return
 		}
+
+		wsChan.Time = time.Now()
 	}
 }

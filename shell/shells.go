@@ -117,6 +117,9 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 			glog.Error("Shell WS ERROR: " + err.Error())
 			return
 		}
+
+		// 更新通道最近使用时间
+		wsChan.Time = time.Now()
 	}
 }
 
