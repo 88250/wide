@@ -28,7 +28,7 @@ var shellWS = map[string]*util.WSChannel{}
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
 
-	model := map[string]interface{}{"Wide": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
 
 	session, _ := user.Session.Get(r, "wide-session")
 

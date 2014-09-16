@@ -39,25 +39,29 @@ func init() {
 
 // Wide 首页.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
+	// 创建一个 Wide 会话
+	wideSession := user.NewSession()
+
 	i18n.Load()
 
-	model := map[string]interface{}{"Wide": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+		"session": wideSession}
 
-	session, _ := user.Session.Get(r, "wide-session")
+	httpSession, _ := user.Session.Get(r, "wide-session")
 
-	if session.IsNew {
+	if httpSession.IsNew {
 		// TODO: 写死以 admin 作为用户登录
 		name := conf.Wide.Users[0].Name
 
-		session.Values["username"] = name
-		session.Values["id"] = strconv.Itoa(rand.Int())
+		httpSession.Values["username"] = name
+		httpSession.Values["id"] = strconv.Itoa(rand.Int())
 		// 一天过期
-		session.Options.MaxAge = 60 * 60 * 24
+		httpSession.Options.MaxAge = 60 * 60 * 24
 
-		glog.Infof("Created a session [%s] for user [%s]", session.Values["id"].(string), name)
+		glog.Infof("Created a session [%s] for user [%s]", httpSession.Values["id"].(string), name)
 	}
 
-	session.Save(r, w)
+	httpSession.Save(r, w)
 
 	t, err := template.ParseFiles("view/index.html")
 
