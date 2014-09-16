@@ -107,9 +107,6 @@ var tree = {
                     case "md":
                         iconSkin = "ico-ztree-md ";
                         break;
-                    case "md":
-                        iconSkin = "ico-ztree-md ";
-                        break;
                     case "js", "json":
                         iconSkin = "ico-ztree-js ";
                         break;

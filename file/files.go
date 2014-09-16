@@ -271,25 +271,32 @@ func listFiles(dirname string) []string {
 }
 
 func getIconSkin(filenameExtension string) string {
+	if isImg(filenameExtension) {
+		return "ico-ztree-img "
+	}
+
 	switch filenameExtension {
-	case ".gitignore", "", ".exe", ".s", ".tar", ".zip", ".rar", ".gz": // 不支持显示图标的文件
-		return "ico-ztree-other "
-	case ".json", ".js":
-		return "ico-ztree-js "
+	case ".html", ".htm":
+		return "ico-ztree-html "
+	case ".go":
+		return "ico-ztree-go "
+	case ".css":
+		return "ico-ztree-css "
 	case ".txt":
 		return "ico-ztree-text "
+	case ".sql":
+		return "ico-ztree-sql "
 	case ".properties":
 		return "ico-ztree-pro "
-	case ".htm", ".html":
-		return "ico-ztree-html "
+	case ".md":
+		return "ico-ztree-md "
+	case ".js", "json":
+		return "ico-ztree-js "
+	case ".xml":
+		return "ico-ztree-xml "
 	default:
-		if isImg(filenameExtension) {
-			return "ico-ztree-img "
-		}
-
-		return "ico-ztree-" + filenameExtension[1:] + " "
+		return "ico-ztree-other "
 	}
-	return ""
 }
 
 func getEditorMode(filenameExtension string) string {
