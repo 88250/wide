@@ -234,7 +234,7 @@ var wide = {
 
                 break;
             default :
-                // TODO: XML/JSON 格式化处理
+                // TODO: XML 格式化处理
                 break;
         }
     }

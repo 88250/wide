@@ -78,7 +78,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	ret := map[string]interface{}{"output": "Notification initialized", "cmd": "init-notification"}
 	wsChan.Conn.WriteJSON(&ret)
 
-	glog.Infof("Open a new [Notification] with session [%s], %d", sid, len(notificationWSs))
+	glog.V(4).Infof("Open a new [Notification] with session [%s], %d", sid, len(notificationWSs))
 
 	// 初始化用户事件队列
 	event.InitUserQueue(sid, event.HandleFunc(event2Notification))

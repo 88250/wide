@@ -78,7 +78,9 @@ var editors = {
             while (start && word.test(curLine.charAt(start - 1))) {
                 --start;
             }
+            
             var request = {
+                path: $(".edit-header .current > span:eq(0)").attr("title"),
                 code: editor.getValue(),
                 cursorLine: cur.line,
                 cursorCh: cur.ch
@@ -269,7 +271,7 @@ var editors = {
                 "Ctrl-S": function () {
                       wide.saveFile();
                 },
-                "Alt-Shift-F": function () {
+                "Shift-Alt-F": function () {
                      wide.fmt();
                 },
                 "Alt-F7": "findUsages"

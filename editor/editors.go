@@ -28,6 +28,7 @@ type snippet struct {
 	Contents []string `json:"contents"` // 代码行
 }
 
+// 建立编辑器通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
@@ -101,8 +102,26 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 
+	path := args["path"].(string)
+
+	fout, err := os.Create(path)
+
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
 	code := args["code"].(string)
-	// TODO: 保存文件
+	fout.WriteString(code)
+
+	if err := fout.Close(); nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
 
 	line := int(args["cursorLine"].(float64))
 	ch := int(args["cursorCh"].(float64))
