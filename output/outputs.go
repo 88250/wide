@@ -11,6 +11,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/user"
@@ -19,16 +20,22 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var outputWS = map[string]*websocket.Conn{}
+// 输出通道.
+// <sid, util.WSChannel>
+var outputWS = map[string]*util.WSChannel{}
 
+// 建立输出通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
-	outputWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)
+	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
+	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
+
+	outputWS[sid] = &wsChan
 
 	ret := map[string]interface{}{"output": "Ouput initialized", "cmd": "init-output"}
-	outputWS[sid].WriteJSON(&ret)
+	wsChan.Conn.WriteJSON(&ret)
 
 	glog.V(4).Infof("Open a new [Output] with session [%s], %d", sid, len(outputWS))
 }
@@ -96,7 +103,9 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				channelRet["cmd"] = "run"
 
 				if nil != outputWS[sid] {
-					err := outputWS[sid].WriteJSON(&channelRet)
+					wsChannel := outputWS[sid]
+
+					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
 						break
@@ -250,7 +259,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			if nil != outputWS[sid] {
 				glog.V(3).Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
 
-				err := outputWS[sid].WriteJSON(&channelRet)
+				wsChannel := outputWS[sid]
+				err := wsChannel.Conn.WriteJSON(&channelRet)
 				if nil != err {
 					glog.Error(err)
 				}
@@ -371,7 +381,8 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 			if nil != outputWS[sid] {
 				glog.V(3).Infof("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
 
-				err := outputWS[sid].WriteJSON(&channelRet)
+				wsChannel := outputWS[sid]
+				err := wsChannel.Conn.WriteJSON(&channelRet)
 				if nil != err {
 					glog.Error(err)
 				}
@@ -447,7 +458,9 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 				channelRet["cmd"] = "go get"
 
 				if nil != outputWS[sid] {
-					err := outputWS[sid].WriteJSON(&channelRet)
+					wsChannel := outputWS[sid]
+
+					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
 						break

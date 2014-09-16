@@ -10,16 +10,21 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 )
 
-var shellWS = map[string]*websocket.Conn{}
+// Shell 通道.
+// <sid, util.WSChannel>>
+var shellWS = map[string]*util.WSChannel{}
 
+// Shell 首页.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
 
@@ -53,22 +58,26 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, model)
 }
 
+// 建立 Shell 通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 	sid := session.Values["id"].(string)
 
-	shellWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)
+	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
+	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
+
+	shellWS[sid] = &wsChan
 
 	ret := map[string]interface{}{"output": "Shell initialized", "cmd": "init-shell"}
-	shellWS[sid].WriteJSON(&ret)
+	wsChan.Conn.WriteJSON(&ret)
 
 	glog.Infof("Open a new [Shell] with session [%s], %d", sid, len(shellWS))
 
 	input := map[string]interface{}{}
 
 	for {
-		if err := shellWS[sid].ReadJSON(&input); err != nil {
+		if err := wsChan.Conn.ReadJSON(&input); err != nil {
 			if err.Error() == "EOF" {
 				return
 			}
@@ -104,7 +113,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		ret = map[string]interface{}{"output": output, "cmd": "shell-output"}
 
-		if err := shellWS[sid].WriteJSON(&ret); err != nil {
+		if err := wsChan.Conn.WriteJSON(&ret); err != nil {
 			glog.Error("Shell WS ERROR: " + err.Error())
 			return
 		}

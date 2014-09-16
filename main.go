@@ -71,6 +71,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, model)
 }
 
+// 主程序入口.
 func main() {
 	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
 

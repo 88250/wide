@@ -3,16 +3,14 @@ package notification
 
 import (
 	"net/http"
-	"os"
-	"os/exec"
-	"runtime"
+
 	"time"
 
 	"strconv"
-	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 )
@@ -33,16 +31,9 @@ type Notification struct {
 	Message  string `json:"message"`
 }
 
-// 一个用户会话的 WebSocket 通道结构.
-type WSChannel struct {
-	Conn    *websocket.Conn // WebSocket 连接
-	Request *http.Request   // 关联的 HTTP 请求
-	Time    time.Time       // 该通道最近一次使用时间
-}
-
 // 通知通道.
-// <sid, WSChannel>
-var notificationWSs = map[string]*WSChannel{}
+// <sid, util.WSChannel>
+var notificationWSs = map[string]*util.WSChannel{}
 
 // 用户事件处理：将事件转为通知，并通过通知通道推送给前端.
 // 当用户事件队列接收到事件时将会调用该函数进行处理.
@@ -69,14 +60,17 @@ func event2Notification(e *event.Event) {
 	notification.Message = i18n.Get(wsChannel.Request, "notification_"+strconv.Itoa(e.Code)).(string)
 
 	wsChannel.Conn.WriteJSON(&notification)
+
+	wsChannel.Time = time.Now()
 }
 
+// 建立通知通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := user.Session.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
-	wsChan := WSChannel{Conn: conn, Request: r, Time: time.Now()}
+	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
 	notificationWSs[sid] = &wsChan
 
@@ -113,44 +107,4 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 	}
-}
-
-func pipeCommands(username string, commands ...*exec.Cmd) string {
-	for i, command := range commands[:len(commands)-1] {
-		setCmdEnv(command, username)
-
-		stdout, err := command.StdoutPipe()
-		if nil != err {
-			return err.Error()
-		}
-
-		command.Start()
-
-		commands[i+1].Stdin = stdout
-	}
-
-	last := commands[len(commands)-1]
-	setCmdEnv(last, username)
-
-	out, err := last.CombinedOutput()
-
-	if err != nil {
-		return err.Error()
-	}
-
-	return string(out)
-}
-
-func setCmdEnv(cmd *exec.Cmd, username string) {
-	userWorkspace := conf.Wide.GetUserWorkspace(username)
-
-	cmd.Env = append(cmd.Env,
-		"TERM="+os.Getenv("TERM"),
-		"GOPATH="+userWorkspace,
-		"GOOS="+runtime.GOOS,
-		"GOARCH="+runtime.GOARCH,
-		"GOROOT="+runtime.GOROOT(),
-		"PATH="+os.Getenv("PATH"))
-
-	cmd.Dir = userWorkspace
 }
