@@ -21,7 +21,7 @@ import (
 )
 
 // Shell 通道.
-// <sid, util.WSChannel>>
+// <sid, *util.WSChannel>>
 var shellWS = map[string]*util.WSChannel{}
 
 // Shell 首页.

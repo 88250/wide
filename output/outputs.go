@@ -21,7 +21,7 @@ import (
 )
 
 // 输出通道.
-// <sid, util.WSChannel>
+// <sid, *util.WSChannel>
 var outputWS = map[string]*util.WSChannel{}
 
 // 建立输出通道.
@@ -83,9 +83,18 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	reader := io.MultiReader(stdout, stderr)
 
-	cmd.Start()
+	if err := cmd.Start(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	// 添加到用户进程集中
+	processes.add(sid, cmd.Process)
 
 	channelRet := map[string]interface{}{}
+	channelRet["pid"] = cmd.Process.Pid
 
 	go func(runningId int) {
 		glog.V(3).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
@@ -95,16 +104,33 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			count, err := reader.Read(buf)
 
 			if nil != err || 0 == count {
-				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
+				// 从用户进程集中移除这个执行完毕的进程
+				processes.remove(sid, cmd.Process)
 
-				break
-			} else {
-				channelRet["output"] = string(buf[:count])
-				channelRet["cmd"] = "run"
+				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
 
 				if nil != outputWS[sid] {
 					wsChannel := outputWS[sid]
 
+					channelRet["cmd"] = "run-done"
+					channelRet["output"] = string(buf[:count])
+					err := wsChannel.Conn.WriteJSON(&channelRet)
+					if nil != err {
+						glog.Error(err)
+						break
+					}
+
+					// 更新通道最近使用时间
+					wsChannel.Time = time.Now()
+				}
+
+				break
+			} else {
+				if nil != outputWS[sid] {
+					wsChannel := outputWS[sid]
+
+					channelRet["cmd"] = "run"
+					channelRet["output"] = string(buf[:count])
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
@@ -206,7 +232,12 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if data["succ"].(bool) {
 		reader := io.MultiReader(stdout, stderr)
 
-		cmd.Start()
+		if err := cmd.Start(); nil != err {
+			glog.Error(err)
+			data["succ"] = false
+
+			return
+		}
 
 		go func(runningId int) {
 			glog.V(3).Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)

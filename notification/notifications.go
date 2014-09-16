@@ -32,7 +32,7 @@ type Notification struct {
 }
 
 // 通知通道.
-// <sid, util.WSChannel>
+// <sid, *util.WSChannel>
 var notificationWSs = map[string]*util.WSChannel{}
 
 // 用户事件处理：将事件转为通知，并通过通知通道推送给前端.

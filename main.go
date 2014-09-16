@@ -24,7 +24,7 @@ import (
 func init() {
 	// 默认启动参数
 	flag.Set("logtostderr", "true")
-	flag.Set("v", "1")
+	flag.Set("v", "3")
 	flag.Parse()
 
 	// 加载事件处理
