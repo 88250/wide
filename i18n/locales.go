@@ -39,8 +39,15 @@ func Load() {
 	glog.V(5).Info("Loaded [zh_CN] locale configuration")
 }
 
+// 获取请求对应的本地语言配置项.
+func Get(r *http.Request, key string) interface{} {
+	locale := GetLocale(r)
+
+	return Locales[locale].Langs[key]
+}
+
 // 获取请求对应的本地语言配置.
-func GetLangs(r *http.Request) map[string]interface{} {
+func GetAll(r *http.Request) map[string]interface{} {
 	locale := GetLocale(r)
 
 	return Locales[locale].Langs

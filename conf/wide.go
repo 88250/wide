@@ -71,8 +71,8 @@ func CheckEnv() {
 				glog.Warningf("Not found ide_stub [%s]", ide_stub)
 			}
 
-			// 7 分钟进行一次检查
-			time.Sleep(time.Minute * 7)
+			// TODO: 7 分钟进行一次检查环境
+			time.Sleep(time.Second * 10)
 		}
 	}()
 }
