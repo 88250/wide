@@ -142,16 +142,10 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	// FIXME: 使用 gocode set lib-path 在多工作空间环境下肯定是有问题的，需要考虑其他实现方式
 	gocode := conf.Wide.GetGocode()
 	argv := []string{"set", "lib-path", libPath}
-	cmd := exec.Command(gocode, argv...)
-	cmd.Run()
-
-	//gocode 试验性质特性：自动构建
-	//argv = []string{"set", "autobuild", "true"}
-	//cmd := exec.Command("gocode", argv...)
-	//cmd.Start()
+	exec.Command(gocode, argv...).Run()
 
 	argv = []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
-	cmd = exec.Command(gocode, argv...)
+	cmd := exec.Command(gocode, argv...)
 
 	stdin, _ := cmd.StdinPipe()
 	stdin.Write([]byte(code))
