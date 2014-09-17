@@ -12,9 +12,8 @@ outputWS.onmessage = function(e) {
     }
 
     if ('run' === data.nextCmd) {
-        var request = {
-            executable: data.executable
-        };
+        var request = newWideRequest();
+        request.executable = data.executable;
 
         $.ajax({
             type: 'POST',
@@ -80,7 +79,7 @@ var wide = {
     },
     init: function() {
         this._initLayout();
-        
+
         this._initBottomWindowGroup();
 
         $("body").bind("mousedown", function(event) {
@@ -101,10 +100,10 @@ var wide = {
 
     },
     saveFile: function() {
-        var request = {
-            file: $(".edit-header .current span:eq(0)").attr("title"),
-            code: wide.curEditor.getValue()
-        };
+        var request = newWideRequest();
+        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.code = wide.curEditor.getValue();
+
         $.ajax({
             type: 'POST',
             url: '/file/save',
@@ -128,10 +127,9 @@ var wide = {
     },
     // 构建 & 运行.
     run: function() {
-        var request = {
-            file: $(".edit-header .current span:eq(0)").attr("title"),
-            code: wide.curEditor.getValue()
-        };
+        var request = newWideRequest();
+        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.code = wide.curEditor.getValue();
 
         // TODO: 修改 [构建&运行] 图标状态为不可用状态
 
@@ -148,9 +146,8 @@ var wide = {
         });
     },
     goget: function() {
-        var request = {
-            file: $(".edit-header .current span:eq(0)").attr("title")
-        };
+        var request = newWideRequest();
+        request.file = $(".edit-header .current span:eq(0)").attr("title");
 
         $.ajax({
             type: 'POST',
@@ -165,10 +162,9 @@ var wide = {
         });
     },
     goinstall: function() {
-        var request = {
-            file: $(".edit-header .current span:eq(0)").attr("title"),
-            code: wide.curEditor.getValue()
-        };
+        var request = newWideRequest();
+        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.code = wide.curEditor.getValue();
 
         $.ajax({
             type: 'POST',
@@ -186,12 +182,11 @@ var wide = {
         var path = $(".edit-header .current span:eq(0)").attr("title");
         var mode = wide.curNode.mode;
 
-        var request = {
-            file: path,
-            code: wide.curEditor.getValue(),
-            cursorLine: wide.curEditor.getCursor().line,
-            cursorCh: wide.curEditor.getCursor().ch
-        };
+        var request = newWideRequest();
+        request.file = path;
+        request.code = wide.curEditor.getValue();
+        request.cursorLine = wide.curEditor.getCursor().line;
+        request.cursorCh = wide.curEditor.getCursor().ch;
 
         switch (mode) {
             case "text/x-go":

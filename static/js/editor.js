@@ -1,10 +1,10 @@
 var editors = {
     data: [],
-    init: function() {
+    init: function () {
         editors._initAutocomplete();
         editors.tabs = new Tabs({
             id: ".edit-panel",
-            clickAfter: function(id) {
+            clickAfter: function (id) {
                 // set tree node selected
                 var node = tree.fileTree.getNodeByTId(id);
                 tree.fileTree.selectNode(node);
@@ -19,7 +19,7 @@ var editors = {
 
                 wide.curEditor.focus();
             },
-            removeAfter: function(id, nextId) {
+            removeAfter: function (id, nextId) {
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
                         editors.data.splice(i, 1);
@@ -57,16 +57,16 @@ var editors = {
         });
 
 
-        $(".edit-header .tabs").on("dblclick", "div", function() {
+        $(".edit-header .tabs").on("dblclick", "div", function () {
             editors.fullscreen();
         });
     },
-    fullscreen: function() {
+    fullscreen: function () {
         wide.curEditor.setOption("fullScreen", true);
         wide.curEditor.focus();
     },
-    _initAutocomplete: function() {
-        CodeMirror.registerHelper("hint", "go", function(editor) {
+    _initAutocomplete: function () {
+        CodeMirror.registerHelper("hint", "go", function (editor) {
             var word = /[\w$]+/;
 
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
@@ -78,13 +78,12 @@ var editors = {
             while (start && word.test(curLine.charAt(start - 1))) {
                 --start;
             }
-            
-            var request = {
-                path: $(".edit-header .current > span:eq(0)").attr("title"),
-                code: editor.getValue(),
-                cursorLine: cur.line,
-                cursorCh: cur.ch
-            };
+
+            var request = newWideRequest();
+            request.path = $(".edit-header .current > span:eq(0)").attr("title");
+            request.code = editor.getValue();
+            request.cursorLine = cur.line;
+            request.cursorCh = cur.ch;
 
             var autocompleteHints = [];
 
@@ -94,7 +93,7 @@ var editors = {
                 url: '/autocomplete',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function(data) {
+                success: function (data) {
                     var autocompleteArray = data[1];
 
                     if (autocompleteArray) {
@@ -108,8 +107,8 @@ var editors = {
             return {list: autocompleteHints, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
         });
 
-        CodeMirror.commands.autocompleteAfterDot = function(cm) {
-            setTimeout(function() {
+        CodeMirror.commands.autocompleteAfterDot = function (cm) {
+            setTimeout(function () {
                 if (!cm.state.completionActive) {
                     cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
                 }
@@ -118,35 +117,34 @@ var editors = {
             return CodeMirror.Pass;
         };
 
-        CodeMirror.commands.autocompleteAnyWord = function(cm) {
+        CodeMirror.commands.autocompleteAnyWord = function (cm) {
             cm.showHint({hint: CodeMirror.hint.auto});
         };
 
-        CodeMirror.commands.gotoLine = function(cm) {
+        CodeMirror.commands.gotoLine = function (cm) {
             var line = prompt("Go To Line: ", "0");
 
             cm.setCursor(CodeMirror.Pos(line - 1, 0));
         };
 
-        CodeMirror.commands.doNothing = function(cm) {
+        CodeMirror.commands.doNothing = function (cm) {
         };
 
-        CodeMirror.commands.jumpToDecl = function(cm) {
+        CodeMirror.commands.jumpToDecl = function (cm) {
             var cur = wide.curEditor.getCursor();
 
-            var request = {
-                path: $(".edit-header .current > span:eq(0)").attr("title"),
-                code: wide.curEditor.getValue(),
-                cursorLine: cur.line,
-                cursorCh: cur.ch
-            };
+            var request = newWideRequest();
+            request.path = $(".edit-header .current > span:eq(0)").attr("title");
+            request.code = wide.curEditor.getValue();
+            request.cursorLine = cur.line;
+            request.cursorCh = cur.ch;
 
             $.ajax({
                 type: 'POST',
                 url: '/find/decl',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function(data) {
+                success: function (data) {
                     if (!data.succ) {
                         return;
                     }
@@ -154,16 +152,15 @@ var editors = {
                     var cursorLine = data.cursorLine;
                     var cursorCh = data.cursorCh;
 
-                    var request = {
-                        path: data.path
-                    };
+                    var request = newWideRequest();
+                    request.path = data.path;
 
                     $.ajax({
                         type: 'POST',
                         url: '/file',
                         data: JSON.stringify(request),
                         dataType: "json",
-                        success: function(data) {
+                        success: function (data) {
                             if (!data.succ) {
                                 alert(data.msg);
 
@@ -183,22 +180,21 @@ var editors = {
             });
         };
 
-        CodeMirror.commands.findUsages = function(cm) {
+        CodeMirror.commands.findUsages = function (cm) {
             var cur = wide.curEditor.getCursor();
 
-            var request = {
-                file: wide.curNode.path,
-                code: wide.curEditor.getValue(),
-                cursorLine: cur.line,
-                cursorCh: cur.ch
-            };
+            var request = newWideRequest();
+            request.file = wide.curNode.path;
+            request.code = wide.curEditor.getValue();
+            request.cursorLine = cur.line;
+            request.cursorCh = cur.ch;
 
             $.ajax({
                 type: 'POST',
                 url: '/find/usages',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function(data) {
+                success: function (data) {
                     console.log(data);
 
                     if (!data.succ) {
@@ -211,7 +207,7 @@ var editors = {
         };
     },
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
-    newEditor: function(data) {
+    newEditor: function (data) {
         $(".ico-fullscreen").show();
         var id = wide.curNode.tId;
 
@@ -256,12 +252,12 @@ var editors = {
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
                 ".": "autocompleteAfterDot",
-                "Esc": function(cm) {
+                "Esc": function (cm) {
                     if (cm.getOption("fullScreen")) {
                         cm.setOption("fullScreen", false);
                     }
                 },
-                "F11": function(cm) {
+                "F11": function (cm) {
                     cm.setOption("fullScreen", !cm.getOption("fullScreen"));
                 },
                 "Ctrl-G": "gotoLine",
@@ -269,16 +265,16 @@ var editors = {
                 "Ctrl-D": "doNothing", // 取消默认的 deleteLine
                 "Ctrl-B": "jumpToDecl",
                 "Ctrl-S": function () {
-                      wide.saveFile();
+                    wide.saveFile();
                 },
                 "Shift-Alt-F": function () {
-                     wide.fmt();
+                    wide.fmt();
                 },
                 "Alt-F7": "findUsages"
             }
         });
 
-        editor.on('cursorActivity', function(cm) {
+        editor.on('cursorActivity', function (cm) {
             var cursor = cm.getCursor();
 
             $("#footer-cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');

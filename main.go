@@ -40,7 +40,7 @@ func init() {
 // Wide 首页.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	// 创建一个 Wide 会话
-	wideSession := user.NewSession()
+	wideSession := user.WideSessions.New()
 
 	i18n.Load()
 
@@ -54,7 +54,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		name := conf.Wide.Users[0].Name
 
 		httpSession.Values["username"] = name
-		httpSession.Values["id"] = strconv.Itoa(rand.Int())
+		httpSessionId := strconv.Itoa(rand.Int())
+		httpSession.Values["id"] = httpSessionId
 		// 一天过期
 		httpSession.Options.MaxAge = 60 * 60 * 24
 
@@ -62,6 +63,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpSession.Save(r, w)
+
+	// Wide 会话关联 HTTP 会话
+	wideSession.HTTPSessionId = httpSession.Values["id"].(string)
 
 	t, err := template.ParseFiles("view/index.html")
 
