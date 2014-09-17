@@ -1,7 +1,8 @@
 # Wide
 
 ## Intro
-A simple <b>W</b>eb **IDE** for golang.
+
+A <b>W</b>eb <b>IDE</b> IDE for Team dev with Golang.
 
 ## Motivation
 * **Team** IDE:
