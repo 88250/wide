@@ -99,6 +99,7 @@ func (*conf) GetIDEStub() string {
 	return getGOBIN() + "ide_stub"
 }
 
+// 获取 GOBIN 路径，末尾带路径分隔符.
 func getGOBIN() string {
 	ret := os.Getenv("GOBIN")
 	if "" != ret {
