@@ -245,8 +245,7 @@ ul {
     cursor: pointer;
 }
 
-#output, 
-#notification {
+.bottom-window-group textarea {
     border-width: 0;
     color: #555555;
     height: 130px;

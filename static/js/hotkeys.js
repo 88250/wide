@@ -1,5 +1,12 @@
 var hotkeys = {
     defaultKeyMap: {
+        // Ctrl+0 焦点切换到当前编辑器   
+        goEditor: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 48
+        },
         // Ctrl+1 焦点切换到文件树
         goFileTree: {
             ctrlKey: true,
@@ -13,6 +20,20 @@ var hotkeys = {
             altKey: false,
             shiftKey: false,
             which: 52
+        },
+        // Ctrl+5 焦点切换到搜索窗口   
+        goSearch: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 53
+        },
+        // Ctrl+6 焦点切换到通知窗口   
+        goNotification: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 54
         },
         // F6 构建并运行
         buildRun: {
@@ -140,6 +161,16 @@ var hotkeys = {
 
         var hotKeys = this.defaultKeyMap;
         $(document).keydown(function(event) {
+            if (event.ctrlKey === hotKeys.goEditor.ctrlKey
+                    && event.which === hotKeys.goEditor.which) {  // Ctrl+0 焦点切换到当前编辑器
+                if (wide.curEditor) {
+                    wide.curEditor.focus();
+                }
+                event.preventDefault();
+
+                return;
+            }
+
             if (event.ctrlKey === hotKeys.goFileTree.ctrlKey
                     && event.which === hotKeys.goFileTree.which) { // Ctrl+1 焦点切换到文件树
                 // 有些元素需设置 tabindex 为 -1 时才可以 focus
@@ -150,8 +181,26 @@ var hotkeys = {
             }
 
             if (event.ctrlKey === hotKeys.goOutPut.ctrlKey
-                    && event.which === hotKeys.goOutPut.which) { // Ctrl+4 焦点切换到输出窗口                
-                $("#output").focus();
+                    && event.which === hotKeys.goOutPut.which) { // Ctrl+4 焦点切换到输出窗口   
+                wide.bottomWindowTab.setCurrent("output");
+                $(".bottom-window-group .output").focus();
+                event.preventDefault();
+
+                return;
+            }
+            if (event.ctrlKey === hotKeys.goSearch.ctrlKey
+                    && event.which === hotKeys.goSearch.which) { // Ctrl+5 焦点切换到搜索窗口  
+                wide.bottomWindowTab.setCurrent("search");
+                $(".bottom-window-group .search").focus();
+                event.preventDefault();
+
+                return;
+            }
+            
+            if (event.ctrlKey === hotKeys.goNotification.ctrlKey
+                    && event.which === hotKeys.goNotification.which) { // Ctrl+6 焦点切换到通知窗口          
+                wide.bottomWindowTab.setCurrent("notification");
+                $(".bottom-window-group .notification").focus();
                 event.preventDefault();
 
                 return;

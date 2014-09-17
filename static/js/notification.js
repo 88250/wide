@@ -6,7 +6,7 @@ notificationWS.onmessage = function(e) {
     console.log('[notification onmessage]' + e.data);
     var data = JSON.parse(e.data);
     if ('init-notification' !== data.cmd) {
-        $('#notification').val(data.output);
+        $('.bottom-window-group .notification').val(data.output);
     }
 };
 notificationWS.onclose = function(e) {

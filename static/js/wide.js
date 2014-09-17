@@ -22,7 +22,7 @@ outputWS.onmessage = function(e) {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function(data) {
-                $('#output').text('');
+                $('.bottom-window-group .output').text('');
             },
             success: function(data) {
 
@@ -31,11 +31,11 @@ outputWS.onmessage = function(e) {
     }
 
     if ('run' === data.cmd) { // 正在运行
-        $('#output').text($('#output').text() + data.output);
+        $('.bottom-window-group .output').text($('.bottom-window-group .output').text() + data.output);
     } else if ('run-done' === data.cmd) { // 运行结束
         // TODO: 运行结束后修改 [构建&运行] 图标状态为可用状态
     } else if ('build' === data.cmd || 'go install' === data.cmd) {
-        $('#output').text(data.output);
+        $('.bottom-window-group .output').text(data.output);
 
         if (0 !== data.output.length) { // 说明编译有错误输出            
             for (var i = 0; i < data.lints.length; i++) {
@@ -52,7 +52,7 @@ outputWS.onmessage = function(e) {
         // 触发一次 gutter lint
         CodeMirror.signal(wide.curEditor, "change", wide.curEditor);
     } else if ('go get' === data.cmd || 'go install' === data.cmd) {
-        $('#output').text($('#output').text() + data.output);
+        $('.bottom-window-group .output').text($('.bottom-window-group .output').text() + data.output);
     }
 };
 outputWS.onclose = function(e) {
@@ -66,6 +66,7 @@ outputWS.onerror = function(e) {
 var wide = {
     curNode: undefined,
     curEditor: undefined,
+    bottomWindowTab: undefined,
     _initLayout: function() {
         var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2;
         $(".content, .ztree").height(mainH);
@@ -73,7 +74,7 @@ var wide = {
         $(".edit-panel").height(mainH - $(".bottom-window-group").height());
     },
     _initBottomWindowGroup: function() {
-        new Tabs({
+        this.bottomWindowTab = new Tabs({
             id: ".bottom-window-group"
         });
     },
@@ -140,7 +141,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function(data) {
-                $('#output').text('');
+                $('.bottom-window-group .output').text('');
             },
             success: function(data) {
             }
@@ -157,7 +158,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function(data) {
-                $('#output').text('');
+                $('.bottom-window-group .output').text('');
             },
             success: function(data) {
             }
@@ -175,7 +176,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function(data) {
-                $('#output').text('');
+                $('.bottom-window-group .output').text('');
             },
             success: function(data) {
             }
