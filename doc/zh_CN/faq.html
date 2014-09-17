@@ -10,7 +10,9 @@
 
         <ul>
             <li><b>默认用户是？</b></li>
-            <p>默认用户是 admin 用户。用户名：admin，密码：admin。</p>
+            <p>
+                默认用户是 admin 用户。用户名：admin，密码：admin。
+            </p>
             
             <li><b>什么是工作空间？</b></li>
             <p>
@@ -45,6 +47,20 @@
             <li><b>如何配置多用户？</b></li>
             <p>
                 修改 wide.json 中的 Users 数组，按照默认用户的格式（用户名、密码等）添加。
+            </p>
+            
+            <li><b>为什么代码辅助功能（自动完成/跳转到声明等）失效了？</b></li>
+            <p>
+                请确认正确安装了 gocode 和 ide_stub 工具。安装命令：
+            </p>
+            
+            <ul>
+                <li>go get -u github.com/88250/ide_stub</li>
+                <li>go get -u github.com/nsf/gocode</li>
+            </ul>
+            
+            <p>
+                如果安装不对，Wide 会自动检查并通过通知窗口告知用户。另外，通知窗口还会告知用户一些其他重要信息，例如 IDE 版本更新提醒等。
             </p>
         </ul>	
     </body>
