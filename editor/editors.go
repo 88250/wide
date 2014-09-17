@@ -143,7 +143,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	gocode := conf.Wide.GetGocode()
 	argv := []string{"set", "lib-path", libPath}
 	cmd := exec.Command(gocode, argv...)
-	cmd.Start()
+	cmd.Run()
 
 	//gocode 试验性质特性：自动构建
 	//argv = []string{"set", "autobuild", "true"}
