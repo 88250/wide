@@ -67,7 +67,7 @@ func event2Notification(e *event.Event) {
 
 // 建立通知通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)

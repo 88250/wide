@@ -14,7 +14,7 @@ const (
 )
 
 // 用户 HTTP 会话，用于验证登录.
-var Session = sessions.NewCookieStore([]byte("BEYOND"))
+var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
 
 // Wide 会话，对应一个浏览器 tab.
 type WideSession struct {

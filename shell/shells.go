@@ -30,7 +30,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
 
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 
 	if session.IsNew {
 		// TODO: 写死以 admin 作为用户登录
@@ -60,7 +60,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // 建立 Shell 通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 	sid := session.Values["id"].(string)
 

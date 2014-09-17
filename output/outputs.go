@@ -26,7 +26,7 @@ var outputWS = map[string]*util.WSChannel{}
 
 // 建立输出通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -45,7 +45,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	decoder := json.NewDecoder(r.Body)
@@ -150,7 +150,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 	username := session.Values["username"].(string)
 
@@ -314,7 +314,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 	username := session.Values["username"].(string)
 
@@ -439,7 +439,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 	username := session.Values["username"].(string)
 
