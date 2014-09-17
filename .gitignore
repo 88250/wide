@@ -7,4 +7,4 @@
 
 /data/user_workspaces/*/bin/
 /data/user_workspaces/*/pkg/
-/data/user_workspaces/*/src/
+/data/user_workspaces/*/src/**/*.exe
