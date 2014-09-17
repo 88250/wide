@@ -12,7 +12,7 @@ import (
 	"strings"
 
 	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 )
@@ -23,7 +23,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	session, _ := user.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
 	userSrc := conf.Wide.GetUserWorkspace(username) + string(os.PathSeparator) + "src"

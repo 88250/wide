@@ -15,8 +15,8 @@ import (
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/notification"
 	"github.com/b3log/wide/output"
+	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/shell"
-	"github.com/b3log/wide/user"
 	"github.com/golang/glog"
 )
 
@@ -39,24 +39,16 @@ func init() {
 
 // Wide 首页.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	// 创建一个 Wide 会话
-	wideSession := user.WideSessions.New()
-
 	i18n.Load()
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
-		"session": wideSession}
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
-	httpSession, _ := user.HTTPSession.Get(r, "wide-session")
-
-	httpSessionId := httpSession.Values["id"].(string)
 	// TODO: 写死以 admin 作为用户登录
 	username := conf.Wide.Users[0].Name
 	if httpSession.IsNew {
 
 		httpSession.Values["username"] = username
-		httpSessionId = strconv.Itoa(rand.Int())
-		httpSession.Values["id"] = httpSessionId
+		httpSession.Values["id"] = strconv.Itoa(rand.Int())
 		// 一天过期
 		httpSession.Options.MaxAge = 60 * 60 * 24
 
@@ -65,10 +57,13 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	httpSession.Save(r, w)
 
-	// Wide 会话关联 HTTP 会话
-	wideSession.HTTPSessionId = httpSession.Values["id"].(string)
+	// 创建一个 Wide 会话
+	wideSession := session.WideSessions.New(httpSession)
 
-	wideSessions := user.WideSessions.GetByHTTPSid(httpSessionId)
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+		"session": wideSession}
+
+	wideSessions := session.WideSessions.GetByHTTPSession(httpSession)
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("view/index.html")
@@ -135,8 +130,8 @@ func main() {
 	http.HandleFunc("/notification/ws", notification.WSHandler)
 
 	// 用户
-	http.HandleFunc("/user/new", user.AddUser)
-	http.HandleFunc("/user/repos/init", user.InitGitRepos)
+	http.HandleFunc("/user/new", session.AddUser)
+	http.HandleFunc("/user/repos/init", session.InitGitRepos)
 
 	// 文档
 	http.Handle("/doc/", http.StripPrefix("/doc/", http.FileServer(http.Dir("doc"))))

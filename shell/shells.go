@@ -14,7 +14,7 @@ import (
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
@@ -26,15 +26,9 @@ var shellWS = map[string]*util.WSChannel{}
 
 // Shell 首页.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	// 创建一个 Wide 会话
-	wideSession := user.WideSessions.New()
-
 	i18n.Load()
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
-		"session": wideSession}
-
-	httpSession, _ := user.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
 		// TODO: 写死以 admin 作为用户登录
@@ -50,8 +44,11 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	httpSession.Save(r, w)
 
-	// Wide 会话关联 HTTP 会话
-	wideSession.HTTPSessionId = httpSession.Values["id"].(string)
+	// 创建一个 Wide 会话
+	wideSession := session.WideSessions.New(httpSession)
+
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+		"session": wideSession}
 
 	t, err := template.ParseFiles("view/shell.html")
 
@@ -67,7 +64,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // 建立 Shell 通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := user.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
 
 	// TODO: 会话校验

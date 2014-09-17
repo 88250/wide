@@ -91,36 +91,33 @@ func (*conf) GetUserWorkspace(username string) string {
 
 // 获取 gocode 路径.
 func (*conf) GetGocode() string {
-	binDir := os.Getenv("GOBIN")
-	if "" != binDir {
-		return binDir + string(os.PathSeparator) + "gocode"
-	}
-
-	binDir = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-		runtime.GOOS + "_" + os.Getenv("GOARCH")
-	if isExist(binDir) {
-		return binDir + string(os.PathSeparator) + "gocode"
-	} else {
-		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-			"gocode"
-	}
+	return getGOBIN() + "gocode"
 }
 
 // 获取 ide_stub 路径.
 func (*conf) GetIDEStub() string {
-	binDir := os.Getenv("GOBIN")
-	if "" != binDir {
-		return binDir + string(os.PathSeparator) + "ide_stub"
+	return getGOBIN() + "ide_stub"
+}
+
+func getGOBIN() string {
+	ret := os.Getenv("GOBIN")
+	if "" != ret {
+		return ret + string(os.PathSeparator)
 	}
 
-	binDir = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-		runtime.GOOS + "_" + os.Getenv("GOARCH")
-	if isExist(binDir) {
-		return binDir + string(os.PathSeparator) + "ide_stub"
-	} else {
-		return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
-			"ide_stub"
+	ret = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+		os.Getenv("GOOS") + "_" + os.Getenv("GOARCH")
+	if isExist(ret) {
+		return ret + string(os.PathSeparator)
 	}
+
+	ret = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+		runtime.GOOS + "_" + runtime.GOARCH
+	if isExist(ret) {
+		return ret + string(os.PathSeparator)
+	}
+
+	return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator)
 }
 
 // 保存 Wide 配置.

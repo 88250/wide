@@ -14,7 +14,7 @@ import (
 	"time"
 
 	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/user"
+	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
@@ -150,7 +150,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	httpSession, _ := user.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
 
 	decoder := json.NewDecoder(r.Body)
@@ -316,7 +316,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	httpSession, _ := user.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
 
 	decoder := json.NewDecoder(r.Body)
@@ -443,7 +443,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	httpSession, _ := user.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
 
 	decoder := json.NewDecoder(r.Body)
