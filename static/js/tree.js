@@ -1,6 +1,6 @@
 var tree = {
     // 递归获取当前节点展开中的最后一个节点
-    getCurrentNodeLastNode: function(node) {
+    getCurrentNodeLastNode: function (node) {
         var returnNode = node.children[node.children.length - 1];
         if (returnNode.open) {
             return tree.getCurrentNodeLastNode(returnNode);
@@ -9,7 +9,7 @@ var tree = {
         }
     },
     // 按照树展现获取下一个节点
-    getNextShowNode: function(node) {
+    getNextShowNode: function (node) {
         if (node.level !== 0) {
             if (node.getParentNode().getNextNode()) {
                 return node.getParentNode().getNextNode();
@@ -20,7 +20,7 @@ var tree = {
             return node.getNextNode();
         }
     },
-    isBottomNode: function(node) {
+    isBottomNode: function (node) {
         if (node.open) {
             return false;
         }
@@ -39,7 +39,7 @@ var tree = {
             }
         }
     },
-    getTIdByPath: function(path) {
+    getTIdByPath: function (path) {
         var nodes = tree.fileTree.transformToArray(tree.fileTree.getNodes());
         for (var i = 0, ii = nodes.length; i < ii; i++) {
             if (nodes[i].path === path) {
@@ -50,7 +50,7 @@ var tree = {
         return undefined;
     },
     fileTree: undefined,
-    _isParents: function(tId, parentTId) {
+    _isParents: function (tId, parentTId) {
         var node = tree.fileTree.getNodeByTId(tId);
         if (!node || !node.parentTId) {
             return false;
@@ -62,23 +62,23 @@ var tree = {
             }
         }
     },
-    newFile: function() {
+    newFile: function () {
         $("#dirRMenu").hide();
         var name = prompt("Name", "");
         if (!name) {
             return false;
         }
 
-        var request = {
-            path: wide.curNode.path + '\\' + name,
-            fileType: "f"
-        };
+        var request = newWideRequest();
+        request.path = wide.curNode.path + '\\' + name;
+        request.fileType = "f";
+
         $.ajax({
             type: 'POST',
             url: '/file/new',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 if (!data.succ) {
                     return false;
                 }
@@ -126,23 +126,23 @@ var tree = {
             }
         });
     },
-    newDir: function() {
+    newDir: function () {
         $("#dirRMenu").hide();
         var name = prompt("Name", "");
         if (!name) {
             return false;
         }
 
-        var request = {
-            path: wide.curNode.path + '\\' + name,
-            fileType: "d"
-        };
+        var request = newWideRequest();
+        request.path = wide.curNode.path + '\\' + name;
+        request.fileType = "d";
+
         $.ajax({
             type: 'POST',
             url: '/file/new',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 if (!data.succ) {
                     return false;
                 }
@@ -154,22 +154,23 @@ var tree = {
             }
         });
     },
-    removeIt: function() {
+    removeIt: function () {
         $("#dirRMenu").hide();
         $("#fileRMenu").hide();
 
         if (!confirm("Remove it?")) {
             return;
         }
-        var request = {
-            path: wide.curNode.path
-        };
+
+        var request = newWideRequest();
+        request.path = wide.curNode.path;
+
         $.ajax({
             type: 'POST',
             url: '/file/remove',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 if (!data.succ) {
                     return false;
                 }
@@ -196,12 +197,15 @@ var tree = {
             }
         });
     },
-    init: function() {
+    init: function () {
+        var request = newWideRequest();
+
         $.ajax({
-            type: 'GET',
+            type: 'POST',
             url: '/files',
+            data: JSON.stringify(request),
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 if (data.succ) {
                     var dirRMenu = $("#dirRMenu");
                     var fileRMenu = $("#fileRMenu");
@@ -210,7 +214,7 @@ var tree = {
                             selectedMulti: false
                         },
                         callback: {
-                            onRightClick: function(event, treeId, treeNode) {
+                            onRightClick: function (event, treeId, treeNode) {
                                 if (treeNode) {
                                     wide.curNode = treeNode;
                                     if ("ico-ztree-dir " !== treeNode.iconSkin) { // 如果右击了文件
@@ -230,7 +234,7 @@ var tree = {
                                     }
                                 }
                             },
-                            onClick: function(event, treeId, treeNode, clickFlag) {
+                            onClick: function (event, treeId, treeNode, clickFlag) {
                                 tree._onClick(treeNode);
                             }
                         }
@@ -240,7 +244,7 @@ var tree = {
             }
         });
     },
-    _onClick: function(treeNode) {
+    _onClick: function (treeNode) {
         if (wide.curNode) {
             for (var i = 0, ii = editors.data.length; i < ii; i++) {
                 // 该节点文件已经打开
@@ -256,15 +260,15 @@ var tree = {
         wide.curNode = treeNode;
 
         if ("ico-ztree-dir " !== treeNode.iconSkin) { // 如果单击了文件
-            var request = {
-                path: treeNode.path
-            };
+            var request = newWideRequest();
+            request.path = treeNode.path;
+
             $.ajax({
                 type: 'POST',
                 url: '/file',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function(data) {
+                success: function (data) {
                     if (!data.succ) {
                         alert(data.msg);
 

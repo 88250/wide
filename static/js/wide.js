@@ -1,9 +1,9 @@
 var outputWS = new WebSocket(config.channel.output + '/output/ws');
-outputWS.onopen = function() {
+outputWS.onopen = function () {
     console.log('[output onopen] connected');
 };
 
-outputWS.onmessage = function(e) {
+outputWS.onmessage = function (e) {
     console.log('[output onmessage]' + e.data);
     var data = JSON.parse(e.data);
 
@@ -12,19 +12,18 @@ outputWS.onmessage = function(e) {
     }
 
     if ('run' === data.nextCmd) {
-        var request = {
-            executable: data.executable
-        };
+        var request = newWideRequest();
+        request.executable = data.executable;
 
         $.ajax({
             type: 'POST',
             url: '/run',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function(data) {
+            beforeSend: function (data) {
                 $('#output').text('');
             },
-            success: function(data) {
+            success: function (data) {
 
             }
         });
@@ -55,34 +54,34 @@ outputWS.onmessage = function(e) {
         $('#output').text($('#output').text() + data.output);
     }
 };
-outputWS.onclose = function(e) {
+outputWS.onclose = function (e) {
     console.log('[output onclose] disconnected (' + e.code + ')');
     delete outputWS;
 };
-outputWS.onerror = function(e) {
+outputWS.onerror = function (e) {
     console.log('[output onerror] ' + e);
 };
 
 var wide = {
     curNode: undefined,
     curEditor: undefined,
-    _initLayout: function() {
+    _initLayout: function () {
         var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2;
         $(".content, .ztree").height(mainH);
 
         $(".edit-panel").height(mainH - $(".bottom-window-group").height());
     },
-    _initBottomWindowGroup: function() {
+    _initBottomWindowGroup: function () {
         new Tabs({
             id: ".bottom-window-group"
         });
     },
-    init: function() {
+    init: function () {
         this._initLayout();
-        
+
         this._initBottomWindowGroup();
 
-        $("body").bind("mousedown", function(event) {
+        $("body").bind("mousedown", function (event) {
             if (!(event.target.id === "dirRMenu" || $(event.target).closest("#dirRMenu").length > 0)) {
                 $("#dirRMenu").hide();
             }
@@ -99,38 +98,37 @@ var wide = {
         });
 
     },
-    saveFile: function() {
-        var request = {
-            file: $(".edit-header .current span:eq(0)").attr("title"),
-            code: wide.curEditor.getValue()
-        };
+    saveFile: function () {
+        var request = newWideRequest();
+        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.code = wide.curEditor.getValue();
+
         $.ajax({
             type: 'POST',
             url: '/file/save',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
             }
         });
     },
-    saveAllFiles: function() {
+    saveAllFiles: function () {
         // TODO: save all files
     },
-    closeFile: function() {
+    closeFile: function () {
         // TODO: close file
     },
-    closeAllFiles: function() {
+    closeAllFiles: function () {
         // TODO: close all files
     },
-    exit: function() {
+    exit: function () {
         // TODO: exit
     },
     // 构建 & 运行.
-    run: function() {
-        var request = {
-            file: $(".edit-header .current span:eq(0)").attr("title"),
-            code: wide.curEditor.getValue()
-        };
+    run: function () {
+        var request = newWideRequest();
+        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.code = wide.curEditor.getValue();
 
         // TODO: 修改 [构建&运行] 图标状态为不可用状态
 
@@ -139,58 +137,55 @@ var wide = {
             url: '/build',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function(data) {
+            beforeSend: function (data) {
                 $('#output').text('');
             },
-            success: function(data) {
+            success: function (data) {
             }
         });
     },
-    goget: function() {
-        var request = {
-            file: $(".edit-header .current span:eq(0)").attr("title")
-        };
+    goget: function () {
+        var request = newWideRequest();
+        request.file = $(".edit-header .current span:eq(0)").attr("title");
 
         $.ajax({
             type: 'POST',
             url: '/go/get',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function(data) {
+            beforeSend: function (data) {
                 $('#output').text('');
             },
-            success: function(data) {
+            success: function (data) {
             }
         });
     },
-    goinstall: function() {
-        var request = {
-            file: $(".edit-header .current span:eq(0)").attr("title"),
-            code: wide.curEditor.getValue()
-        };
+    goinstall: function () {
+        var request = newWideRequest();
+        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.code = wide.curEditor.getValue();
 
         $.ajax({
             type: 'POST',
             url: '/go/install',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function(data) {
+            beforeSend: function (data) {
                 $('#output').text('');
             },
-            success: function(data) {
+            success: function (data) {
             }
         });
     },
-    fmt: function() {
+    fmt: function () {
         var path = $(".edit-header .current span:eq(0)").attr("title");
         var mode = wide.curNode.mode;
 
-        var request = {
-            file: path,
-            code: wide.curEditor.getValue(),
-            cursorLine: wide.curEditor.getCursor().line,
-            cursorCh: wide.curEditor.getCursor().ch
-        };
+        var request = newWideRequest();
+        request.file = path;
+        request.code = wide.curEditor.getValue();
+        request.cursorLine = wide.curEditor.getCursor().line;
+        request.cursorCh = wide.curEditor.getCursor().ch;
 
         switch (mode) {
             case "text/x-go":
@@ -199,7 +194,7 @@ var wide = {
                     url: '/go/fmt',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function(data) {
+                    success: function (data) {
                         if (data.succ) {
                             wide.curEditor.setValue(data.code);
                         }
@@ -213,7 +208,7 @@ var wide = {
                     url: '/html/fmt',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function(data) {
+                    success: function (data) {
                         if (data.succ) {
                             wide.curEditor.setValue(data.code);
                         }
@@ -240,7 +235,7 @@ var wide = {
     }
 };
 
-$(document).ready(function() {
+$(document).ready(function () {
     wide.init();
     tree.init();
     menu.init();
