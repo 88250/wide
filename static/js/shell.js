@@ -1,4 +1,4 @@
-var shellWS = new WebSocket(config.channel.shell + '/shell/ws');
+var shellWS = new WebSocket(config.channel.shell + '/shell/ws?sid=' + config.wideSessionId);
 shellWS.onopen = function() {
     console.log('[shell onopen] connected');
 };

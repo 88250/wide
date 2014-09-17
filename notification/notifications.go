@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/user"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
@@ -67,8 +66,8 @@ func event2Notification(e *event.Event) {
 
 // 建立通知通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := user.HTTPSession.Get(r, "wide-session")
-	sid := session.Values["id"].(string)
+	// TODO: 会话校验
+	sid := r.URL.Query()["sid"][0]
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}

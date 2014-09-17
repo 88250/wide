@@ -1,4 +1,4 @@
-var outputWS = new WebSocket(config.channel.output + '/output/ws');
+var outputWS = new WebSocket(config.channel.output + '/output/ws?sid=' + config.wideSessionId);
 outputWS.onopen = function() {
     console.log('[output onopen] connected');
 };

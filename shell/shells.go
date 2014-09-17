@@ -26,25 +26,32 @@ var shellWS = map[string]*util.WSChannel{}
 
 // Shell 首页.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
+	// 创建一个 Wide 会话
+	wideSession := user.WideSessions.New()
+
 	i18n.Load()
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+		"session": wideSession}
 
-	session, _ := user.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := user.HTTPSession.Get(r, "wide-session")
 
-	if session.IsNew {
+	if httpSession.IsNew {
 		// TODO: 写死以 admin 作为用户登录
 		name := conf.Wide.Users[0].Name
 
-		session.Values["username"] = name
-		session.Values["id"] = strconv.Itoa(rand.Int())
+		httpSession.Values["username"] = name
+		httpSession.Values["id"] = strconv.Itoa(rand.Int())
 		// 一天过期
-		session.Options.MaxAge = 60 * 60 * 24
+		httpSession.Options.MaxAge = 60 * 60 * 24
 
-		glog.Infof("Created a session [%s] for user [%s]", session.Values["id"].(string), name)
+		glog.Infof("Created a HTTP session [%s] for user [%s]", session.Values["id"].(string), name)
 	}
 
-	session.Save(r, w)
+	httpSession.Save(r, w)
+
+	// Wide 会话关联 HTTP 会话
+	wideSession.HTTPSessionId = httpSession.Values["id"].(string)
 
 	t, err := template.ParseFiles("view/shell.html")
 
@@ -60,9 +67,11 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 // 建立 Shell 通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := user.HTTPSession.Get(r, "wide-session")
-	username := session.Values["username"].(string)
-	sid := session.Values["id"].(string)
+	httpSession, _ := user.HTTPSession.Get(r, "wide-session")
+	username := httpSession.Values["username"].(string)
+
+	// TODO: 会话校验
+	sid := r.URL.Query()["sid"][0]
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
@@ -72,7 +81,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	ret := map[string]interface{}{"output": "Shell initialized", "cmd": "init-shell"}
 	wsChan.Conn.WriteJSON(&ret)
 
-	glog.Infof("Open a new [Shell] with session [%s], %d", sid, len(shellWS))
+	glog.V(4).Infof("Open a new [Shell] with session [%s], %d", sid, len(shellWS))
 
 	input := map[string]interface{}{}
 
