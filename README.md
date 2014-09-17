@@ -2,7 +2,7 @@
 
 ## Intro
 
-A <b>W</b>eb <b>IDE</b> IDE for Team dev with Golang.
+A <b>W</b>eb <b>IDE</b> IDE for Team using Golang.
 
 ## Motivation
 * **Team** IDE:
