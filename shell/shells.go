@@ -45,7 +45,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		// 一天过期
 		httpSession.Options.MaxAge = 60 * 60 * 24
 
-		glog.Infof("Created a HTTP session [%s] for user [%s]", session.Values["id"].(string), name)
+		glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), name)
 	}
 
 	httpSession.Save(r, w)

@@ -60,6 +60,19 @@ func (sessions *Sessions) Remove(sid string) {
 	}
 }
 
+// 获取 HTTP 会话关联的所有 Wide 会话.
+func (sessions *Sessions) GetByHTTPSid(httpSessionId string) []*WideSession {
+	ret := []*WideSession{}
+
+	for _, s := range *sessions {
+		if s.HTTPSessionId == httpSessionId {
+			ret = append(ret, s)
+		}
+	}
+
+	return ret
+}
+
 // 移除 HTTP 会话关联的所有 Wide 会话.
 func (sessions *Sessions) RemoveByHTTPSid(httpSessionId string) {
 	for i, s := range *sessions {
