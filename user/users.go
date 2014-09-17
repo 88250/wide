@@ -48,7 +48,7 @@ func InitGitRepos(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	session, _ := Session.Get(r, "wide-session")
+	session, _ := HTTPSession.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
 	userRepos := conf.Wide.GetUserWorkspace(username) + string(os.PathSeparator) + "src"

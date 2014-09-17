@@ -30,7 +30,7 @@ type snippet struct {
 
 // 建立编辑器通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	sid := session.Values["id"].(string)
 
 	editorWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -99,7 +99,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 
 	path := args["path"].(string)
@@ -174,7 +174,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 
 	decoder := json.NewDecoder(r.Body)
@@ -255,7 +255,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	session, _ := user.Session.Get(r, "wide-session")
+	session, _ := user.HTTPSession.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 
 	decoder := json.NewDecoder(r.Body)
