@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{{.i18n.wide}} - {{.session.Id}}</title>
+        <title>{{.i18n.wide}}</title>
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/codemirror.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/show-hint.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/lint/lint.css">
@@ -167,10 +167,11 @@
         <script type="text/javascript">
                     var config = {
                     channel: {
-                    editor: '{{.conf.EditorChannel}}',
-                            shell: '{{.conf.ShellChannel}}',
-                            output: '{{.conf.OutputChannel}}'
-                    }
+                    editor: {{.conf.EditorChannel}},
+                            shell: {{.conf.ShellChannel}},
+                            output: {{.conf.OutputChannel}}
+                    },
+                            wideSessionId: {{.session.Id}}
                     };</script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
