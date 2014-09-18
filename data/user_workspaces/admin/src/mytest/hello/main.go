@@ -5,5 +5,5 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello, ÊÀ½ç")1
+	fmt.Println("Hello, ä¸–ç•Œ")
 }
