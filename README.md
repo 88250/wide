@@ -35,7 +35,7 @@ A <b>W</b>eb <b>IDE</b> IDE for Team using Golang.
 * Go tool: go get/install/fmt etc.
 
 ## Documents
-* [中文文档](http://b3log.github.io/wide/doc/zh_CN/index.html)
+* [中文文档](http://88250.gitbooks.io/wide-user-guide/zh-cn/index.html)
 
 ## Demos
 
