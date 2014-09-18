@@ -35,7 +35,8 @@ A <b>W</b>eb <b>IDE</b> IDE for Team using Golang.
 * Go tool: go get/install/fmt etc.
 
 ## Documents
-* [中文文档](http://88250.gitbooks.io/wide-user-guide/zh-cn/index.html)
+* [用户指南](http://88250.gitbooks.io/wide-user-guide/zh-cn/index.html)
+* [开发指南](http://88250.gitbooks.io/wide-dev-guide/zh-cn/index.html)
 
 ## Demos
 
