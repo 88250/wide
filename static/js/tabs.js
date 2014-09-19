@@ -14,7 +14,9 @@ $.extend(Tabs.prototype, {
         obj._$tabs.on("click", "div", function(event) {
             var id = $(this).data("index");
             _that.setCurrent(id);
-            obj.clickAfter(id);
+            if (typeof (obj.clickAfter) === "function") {
+                obj.clickAfter(id);
+            }
         });
 
         obj._$tabs.on("click", ".ico-close", function(event) {
@@ -54,7 +56,7 @@ $.extend(Tabs.prototype, {
         } else {
             prevId = this.obj._prevId;
         }
-        
+
         this.obj.removeAfter(id, prevId);
         this.setCurrent(prevId);
     },

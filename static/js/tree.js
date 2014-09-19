@@ -252,6 +252,7 @@ var tree = {
                     editors.tabs.setCurrent(treeNode.tId);
                     wide.curNode = treeNode;
                     wide.curEditor = editors.data[i].editor;
+                    wide.curEditor.focus();
                     return false;
                 }
             }
