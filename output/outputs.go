@@ -56,8 +56,13 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: 会话校验
 	sid := args["sid"].(string)
+	wSession := session.WideSessions.Get(sid)
+	if nil == wSession {
+		data["succ"] = false
+
+		return
+	}
 
 	filePath := args["executable"].(string)
 	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
@@ -91,7 +96,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// 添加到用户进程集中
-	processes.add(sid, cmd.Process)
+	processes.add(wSession, cmd.Process)
 
 	channelRet := map[string]interface{}{}
 	channelRet["pid"] = cmd.Process.Pid
@@ -105,7 +110,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 			if nil != err || 0 == count {
 				// 从用户进程集中移除这个执行完毕的进程
-				processes.remove(sid, cmd.Process)
+				processes.remove(wSession, cmd.Process)
 
 				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
 

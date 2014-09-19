@@ -8,10 +8,12 @@ package session
 
 import (
 	"math/rand"
+	"os"
 	"strconv"
 	"sync"
 	"time"
 
+	"github.com/b3log/wide/event"
 	"github.com/golang/glog"
 	"github.com/gorilla/sessions"
 )
@@ -25,11 +27,13 @@ var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
 
 // Wide 会话，对应一个浏览器 tab.
 type WideSession struct {
-	Id          string            // 唯一标识
-	HTTPSession *sessions.Session // 关联的 HTTP 会话
-	State       int               // 状态
-	Created     time.Time         // 创建时间
-	Updated     time.Time         // 最近一次使用时间
+	Id          string                // 唯一标识
+	HTTPSession *sessions.Session     // 关联的 HTTP 会话
+	Processes   []*os.Process         // 关联的进程集
+	EventQueue  *event.UserEventQueue // 关联的事件队列
+	State       int                   // 状态
+	Created     time.Time             // 创建时间
+	Updated     time.Time             // 最近一次使用时间
 }
 
 type Sessions []*WideSession
@@ -37,8 +41,20 @@ type Sessions []*WideSession
 // 所有 Wide 会话集.
 var WideSessions Sessions
 
-// 排它锁，防止并发问题.
+// 排它锁，防止并发修改.
 var mutex sync.Mutex
+
+// 设置会话关联的进程集.
+func (s *WideSession) SetProcesses(ps []*os.Process) {
+	s.Processes = ps
+
+	s.Refresh()
+}
+
+// 刷新会话最近一次使用时间.
+func (s *WideSession) Refresh() {
+	s.Updated = time.Now()
+}
 
 // 创建一个 Wide 会话.
 func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
@@ -50,9 +66,12 @@ func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
 	id := strconv.Itoa(rand.Int())
 	now := time.Now()
 
+	userEventQueue := event.UserEventQueues.New(id)
+
 	ret := &WideSession{
 		Id:          id,
 		HTTPSession: httpSession,
+		EventQueue:  userEventQueue,
 		State:       SessionStateActive,
 		Created:     now,
 		Updated:     now,
@@ -61,6 +80,20 @@ func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
 	*sessions = append(*sessions, ret)
 
 	return ret
+}
+
+// 获取 Wide 会话.
+func (sessions *Sessions) Get(sid string) *WideSession {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	for _, s := range *sessions {
+		if s.Id == sid {
+			return s
+		}
+	}
+
+	return nil
 }
 
 // 移除 Wide 会话.

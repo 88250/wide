@@ -24,12 +24,17 @@ type Event struct {
 var EventQueue = make(chan int, MaxQueueLength)
 
 // 用户事件队列.
-// <sid, chan>
-var UserEventQueues = map[string]chan int{}
+type UserEventQueue struct {
+	Sid      string    // 关联的会话 id
+	Queue    chan int  // 队列
+	Handlers []Handler // 事件处理器集
+}
 
-// 用户事件处理器集.
-// <sid, *Handlers>
-var UserEventHandlers = map[string]*Handlers{}
+type Queues map[string]*UserEventQueue
+
+// 用户事件队列集.
+// <sid, *UserEventQueue>
+var UserEventQueues = Queues{}
 
 // 加载事件处理.
 func Load() {
@@ -39,43 +44,48 @@ func Load() {
 
 			// 将事件分发到每个用户的事件队列里
 			for _, userQueue := range UserEventQueues {
-				userQueue <- event
+				userQueue.Queue <- event
 			}
 		}
 	}()
 }
 
-// 初始化一个用户事件队列.
-func InitUserQueue(sid string, handlers ...Handler) {
-	// FIXME: 会话过期后需要销毁对应的用户事件队列
-
-	q := UserEventQueues[sid]
-	if nil != q {
-		return
-	}
-
-	q = make(chan int, MaxQueueLength)
-	UserEventQueues[sid] = q
-
-	if nil == UserEventHandlers[sid] {
-		UserEventHandlers[sid] = new(Handlers)
-	}
-
+// 为用户队列添加事件处理器.
+func (uq *UserEventQueue) AddHandler(handlers ...Handler) {
 	for _, handler := range handlers {
-		UserEventHandlers[sid].add(handler)
+		uq.Handlers = append(uq.Handlers, handler)
+	}
+}
+
+// 初始化一个用户事件队列.
+func (ueqs Queues) New(sid string) *UserEventQueue {
+	q := ueqs[sid]
+	if nil != q {
+		glog.Warningf("Already exist a user queue in session [%s]", sid)
+
+		return q
 	}
 
-	go func() {
-		for evtCode := range q {
+	q = &UserEventQueue{
+		Sid:   sid,
+		Queue: make(chan int, MaxQueueLength),
+	}
+
+	ueqs[sid] = q
+
+	go func() { // 队列开始监听事件
+		for evtCode := range q.Queue {
 			glog.V(5).Infof("Session [%s] received a event [%d]", sid, evtCode)
 
 			// 将事件交给事件处理器进行处理
-			for _, handler := range *UserEventHandlers[sid] {
-				e := Event{Code: evtCode, Sid: sid}
-				handler.Handle(&e)
+			for _, handler := range q.Handlers {
+				handler.Handle(&Event{Code: evtCode, Sid: sid})
+
 			}
 		}
 	}()
+
+	return q
 }
 
 // 事件处理接口.
@@ -89,10 +99,4 @@ type HandleFunc func(event *Event)
 // 事件处理默认实现.
 func (fn HandleFunc) Handle(event *Event) {
 	fn(event)
-}
-
-type Handlers []Handler
-
-func (handlers *Handlers) add(handler Handler) {
-	*handlers = append(*handlers, handler)
 }

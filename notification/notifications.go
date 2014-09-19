@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/i18n"
+	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
@@ -66,8 +67,14 @@ func event2Notification(e *event.Event) {
 
 // 建立通知通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	// TODO: 会话校验
 	sid := r.URL.Query()["sid"][0]
+
+	wSession := session.WideSessions.Get(sid)
+	if nil == wSession {
+		glog.Errorf("Session [%s] not found", sid)
+
+		return
+	}
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
@@ -79,8 +86,8 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(4).Infof("Open a new [Notification] with session [%s], %d", sid, len(notificationWSs))
 
-	// 初始化用户事件队列
-	event.InitUserQueue(sid, event.HandleFunc(event2Notification))
+	// 添加用户事件处理器
+	wSession.EventQueue.AddHandler(event.HandleFunc(event2Notification))
 
 	input := map[string]interface{}{}
 
