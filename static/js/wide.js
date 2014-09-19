@@ -74,7 +74,10 @@ var wide = {
     },
     _initBottomWindowGroup: function() {
         this.bottomWindowTab = new Tabs({
-            id: ".bottom-window-group"
+            id: ".bottom-window-group",
+            clickAfter: function(id) {
+                this._$tabsPanel.find("." + id).focus();
+            }
         });
     },
     init: function() {
@@ -241,4 +244,5 @@ $(document).ready(function() {
     tree.init();
     menu.init();
     hotkeys.init();
+    notification.init();
 });

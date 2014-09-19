@@ -35,6 +35,20 @@ var hotkeys = {
             shiftKey: false,
             which: 54
         },
+        // Ctrl+Q 关闭当前编辑器   
+        closeCurEditor: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 81
+        },
+        // Ctrl+D 窗口组切换   
+        changeEditor: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 68
+        },
         // F6 构建并运行
         buildRun: {
             ctrlKey: false,
@@ -196,7 +210,7 @@ var hotkeys = {
 
                 return;
             }
-            
+
             if (event.ctrlKey === hotKeys.goNotification.ctrlKey
                     && event.which === hotKeys.goNotification.which) { // Ctrl+6 焦点切换到通知窗口          
                 wide.bottomWindowTab.setCurrent("notification");
@@ -204,6 +218,69 @@ var hotkeys = {
                 event.preventDefault();
 
                 return;
+            }
+
+            if (event.ctrlKey === hotKeys.closeCurEditor.ctrlKey
+                    && event.which === hotKeys.closeCurEditor.which) {  // Ctrl+Q 关闭当前编辑器   
+                if (editors.tabs.getCurrentId()) {
+                    editors.tabs.del(editors.tabs.getCurrentId());
+                }
+                event.preventDefault();
+
+                return;
+            }
+
+            if (event.ctrlKey === hotKeys.changeEditor.ctrlKey
+                    && event.which === hotKeys.changeEditor.which) { // Ctrl+D 窗口组切换
+                if (document.activeElement.className === "notification"
+                        || document.activeElement.className === "output"
+                        || document.activeElement.className === "search") {
+                    // 焦点在底部窗口组时，对底部进行切换
+                    var tabs = ["output", "search", "notification"],
+                            nextId = "";
+                    for (var i = 0, ii = tabs.length; i < ii; i++) {
+                        if (document.activeElement.className === tabs[i]) {
+                            if (i < ii - 1) {
+                                nextId = tabs[i + 1];
+                            } else {
+                                nextId = tabs[0];
+                            }
+                            break;
+                        }
+                    }
+                    wide.bottomWindowTab.setCurrent(nextId);
+                    $(".bottom-window-group ." + nextId).focus();
+
+                    event.preventDefault();
+
+                    return false;
+                }
+
+                if (editors.data.length > 1) {
+                    var nextId = "";
+                    for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                        if (editors.tabs.getCurrentId() === editors.data[i].id) {
+                            if (i < ii - 1) {
+                                nextId = editors.data[i + 1].id;
+                                wide.curEditor = editors.data[i + 1].editor;
+                            } else {
+                                nextId = editors.data[0].id;
+                                wide.curEditor = editors.data[0].editor;
+                            }
+                            break;
+                        }
+                    }
+
+                    editors.tabs.setCurrent(nextId);
+                    wide.curNode = tree.fileTree.getNodeByTId(nextId);
+                    tree.fileTree.selectNode(wide.curNode);
+
+                    wide.curEditor.focus();
+                }
+
+                event.preventDefault();
+
+                return false;
             }
 
             if (event.which === hotKeys.buildRun.which) { // F6 构建并运行

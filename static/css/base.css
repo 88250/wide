@@ -252,3 +252,11 @@ ul {
     width: 100%;
 }
 /* end output */
+
+/* start footer */
+.notification-count {
+    float: right;
+    display: none;
+    cursor: pointer;
+}
+/* end footer */
