@@ -22,7 +22,7 @@ import (
 
 // Wide 中唯一一个 init 函数.
 func init() {
-	// 默认启动参数
+	// TODO:默认启动参数
 	flag.Set("logtostderr", "true")
 	flag.Set("v", "3")
 	flag.Parse()
@@ -33,7 +33,7 @@ func init() {
 	// 加载配置
 	conf.Load()
 
-	// 定时检查 Wide 运行环境
+	// 定时检查运行环境
 	conf.CheckEnv()
 }
 
