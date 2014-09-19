@@ -171,18 +171,19 @@
                     channel: {
                     editor: {{.conf.EditorChannel}},
                             shell: {{.conf.ShellChannel}},
-                            output: {{.conf.OutputChannel}}
+                            output: {{.conf.OutputChannel}},
+                            session: {{.conf.SessionChannel}}
                     },
                             wideSessionId: {{.session.Id}}
                     };
                     // 发往 Wide 的所有 AJAX 请求需要使用该函数创建请求参数.
-                    function newWideRequest() {
-                        var ret = {
+                            function newWideRequest() {
+                            var ret = {
                             sid: config.wideSessionId
-                        }
-                        
-                        return ret;
-                    }
+                            }
+
+                            return ret;
+                            }
 
         </script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
@@ -225,6 +226,7 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/notification.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/tree.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/wide.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/session.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/menu.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/hotkeys.js?{{.conf.StaticResourceVersion}}"></script>
     </body>

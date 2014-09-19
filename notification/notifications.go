@@ -105,9 +105,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		output := ""
-
-		ret = map[string]interface{}{"output": output, "cmd": "notification-output"}
+		ret = map[string]interface{}{"output": "", "cmd": "notification-output"}
 
 		if err := wsChan.Conn.WriteJSON(&ret); err != nil {
 			glog.Error("Notification WS ERROR: " + err.Error())

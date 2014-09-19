@@ -98,6 +98,7 @@ func main() {
 
 	// IDE 首页
 	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/session/ws", session.WSHandler)
 
 	// 运行相关
 	http.HandleFunc("/build", output.BuildHandler)

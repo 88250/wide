@@ -8,19 +8,26 @@ package session
 
 import (
 	"math/rand"
+	"net/http"
 	"os"
 	"strconv"
 	"sync"
 	"time"
 
 	"github.com/b3log/wide/event"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 	"github.com/gorilla/sessions"
+	"github.com/gorilla/websocket"
 )
 
 const (
 	SessionStateActive = iota // 会话状态：活的
 )
+
+// 输出通道.
+// <sid, *util.WSChannel>
+var sessionWS = map[string]*util.WSChannel{}
 
 // 用户 HTTP 会话，用于验证登录.
 var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
@@ -43,6 +50,65 @@ var WideSessions Sessions
 
 // 排它锁，防止并发修改.
 var mutex sync.Mutex
+
+// 建立会话通道.
+// 通道断开时销毁会话状态，回收相关资源.
+func WSHandler(w http.ResponseWriter, r *http.Request) {
+	sid := r.URL.Query()["sid"][0]
+	wSession := WideSessions.Get(sid)
+	if nil == wSession {
+		glog.Errorf("Session [%s] not found", sid)
+
+		return
+	}
+
+	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
+	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
+
+	sessionWS[sid] = &wsChan
+
+	ret := map[string]interface{}{"output": "Ouput initialized", "cmd": "init-session"}
+	wsChan.Conn.WriteJSON(&ret)
+
+	glog.V(4).Infof("Open a new [Session Channel] with session [%s], %d", sid, len(sessionWS))
+
+	input := map[string]interface{}{}
+
+	for {
+		if err := wsChan.Conn.ReadJSON(&input); err != nil {
+			glog.V(3).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it", sid)
+
+			s := WideSessions.Get(sid)
+
+			// 关闭事件队列
+			close(s.EventQueue.Queue)
+
+			// 杀进程
+			for _, p := range s.Processes {
+				if err := p.Kill(); nil != err {
+					glog.Errorf("Can't kill process [%d] of session [%s]", p.Pid, sid)
+				} else {
+					glog.V(3).Infof("Killed a process [%d] of session [%s]", p.Pid, sid)
+				}
+			}
+
+			// TODO: 回收相关通道
+
+			WideSessions.Remove(sid)
+
+			return
+		}
+
+		ret = map[string]interface{}{"output": "", "cmd": "session-output"}
+
+		if err := wsChan.Conn.WriteJSON(&ret); err != nil {
+			glog.Error("Session WS ERROR: " + err.Error())
+			return
+		}
+
+		wsChan.Time = time.Now()
+	}
+}
 
 // 设置会话关联的进程集.
 func (s *WideSession) SetProcesses(ps []*os.Process) {
@@ -105,7 +171,9 @@ func (sessions *Sessions) Remove(sid string) {
 		if s.Id == sid {
 			*sessions = append((*sessions)[:i], (*sessions)[i+1:]...)
 
-			glog.V(3).Infof("Has [%d] wide sessions currently", len(*sessions))
+			glog.V(3).Infof("Removed a session [%s], has [%d] wide sessions currently", sid, len(*sessions))
+
+			return
 		}
 	}
 }

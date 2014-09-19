@@ -29,6 +29,7 @@ type conf struct {
 	EditorChannel         string
 	OutputChannel         string
 	ShellChannel          string
+	SessionChannel        string
 	StaticResourceVersion string
 	MaxProcs              int
 	RuntimeMode           string
@@ -166,11 +167,14 @@ func Load() {
 	}
 
 	glog.V(3).Infof("IP [%s]", ip)
+
+	// TODO: 弄个反射吧？
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", ip, 1)
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", ip, 1)
 	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{IP}", ip, 1)
 	Wide.OutputChannel = strings.Replace(Wide.OutputChannel, "{IP}", ip, 1)
 	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{IP}", ip, 1)
+	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", ip, 1)
 
 	// 获取当前执行路径
 	file, _ := exec.LookPath(os.Args[0])
