@@ -20,10 +20,6 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// 输出通道.
-// <sid, *util.WSChannel>
-var outputWS = map[string]*util.WSChannel{}
-
 // 建立输出通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	// TODO: 会话校验
@@ -32,12 +28,12 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
-	outputWS[sid] = &wsChan
+	session.OutputWS[sid] = &wsChan
 
 	ret := map[string]interface{}{"output": "Ouput initialized", "cmd": "init-output"}
 	wsChan.Conn.WriteJSON(&ret)
 
-	glog.V(4).Infof("Open a new [Output] with session [%s], %d", sid, len(outputWS))
+	glog.V(4).Infof("Open a new [Output] with session [%s], %d", sid, len(session.OutputWS))
 }
 
 // 运行一个可执行文件.
@@ -114,8 +110,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
 
-				if nil != outputWS[sid] {
-					wsChannel := outputWS[sid]
+				if nil != session.OutputWS[sid] {
+					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run-done"
 					channelRet["output"] = string(buf[:count])
@@ -131,8 +127,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 				break
 			} else {
-				if nil != outputWS[sid] {
-					wsChannel := outputWS[sid]
+				if nil != session.OutputWS[sid] {
+					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run"
 					channelRet["output"] = string(buf[:count])
@@ -299,10 +295,10 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				channelRet["lints"] = lints
 			}
 
-			if nil != outputWS[sid] {
+			if nil != session.OutputWS[sid] {
 				glog.V(3).Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
 
-				wsChannel := outputWS[sid]
+				wsChannel := session.OutputWS[sid]
 				err := wsChannel.Conn.WriteJSON(&channelRet)
 				if nil != err {
 					glog.Error(err)
@@ -426,10 +422,10 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 				channelRet["lints"] = lints
 			}
 
-			if nil != outputWS[sid] {
+			if nil != session.OutputWS[sid] {
 				glog.V(3).Infof("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
 
-				wsChannel := outputWS[sid]
+				wsChannel := session.OutputWS[sid]
 				err := wsChannel.Conn.WriteJSON(&channelRet)
 				if nil != err {
 					glog.Error(err)
@@ -510,8 +506,8 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 				channelRet["output"] = string(buf[:count])
 				channelRet["cmd"] = "go get"
 
-				if nil != outputWS[sid] {
-					wsChannel := outputWS[sid]
+				if nil != session.OutputWS[sid] {
+					wsChannel := session.OutputWS[sid]
 
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {

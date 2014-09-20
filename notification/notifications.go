@@ -31,18 +31,14 @@ type Notification struct {
 	Message  string `json:"message"`
 }
 
-// 通知通道.
-// <sid, *util.WSChannel>
-var notificationWSs = map[string]*util.WSChannel{}
-
 // 用户事件处理：将事件转为通知，并通过通知通道推送给前端.
 // 当用户事件队列接收到事件时将会调用该函数进行处理.
 func event2Notification(e *event.Event) {
-	if nil == notificationWSs[e.Sid] {
+	if nil == session.NotificationWS[e.Sid] {
 		return
 	}
 
-	wsChannel := notificationWSs[e.Sid]
+	wsChannel := session.NotificationWS[e.Sid]
 
 	var notification Notification
 
@@ -79,12 +75,12 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
-	notificationWSs[sid] = &wsChan
+	session.NotificationWS[sid] = &wsChan
 
 	ret := map[string]interface{}{"output": "Notification initialized", "cmd": "init-notification"}
 	wsChan.Conn.WriteJSON(&ret)
 
-	glog.V(4).Infof("Open a new [Notification] with session [%s], %d", sid, len(notificationWSs))
+	glog.V(4).Infof("Open a new [Notification] with session [%s], %d", sid, len(session.NotificationWS))
 
 	// 添加用户事件处理器
 	wSession.EventQueue.AddHandler(event.HandleFunc(event2Notification))

@@ -14,3 +14,8 @@ type WSChannel struct {
 	Request *http.Request   // 关联的 HTTP 请求
 	Time    time.Time       // 该通道最近一次使用时间
 }
+
+// 关闭通道.
+func (c *WSChannel) Close() {
+	c.Conn.Close()
+}

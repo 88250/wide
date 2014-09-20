@@ -88,6 +88,16 @@ func (ueqs Queues) New(sid string) *UserEventQueue {
 	return q
 }
 
+// 关闭一个用户事件队列.
+func (ueqs Queues) Close(sid string) {
+	q := ueqs[sid]
+	if nil == q {
+		return
+	}
+
+	delete(ueqs, sid)
+}
+
 // 事件处理接口.
 type Handler interface {
 	Handle(event *Event)

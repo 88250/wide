@@ -3,7 +3,7 @@
 // 1. HTTP 会话：主要用于验证登录
 // 2. Wide 会话：浏览器 tab 打开/刷新会创建一个，并和 HTTP 会话进行关联
 //
-// TODO: 当 HTTP 会话失效时，关联的 Wide 会话也会做失效处理：释放所有和该会话相关的资源，例如运行中的程序进程、事件队列等
+// 当会话失效时：释放所有和该会话相关的资源，例如运行中的程序进程、事件队列等.
 package session
 
 import (
@@ -23,11 +23,19 @@ import (
 
 const (
 	SessionStateActive = iota // 会话状态：活的
+	SessionStateClosed        // 会话状态：已关闭（这个状态目前暂时没有使用到）
 )
 
-// 输出通道.
-// <sid, *util.WSChannel>
-var sessionWS = map[string]*util.WSChannel{}
+var (
+	// 会话通道. <sid, *util.WSChannel>var
+	sessionWS = map[string]*util.WSChannel{}
+
+	// 输出通道. <sid, *util.WSChannel>
+	OutputWS = map[string]*util.WSChannel{}
+
+	// 通知通道. <sid, *util.WSChannel>
+	NotificationWS = map[string]*util.WSChannel{}
+)
 
 // 用户 HTTP 会话，用于验证登录.
 var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
@@ -78,25 +86,40 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 		if err := wsChan.Conn.ReadJSON(&input); err != nil {
 			glog.V(3).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it", sid)
 
-			s := WideSessions.Get(sid)
+			for i, s := range WideSessions {
+				if s.Id == sid {
+					mutex.Lock()
 
-			// 关闭事件队列
-			close(s.EventQueue.Queue)
+					// 从会话集中移除
+					WideSessions = append(WideSessions[:i], WideSessions[i+1:]...)
 
-			// 杀进程
-			for _, p := range s.Processes {
-				if err := p.Kill(); nil != err {
-					glog.Errorf("Can't kill process [%d] of session [%s]", p.Pid, sid)
-				} else {
-					glog.V(3).Infof("Killed a process [%d] of session [%s]", p.Pid, sid)
+					// 关闭用户事件队列
+					event.UserEventQueues.Close(sid)
+
+					// 杀进程
+					for _, p := range s.Processes {
+						if err := p.Kill(); nil != err {
+							glog.Errorf("Can't kill process [%d] of session [%s]", p.Pid, sid)
+						} else {
+							glog.V(3).Infof("Killed a process [%d] of session [%s]", p.Pid, sid)
+						}
+					}
+
+					// 回收所有通道
+					OutputWS[sid].Close()
+					delete(OutputWS, sid)
+
+					NotificationWS[sid].Close()
+					delete(NotificationWS, sid)
+
+					sessionWS[sid].Close()
+					delete(sessionWS, sid)
+
+					mutex.Unlock()
+
+					return
 				}
 			}
-
-			// TODO: 回收相关通道
-
-			WideSessions.Remove(sid)
-
-			return
 		}
 
 		ret = map[string]interface{}{"output": "", "cmd": "session-output"}
@@ -132,6 +155,7 @@ func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
 	id := strconv.Itoa(rand.Int())
 	now := time.Now()
 
+	// 创建用户事件队列
 	userEventQueue := event.UserEventQueues.New(id)
 
 	ret := &WideSession{
