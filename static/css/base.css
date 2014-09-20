@@ -234,7 +234,7 @@ ul {
 }
 /* end editor */
 
-/* start output */
+/* start bottom-window-group */
 .bottom-window-group .tabs {
     background-color: #CAD3E3;
     border-top: 1px solid #8E97A7;
@@ -245,13 +245,39 @@ ul {
     cursor: pointer;
 }
 
+.bottom-window-group .tabs-panel {
+    height: 133px;
+}
+
 .bottom-window-group textarea {
     border-width: 0;
     color: #555555;
     height: 130px;
     width: 100%;
 }
-/* end output */
+
+.bottom-window-group .notification,
+.bottom-window-group .search,
+.bottom-window-group .output {
+    height: 133px;
+    overflow: auto;
+}
+
+.bottom-window-group .notification > table {
+    width: 100%;
+}
+
+.bottom-window-group .notification td {
+    border-bottom: 1px solid #DDD;
+    line-height: 20px;
+}
+
+.bottom-window-group .notification .type,
+.bottom-window-group .notification .severity {
+    width: 50px;
+    padding: 0 5px;
+}
+/* end bottom-window-group */
 
 /* start footer */
 .notification-count {

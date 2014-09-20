@@ -267,6 +267,9 @@ var editors = {
                 "Ctrl-S": function () {
                     wide.saveFile();
                 },
+                "Shift-Ctrl-S": function () {
+                    wide.saveAllFiles();
+                },
                 "Shift-Alt-F": function () {
                     wide.fmt();
                 },

@@ -121,7 +121,8 @@ var tree = {
                 tree.fileTree.addNodes(wide.curNode, [{
                         "name": name,
                         "iconSkin": iconSkin,
-                        "path": request.path
+                        "path": request.path,
+                        "mode": data.mode
                     }]);
             }
         });

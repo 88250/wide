@@ -77,9 +77,6 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.NotificationWS[sid] = &wsChan
 
-	ret := map[string]interface{}{"output": "Notification initialized", "cmd": "init-notification"}
-	wsChan.Conn.WriteJSON(&ret)
-
 	glog.V(4).Infof("Open a new [Notification] with session [%s], %d", sid, len(session.NotificationWS))
 
 	// 添加用户事件处理器
@@ -100,14 +97,5 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 			glog.Error("Notification WS ERROR: " + err.Error())
 			return
 		}
-
-		ret = map[string]interface{}{"output": "", "cmd": "notification-output"}
-
-		if err := wsChan.Conn.WriteJSON(&ret); err != nil {
-			glog.Error("Notification WS ERROR: " + err.Error())
-			return
-		}
-
-		wsChan.Time = time.Now()
 	}
 }
