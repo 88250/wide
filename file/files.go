@@ -295,7 +295,7 @@ func getIconSkin(filenameExtension string) string {
 		return "ico-ztree-pro "
 	case ".md":
 		return "ico-ztree-md "
-	case ".js", "json":
+	case ".js", ".json":
 		return "ico-ztree-js "
 	case ".xml":
 		return "ico-ztree-xml "

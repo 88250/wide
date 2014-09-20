@@ -175,6 +175,8 @@ var tree = {
                 if (!data.succ) {
                     return false;
                 }
+				
+                tree.fileTree.removeNode(wide.curNode);
 
                 if ("ico-ztree-dir " !== wide.curNode.iconSkin) {
                     // 是文件的话，查看 editor 中是否被打开，如打开则移除
@@ -193,8 +195,6 @@ var tree = {
                         }
                     }
                 }
-
-                tree.fileTree.removeNode(wide.curNode);
             }
         });
     },
