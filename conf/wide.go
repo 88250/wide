@@ -34,7 +34,7 @@ type conf struct {
 	MaxProcs              int
 	RuntimeMode           string
 	Pwd                   string
-	Users                 []User
+	Users                 []*User
 }
 
 var Wide conf

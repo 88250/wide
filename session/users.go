@@ -71,7 +71,7 @@ func addUser(username, password string) string {
 	}
 
 	// FIXME: 新建用户时保存工作空间
-	newUser := conf.User{Name: username, Password: password, Workspace: ""}
+	newUser := &conf.User{Name: username, Password: password, Workspace: ""}
 	conf.Wide.Users = append(conf.Wide.Users, newUser)
 
 	if !conf.Save() {

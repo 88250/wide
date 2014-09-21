@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"html/template"
 	"math/rand"
@@ -17,6 +18,7 @@ import (
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/shell"
+	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 )
 
@@ -37,22 +39,76 @@ func init() {
 	conf.CheckEnv()
 }
 
+// 登录.
+func loginHandler(w http.ResponseWriter, r *http.Request) {
+	i18n.Load()
+
+	if r.Method == "GET" {
+		// 展示登录页面
+
+		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
+
+		t, err := template.ParseFiles("view/login.html")
+
+		if nil != err {
+			glog.Error(err)
+			http.Error(w, err.Error(), 500)
+
+			return
+		}
+
+		t.Execute(w, model)
+
+		return
+	}
+
+	// 非 GET 请求当作是登录请求
+	succ := false
+
+	data := map[string]interface{}{"succ": &succ}
+	defer util.RetJSON(w, r, data)
+
+	var args map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		succ = true
+
+		return
+	}
+
+	username := args["username"].(string)
+	password := args["password"].(string)
+
+	for _, user := range conf.Wide.Users {
+		if user.Name == username && user.Password == password {
+			succ = true
+		}
+	}
+
+	if !succ {
+		return
+	}
+
+	// 创建 HTTP 会话
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession.Values["username"] = username
+	httpSession.Values["id"] = strconv.Itoa(rand.Int())
+	httpSession.Options.MaxAge = 60 * 60 * 24 // 一天过期
+	httpSession.Save(r, w)
+
+	glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), username)
+}
+
 // Wide 首页.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
-	// TODO: 写死以 admin 作为用户登录
-	username := conf.Wide.Users[0].Name
 	if httpSession.IsNew {
+		http.Redirect(w, r, "/login", http.StatusForbidden)
 
-		httpSession.Values["username"] = username
-		httpSession.Values["id"] = strconv.Itoa(rand.Int())
-		// 一天过期
-		httpSession.Options.MaxAge = 60 * 60 * 24
-
-		glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), username)
+		return
 	}
 
 	httpSession.Save(r, w)
@@ -64,6 +120,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		"session": wideSession}
 
 	wideSessions := session.WideSessions.GetByHTTPSession(httpSession)
+
+	username := httpSession.Values["username"].(string)
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("view/index.html")
@@ -96,7 +154,8 @@ func main() {
 	// 库资源
 	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
 
-	// IDE 首页
+	// IDE
+	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/session/ws", session.WSHandler)
 

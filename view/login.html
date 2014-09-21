@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{.i18n.wide}} - {{.i18n.login}}</title>
+    </head>
+    <body>
+        <input id="username" placeholder="{{.i18n.username}}"/>
+        <input id="password" placeholder="{{.i18n.password}}..."/>
+        <button onclick="login()">{{.i18n.login}}</button>
+        
+        // TODO: 绑定回车
+        <div id="msg"></div>
+
+        <script type="text/javascript">
+            function login() {
+                var request = {
+                    username: $("#username").val(),
+                    password: $("#username").val()
+                };
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/login',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+
+                        if (!data.succ) {                            
+                            $("#msg").text({{.i18n.login_failed}});
+
+                            return;
+                        }
+
+                        window.location.href = "/";
+                    }
+                });
+            }
+
+        </script>        
+
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
+    </body>
+</html>

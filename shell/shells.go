@@ -3,12 +3,10 @@ package shell
 
 import (
 	"html/template"
-	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
 	"runtime"
-	"strconv"
 	"strings"
 	"time"
 
@@ -31,15 +29,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
-		// TODO: 写死以 admin 作为用户登录
-		name := conf.Wide.Users[0].Name
+		http.Redirect(w, r, "/login", http.StatusForbidden)
 
-		httpSession.Values["username"] = name
-		httpSession.Values["id"] = strconv.Itoa(rand.Int())
-		// 一天过期
-		httpSession.Options.MaxAge = 60 * 60 * 24
-
-		glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), name)
+		return
 	}
 
 	httpSession.Save(r, w)
@@ -49,6 +41,11 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
 		"session": wideSession}
+
+	wideSessions := session.WideSessions.GetByHTTPSession(httpSession)
+
+	username := httpSession.Values["username"].(string)
+	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("view/shell.html")
 

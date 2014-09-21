@@ -1,6 +1,10 @@
 {
     "wide": "Wide",
     "file": "文件",
+    "login": "登录",
+    "username": "用户名",
+    "password": "密码",
+    "login_failed": "登录失败",
     "run": "运行",
     "debug": "调试",
     "help": "帮助",
