@@ -145,6 +145,10 @@ func pipeCommands(username string, commands ...*exec.Cmd) string {
 
 	out, err := last.CombinedOutput()
 
+	for _, command := range commands[:len(commands)-1] {
+		command.Wait()
+	}
+
 	if err != nil {
 		return err.Error()
 	}
