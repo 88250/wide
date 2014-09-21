@@ -6,30 +6,51 @@
     </head>
     <body>
         <input id="username" placeholder="{{.i18n.username}}"/>
-        <input id="password" placeholder="{{.i18n.password}}..."/>
+        <input id="password" type="password" placeholder="{{.i18n.password}}..."/>
         <button onclick="login()">{{.i18n.login}}</button>
-        
-        // TODO: 绑定回车
         <div id="msg"></div>
-
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
         <script type="text/javascript">
-            function login() {
+            (function () {
+                $("#username").keydown(function (event) {
+                    if (event.which === 13) {
+                        if ($.trim($(this).val()) === "") {
+                            $("#msg").text("{{.i18n.login_failed}}");
+                        } else {
+                            $("#password").focus();
+                        }
+                    }
+                    
+                    $("#msg").text('');
+                });
+
+
+                $("#password").keydown(function (event) {
+                    if (event.which === 13) {
+                        if ($.trim($(this).val()) === "") {
+                            $("#msg").text("{{.i18n.login_failed}}");
+                        } else {
+                            login();
+                        }
+                    }
+                    
+                    $("#msg").text('');
+                });
+            })();
+
+            var login = function () {
                 var request = {
                     username: $("#username").val(),
-                    password: $("#username").val()
+                    password: $("#password").val()
                 };
-
                 $.ajax({
                     type: 'POST',
                     url: '/login',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (data) {
-                        console.log(data);
-
-                        if (!data.succ) {                            
-                            $("#msg").text({{.i18n.login_failed}});
-
+                        if (!data.succ) {
+                            $("#msg").text('{{.i18n.login_failed}}');
                             return;
                         }
 
@@ -37,9 +58,6 @@
                     }
                 });
             }
-
         </script>        
-
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
     </body>
 </html>
