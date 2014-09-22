@@ -168,12 +168,14 @@ func NewFile(w http.ResponseWriter, r *http.Request) {
 	fileType := args["fileType"].(string)
 
 	if !createFile(path, fileType) {
-		if "f" == fileType {
-			extension := filepath.Ext(path)
-			data["mode"] = getEditorMode(extension)
-
-		}
 		data["succ"] = false
+
+		return
+	}
+
+	if "f" == fileType {
+		extension := filepath.Ext(path)
+		data["mode"] = getEditorMode(extension)
 	}
 }
 
