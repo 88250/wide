@@ -64,7 +64,6 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
 
-	// TODO: 会话校验
 	sid := r.URL.Query()["sid"][0]
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)

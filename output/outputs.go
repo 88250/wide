@@ -22,7 +22,6 @@ import (
 
 // 建立输出通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	// TODO: 会话校验
 	sid := r.URL.Query()["sid"][0]
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -331,7 +330,6 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: 会话校验
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
@@ -458,7 +456,6 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: 会话校验
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
