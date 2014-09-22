@@ -71,14 +71,11 @@
 }
 
 #dialogRemoveConfirm,
-#dialogNewFilePrompt,
-#dialogNewDirPrompt,
-#dialogGoLinePrompt {
+.dialog-prompt {
     padding: 10px 20px 0;
+    overflow: hidden;
 }
 
-#dialogNewFilePrompt > input,
-#dialogNewDirPrompt > input,
-#dialogGoLinePrompt > input {
+.dialog-prompt > input {
     width: 100%;
 }

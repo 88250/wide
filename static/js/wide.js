@@ -115,8 +115,17 @@ var wide = {
             }
         });
 
+
+        $(".dialog-prompt > input").keydown(function(event) {
+            $(".dialog-prompt > .tip").text('');
+            
+            if (event.which === 13) {
+                $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)").click();
+            }
+        });
+
         $("#dialogNewFilePrompt").dialog({
-            "height": 32,
+            "height": 52,
             "width": 260,
             "title": config.label.create_file,
             "okText": config.label.create,
@@ -126,7 +135,12 @@ var wide = {
             },
             "ok": function() {
                 var request = newWideRequest(),
-                        name = $("#dialogNewFilePrompt > input").val()
+                        name = $("#dialogNewFilePrompt > input").val();
+                if ($.trim(name) === "") {
+                    $("#dialogNewFilePrompt > .tip").text(config.label.input_no_empty);
+                    return false;
+                }
+
                 request.path = wide.curNode.path + '\\' + name;
                 request.fileType = "f";
 
@@ -187,7 +201,7 @@ var wide = {
         });
 
         $("#dialogNewDirPrompt").dialog({
-            "height": 32,
+            "height": 52,
             "width": 260,
             "title": config.label.create_dir,
             "okText": config.label.create,
@@ -198,6 +212,10 @@ var wide = {
             "ok": function() {
                 var name = $("#dialogNewDirPrompt > input").val(),
                         request = newWideRequest();
+                if ($.trim(name) === "") {
+                    $("#dialogNewDirPrompt > .tip").text(config.label.input_no_empty);
+                    return false;
+                }
                 request.path = wide.curNode.path + '\\' + name;
                 request.fileType = "d";
 
@@ -224,7 +242,7 @@ var wide = {
         });
 
         $("#dialogGoLinePrompt").dialog({
-            "height": 32,
+            "height": 52,
             "width": 260,
             "title": config.label.goto_line,
             "okText": config.label.goto,
@@ -234,7 +252,10 @@ var wide = {
             },
             "ok": function() {
                 var line = parseInt($("#dialogGoLinePrompt > input").val());
-
+                if ($.trim(line) === "") {
+                    $("#dialogGoLinePrompt > .tip").text(config.label.input_no_empty);
+                    return false;
+                }
                 $("#dialogGoLinePrompt").dialog("close");
                 wide.curEditor.setCursor(CodeMirror.Pos(line - 1, 0));
                 wide.curEditor.focus();

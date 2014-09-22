@@ -170,20 +170,21 @@
         <div id="dialogRemoveConfirm">
             {{.i18n.isDelete}} <b></b>?
         </div>
-        <div id="dialogNewFilePrompt">
-            <input/>
+        <div id="dialogNewFilePrompt" class="dialog-prompt">
+            <input/><span class="tip"></span>
         </div>
-        <div id="dialogNewDirPrompt">
-            <input/>
+        <div id="dialogNewDirPrompt" class="dialog-prompt">
+            <input/><span class="tip"></span>
         </div>
-        <div id="dialogGoLinePrompt">
-            <input/>
+        <div id="dialogGoLinePrompt" class="dialog-prompt">
+            <input/><span class="tip"></span>
         </div>
         <script>
                     var config = {
                     "label": {
                     "delete": "{{.i18n.delete}}",
                             "cancel": "{{.i18n.cancel}}",
+                            "input_no_empty": "{{.i18n.input_no_empty}}",
                             "goto_line": "{{.i18n.goto_line}}",
                             "goto": "{{.i18n.goto}}",
                             "create": "{{.i18n.create}}",
