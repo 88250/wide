@@ -162,6 +162,7 @@ func main() {
 	// 运行相关
 	http.HandleFunc("/build", output.BuildHandler)
 	http.HandleFunc("/run", output.RunHandler)
+	http.HandleFunc("/stop", output.StopHandler)
 	http.HandleFunc("/go/get", output.GoGetHandler)
 	http.HandleFunc("/go/install", output.GoInstallHandler)
 	http.HandleFunc("/output/ws", output.WSHandler)

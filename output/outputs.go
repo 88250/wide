@@ -520,6 +520,32 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	}(rand.Int())
 }
 
+// 结束正在运行的进程.
+func StopHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	var args map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	sid := args["sid"].(string)
+	pid := args["pid"].(int)
+
+	wSession := session.WideSessions.Get(sid)
+	if nil == wSession {
+		data["succ"] = false
+
+		return
+	}
+
+	processes.kill(wSession, pid)
+}
+
 func setCmdEnv(cmd *exec.Cmd, username string) {
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 

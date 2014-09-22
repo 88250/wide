@@ -83,6 +83,8 @@ func (procs *procs) kill(wSession *session.WideSession, pid int) {
 
 				glog.V(3).Infof("Killed a process [pid=%d] of session [%s]", pid, sid)
 			}
+
+			return
 		}
 	}
 }
