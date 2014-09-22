@@ -1,5 +1,7 @@
 {
     "wide": "Wide",
+    "isDelete": "是否删除",
+    "cancel": "取消",
     "file": "文件",
     "login": "登录",
     "username": "用户名",
@@ -14,6 +16,7 @@
     "about": "关于",
     "start_page": "起始页",
     "create_file": "创建文件",
+    "create": "创建",
     "create_dir": "创建目录",
     "delete": "删除",
     "save": "保存",
@@ -28,5 +31,7 @@
     "full_screen": "全屏",
     "unread_notification": "未读通知",
     "notification_2": "没有检查到 gocode，这将会导致 [自动完成] 失效",
-    "notification_3": "没有检查到 ide_stub，这将会导致 [跳转到声明]、[查找使用] 失效"
+    "notification_3": "没有检查到 ide_stub，这将会导致 [跳转到声明]、[查找使用] 失效",
+    "goto_line": "跳转到行",
+    "goto": "跳转"
 }

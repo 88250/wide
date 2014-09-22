@@ -1,9 +1,9 @@
 var outputWS = new WebSocket(config.channel.output + '/output/ws?sid=' + config.wideSessionId);
-outputWS.onopen = function () {
+outputWS.onopen = function() {
     console.log('[output onopen] connected');
 };
 
-outputWS.onmessage = function (e) {
+outputWS.onmessage = function(e) {
     console.log('[output onmessage]' + e.data);
     var data = JSON.parse(e.data);
 
@@ -20,10 +20,10 @@ outputWS.onmessage = function (e) {
             url: '/run',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function(data) {
                 $('.bottom-window-group .output').text('');
             },
-            success: function (data) {
+            success: function(data) {
 
             }
         });
@@ -54,11 +54,11 @@ outputWS.onmessage = function (e) {
         $('.bottom-window-group .output').text($('.bottom-window-group .output').text() + data.output);
     }
 };
-outputWS.onclose = function (e) {
+outputWS.onclose = function(e) {
     console.log('[output onclose] disconnected (' + e.code + ')');
     delete outputWS;
 };
-outputWS.onerror = function (e) {
+outputWS.onerror = function(e) {
     console.log('[output onerror] ' + e);
 };
 
@@ -66,26 +66,201 @@ var wide = {
     curNode: undefined,
     curEditor: undefined,
     bottomWindowTab: undefined,
-    _initLayout: function () {
+    _initDialog: function() {
+        $("#dialogRemoveConfirm").dialog({
+            "height": 26,
+            "width": 260,
+            "title": config.label.delete,
+            "okText": config.label.delete,
+            "cancelText": config.label.cancel,
+            "afterOpen": function() {
+                $("#dialogRemoveConfirm > b").html('"' + wide.curNode.name + '"');
+            },
+            "ok": function() {
+                var request = newWideRequest();
+                request.path = wide.curNode.path;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/file/remove',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function(data) {
+                        if (!data.succ) {
+                            return false;
+                        }
+
+                        $("#dialogRemoveConfirm").dialog("close");
+                        tree.fileTree.removeNode(wide.curNode);
+
+                        if ("ico-ztree-dir " !== wide.curNode.iconSkin) {
+                            // 是文件的话，查看 editor 中是否被打开，如打开则移除
+                            for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                                if (editors.data[i].id === wide.curNode.tId) {
+                                    $(".edit-header .tabs > div[data-index=" + wide.curNode.tId + "]").find(".ico-close").click();
+                                    break;
+                                }
+                            }
+                        } else {
+                            for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                                if (tree._isParents(editors.data[i].id, wide.curNode.tId)) {
+                                    $(".edit-header .tabs > div[data-index=" + editors.data[i].id + "]").find(".ico-close").click();
+                                    i--;
+                                    ii--;
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#dialogNewFilePrompt").dialog({
+            "height": 32,
+            "width": 260,
+            "title": config.label.create_file,
+            "okText": config.label.create,
+            "cancelText": config.label.cancel,
+            "afterOpen": function() {
+                $("#dialogNewFilePrompt > input").val('').focus();
+            },
+            "ok": function() {
+                var request = newWideRequest(),
+                        name = $("#dialogNewFilePrompt > input").val()
+                request.path = wide.curNode.path + '\\' + name;
+                request.fileType = "f";
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/file/new',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function(data) {
+                        if (!data.succ) {
+                            return false;
+                        }
+                        $("#dialogNewFilePrompt").dialog("close");
+                        var suffix = name.split(".")[1],
+                                iconSkin = "ico-ztree-other ";
+                        switch (suffix) {
+                            case "html", "htm":
+                                iconSkin = "ico-ztree-html ";
+                                break;
+                            case "go":
+                                iconSkin = "ico-ztree-go ";
+                                break;
+                            case "css":
+                                iconSkin = "ico-ztree-css ";
+                                break;
+                            case "txt":
+                                iconSkin = "ico-ztree-text ";
+                                break;
+                            case "sql":
+                                iconSkin = "ico-ztree-sql ";
+                                break;
+                            case "properties":
+                                iconSkin = "ico-ztree-pro ";
+                                break;
+                            case "md":
+                                iconSkin = "ico-ztree-md ";
+                                break;
+                            case "js", "json":
+                                iconSkin = "ico-ztree-js ";
+                                break;
+                            case "xml":
+                                iconSkin = "ico-ztree-xml ";
+                                break;
+                            case "jpg", "jpeg", "bmp", "gif", "png", "svg", "ico":
+                                iconSkin = "ico-ztree-img ";
+                                break;
+                        }
+
+                        tree.fileTree.addNodes(wide.curNode, [{
+                                "name": name,
+                                "iconSkin": iconSkin,
+                                "path": request.path,
+                                "mode": data.mode
+                            }]);
+                    }
+                });
+            }
+        });
+
+        $("#dialogNewDirPrompt").dialog({
+            "height": 32,
+            "width": 260,
+            "title": config.label.create_dir,
+            "okText": config.label.create,
+            "cancelText": config.label.cancel,
+            "afterOpen": function() {
+                $("#dialogNewDirPrompt > input").val('').focus();
+            },
+            "ok": function() {
+                var name = $("#dialogNewDirPrompt > input").val(),
+                        request = newWideRequest();
+                request.path = wide.curNode.path + '\\' + name;
+                request.fileType = "d";
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/file/new',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function(data) {
+                        if (!data.succ) {
+                            return false;
+                        }
+
+                        $("#dialogNewDirPrompt").dialog("close");
+
+                        tree.fileTree.addNodes(wide.curNode, [{
+                                "name": name,
+                                "iconSkin": "ico-ztree-dir ",
+                                "path": request.path
+                            }]);
+                    }
+                });
+            }
+        });
+
+        $("#dialogGoLinePrompt").dialog({
+            "height": 32,
+            "width": 260,
+            "title": config.label.goto_line,
+            "okText": config.label.goto,
+            "cancelText": config.label.cancel,
+            "afterOpen": function() {
+                $("#dialogGoLinePrompt > input").val('').focus();
+            },
+            "ok": function() {
+                var line = parseInt($("#dialogGoLinePrompt > input").val());
+
+                $("#dialogGoLinePrompt").dialog("close");
+                wide.curEditor.setCursor(CodeMirror.Pos(line - 1, 0));
+                wide.curEditor.focus();
+            }
+        });
+    },
+    _initLayout: function() {
         var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2;
         $(".content, .ztree").height(mainH);
 
         $(".edit-panel").height(mainH - $(".bottom-window-group").height());
     },
-    _initBottomWindowGroup: function () {
+    _initBottomWindowGroup: function() {
         this.bottomWindowTab = new Tabs({
             id: ".bottom-window-group",
-            clickAfter: function (id) {
+            clickAfter: function(id) {
                 this._$tabsPanel.find("." + id).focus();
             }
         });
     },
-    init: function () {
+    init: function() {
         this._initLayout();
 
         this._initBottomWindowGroup();
 
-        $("body").bind("mousedown", function (event) {
+        $("body").bind("mousedown", function(event) {
             if (!(event.target.id === "dirRMenu" || $(event.target).closest("#dirRMenu").length > 0)) {
                 $("#dirRMenu").hide();
             }
@@ -101,8 +276,9 @@ var wide = {
             }
         });
 
+        this._initDialog();
     },
-    _save: function () {
+    _save: function() {
         var request = newWideRequest();
         request.file = $(".edit-header .current span:eq(0)").attr("title");
         request.code = wide.curEditor.getValue();
@@ -112,29 +288,32 @@ var wide = {
             url: '/file/save',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
             }
         });
     },
-    saveFile: function () {
+    saveFile: function() {
         // 格式化后会对文件进行保存
         this.fmt();
     },
-    saveAllFiles: function () {
-        // TODO: save all files
-        console.log("TODO: ssave all files");
+    saveAllFiles: function() {
+        // TODO: save all open files
+        for (var i = 0, ii = editors.data.length; i < ii; i++) {
+
+        }
+        console.log("TODO: save all files");
     },
-    closeFile: function () {
+    closeFile: function() {
         // TODO: close file
     },
-    closeAllFiles: function () {
+    closeAllFiles: function() {
         // TODO: close all files
     },
-    exit: function () {
+    exit: function() {
         // TODO: exit
     },
     // 构建 & 运行.
-    run: function () {
+    run: function() {
         var request = newWideRequest();
         request.file = $(".edit-header .current span:eq(0)").attr("title");
         request.code = wide.curEditor.getValue();
@@ -146,14 +325,14 @@ var wide = {
             url: '/build',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function(data) {
                 $('.bottom-window-group .output').text('');
             },
-            success: function (data) {
+            success: function(data) {
             }
         });
     },
-    goget: function () {
+    goget: function() {
         var request = newWideRequest();
         request.file = $(".edit-header .current span:eq(0)").attr("title");
 
@@ -162,14 +341,14 @@ var wide = {
             url: '/go/get',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function(data) {
                 $('.bottom-window-group .output').text('');
             },
-            success: function (data) {
+            success: function(data) {
             }
         });
     },
-    goinstall: function () {
+    goinstall: function() {
         var request = newWideRequest();
         request.file = $(".edit-header .current span:eq(0)").attr("title");
         request.code = wide.curEditor.getValue();
@@ -179,16 +358,16 @@ var wide = {
             url: '/go/install',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function(data) {
                 $('.bottom-window-group .output').text('');
             },
-            success: function (data) {
+            success: function(data) {
             }
         });
     },
-    fmt: function () {
+    fmt: function() {
         var path = $(".edit-header .current span:eq(0)").attr("title");
-        var mode = wide.curNode.mode;
+        var mode = wide.curEditor.getOption("mode");
 
         var request = newWideRequest();
         request.file = path;
@@ -203,7 +382,7 @@ var wide = {
                     url: '/go/fmt',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
+                    success: function(data) {
                         if (data.succ) {
                             wide.curEditor.setValue(data.code);
                         }
@@ -217,7 +396,7 @@ var wide = {
                     url: '/html/fmt',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
+                    success: function(data) {
                         if (data.succ) {
                             wide.curEditor.setValue(data.code);
                         }
@@ -246,7 +425,7 @@ var wide = {
     }
 };
 
-$(document).ready(function () {
+$(document).ready(function() {
     wide.init();
     tree.init();
     menu.init();

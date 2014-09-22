@@ -1,0 +1,84 @@
+/**
+ * dialig style
+ *
+ * @author <a href="mailto:LLY219@gmail.com">Liyuan Li</a>
+ * @version 0.0.0.6, Jun 3, 2012
+*/
+
+.dialog-background {
+    height: 100%;
+    left: 0;
+    opacity: .3;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    filter: alpha(opacity=30);
+    display: none;
+    background-color: #000000;
+}
+
+.dialog-panel {
+    position: absolute;
+    z-index: 100;
+    display: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+.dialog-title {
+    float: left;
+    line-height: 22px;
+    margin-left: 3px;
+    color: #000;
+}
+
+.dialog-header-bg {
+    height: 23px;
+    background-color: #CCD5E5;
+    cursor: move;
+    width: 100%;
+    border: 1px solid #9B9B9B;
+    border-top-color: #8E97A7;
+    border-bottom-color: #8891A1;
+}
+
+.dialog-close-icon {
+    background-position: -15px 0;
+    cursor: pointer;
+    float: right;
+    height: 18px;
+    margin: 5px 3px 0 0;
+    width: 18px;
+}
+
+.dialog-close-icon:hover {
+    background-position: -15px -18px;
+}
+
+.dialog-main {
+    border: 1px solid #9B9B9B;
+    border-top-width: 0px;
+    background-color: #F0F0F0;
+}
+
+.dialog-main > div {
+    width: 100%;
+}
+
+.dialog-footer {
+    padding: 10px;
+    text-align: right;
+}
+
+#dialogRemoveConfirm,
+#dialogNewFilePrompt,
+#dialogNewDirPrompt,
+#dialogGoLinePrompt {
+    padding: 10px 20px 0;
+}
+
+#dialogNewFilePrompt > input,
+#dialogNewDirPrompt > input,
+#dialogGoLinePrompt > input {
+    width: 100%;
+}

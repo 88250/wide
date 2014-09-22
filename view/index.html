@@ -12,6 +12,7 @@
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/ztree/zTreeStyle.css">
 
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
     </head>
@@ -166,22 +167,42 @@
             <span class="notification-count" title="{{.i18n.unread_notification}}">Notification!</span>
         </div>
 
-        <script type="text/javascript">
+        <div id="dialogRemoveConfirm">
+            {{.i18n.isDelete}} <b></b>?
+        </div>
+        <div id="dialogNewFilePrompt">
+            <input/>
+        </div>
+        <div id="dialogNewDirPrompt">
+            <input/>
+        </div>
+        <div id="dialogGoLinePrompt">
+            <input/>
+        </div>
+        <script>
                     var config = {
-                    channel: {
-                    editor: {{.conf.EditorChannel}},
-                            shell: {{.conf.ShellChannel}},
-                            output: {{.conf.OutputChannel}},
-                            session: {{.conf.SessionChannel}}
+                    "label": {
+                    "delete": "{{.i18n.delete}}",
+                            "cancel": "{{.i18n.cancel}}",
+                            "goto_line": "{{.i18n.goto_line}}",
+                            "goto": "{{.i18n.goto}}",
+                            "create": "{{.i18n.create}}",
+                            "create_file": "{{.i18n.create_file}}",
+                            "create_dir": "{{.i18n.create_dir}}",
                     },
-                            wideSessionId: {{.session.Id}}
+                            "channel": {
+                            "editor": '{{.conf.EditorChannel}}',
+                                    "shell": '{{.conf.ShellChannel}}',
+                                    "output": '{{.conf.OutputChannel}}',
+                                    "session": '{{.conf.SessionChannel}}'
+                            },
+                            "wideSessionId": '{{.session.Id}}'
                     };
                     // 发往 Wide 的所有 AJAX 请求需要使用该函数创建请求参数.
                             function newWideRequest() {
                             var ret = {
                             sid: config.wideSessionId
                             }
-
                             return ret;
                             }
 
@@ -222,6 +243,7 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lint/json-lint.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lint/go-lint.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/tabs.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/dialog.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/editor.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/notification.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/tree.js?{{.conf.StaticResourceVersion}}"></script>
