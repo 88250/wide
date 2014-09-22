@@ -23,9 +23,9 @@ var editorWS = map[string]*websocket.Conn{}
 // 代码片段. 这个结构可用于“查找使用”、“文件搜索”的返回值.
 type snippet struct {
 	Path     string   `json:"path"`     // 文件路径
-	Line     int      `json:"lline"`    // 行号
+	Line     int      `json:"line"`     // 行号
 	Ch       int      `json:"ch"`       // 列号
-	Contents []string `json:"contents"` // 代码行
+	Contents []string `json:"contents"` // 附近几行
 }
 
 // 建立编辑器通道.
