@@ -17,3 +17,21 @@ sessionWS.onerror = function (e) {
     console.log('[session onerror] ' + JSON.parse(e));
 };
 
+// 定时（30 秒）保存会话内容.
+setTimeout(function () {
+    var request = newWideRequest();
+    
+    // TODO: 会话状态保存
+    request.currentFile = "current file"; // 当前编辑器
+    request.fileTree = ["1/", "2/"]; // 文件树展开状态
+    request.files = ["1.go", "2.go", "3.go"]; // 编辑器打开状态
+
+    $.ajax({
+        type: 'POST',
+        url: '/session/save',
+        data: JSON.stringify(request),
+        dataType: "json",
+        success: function (data) {
+        }
+    });
+}, 30000);

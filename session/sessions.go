@@ -7,6 +7,7 @@
 package session
 
 import (
+	"encoding/json"
 	"math/rand"
 	"net/http"
 	"os"
@@ -14,6 +15,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
@@ -42,13 +44,15 @@ var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
 
 // Wide 会话，对应一个浏览器 tab.
 type WideSession struct {
-	Id          string                // 唯一标识
-	HTTPSession *sessions.Session     // 关联的 HTTP 会话
-	Processes   []*os.Process         // 关联的进程集
-	EventQueue  *event.UserEventQueue // 关联的事件队列
-	State       int                   // 状态
-	Created     time.Time             // 创建时间
-	Updated     time.Time             // 最近一次使用时间
+	Id          string                     // 唯一标识
+	Username    string                     // 用户名
+	HTTPSession *sessions.Session          // 关联的 HTTP 会话
+	Processes   []*os.Process              // 关联的进程集
+	EventQueue  *event.UserEventQueue      // 关联的事件队列
+	State       int                        // 状态
+	Content     *conf.LatestSessionContent // 最近一次会话内容
+	Created     time.Time                  // 创建时间
+	Updated     time.Time                  // 最近一次使用时间
 }
 
 type Sessions []*WideSession
@@ -133,6 +137,56 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 会话内容保存.
+func SaveContent(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	var args map[string]interface{}
+
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	sid := args["sid"].(string)
+
+	wSession := WideSessions.Get(sid)
+	if nil == wSession {
+		data["succ"] = false
+
+		return
+	}
+
+	wSession.Content.CurrentFile = args["currentFile"].(string)
+	// TODO: Ugly
+	fileTree := args["fileTree"].([]interface{})
+	ft := []string{}
+	for _, v := range fileTree {
+		ft = append(ft, v.(string))
+	}
+	wSession.Content.FileTree = ft
+
+	files := args["files"].([]interface{})
+	fs := []string{}
+	for _, v := range files {
+		fs = append(fs, v.(string))
+	}
+	wSession.Content.Files = fs
+
+	for _, user := range conf.Wide.Users {
+		if user.Name == wSession.Username {
+			user.LatestSessionContent = wSession.Content
+
+			// 定时任务会负责持久化
+
+			return
+		}
+	}
+}
+
 // 设置会话关联的进程集.
 func (s *WideSession) SetProcesses(ps []*os.Process) {
 	s.Processes = ps
@@ -160,9 +214,11 @@ func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
 
 	ret := &WideSession{
 		Id:          id,
+		Username:    httpSession.Values["username"].(string),
 		HTTPSession: httpSession,
 		EventQueue:  userEventQueue,
 		State:       SessionStateActive,
+		Content:     &conf.LatestSessionContent{},
 		Created:     now,
 		Updated:     now,
 	}

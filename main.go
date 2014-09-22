@@ -36,7 +36,10 @@ func init() {
 	conf.Load()
 
 	// 定时检查运行环境
-	conf.CheckEnv()
+	conf.FixedTimeCheckEnv()
+
+	// 定时保存配置
+	conf.FixedTimeSave()
 }
 
 // 登录.
@@ -158,6 +161,7 @@ func main() {
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/session/ws", session.WSHandler)
+	http.HandleFunc("/session/save", session.SaveContent)
 
 	// 运行相关
 	http.HandleFunc("/build", output.BuildHandler)

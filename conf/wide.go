@@ -17,12 +17,22 @@ import (
 	"github.com/golang/glog"
 )
 
-type User struct {
-	Name      string
-	Password  string
-	Workspace string // 指定了该用户的 GOPATH 路径
+// 最后一次会话内容结构.
+type LatestSessionContent struct {
+	FileTree    []string // 文件树展开的路径集
+	Files       []string // 编辑器打开的文件路径集
+	CurrentFile string   // 当前编辑器文件路径
 }
 
+// 用户结构.
+type User struct {
+	Name                 string
+	Password             string
+	Workspace            string // 指定了该用户的 GOPATH 路径
+	LatestSessionContent *LatestSessionContent
+}
+
+// 配置结构.
 type conf struct {
 	Server                string
 	StaticServer          string
@@ -37,12 +47,16 @@ type conf struct {
 	Users                 []*User
 }
 
+// 配置.
 var Wide conf
+
+// 维护非变化部分的配置.
+// 只有 Users 是会运行时变化的，保存回写文件时要使用这个变量.
 var rawWide conf
 
 // 定时检查 Wide 运行环境.
 // 如果是特别严重的问题（比如 $GOPATH 不存在）则退出进程，另一些不太严重的问题（比如 gocode 不存在）则放入全局通知队列.
-func CheckEnv() {
+func FixedTimeCheckEnv() {
 	go func() {
 		for {
 			if "" == os.Getenv("GOPATH") {
@@ -73,6 +87,19 @@ func CheckEnv() {
 			}
 
 			// TODO: 7 分钟进行一次检查环境
+			time.Sleep(time.Second * 7)
+		}
+	}()
+}
+
+// 定时（10 分钟）保存配置.
+// 主要是保存用户会话内容，以备下一次用户打开 Wide 时进行会话还原.
+func FixedTimeSave() {
+	go func() {
+		for {
+			Save()
+
+			// TODO: 10 分钟进行一次配置保存
 			time.Sleep(time.Second * 10)
 		}
 	}()
@@ -124,7 +151,7 @@ func getGOBIN() string {
 
 // 保存 Wide 配置.
 func Save() bool {
-	// 只有 Users 是可以通过界面修改的，其他属性只能手工维护 wide.json 配置文件
+	// 只有 Users 是会运行时变化的，其他属性只能手工维护 wide.json 配置文件
 	rawWide.Users = Wide.Users
 
 	// 原始配置文件内容
