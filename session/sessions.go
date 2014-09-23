@@ -142,7 +142,10 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	var args map[string]interface{}
+	args := struct {
+		sid string
+		*conf.LatestSessionContent
+	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
@@ -151,30 +154,14 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	sid := args["sid"].(string)
-
-	wSession := WideSessions.Get(sid)
+	wSession := WideSessions.Get(args.sid)
 	if nil == wSession {
 		data["succ"] = false
 
 		return
 	}
 
-	wSession.Content.CurrentFile = args["currentFile"].(string)
-	// TODO: Ugly
-	fileTree := args["fileTree"].([]interface{})
-	ft := []string{}
-	for _, v := range fileTree {
-		ft = append(ft, v.(string))
-	}
-	wSession.Content.FileTree = ft
-
-	files := args["files"].([]interface{})
-	fs := []string{}
-	for _, v := range files {
-		fs = append(fs, v.(string))
-	}
-	wSession.Content.Files = fs
+	wSession.Content = args.LatestSessionContent
 
 	for _, user := range conf.Wide.Users {
 		if user.Name == wSession.Username {
