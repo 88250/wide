@@ -452,4 +452,5 @@ $(document).ready(function() {
     menu.init();
     hotkeys.init();
     notification.init();
+    session.init();
 });

@@ -63,6 +63,27 @@ var WideSessions Sessions
 // 排它锁，防止并发修改.
 var mutex sync.Mutex
 
+// 在一些特殊情况（例如浏览器不间断刷新时会话通道建立并发）下 Wide 会话集内会出现无效会话，该函数定时（1 小时）检查并移除这些无效会话.
+// 无效会话：在检查时间内 30 分钟都没有使用过的会话，WideSession.Updated 字段.
+func FixedTimeRelease() {
+	go func() {
+		for {
+			hour, _ := time.ParseDuration("-30m")
+			threshold := time.Now().Add(hour)
+
+			for _, s := range WideSessions {
+				if s.Updated.Before(threshold) {
+					glog.V(3).Infof("Removes a invalid session [%s]", s.Id)
+
+					WideSessions.Remove(s.Id)
+				}
+			}
+
+			time.Sleep(time.Hour)
+		}
+	}()
+}
+
 // 建立会话通道.
 // 通道断开时销毁会话状态，回收相关资源.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
@@ -90,40 +111,9 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 		if err := wsChan.Conn.ReadJSON(&input); err != nil {
 			glog.V(3).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it", sid)
 
-			for i, s := range WideSessions {
-				if s.Id == sid {
-					mutex.Lock()
+			WideSessions.Remove(sid)
 
-					// 从会话集中移除
-					WideSessions = append(WideSessions[:i], WideSessions[i+1:]...)
-
-					// 关闭用户事件队列
-					event.UserEventQueues.Close(sid)
-
-					// 杀进程
-					for _, p := range s.Processes {
-						if err := p.Kill(); nil != err {
-							glog.Errorf("Can't kill process [%d] of session [%s]", p.Pid, sid)
-						} else {
-							glog.V(3).Infof("Killed a process [%d] of session [%s]", p.Pid, sid)
-						}
-					}
-
-					// 回收所有通道
-					OutputWS[sid].Close()
-					delete(OutputWS, sid)
-
-					NotificationWS[sid].Close()
-					delete(NotificationWS, sid)
-
-					sessionWS[sid].Close()
-					delete(sessionWS, sid)
-
-					mutex.Unlock()
-
-					return
-				}
-			}
+			return
 		}
 
 		ret = map[string]interface{}{"output": "", "cmd": "session-output"}
@@ -143,7 +133,7 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	args := struct {
-		sid string
+		Sid string
 		*conf.LatestSessionContent
 	}{}
 
@@ -154,7 +144,7 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	wSession := WideSessions.Get(args.sid)
+	wSession := WideSessions.Get(args.Sid)
 	if nil == wSession {
 		data["succ"] = false
 
@@ -165,9 +155,10 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 
 	for _, user := range conf.Wide.Users {
 		if user.Name == wSession.Username {
+			// 更新配置（内存变量），conf.FixedTimeSave() 会负责定时持久化
 			user.LatestSessionContent = wSession.Content
 
-			// 定时任务会负责持久化
+			wSession.Refresh()
 
 			return
 		}
@@ -236,9 +227,46 @@ func (sessions *Sessions) Remove(sid string) {
 
 	for i, s := range *sessions {
 		if s.Id == sid {
+			// 从会话集中移除
 			*sessions = append((*sessions)[:i], (*sessions)[i+1:]...)
 
-			glog.V(3).Infof("Removed a session [%s], has [%d] wide sessions currently", sid, len(*sessions))
+			// 关闭用户事件队列
+			event.UserEventQueues.Close(sid)
+
+			// 杀进程
+			for _, p := range s.Processes {
+				if err := p.Kill(); nil != err {
+					glog.Errorf("Can't kill process [%d] of session [%s]", p.Pid, sid)
+				} else {
+					glog.V(3).Infof("Killed a process [%d] of session [%s]", p.Pid, sid)
+				}
+			}
+
+			// 回收所有通道
+			if ws, ok := OutputWS[sid]; ok {
+				ws.Close()
+				delete(OutputWS, sid)
+			}
+
+			if ws, ok := NotificationWS[sid]; ok {
+				ws.Close()
+				delete(NotificationWS, sid)
+			}
+
+			if ws, ok := sessionWS[sid]; ok {
+				ws.Close()
+				delete(sessionWS, sid)
+			}
+
+			glog.V(3).Infof("Removed a session [%s]", s.Id)
+
+			cnt := 0 // 统计当前 HTTP 会话关联的 Wide 会话数量
+			for _, s := range *sessions {
+				if s.HTTPSession.ID == s.HTTPSession.ID {
+					cnt++
+				}
+			}
+			glog.V(3).Infof("User [%s] has [%d] sessions", s.Username, cnt)
 
 			return
 		}

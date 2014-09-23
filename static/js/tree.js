@@ -1,6 +1,6 @@
 var tree = {
     // 递归获取当前节点展开中的最后一个节点
-    getCurrentNodeLastNode: function(node) {
+    getCurrentNodeLastNode: function (node) {
         var returnNode = node.children[node.children.length - 1];
         if (returnNode.open) {
             return tree.getCurrentNodeLastNode(returnNode);
@@ -9,7 +9,7 @@ var tree = {
         }
     },
     // 按照树展现获取下一个节点
-    getNextShowNode: function(node) {
+    getNextShowNode: function (node) {
         if (node.level !== 0) {
             if (node.getParentNode().getNextNode()) {
                 return node.getParentNode().getNextNode();
@@ -20,7 +20,7 @@ var tree = {
             return node.getNextNode();
         }
     },
-    isBottomNode: function(node) {
+    isBottomNode: function (node) {
         if (node.open) {
             return false;
         }
@@ -39,7 +39,7 @@ var tree = {
             }
         }
     },
-    getTIdByPath: function(path) {
+    getTIdByPath: function (path) {
         var nodes = tree.fileTree.transformToArray(tree.fileTree.getNodes());
         for (var i = 0, ii = nodes.length; i < ii; i++) {
             if (nodes[i].path === path) {
@@ -49,8 +49,19 @@ var tree = {
 
         return undefined;
     },
+    getOpenPaths: function () {
+        var nodes = tree.fileTree.transformToArray(tree.fileTree.getNodes()),
+                paths = [];
+        for (var i = 0, ii = nodes.length; i < ii; i++) {
+            if (nodes[i].open) {
+                paths.push(nodes[i].path);
+            }
+        }
+        
+        return paths;
+    },
     fileTree: undefined,
-    _isParents: function(tId, parentTId) {
+    _isParents: function (tId, parentTId) {
         var node = tree.fileTree.getNodeByTId(tId);
         if (!node || !node.parentTId) {
             return false;
@@ -62,20 +73,20 @@ var tree = {
             }
         }
     },
-    newFile: function() {
+    newFile: function () {
         $("#dirRMenu").hide();
         $("#dialogNewFilePrompt").dialog("open");
     },
-    newDir: function() {
+    newDir: function () {
         $("#dirRMenu").hide();
         $("#dialogNewDirPrompt").dialog("open");
     },
-    removeIt: function() {
+    removeIt: function () {
         $("#dirRMenu").hide();
         $("#fileRMenu").hide();
         $("#dialogRemoveConfirm").dialog("open");
     },
-    init: function() {
+    init: function () {
         var request = newWideRequest();
 
         $.ajax({
@@ -83,7 +94,7 @@ var tree = {
             url: '/files',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function(data) {
+            success: function (data) {
                 if (data.succ) {
                     var dirRMenu = $("#dirRMenu");
                     var fileRMenu = $("#fileRMenu");
@@ -92,7 +103,7 @@ var tree = {
                             selectedMulti: false
                         },
                         callback: {
-                            onRightClick: function(event, treeId, treeNode) {
+                            onRightClick: function (event, treeId, treeNode) {
                                 if (treeNode) {
                                     wide.curNode = treeNode;
                                     if ("ico-ztree-dir " !== treeNode.iconSkin) { // 如果右击了文件
@@ -112,7 +123,7 @@ var tree = {
                                     }
                                 }
                             },
-                            onClick: function(event, treeId, treeNode, clickFlag) {
+                            onClick: function (event, treeId, treeNode, clickFlag) {
                                 tree._onClick(treeNode);
                             }
                         }
@@ -122,7 +133,7 @@ var tree = {
             }
         });
     },
-    _onClick: function(treeNode) {
+    _onClick: function (treeNode) {
         if (wide.curNode) {
             for (var i = 0, ii = editors.data.length; i < ii; i++) {
                 // 该节点文件已经打开
@@ -147,7 +158,7 @@ var tree = {
                 url: '/file',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function(data) {
+                success: function (data) {
                     if (!data.succ) {
                         alert(data.msg);
 

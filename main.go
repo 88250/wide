@@ -40,6 +40,9 @@ func init() {
 
 	// 定时保存配置
 	conf.FixedTimeSave()
+
+	// 定时检查无效会话
+	session.FixedTimeRelease()
 }
 
 // 登录.

@@ -1,5 +1,6 @@
 var editors = {
     data: [],
+    tabs: {},
     init: function () {
         editors._initAutocomplete();
         editors.tabs = new Tabs({
