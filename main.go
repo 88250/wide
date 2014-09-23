@@ -160,6 +160,8 @@ func main() {
 	// IDE
 	http.HandleFunc("/login", loginHandler)
 	http.HandleFunc("/", indexHandler)
+
+	// 会话
 	http.HandleFunc("/session/ws", session.WSHandler)
 	http.HandleFunc("/session/save", session.SaveContent)
 

@@ -104,7 +104,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			count, err := reader.Read(buf)
 
 			if nil != err || 0 == count {
-				// 从用户进程集中移除这个执行完毕的进程
+				// 从用户进程集中移除这个执行完毕（或是被主动停止）的进程
 				processes.remove(wSession, cmd.Process)
 
 				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
@@ -534,7 +534,7 @@ func StopHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sid := args["sid"].(string)
-	pid := args["pid"].(int)
+	pid := int(args["pid"].(float64))
 
 	wSession := session.WideSessions.Get(sid)
 	if nil == wSession {
