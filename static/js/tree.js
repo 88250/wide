@@ -57,7 +57,7 @@ var tree = {
                 paths.push(nodes[i].path);
             }
         }
-        
+
         return paths;
     },
     fileTree: undefined,
@@ -129,6 +129,8 @@ var tree = {
                         }
                     };
                     tree.fileTree = $.fn.zTree.init($("#files"), setting, data.root.children);
+
+                    session.restore();
                 }
             }
         });
@@ -147,13 +149,12 @@ var tree = {
             }
         }
 
-        wide.curNode = treeNode;
-
         if ("ico-ztree-dir " !== treeNode.iconSkin) { // 如果单击了文件
             var request = newWideRequest();
             request.path = treeNode.path;
 
             $.ajax({
+                async: false,
                 type: 'POST',
                 url: '/file',
                 data: JSON.stringify(request),
@@ -164,6 +165,8 @@ var tree = {
 
                         return false;
                     }
+
+                    wide.curNode = treeNode;
 
                     if ("img" === data.mode) { // 是图片文件的话新建 tab 打开
                         // 最好是开 tab，但这个最终取决于浏览器设置

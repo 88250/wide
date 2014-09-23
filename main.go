@@ -74,7 +74,11 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": &succ}
 	defer util.RetJSON(w, r, data)
 
-	var args map[string]interface{}
+	args := struct {
+		Username string
+		Password string
+	}{}
+
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		succ = true
@@ -82,11 +86,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	username := args["username"].(string)
-	password := args["password"].(string)
-
 	for _, user := range conf.Wide.Users {
-		if user.Name == username && user.Password == password {
+		if user.Name == args.Username && user.Password == args.Password {
 			succ = true
 		}
 	}
@@ -97,12 +98,12 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// 创建 HTTP 会话
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-	httpSession.Values["username"] = username
+	httpSession.Values["username"] = args.Username
 	httpSession.Values["id"] = strconv.Itoa(rand.Int())
 	httpSession.Options.MaxAge = 60 * 60 * 24 // 一天过期
 	httpSession.Save(r, w)
 
-	glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), username)
+	glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
 }
 
 // Wide 首页.
@@ -122,12 +123,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	// 创建一个 Wide 会话
 	wideSession := session.WideSessions.New(httpSession)
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
-		"session": wideSession}
-
 	wideSessions := session.WideSessions.GetByHTTPSession(httpSession)
 
 	username := httpSession.Values["username"].(string)
+	userConf := conf.Wide.GetUser(username)
+
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+		"session": wideSession, "latestSessionContent": userConf.LatestSessionContent}
+
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("view/index.html")

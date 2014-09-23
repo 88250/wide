@@ -106,6 +106,7 @@ func FixedTimeSave() {
 }
 
 // 获取 username 指定的用户的工作空间路径.
+// 查找不到时返回空字符串.
 func (*conf) GetUserWorkspace(username string) string {
 	for _, user := range Wide.Users {
 		if user.Name == username {
@@ -115,6 +116,17 @@ func (*conf) GetUserWorkspace(username string) string {
 	}
 
 	return ""
+}
+
+// 获取 username 指定的用户配置.
+func (*conf) GetUser(username string) *User {
+	for _, user := range Wide.Users {
+		if user.Name == username {
+			return user
+		}
+	}
+
+	return nil
 }
 
 // 获取 gocode 路径.

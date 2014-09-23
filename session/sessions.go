@@ -63,7 +63,7 @@ var WideSessions Sessions
 // 排它锁，防止并发修改.
 var mutex sync.Mutex
 
-// 在一些特殊情况（例如浏览器不间断刷新时会话通道建立并发）下 Wide 会话集内会出现无效会话，该函数定时（1 小时）检查并移除这些无效会话.
+// 在一些特殊情况（例如浏览器不间断刷新/在源代码视图刷新）下 Wide 会话集内会出现无效会话，该函数定时（1 小时）检查并移除这些无效会话.
 // 无效会话：在检查时间内 30 分钟都没有使用过的会话，WideSession.Updated 字段.
 func FixedTimeRelease() {
 	go func() {

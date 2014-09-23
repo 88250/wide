@@ -17,7 +17,7 @@ var session = {
 
                 filse.push($it.find("span:eq(0)").attr("title"));
             });
-            
+
             fileTree = tree.getOpenPaths();
 
             request.currentFile = currentFile; // 当前编辑器
@@ -33,6 +33,50 @@ var session = {
                 }
             });
         }, 5000);
+    },
+    restore: function () {
+        var fileTree = config.latestSessionContent.FileTree,
+                files = config.latestSessionContent.Files,
+                currentFile = config.latestSessionContent.CurrentFile,
+                id = "",
+                nodesToOpen = [];
+
+
+        var nodes = tree.fileTree.transformToArray(tree.fileTree.getNodes());
+
+        for (var i = 0, ii = nodes.length; i < ii; i++) {
+            // expand tree
+            for (var j = 0, jj = fileTree.length; j < jj; j++) {
+                if (nodes[i].path === fileTree[j]) {
+                    tree.fileTree.expandNode(nodes[i], true, false, false);
+                    break;
+                }
+            }
+
+            // open editors
+            for (var k = 0, kk = files.length; k < kk; k++) {
+                if (nodes[i].path === files[k]) {
+                    nodesToOpen.push(nodes[i]);
+                    break;
+                }
+            }
+
+            if (nodes[i].path === currentFile) {
+                id = nodes[i].tId;
+            }
+        }
+
+        // 处理编辑器打开顺序
+        for (var m = 0, mm = files.length; m < mm; m++) {
+            for (var n = 0, nn = nodesToOpen.length; n < nn; n++) {
+                if (nodesToOpen[n].path === files[m]) {
+                    tree._onClick(nodesToOpen[n]);
+                    break;
+                }
+            }
+        }
+
+        editors.tabs.setCurrent(id);
     },
     _initWS: function () {
         // 用于保持会话，如果该通道断开，则服务器端会销毁会话状态，回收相关资源.
