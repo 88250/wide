@@ -93,14 +93,14 @@ func FixedTimeCheckEnv() {
 }
 
 // 定时（10 分钟）保存配置.
-// 主要是保存用户会话内容，以备下一次用户打开 Wide 时进行会话还原.
+// 主要目的是保存用户会话内容，以备下一次用户打开 Wide 时进行会话还原.
 func FixedTimeSave() {
 	go func() {
 		for {
 			Save()
 
-			// TODO: 10 分钟进行一次配置保存
-			time.Sleep(time.Second * 10)
+			// 10 分钟进行一次配置保存
+			time.Sleep(time.Minute * 10)
 		}
 	}()
 }
