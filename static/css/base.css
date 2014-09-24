@@ -71,8 +71,12 @@ ul {
     content: "\e60b";
 }
 
-.icon-buildrun:before {
+.ico-buildrun:before {
     content: "\e607";
+}
+
+.ico-stop:before {
+    content: "\e608";
 }
 
 .ico-close {

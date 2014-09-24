@@ -35,7 +35,7 @@ var editors = {
                     wide.curNode = undefined;
 
                     wide.curEditor = undefined;
-                    $(".ico-fullscreen").hide();
+                    $(".toolbars").hide();
                     return false;
                 }
 
@@ -207,7 +207,7 @@ var editors = {
     },
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
     newEditor: function (data) {
-        $(".ico-fullscreen").show();
+        $(".toolbars").show();
         var id = wide.curNode.tId;
 
         // 光标位置
