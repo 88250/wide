@@ -261,8 +261,9 @@ var wide = {
                 wide.curProcessId = data.pid;
             } else if ('run-done' === data.cmd) { // 运行结束                
                 wide.curProcessId = undefined;
-                
-                // TODO: 运行结束后修改 [构建&运行] 图标状态为可用状态
+                // 运行结束后修改 [构建&运行] 图标状态为可用状态
+                $(".toolbars .ico-stop").removeClass("ico-stop")
+                        .addClass("ico-buildrun").attr("title", config.label.build_n_run);
             } else if ('build' === data.cmd || 'go install' === data.cmd) {
                 $('.bottom-window-group .output').text(data.output);
 
@@ -275,7 +276,8 @@ var wide = {
                             message: lint.msg, severity: lint.severity});
                     }
 
-                    // TODO: 修改 [构建&运行] 图标状态为可用状态
+                    $(".toolbars .ico-stop").removeClass("ico-stop")
+                            .addClass("ico-buildrun").attr("title", config.label.build_n_run);
                 }
 
                 // 触发一次 gutter lint
@@ -294,7 +296,7 @@ var wide = {
     },
     init: function () {
         this._initWS();
-        
+
         this._initLayout();
 
         this._initBottomWindowGroup();
@@ -352,11 +354,11 @@ var wide = {
         // TODO: exit
     },
     stop: function () {
-         if ($(".toolbars .ico-buildrun").length === 1) {
+        if ($(".toolbars .ico-buildrun").length === 1) {
             wide.run();
             return false;
-        } 
-        
+        }
+
         var request = newWideRequest();
         request.pid = wide.curProcessId;
 
@@ -369,7 +371,8 @@ var wide = {
                 // $('.bottom-window-group .output').text('');
             },
             success: function (data) {
-                $(".toolbars .ico-stop").removeClass("ico-stop").addClass("ico-buildrun");
+                $(".toolbars .ico-stop").removeClass("ico-stop")
+                        .addClass("ico-buildrun").attr("title", config.label.build_n_run);
             }
         });
     },
@@ -378,8 +381,8 @@ var wide = {
         if ($(".toolbars .ico-stop").length === 1) {
             wide.stop();
             return false;
-        } 
-        
+        }
+
         var request = newWideRequest();
         request.file = $(".edit-header .current span:eq(0)").attr("title");
         request.code = wide.curEditor.getValue();
@@ -393,7 +396,8 @@ var wide = {
                 $('.bottom-window-group .output').text('');
             },
             success: function (data) {
-                $(".toolbars .ico-buildrun").addClass("ico-stop").removeClass("ico-buildrun");
+                $(".toolbars .ico-buildrun").addClass("ico-stop")
+                        .removeClass("ico-buildrun").attr("title", config.label.stop);
             }
         });
     },

@@ -36,5 +36,6 @@
     "goto": "跳转",
     "input_no_empty": "输入不能为空",
     "tip": "提示",
-    "confirm": "确定"
+    "confirm": "确定",
+    "stop": "停止"
 }
