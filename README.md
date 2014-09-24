@@ -34,6 +34,10 @@ A <b>W</b>eb <b>IDE</b> IDE for Team using Golang.
 * Web development: Frontend devlopment (HTML/JS/CSS) all in one
 * Go tool: go get/install/fmt etc.
 
+## Architecture 
+### Build & Run
+![](https://cloud.githubusercontent.com/assets/873584/4389219/3642bc62-43f3-11e4-8d1f-06d7aaf22784.png)
+
 ## Documents
 
 * [用户指南](http://88250.gitbooks.io/wide-user-guide/zh-cn/index.html)
