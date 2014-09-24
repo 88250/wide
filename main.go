@@ -123,9 +123,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	// 创建一个 Wide 会话
 	wideSession := session.WideSessions.New(httpSession)
 
-	wideSessions := session.WideSessions.GetByHTTPSession(httpSession)
-
 	username := httpSession.Values["username"].(string)
+
+	wideSessions := session.WideSessions.GetByUsername(username)
 	userConf := conf.Wide.GetUser(username)
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),

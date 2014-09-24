@@ -220,7 +220,11 @@ func (sessions *Sessions) Get(sid string) *WideSession {
 	return nil
 }
 
-// 移除 Wide 会话.
+// 移除 Wide 会话，释放相关资源.
+// 会话相关资源：
+// 1. 用户事件队列
+// 2. 运行中的进程
+// 3. WebSocket 通道
 func (sessions *Sessions) Remove(sid string) {
 	mutex.Lock()
 	defer mutex.Unlock()
@@ -273,32 +277,18 @@ func (sessions *Sessions) Remove(sid string) {
 	}
 }
 
-// 获取 HTTP 会话关联的所有 Wide 会话.
-func (sessions *Sessions) GetByHTTPSession(httpSession *sessions.Session) []*WideSession {
+// 获取 username 指定的用户的所有 Wide 会话.
+func (sessions *Sessions) GetByUsername(username string) []*WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	ret := []*WideSession{}
 
 	for _, s := range *sessions {
-		if s.HTTPSession.ID == httpSession.ID {
+		if s.Username == username {
 			ret = append(ret, s)
 		}
 	}
 
 	return ret
-}
-
-// 移除 HTTP 会话关联的所有 Wide 会话.
-func (sessions *Sessions) RemoveByHTTPSession(httpSession *sessions.Session) {
-	mutex.Lock()
-	defer mutex.Unlock()
-
-	for i, s := range *sessions {
-		if s.HTTPSession.ID == httpSession.ID {
-			*sessions = append((*sessions)[:i], (*sessions)[i+1:]...)
-
-			glog.V(3).Infof("Has [%d] wide sessions currently", len(*sessions))
-		}
-	}
 }

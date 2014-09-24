@@ -39,12 +39,13 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	// 创建一个 Wide 会话
 	wideSession := session.WideSessions.New(httpSession)
 
+	username := httpSession.Values["username"].(string)
+
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
 		"session": wideSession}
 
-	wideSessions := session.WideSessions.GetByHTTPSession(httpSession)
+	wideSessions := session.WideSessions.GetByUsername(username)
 
-	username := httpSession.Values["username"].(string)
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("view/shell.html")

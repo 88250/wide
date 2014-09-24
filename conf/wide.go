@@ -19,9 +19,9 @@ import (
 
 // 最后一次会话内容结构.
 type LatestSessionContent struct {
-	FileTree    []string // 文件树展开的路径集
-	Files       []string // 编辑器打开的文件路径集
-	CurrentFile string   // 当前编辑器文件路径
+	FileTree    []string `json:"fileTree"`    // 文件树展开的路径集
+	Files       []string `json:"files"`       // 编辑器打开的文件路径集
+	CurrentFile string   `json:"currentFile"` // 当前编辑器文件路径
 }
 
 // 用户结构.
