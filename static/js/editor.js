@@ -123,7 +123,7 @@ var editors = {
         };
 
         CodeMirror.commands.gotoLine = function (cm) {
-           $("#dialogGoLinePrompt").dialog("open");
+            $("#dialogGoLinePrompt").dialog("open");
         };
 
         CodeMirror.commands.doNothing = function (cm) {
@@ -161,7 +161,7 @@ var editors = {
                         dataType: "json",
                         success: function (data) {
                             if (!data.succ) {
-                                alert(data.msg);
+                                $("#dialogAlert").dialog("open", data.msg);
 
                                 return false;
                             }

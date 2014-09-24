@@ -67,6 +67,17 @@ var wide = {
     curEditor: undefined,
     bottomWindowTab: undefined,
     _initDialog: function() {
+        $("#dialogAlert").dialog({
+            "height": 26,
+            "width": 260,
+            "title": config.label.tip,
+            "hiddenOk": true,
+            "cancelText": config.label.confirm,
+            "afterOpen": function(msg) {
+                $("#dialogAlert").html(msg);
+            }
+        });
+        
         $("#dialogRemoveConfirm").dialog({
             "height": 26,
             "width": 260,
@@ -114,7 +125,6 @@ var wide = {
                 });
             }
         });
-
 
         $(".dialog-prompt > input").keydown(function(event) {
             $(".dialog-prompt > .tip").text('');

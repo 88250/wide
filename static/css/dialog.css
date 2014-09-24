@@ -43,16 +43,9 @@
 }
 
 .dialog-close-icon {
-    background-position: -15px 0;
-    cursor: pointer;
     float: right;
-    height: 18px;
-    margin: 5px 3px 0 0;
-    width: 18px;
-}
-
-.dialog-close-icon:hover {
-    background-position: -15px -18px;
+    margin: 3px;
+    text-decoration: none;
 }
 
 .dialog-main {
@@ -71,7 +64,8 @@
 }
 
 #dialogRemoveConfirm,
-.dialog-prompt {
+.dialog-prompt,
+#dialogAlert {
     padding: 10px 20px 0;
     overflow: hidden;
 }

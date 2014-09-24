@@ -34,5 +34,7 @@
     "notification_3": "没有检查到 ide_stub，这将会导致 [跳转到声明]、[查找使用] 失效",
     "goto_line": "跳转到行",
     "goto": "跳转",
-    "input_no_empty": "输入不能为空"
+    "input_no_empty": "输入不能为空",
+    "tip": "提示",
+    "confirm": "确定"
 }
