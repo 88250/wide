@@ -168,6 +168,8 @@ var hotkeys = {
 
                     break;
             }
+            
+            event.preventDefault();
         });
     },
     init: function() {
