@@ -158,53 +158,53 @@ func main() {
 
 	// 静态资源
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.HandleFunc("/favicon.ico", faviconHandler)
+	http.HandleFunc("/favicon.ico", panicRecover(faviconHandler))
 
 	// 库资源
 	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
 
 	// IDE
-	http.HandleFunc("/login", loginHandler)
-	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/login", panicRecover(loginHandler))
+	http.HandleFunc("/", panicRecover(indexHandler))
 
 	// 会话
-	http.HandleFunc("/session/ws", session.WSHandler)
-	http.HandleFunc("/session/save", session.SaveContent)
+	http.HandleFunc("/session/ws", panicRecover(session.WSHandler))
+	http.HandleFunc("/session/save", panicRecover(session.SaveContent))
 
 	// 运行相关
-	http.HandleFunc("/build", output.BuildHandler)
-	http.HandleFunc("/run", output.RunHandler)
-	http.HandleFunc("/stop", output.StopHandler)
-	http.HandleFunc("/go/get", output.GoGetHandler)
-	http.HandleFunc("/go/install", output.GoInstallHandler)
-	http.HandleFunc("/output/ws", output.WSHandler)
+	http.HandleFunc("/build", panicRecover(output.BuildHandler))
+	http.HandleFunc("/run", panicRecover(output.RunHandler))
+	http.HandleFunc("/stop", panicRecover(output.StopHandler))
+	http.HandleFunc("/go/get", panicRecover(output.GoGetHandler))
+	http.HandleFunc("/go/install", panicRecover(output.GoInstallHandler))
+	http.HandleFunc("/output/ws", panicRecover(output.WSHandler))
 
 	// 文件树
-	http.HandleFunc("/files", file.GetFiles)
-	http.HandleFunc("/file", file.GetFile)
-	http.HandleFunc("/file/save", file.SaveFile)
-	http.HandleFunc("/file/new", file.NewFile)
-	http.HandleFunc("/file/remove", file.RemoveFile)
+	http.HandleFunc("/files", panicRecover(file.GetFiles))
+	http.HandleFunc("/file", panicRecover(file.GetFile))
+	http.HandleFunc("/file/save", panicRecover(file.SaveFile))
+	http.HandleFunc("/file/new", panicRecover(file.NewFile))
+	http.HandleFunc("/file/remove", panicRecover(file.RemoveFile))
 
 	// 编辑器
-	http.HandleFunc("/editor/ws", editor.WSHandler)
-	http.HandleFunc("/go/fmt", editor.GoFmtHandler)
-	http.HandleFunc("/autocomplete", editor.AutocompleteHandler)
-	http.HandleFunc("/find/decl", editor.FindDeclarationHandler)
-	http.HandleFunc("/find/usages", editor.FindUsagesHandler)
-	http.HandleFunc("/html/fmt", editor.HTMLFmtHandler)
-	http.HandleFunc("/json/fmt", editor.JSONFmtHandler)
+	http.HandleFunc("/editor/ws", panicRecover(editor.WSHandler))
+	http.HandleFunc("/go/fmt", panicRecover(editor.GoFmtHandler))
+	http.HandleFunc("/autocomplete", panicRecover(editor.AutocompleteHandler))
+	http.HandleFunc("/find/decl", panicRecover(editor.FindDeclarationHandler))
+	http.HandleFunc("/find/usages", panicRecover(editor.FindUsagesHandler))
+	http.HandleFunc("/html/fmt", panicRecover(editor.HTMLFmtHandler))
+	http.HandleFunc("/json/fmt", panicRecover(editor.JSONFmtHandler))
 
 	// Shell
-	http.HandleFunc("/shell/ws", shell.WSHandler)
-	http.HandleFunc("/shell", shell.IndexHandler)
+	http.HandleFunc("/shell/ws", panicRecover(shell.WSHandler))
+	http.HandleFunc("/shell", panicRecover(shell.IndexHandler))
 
 	// 通知
-	http.HandleFunc("/notification/ws", notification.WSHandler)
+	http.HandleFunc("/notification/ws", panicRecover(notification.WSHandler))
 
 	// 用户
-	http.HandleFunc("/user/new", session.AddUser)
-	http.HandleFunc("/user/repos/init", session.InitGitRepos)
+	http.HandleFunc("/user/new", panicRecover(session.AddUser))
+	http.HandleFunc("/user/repos/init", panicRecover(session.InitGitRepos))
 
 	// 文档
 	http.Handle("/doc/", http.StripPrefix("/doc/", http.FileServer(http.Dir("doc"))))
@@ -214,5 +214,19 @@ func main() {
 	err := http.ListenAndServe(conf.Wide.Server, nil)
 	if err != nil {
 		glog.Fatal(err)
+	}
+}
+
+// 包装 HTTP Handler 函数，recover panic.
+func panicRecover(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		defer func() {
+			if r := recover(); r != nil {
+				glog.Errorf("PANIC RECOVERED: %v", r)
+			}
+		}()
+
+		// Handler 处理
+		f(w, r)
 	}
 }
