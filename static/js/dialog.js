@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-(function($) {
+(function ($) {
     $.fn.extend({
         dialog: {
             version: "0.0.1.7",
@@ -24,7 +24,7 @@
     var dpuuid = new Date().getTime();
     var PROP_NAME = 'dialog';
 
-    var Dialog = function() {
+    var Dialog = function () {
         this._defaults = {
             "styleClass": {
                 "background": "dialog-background",
@@ -41,7 +41,7 @@
     };
 
     $.extend(Dialog.prototype, {
-        _attach: function(target, settings) {
+        _attach: function (target, settings) {
             if (!target.id) {
                 this.uuid++;
                 target.id = 'dp' + this.uuid;
@@ -53,21 +53,21 @@
             this._init(target);
         },
         /* Create a new instance object. */
-        _newInst: function(target) {
+        _newInst: function (target) {
             // escape jQuery meta chars
             var id = target[0].id.replace(/([^A-Za-z0-9_])/g, '\\\\$1');
             return {
                 id: id
             };
         },
-        _getInst: function(target) {
+        _getInst: function (target) {
             try {
                 return $.data(target, PROP_NAME);
             } catch (err) {
                 throw 'Missing instance data for this dialog';
             }
         },
-        _destroyDialog: function(target) {
+        _destroyDialog: function (target) {
             var inst = $.dialog._getInst(target);
             var id = inst.id;
             $.removeData(target, PROP_NAME);
@@ -79,7 +79,7 @@
             $("." + styleClass.background).remove();
             $("#" + id + "Dialog").remove();
         },
-        _init: function(target) {
+        _init: function (target) {
             var inst = this._getInst(target);
             var id = inst.id,
                     settings = inst.settings;
@@ -99,13 +99,16 @@
                     headerHTML = "<div class='"
                     + styleClass.headerBg + "'><div class='"
                     + styleClass.title + "'>"
-                    + settings.title + "</div><a href='javascript:void(0);' class='"
+                    + settings.title + "</div><a href='javascript:void(0);' class='ico-close font-ico "
                     + styleClass.closeIcon + "'></a></div>";
 
             // Sets footerHTML.
             if (!settings.hideFooter) {
-                footerHTML = "<button>" + settings.okText +
-                        "</button><button>"
+                if (!settings.hiddenOk) {
+                    footerHTML = "<button>" + settings.okText +
+                            "</button>";
+                }
+                footerHTML += "<button>"
                         + settings.cancelText + "</button>";
             }
 
@@ -147,16 +150,16 @@
             });
 
             // Bind event.
-            $("#" + id + "Dialog ." + styleClass.closeIcon).bind("click", function() {
+            $("#" + id + "Dialog ." + styleClass.closeIcon).bind("click", function () {
                 $.dialog._close(id, settings);
             });
 
             var $buttons = $("#" + id + "Dialog ." + styleClass.footer + " button");
-            $($buttons.get(1)).bind("click", function() {
+            $($buttons.get(1)).bind("click", function () {
                 $.dialog._close(id, settings);
             });
 
-            $($buttons.get(0)).bind("click", function() {
+            $($buttons.get(0)).bind("click", function () {
                 if (settings.ok === undefined || settings.ok()) {
                     $.dialog._close(id, settings);
                 }
@@ -165,14 +168,14 @@
             this._bindMove(id, styleClass.headerBg, dialogH, dialogW);
 
             // esc exit
-            $(window).keyup(function(event) {
+            $(window).keyup(function (event) {
                 if (event.keyCode === 27) {
                     $.dialog._close(id, settings);
                 }
             });
         },
-        _bindMove: function(id, className) {
-            $("#" + id + "Dialog ." + className).mousedown(function(event) {
+        _bindMove: function (id, className) {
+            $("#" + id + "Dialog ." + className).mousedown(function (event) {
                 var _document = document;
                 if (!event) {
                     event = window.event;
@@ -190,7 +193,7 @@
                     window.captureEvents(Event.MOUSEMOVE | Event.MOUSEUP);
                 }
 
-                _document.onmousemove = function(event) {
+                _document.onmousemove = function (event) {
                     if (!event) {
                         event = window.event;
                     }
@@ -212,7 +215,7 @@
                     dialog.style.top = positionY + "px";
                 };
 
-                _document.onmouseup = function() {
+                _document.onmouseup = function () {
                     if (this.releaseCapture) {
                         this.releaseCapture();
                     } else if (window.captureEvents) {
@@ -226,7 +229,7 @@
                 }
             });
         },
-        _close: function(id, settings) {
+        _close: function (id, settings) {
             if ($("#" + id + "Dialog").css("display") === "none") {
                 return;
             }
@@ -238,13 +241,13 @@
                 }
             }
         },
-        _closeDialog: function(target) {
+        _closeDialog: function (target) {
             var inst = this._getInst(target);
             var id = inst.id,
                     settings = inst.settings;
             $.dialog._close(id, settings);
         },
-        _openDialog: function(target) {
+        _openDialog: function (target, msg) {
             var inst = this._getInst(target);
             var id = inst.id,
                     settings = inst.settings;
@@ -257,12 +260,12 @@
             }
 
             $("#" + id + "Dialog .dialog-footer button:eq(0)").focus();
-            
+
             if (typeof settings.afterOpen === "function") {
-                settings.afterOpen();
+                settings.afterOpen(msg);
             }
         },
-        _updateDialog: function(target, data) {
+        _updateDialog: function (target, data) {
             var inst = this._getInst(target);
             var id = inst.id,
                     settings = inst.settings;
@@ -273,7 +276,7 @@
                 $dialog.css({
                     "top": data.position.top,
                     "left": data.position.left
-                })
+                });
             }
 
             if (data.width) {
@@ -307,7 +310,7 @@
             }
 
         },
-        _getDefaults: function(defaults, settings, key) {
+        _getDefaults: function (defaults, settings, key) {
             if (key === "styleClass") {
                 if (settings.theme === "default" || settings.theme === undefined) {
                     return defaults.styleClass;
@@ -331,14 +334,14 @@
         }
     });
 
-    $.fn.dialog = function(options) {
+    $.fn.dialog = function (options) {
         var otherArgs = Array.prototype.slice.call(arguments);
 
         if (typeof options === 'string') {
             otherArgs.shift();
             return $.dialog['_' + options + 'Dialog'].apply($.dialog, [this[0]].concat(otherArgs));
         }
-        return this.each(function() {
+        return this.each(function () {
             $.dialog._attach(this, options);
         });
     };

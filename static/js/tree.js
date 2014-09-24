@@ -161,7 +161,7 @@ var tree = {
                 dataType: "json",
                 success: function (data) {
                     if (!data.succ) {
-                        alert(data.msg);
+                        $("#dialogAlert").dialog("open", data.msg);
 
                         return false;
                     }

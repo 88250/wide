@@ -74,6 +74,19 @@ ul {
 .icon-buildrun:before {
     content: "\e607";
 }
+
+.ico-close {
+    color: #666;
+}
+
+.ico-close:hover {
+    color: #333;
+}
+
+.ico-close:before {
+    content: "\e60a";
+    cursor: pointer;
+}
 /* end reset & function */
 
 /* start frame */
@@ -132,20 +145,6 @@ ul {
 
 .tabs > div.current {
     background-color: #F7F7F7;
-}
-
-.tabs .ico-close {
-    color: #666;
-}
-
-.tabs .ico-close:hover {
-    color: #333;
-}
-
-.tabs .ico-close:before {
-    content: "\e60a";
-    cursor: pointer;
-
 }
 /* end tabs */
 
