@@ -148,7 +148,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 // favicon.ico 请求处理.
 func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	// TODO: favicon.ico 请求处理.
+	// TODO: favicon.ico 请求处理
 }
 
 // 主程序入口.
