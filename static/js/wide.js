@@ -210,10 +210,12 @@ var wide = {
         });
     },
     _initLayout: function () {
-        var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2;
+        var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2,
+                bottomH = Math.floor(mainH * 0.3);
         $(".content, .ztree").height(mainH);
 
-        $(".edit-panel").height(mainH - $(".bottom-window-group").height());
+        $(".bottom-window-group .output, notification").height(bottomH - 23);
+        $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
     },
     _initBottomWindowGroup: function () {
         this.bottomWindowTab = new Tabs({
@@ -294,10 +296,34 @@ var wide = {
             console.log('[output onerror] ' + e);
         };
     },
-    init: function () {
-        this._initWS();
+    _initFullscreen: function () {
+        $(".bottom-window-group .tabs").dblclick(function () {
+            var $it = $(".bottom-window-group");
+            if ($it.hasClass("bottom-window-group-fullscreen")) {
+                $(".bottom-window-group").removeClass("bottom-window-group-fullscreen");
 
-        this._initLayout();
+            } else {
+                var bottomH = $(".content, .ztree").height();
+                $(".bottom-window-group .output, notification").height(bottomH - 22);
+                $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 19);
+                
+                $(".bottom-window-group").addClass("bottom-window-group-fullscreen");
+            }
+        });
+
+        $(".side").dblclick(function () {
+            var $it = $(this);
+            if ($it.hasClass("side-fullscreen")) {
+                $it.removeClass("side-fullscreen");
+            } else {
+                $it.addClass("side-fullscreen");
+            }
+        });
+    },
+    init: function () {
+        this._initFullscreen();
+
+        this._initWS();
 
         this._initBottomWindowGroup();
 
@@ -318,6 +344,8 @@ var wide = {
         });
 
         this._initDialog();
+
+        this._initLayout();
     },
     _save: function () {
         var request = newWideRequest();

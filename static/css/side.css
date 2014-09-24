@@ -1,4 +1,11 @@
 /* start tree */
+.ztree {
+    position: absolute;
+    overflow: auto;
+    width: 100%;
+    padding: 0;
+}
+
 .ztree li a.curSelectedNode {
     background-color: #3875d7;
     border-width: 0;

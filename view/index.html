@@ -128,36 +128,34 @@
                 </div>
             </div>
 
-            <div class="main">
-                <div class="edit-panel">
-                    <div class="edit-header fn-clear">
-                        <div class="tabs fn-left"></div>
-                    </div>
-                    <div class="tabs-panel"></div>
+            <div class="edit-panel">
+                <div class="edit-header fn-clear">
+                    <div class="tabs fn-left"></div>
                 </div>
+                <div class="tabs-panel"></div>
+            </div>
 
-                <div class="bottom-window-group">
-                    <div class="tabs">
-                        <div class="current" data-index="output">
-                            <span title="Output">Output</span>
-                        </div>
-                        <div data-index="search">
-                            <span title="Search">Search</span>
-                        </div>
-                        <div data-index="notification">
-                            <span title="Notification">Notification</span>
-                        </div>
+            <div class="bottom-window-group">
+                <div class="tabs">
+                    <div class="current" data-index="output">
+                        <span title="Output">Output</span>
                     </div>
-                    <div class="tabs-panel">
-                        <div data-index="output">
-                            <textarea class="output"></textarea>
-                        </div>
-                        <div class="fn-none" data-index="search">
-                            <div class="search" tabindex="-1"></div>
-                        </div>
-                        <div class="fn-none" data-index="notification">
-                            <div tabindex="-1" class="notification"><table cellpadding="0" cellspacing="0"></table></div>
-                        </div>
+                    <div data-index="search">
+                        <span title="Search">Search</span>
+                    </div>
+                    <div data-index="notification">
+                        <span title="Notification">Notification</span>
+                    </div>
+                </div>
+                <div class="tabs-panel">
+                    <div data-index="output">
+                        <textarea class="output"></textarea>
+                    </div>
+                    <div class="fn-none" data-index="search">
+                        <div class="search" tabindex="-1"></div>
+                    </div>
+                    <div class="fn-none" data-index="notification">
+                        <div tabindex="-1" class="notification"><table cellpadding="0" cellspacing="0"></table></div>
                     </div>
                 </div>
             </div>
@@ -185,20 +183,20 @@
         <script>
                     var config = {
                     "latestSessionContent": {{.latestSessionContent}},
-                    "label": {
-                    "delete": "{{.i18n.delete}}",
-                            "cancel": "{{.i18n.cancel}}",
-                            "input_no_empty": "{{.i18n.input_no_empty}}",
-                            "goto_line": "{{.i18n.goto_line}}",
-                            "goto": "{{.i18n.goto}}",
-                            "create": "{{.i18n.create}}",
-                            "create_file": "{{.i18n.create_file}}",
-                            "create_dir": "{{.i18n.create_dir}}",
-                            "tip": "{{.i18n.tip}}",
-                            "confirm": "{{.i18n.confirm}}",
-                            "build_n_run": "{{.i18n.build_n_run}}",
-                            "stop": "{{.i18n.stop}}"
-                    },
+                            "label": {
+                            "delete": "{{.i18n.delete}}",
+                                    "cancel": "{{.i18n.cancel}}",
+                                    "input_no_empty": "{{.i18n.input_no_empty}}",
+                                    "goto_line": "{{.i18n.goto_line}}",
+                                    "goto": "{{.i18n.goto}}",
+                                    "create": "{{.i18n.create}}",
+                                    "create_file": "{{.i18n.create_file}}",
+                                    "create_dir": "{{.i18n.create_dir}}",
+                                    "tip": "{{.i18n.tip}}",
+                                    "confirm": "{{.i18n.confirm}}",
+                                    "build_n_run": "{{.i18n.build_n_run}}",
+                                    "stop": "{{.i18n.stop}}"
+                            },
                             "channel": {
                             "editor": '{{.conf.EditorChannel}}',
                                     "shell": '{{.conf.ShellChannel}}',
