@@ -32,7 +32,7 @@ var session = {
                 success: function (data) {
                 }
             });
-        }, 5000);
+        }, 30000);
     },
     restore: function () {
         var fileTree = config.latestSessionContent.FileTree,

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"runtime"
 	"strconv"
+	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
@@ -158,53 +159,53 @@ func main() {
 
 	// 静态资源
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.HandleFunc("/favicon.ico", panicRecover(faviconHandler))
+	http.HandleFunc("/favicon.ico", handlerWrapper(faviconHandler))
 
 	// 库资源
 	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
 
 	// IDE
-	http.HandleFunc("/login", panicRecover(loginHandler))
-	http.HandleFunc("/", panicRecover(indexHandler))
+	http.HandleFunc("/login", handlerWrapper(loginHandler))
+	http.HandleFunc("/", handlerWrapper(indexHandler))
 
 	// 会话
-	http.HandleFunc("/session/ws", panicRecover(session.WSHandler))
-	http.HandleFunc("/session/save", panicRecover(session.SaveContent))
+	http.HandleFunc("/session/ws", handlerWrapper(session.WSHandler))
+	http.HandleFunc("/session/save", handlerWrapper(session.SaveContent))
 
 	// 运行相关
-	http.HandleFunc("/build", panicRecover(output.BuildHandler))
-	http.HandleFunc("/run", panicRecover(output.RunHandler))
-	http.HandleFunc("/stop", panicRecover(output.StopHandler))
-	http.HandleFunc("/go/get", panicRecover(output.GoGetHandler))
-	http.HandleFunc("/go/install", panicRecover(output.GoInstallHandler))
-	http.HandleFunc("/output/ws", panicRecover(output.WSHandler))
+	http.HandleFunc("/build", handlerWrapper(output.BuildHandler))
+	http.HandleFunc("/run", handlerWrapper(output.RunHandler))
+	http.HandleFunc("/stop", handlerWrapper(output.StopHandler))
+	http.HandleFunc("/go/get", handlerWrapper(output.GoGetHandler))
+	http.HandleFunc("/go/install", handlerWrapper(output.GoInstallHandler))
+	http.HandleFunc("/output/ws", handlerWrapper(output.WSHandler))
 
 	// 文件树
-	http.HandleFunc("/files", panicRecover(file.GetFiles))
-	http.HandleFunc("/file", panicRecover(file.GetFile))
-	http.HandleFunc("/file/save", panicRecover(file.SaveFile))
-	http.HandleFunc("/file/new", panicRecover(file.NewFile))
-	http.HandleFunc("/file/remove", panicRecover(file.RemoveFile))
+	http.HandleFunc("/files", handlerWrapper(file.GetFiles))
+	http.HandleFunc("/file", handlerWrapper(file.GetFile))
+	http.HandleFunc("/file/save", handlerWrapper(file.SaveFile))
+	http.HandleFunc("/file/new", handlerWrapper(file.NewFile))
+	http.HandleFunc("/file/remove", handlerWrapper(file.RemoveFile))
 
 	// 编辑器
-	http.HandleFunc("/editor/ws", panicRecover(editor.WSHandler))
-	http.HandleFunc("/go/fmt", panicRecover(editor.GoFmtHandler))
-	http.HandleFunc("/autocomplete", panicRecover(editor.AutocompleteHandler))
-	http.HandleFunc("/find/decl", panicRecover(editor.FindDeclarationHandler))
-	http.HandleFunc("/find/usages", panicRecover(editor.FindUsagesHandler))
-	http.HandleFunc("/html/fmt", panicRecover(editor.HTMLFmtHandler))
-	http.HandleFunc("/json/fmt", panicRecover(editor.JSONFmtHandler))
+	http.HandleFunc("/editor/ws", handlerWrapper(editor.WSHandler))
+	http.HandleFunc("/go/fmt", handlerWrapper(editor.GoFmtHandler))
+	http.HandleFunc("/autocomplete", handlerWrapper(editor.AutocompleteHandler))
+	http.HandleFunc("/find/decl", handlerWrapper(editor.FindDeclarationHandler))
+	http.HandleFunc("/find/usages", handlerWrapper(editor.FindUsagesHandler))
+	http.HandleFunc("/html/fmt", handlerWrapper(editor.HTMLFmtHandler))
+	http.HandleFunc("/json/fmt", handlerWrapper(editor.JSONFmtHandler))
 
 	// Shell
-	http.HandleFunc("/shell/ws", panicRecover(shell.WSHandler))
-	http.HandleFunc("/shell", panicRecover(shell.IndexHandler))
+	http.HandleFunc("/shell/ws", handlerWrapper(shell.WSHandler))
+	http.HandleFunc("/shell", handlerWrapper(shell.IndexHandler))
 
 	// 通知
-	http.HandleFunc("/notification/ws", panicRecover(notification.WSHandler))
+	http.HandleFunc("/notification/ws", handlerWrapper(notification.WSHandler))
 
 	// 用户
-	http.HandleFunc("/user/new", panicRecover(session.AddUser))
-	http.HandleFunc("/user/repos/init", panicRecover(session.InitGitRepos))
+	http.HandleFunc("/user/new", handlerWrapper(session.AddUser))
+	http.HandleFunc("/user/repos/init", handlerWrapper(session.InitGitRepos))
 
 	// 文档
 	http.Handle("/doc/", http.StripPrefix("/doc/", http.FileServer(http.Dir("doc"))))
@@ -217,8 +218,33 @@ func main() {
 	}
 }
 
-// 包装 HTTP Handler 函数，recover panic.
-func panicRecover(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+// HTTP Handler 包装.
+// 完成共性处理：
+// 1. panic recover
+// 2. 请求计时
+func handlerWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	handler := panicRecover(f)
+	handler = stopwatch(handler)
+
+	return handler
+}
+
+// Handler 包装请求计时.
+func stopwatch(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+
+		defer func() {
+			glog.V(5).Infof("[%s] [%s]", r.RequestURI, time.Since(start))
+		}()
+
+		// Handler 处理
+		handler(w, r)
+	}
+}
+
+// Handler 包装 recover panic.
+func panicRecover(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer func() {
 			if r := recover(); r != nil {
@@ -227,6 +253,6 @@ func panicRecover(f func(w http.ResponseWriter, r *http.Request)) func(w http.Re
 		}()
 
 		// Handler 处理
-		f(w, r)
+		handler(w, r)
 	}
 }
