@@ -302,11 +302,15 @@ var wide = {
             if ($it.hasClass("bottom-window-group-fullscreen")) {
                 $(".bottom-window-group").removeClass("bottom-window-group-fullscreen");
 
+                var bottomH = $(".bottom-window-group").height();
+
+                $(".bottom-window-group .output, notification").height(bottomH - 23);
+                $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
             } else {
                 var bottomH = $(".content, .ztree").height();
                 $(".bottom-window-group .output, notification").height(bottomH - 22);
                 $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 19);
-                
+
                 $(".bottom-window-group").addClass("bottom-window-group-fullscreen");
             }
         });
