@@ -1,4 +1,4 @@
-# Wide
+# Wide [![Build Status](https://drone.io/github.com/b3log/wide/status.png)](https://drone.io/github.com/b3log/wide/latest)
 
 ## Intro
 
