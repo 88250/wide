@@ -35,9 +35,9 @@ var session = {
         }, 5000);
     },
     restore: function () {
-        var fileTree = config.latestSessionContent.fileTree,
-                files = config.latestSessionContent.files,
-                currentFile = config.latestSessionContent.currentFile,
+        var fileTree = config.latestSessionContent.FileTree,
+                files = config.latestSessionContent.Files,
+                currentFile = config.latestSessionContent.CurrentFile,
                 id = "",
                 nodesToOpen = [];
 
