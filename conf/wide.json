@@ -21,7 +21,6 @@
                     "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\hello",
                     "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time",
                     "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time\\pkg",
-                    "D:\\go\\src\\pkg",
                     "D:\\go\\src\\pkg\\archive",
                     "D:\\go\\src\\pkg\\archive\\tar",
                     "D:\\go\\src\\pkg\\archive\\tar\\testdata"
@@ -29,9 +28,10 @@
                 "files": [
                     "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\1123",
                     "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\123\\q.exe",
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\hello\\2.json"
+                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\hello\\2.json",
+                    "D:\\go\\src\\pkg\\archive\\tar\\testdata\\small.txt"
                 ],
-                "currentFile": "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\123\\q.exe"
+                "currentFile": "D:\\go\\src\\pkg\\archive\\tar\\testdata\\small.txt"
             }
         }
     ]
