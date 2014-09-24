@@ -20,7 +20,7 @@ type Event struct {
 }
 
 // 全局事件队列.
-// 入队的事件将分发到每个用户的通知队列.
+// 入队的事件将分发到每个用户的事件队列中.
 var EventQueue = make(chan int, MaxQueueLength)
 
 // 用户事件队列.
