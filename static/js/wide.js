@@ -1,6 +1,7 @@
 var wide = {
     curNode: undefined,
     curEditor: undefined,
+    curProcessId: undefined, // 当前正在运行的进程 id（pid）
     bottomWindowTab: undefined,
     _initDialog: function () {
         $("#dialogAlert").dialog({
@@ -256,7 +257,11 @@ var wide = {
 
             if ('run' === data.cmd) { // 正在运行
                 $('.bottom-window-group .output').text($('.bottom-window-group .output').text() + data.output);
-            } else if ('run-done' === data.cmd) { // 运行结束
+
+                wide.curProcessId = data.pid;
+            } else if ('run-done' === data.cmd) { // 运行结束                
+                wide.curProcessId = undefined;
+                
                 // TODO: 运行结束后修改 [构建&运行] 图标状态为可用状态
             } else if ('build' === data.cmd || 'go install' === data.cmd) {
                 $('.bottom-window-group .output').text(data.output);
@@ -353,7 +358,7 @@ var wide = {
         } 
         
         var request = newWideRequest();
-        request.pid = 0;
+        request.pid = wide.curProcessId;
 
         $.ajax({
             type: 'POST',
@@ -361,7 +366,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output').text('');
+                // $('.bottom-window-group .output').text('');
             },
             success: function (data) {
                 $(".toolbars .ico-stop").removeClass("ico-stop").addClass("ico-buildrun");
