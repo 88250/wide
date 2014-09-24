@@ -141,23 +141,27 @@ func (*conf) GetIDEStub() string {
 
 // 获取 GOBIN 路径，末尾带路径分隔符.
 func getGOBIN() string {
+	// $GOBIN/
 	ret := os.Getenv("GOBIN")
 	if "" != ret {
 		return ret + string(os.PathSeparator)
 	}
 
+	// $GOPATH/bin/$GOOS_$GOARCH/
 	ret = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
 		os.Getenv("GOOS") + "_" + os.Getenv("GOARCH")
 	if isExist(ret) {
 		return ret + string(os.PathSeparator)
 	}
 
+	// $GOPATH/bin/{runtime.GOOS}_{runtime.GOARCH}/
 	ret = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
 		runtime.GOOS + "_" + runtime.GOARCH
 	if isExist(ret) {
 		return ret + string(os.PathSeparator)
 	}
 
+	// $GOPATH/bin/
 	return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator)
 }
 
@@ -207,7 +211,6 @@ func Load() {
 
 	glog.V(3).Infof("IP [%s]", ip)
 
-	// TODO: 弄个反射吧？
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", ip, 1)
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", ip, 1)
 	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{IP}", ip, 1)
