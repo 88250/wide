@@ -30,7 +30,7 @@ const (
 )
 
 var (
-	// 会话通道. <sid, *util.WSChannel>var
+	// 会话通道. <sid, *util.WSChannel>
 	SessionWS = map[string]*util.WSChannel{}
 
 	// 输出通道. <sid, *util.WSChannel>
