@@ -38,6 +38,9 @@ A <b>W</b>eb <b>IDE</b> IDE for Team using Golang.
 ### Build & Run
 ![](https://cloud.githubusercontent.com/assets/873584/4389219/3642bc62-43f3-11e4-8d1f-06d7aaf22784.png)
 
+### Code Assist
+![](https://cloud.githubusercontent.com/assets/873584/4398975/52038810-4460-11e4-96b5-40394b49e62a.png)
+
 ## Documents
 
 * [用户指南](http://88250.gitbooks.io/wide-user-guide/zh-cn/index.html)
