@@ -37,5 +37,8 @@
     "input_no_empty": "输入不能为空",
     "tip": "提示",
     "confirm": "确定",
-    "stop": "停止"
+    "stop": "停止",
+    "output": "输出",
+    "search": "搜索",
+    "notification": "通知"
 }

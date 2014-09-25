@@ -105,26 +105,30 @@
 
         <div class="content">
             <div class="side">
-                <div class="side-1">
-                    <ul id="files" tabindex="-1" class="ztree"></ul>
-
-                    <!-- 目录右键菜单 -->
-                    <div id="dirRMenu" class="frame">
-                        <ul>
-                            <li onclick="tree.newFile();">{{.i18n.create_file}}</li>
-                            <li onclick="tree.newDir();">{{.i18n.create_dir}}</li>
-                            <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
-                        </ul>
-                    </div>
-
-                    <!-- 文件右键菜单 -->
-                    <div id="fileRMenu" class="frame">
-                        <ul>
-                            <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
-                        </ul>
+                <div class="tabs">
+                    <div class="current" data-index="filreTree">
+                        <span title="{{.i18n.file}}">{{.i18n.file}}</span>
                     </div>
                 </div>
-                <div class="side-2">
+                <div class="tabs-panel">
+                    <div data-index="filreTree">
+                        <ul id="files" tabindex="-1" class="ztree"></ul>
+                        <!-- 目录右键菜单 -->
+                        <div id="dirRMenu" class="frame">
+                            <ul>
+                                <li onclick="tree.newFile();">{{.i18n.create_file}}</li>
+                                <li onclick="tree.newDir();">{{.i18n.create_dir}}</li>
+                                <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
+                            </ul>
+                        </div>
+
+                        <!-- 文件右键菜单 -->
+                        <div id="fileRMenu" class="frame">
+                            <ul>
+                                <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -138,13 +142,13 @@
             <div class="bottom-window-group">
                 <div class="tabs">
                     <div class="current" data-index="output">
-                        <span title="Output">Output</span>
+                        <span title="{{.i18n.output}}">{{.i18n.output}}</span>
                     </div>
                     <div data-index="search">
-                        <span title="Search">Search</span>
+                        <span title="{{.i18n.search}}">{{.i18n.search}}</span>
                     </div>
                     <div data-index="notification">
-                        <span title="Notification">Notification</span>
+                        <span title="{{.i18n.notification}}">{{.i18n.notification}}</span>
                     </div>
                 </div>
                 <div class="tabs-panel">
@@ -164,7 +168,7 @@
         <div class="footer">
             <span>|</span>
             <span id="footer-cursor" style="float: right;"></span>
-            <span class="notification-count" title="{{.i18n.unread_notification}}">Notification!</span>
+            <span class="notification-count" title="{{.i18n.unread_notification}}">{{.i18n.notification}}!</span>
         </div>
 
         <div id="dialogRemoveConfirm">
@@ -247,7 +251,7 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/mode/sql/sql.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/lint/json-lint.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/lint/go-lint.js?{{.conf.StaticResourceVersion}}"></script>
-        
+
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/tabs.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/dialog.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/editors.js?{{.conf.StaticResourceVersion}}"></script>

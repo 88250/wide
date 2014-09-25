@@ -136,19 +136,24 @@ ul {
     height: 20px;
     overflow: hidden;
     width: 100%;
+    background-color: #E6E6E6;
+    border-top: 1px solid #A4A4A4;
+    border-bottom: 1px solid #9D9D9D;
 }
 
 .tabs > div {
-    background-color: #d1d1d1;
-    border-right: 1px solid #9b9b9b;
-    color: #333;
     float: left;
     line-height: 19px;
-    padding: 0 5px
+    padding: 0 5px;
+    cursor: pointer;
+    background-color: #DDD;
+    color: #8B8B8B;
+    border-right: 1px solid #ADADAD;
 }
 
 .tabs > div.current {
-    background-color: #F7F7F7;
+    background-color: #9F9F9F;
+    color: #FFF;
 }
 /* end tabs */
 
@@ -174,8 +179,7 @@ ul {
 /* start menu */
 .menu {
     background-color: #F0F0F0;
-    border-bottom: 1px solid #A5A5A5;
-    height: 25px;
+    height: 24px;
 }
 
 .menu > ul > li {
@@ -214,6 +218,17 @@ ul {
     height: 70%;
 }
 
+.edit-panel .tabs > div {
+    background-color: #d1d1d1;
+    border-right-color: #9b9b9b;
+    color: #333;
+    cursor: auto;
+}
+
+.edit-panel .tabs > div.current {
+    background-color: #F7F7F7;
+}
+
 .edit-header .ico {
     background-image: url("../images/ico-file.png");
     float: left;
@@ -246,24 +261,6 @@ ul {
     top: -1px;
     width: 100%;
     z-index: 1000;
-}
-
-.bottom-window-group .tabs {
-    background-color: #E6E6E6;
-    border-top: 1px solid #A4A4A4;
-    border-bottom: 1px solid #9D9D9D;
-}
-
-.bottom-window-group .tabs > div {
-    cursor: pointer;
-    background-color: #DDD;
-    color: #8B8B8B;
-    border-right-color: #ADADAD;
-}
-
-.bottom-window-group .tabs > div.current {
-    background-color: #9F9F9F;
-    color: #FFF;
 }
 
 .bottom-window-group textarea.output {

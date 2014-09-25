@@ -1,4 +1,5 @@
 var tree = {
+    fileTree: undefined,
     // 递归获取当前节点展开中的最后一个节点
     getCurrentNodeLastNode: function (node) {
         var returnNode = node.children[node.children.length - 1];
@@ -60,7 +61,6 @@ var tree = {
 
         return paths;
     },
-    fileTree: undefined,
     _isParents: function (tId, parentTId) {
         var node = tree.fileTree.getNodeByTId(tId);
         if (!node || !node.parentTId) {

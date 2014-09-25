@@ -1,7 +1,11 @@
+/* start side */
+.side .tabs-panel {
+    overflow: auto;
+}
+/* start side */
+
 /* start tree */
 .ztree {
-    position: absolute;
-    overflow: auto;
     width: 100%;
     padding: 0;
 }

@@ -212,9 +212,10 @@ var wide = {
     _initLayout: function () {
         var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2,
                 bottomH = Math.floor(mainH * 0.3);
-        $(".content, .ztree").height(mainH);
+        $(".content").height(mainH);
+        $(".side .tabs-panel").height(mainH - 20);
 
-        $(".bottom-window-group .output, notification").height(bottomH - 23);
+        $(".bottom-window-group .output, notification").height(bottomH - 24);
         $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
     },
     _initBottomWindowGroup: function () {
@@ -304,19 +305,19 @@ var wide = {
 
                 var bottomH = $(".bottom-window-group").height();
 
-                $(".bottom-window-group .output, notification").height(bottomH - 23);
+                $(".bottom-window-group .output, notification").height(bottomH - 24);
                 $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
             } else {
                 var bottomH = $(".content, .ztree").height();
-                $(".bottom-window-group .output, notification").height(bottomH - 22);
+                $(".bottom-window-group .output, notification").height(bottomH - 23);
                 $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 19);
 
                 $(".bottom-window-group").addClass("bottom-window-group-fullscreen");
             }
         });
 
-        $(".side").dblclick(function () {
-            var $it = $(this);
+        $(".side .tabs").dblclick(function () {
+            var $it = $(".side");
             if ($it.hasClass("side-fullscreen")) {
                 $it.removeClass("side-fullscreen");
             } else {
