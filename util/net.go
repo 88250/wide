@@ -11,6 +11,7 @@ type mynet struct{}
 // 网络工具.
 var Net = mynet{}
 
+// 获取第一块网卡的 IP 地址.
 func (*mynet) LocalIP() (string, error) {
 	tt, err := net.Interfaces()
 

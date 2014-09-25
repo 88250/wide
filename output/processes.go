@@ -9,6 +9,7 @@ import (
 )
 
 // 所有用户正在运行的程序进程集.
+//
 // <sid, []*os.Process>
 type procs map[string][]*os.Process
 

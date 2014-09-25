@@ -19,6 +19,7 @@ import (
 )
 
 // Shell 通道.
+//
 // <sid, *util.WSChannel>>
 var ShellWS = map[string]*util.WSChannel{}
 
@@ -145,6 +146,7 @@ func pipeCommands(username string, commands ...*exec.Cmd) string {
 
 	out, err := last.CombinedOutput()
 
+	// 结束进程，释放资源
 	for _, command := range commands[:len(commands)-1] {
 		command.Wait()
 	}

@@ -1,4 +1,5 @@
 // 会话操作.
+//
 // Wide 服务器端需要维护两种会话：
 //
 // 1. HTTP 会话：主要用于验证登录
@@ -65,6 +66,7 @@ var WideSessions Sessions
 var mutex sync.Mutex
 
 // 在一些特殊情况（例如浏览器不间断刷新/在源代码视图刷新）下 Wide 会话集内会出现无效会话，该函数定时（1 小时）检查并移除这些无效会话.
+//
 // 无效会话：在检查时间内 30 分钟都没有使用过的会话，WideSession.Updated 字段.
 func FixedTimeRelease() {
 	go func() {
@@ -85,8 +87,7 @@ func FixedTimeRelease() {
 	}()
 }
 
-// 建立会话通道.
-// 通道断开时销毁会话状态，回收相关资源.
+// 建立会话通道. 通道断开时销毁会话状态，回收相关资源.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
 	wSession := WideSessions.Get(sid)
@@ -222,6 +223,7 @@ func (sessions *Sessions) Get(sid string) *WideSession {
 }
 
 // 移除 Wide 会话，释放相关资源.
+//
 // 会话相关资源：
 //
 // 1. 用户事件队列

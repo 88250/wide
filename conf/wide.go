@@ -51,10 +51,12 @@ type conf struct {
 var Wide conf
 
 // 维护非变化部分的配置.
+//
 // 只有 Users 是会运行时变化的，保存回写文件时要使用这个变量.
 var rawWide conf
 
 // 定时检查 Wide 运行环境.
+//
 // 如果是特别严重的问题（比如 $GOPATH 不存在）则退出进程，另一些不太严重的问题（比如 gocode 不存在）则放入全局通知队列.
 func FixedTimeCheckEnv() {
 	go func() {
@@ -93,6 +95,7 @@ func FixedTimeCheckEnv() {
 }
 
 // 定时（10 分钟）保存配置.
+//
 // 主要目的是保存用户会话内容，以备下一次用户打开 Wide 时进行会话还原.
 func FixedTimeSave() {
 	go func() {
@@ -105,8 +108,7 @@ func FixedTimeSave() {
 	}()
 }
 
-// 获取 username 指定的用户的工作空间路径.
-// 查找不到时返回空字符串.
+// 获取 username 指定的用户的工作空间路径，查找不到时返回空字符串.
 func (*conf) GetUserWorkspace(username string) string {
 	for _, user := range Wide.Users {
 		if user.Name == username {
@@ -229,6 +231,7 @@ func Load() {
 }
 
 // 检查文件或目录是否存在.
+//
 // 如果由 filename 指定的文件或目录存在则返回 true，否则返回 false.
 func isExist(filename string) bool {
 	_, err := os.Stat(filename)

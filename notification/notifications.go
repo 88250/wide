@@ -32,6 +32,7 @@ type Notification struct {
 }
 
 // 用户事件处理：将事件转为通知，并通过通知通道推送给前端.
+//
 // 当用户事件队列接收到事件时将会调用该函数进行处理.
 func event2Notification(e *event.Event) {
 	if nil == session.NotificationWS[e.Sid] {

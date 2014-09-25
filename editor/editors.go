@@ -333,6 +333,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // 计算光标偏移位置.
+//
 // line 指定了行号（第一行为 0），ch 指定了列号（第一列为 0）.
 func getCursorOffset(code string, line, ch int) (offset int) {
 	lines := strings.Split(code, "\n")
