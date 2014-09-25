@@ -18,6 +18,7 @@ import (
 )
 
 // 构造用户工作空间文件树.
+//
 // 将 Go API 源码包（$GOROOT/src/pkg）也作为子节点，这样能方便用户查看 Go API 源码.
 func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
@@ -247,6 +248,7 @@ func walk(path string, node *FileNode) {
 	return
 }
 
+// 列出 dirname 指定目录下的文件/目录名.
 func listFiles(dirname string) []string {
 	f, _ := os.Open(dirname)
 
@@ -277,6 +279,9 @@ func listFiles(dirname string) []string {
 	return append(dirs, files...)
 }
 
+// 根据文件后缀获取文件树图标 CSS 类名.
+//
+// CSS 类名可参考 zTree 文档.
 func getIconSkin(filenameExtension string) string {
 	if isImg(filenameExtension) {
 		return "ico-ztree-img "
@@ -306,6 +311,9 @@ func getIconSkin(filenameExtension string) string {
 	}
 }
 
+// 根据文件后缀获取编辑器 mode.
+//
+// 编辑器 mode 可参考 CodeMirror 文档.
 func getEditorMode(filenameExtension string) string {
 	switch filenameExtension {
 	case ".go":
@@ -331,6 +339,12 @@ func getEditorMode(filenameExtension string) string {
 	}
 }
 
+// 在 path 指定的路径上创建文件.
+//
+// fileType:
+//
+// "f": 文件
+// "d": 目录
 func createFile(path, fileType string) bool {
 	switch fileType {
 	case "f":
@@ -363,6 +377,7 @@ func createFile(path, fileType string) bool {
 	}
 }
 
+// 删除 path 指定路径的文件或目录.
 func removeFile(path string) bool {
 	if err := os.RemoveAll(path); nil != err {
 		glog.Errorf("Removes [%s] failed: [%s]", path, err.Error())
@@ -375,6 +390,7 @@ func removeFile(path string) bool {
 	return true
 }
 
+// 根据文件名后缀判断是否是图片文件.
 func isImg(extension string) bool {
 	ext := strings.ToLower(extension)
 
