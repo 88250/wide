@@ -1,5 +1,6 @@
 // 会话操作.
 // Wide 服务器端需要维护两种会话：
+//
 // 1. HTTP 会话：主要用于验证登录
 // 2. Wide 会话：浏览器 tab 打开/刷新会创建一个，并和 HTTP 会话进行关联
 //
@@ -222,8 +223,9 @@ func (sessions *Sessions) Get(sid string) *WideSession {
 
 // 移除 Wide 会话，释放相关资源.
 // 会话相关资源：
+//
 // 1. 用户事件队列
-// 2. 运行中的进程
+// 2. 运行中的进程集
 // 3. WebSocket 通道
 func (sessions *Sessions) Remove(sid string) {
 	mutex.Lock()

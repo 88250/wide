@@ -220,6 +220,7 @@ func main() {
 
 // HTTP Handler 包装.
 // 完成共性处理：
+//
 // 1. panic recover
 // 2. 请求计时
 func handlerWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
