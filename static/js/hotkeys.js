@@ -57,9 +57,10 @@ var hotkeys = {
             which: 117
         }
     },
-    _bindFileTree: function() {
-        // TODO: 滚动处理
-        $("#files").keydown(function(event) {
+    _bindFileTree: function () {
+        $("#files").keydown(function (event) {
+            event.preventDefault();
+
             switch (event.which) {
                 case 46: // 删除
                     tree.removeIt();
@@ -132,8 +133,11 @@ var hotkeys = {
                         }
                     }
 
-                    wide.curNode = node;
-                    tree.fileTree.selectNode(node);
+                    if (node) {
+                        wide.curNode = node;
+                        tree.fileTree.selectNode(node);
+                    }
+
                     $("#files").focus();
                     break;
                 case 37: // 左
@@ -168,15 +172,13 @@ var hotkeys = {
 
                     break;
             }
-            
-            event.preventDefault();
         });
     },
-    init: function() {
+    init: function () {
         this._bindFileTree();
 
         var hotKeys = this.defaultKeyMap;
-        $(document).keydown(function(event) {
+        $(document).keydown(function (event) {
             if (event.ctrlKey === hotKeys.goEditor.ctrlKey
                     && event.which === hotKeys.goEditor.which) {  // Ctrl+0 焦点切换到当前编辑器
                 if (wide.curEditor) {

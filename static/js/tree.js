@@ -136,16 +136,16 @@ var tree = {
         });
     },
     _onClick: function (treeNode) {
-        if (wide.curNode) {
-            for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                // 该节点文件已经打开
-                if (editors.data[i].id === treeNode.tId) {
-                    editors.tabs.setCurrent(treeNode.tId);
-                    wide.curNode = treeNode;
-                    wide.curEditor = editors.data[i].editor;
-                    wide.curEditor.focus();
-                    return false;
-                }
+        wide.curNode = treeNode;
+
+        for (var i = 0, ii = editors.data.length; i < ii; i++) {
+            // 该节点文件已经打开
+            if (editors.data[i].id === treeNode.tId) {
+                editors.tabs.setCurrent(treeNode.tId);
+                wide.curNode = treeNode;
+                wide.curEditor = editors.data[i].editor;
+                wide.curEditor.focus();
+                return false;
             }
         }
 
@@ -166,12 +166,9 @@ var tree = {
                         return false;
                     }
 
-                    wide.curNode = treeNode;
-
                     if ("img" === data.mode) { // 是图片文件的话新建 tab 打开
                         // 最好是开 tab，但这个最终取决于浏览器设置
                         var w = window.open(data.path);
-
                         return false;
                     }
 
