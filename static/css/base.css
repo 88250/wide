@@ -309,6 +309,10 @@ ul {
     line-height: 18px;
 }
 
+.footer .cursor {
+    cursor: pointer;
+}
+
 .notification-count {
     float: right;
     display: none;

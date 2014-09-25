@@ -199,7 +199,7 @@ var wide = {
             },
             "ok": function () {
                 var line = parseInt($("#dialogGoLinePrompt > input").val());
-                if ($.trim(line) === "") {
+                if ($.trim($("#dialogGoLinePrompt > input").val()) === "") {
                     $("#dialogGoLinePrompt > .tip").text(config.label.input_no_empty);
                     return false;
                 }
@@ -376,7 +376,14 @@ var wide = {
             }
         });
     },
+    _initFooter: function () {
+        $(".footer .cursor").dblclick(function () {
+            $("#dialogGoLinePrompt").dialog("open");
+        });
+    },
     init: function () {
+        this._initFooter();
+        
         this._initFullscreen();
 
         this._initWS();

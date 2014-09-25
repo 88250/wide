@@ -279,7 +279,7 @@ var editors = {
         editor.on('cursorActivity', function (cm) {
             var cursor = cm.getCursor();
 
-            $("#footer-cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
+            $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             // TODO: 关闭 tab 的时候要重置
         });
 
