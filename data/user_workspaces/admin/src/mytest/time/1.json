@@ -1,16 +1,47 @@
-package main
-
-import (
-	"fmt"
-	"mytest/time/pkg"
-	"time"
-)
-
-func main() {
-	for i := 0; i < 50; i++ {
-		fmt.Println("Hello, 世界", pkg.Now())
-
-		time.Sleep(time.Second)
-	}
-
+{
+    "wide": "Wide",
+    "isDelete": "是否删除",
+    "cancel": "取消",
+    "file": "文件",
+    "login": "登录",
+    "username": "用户名",
+    "password": "密码",
+    "login_failed": "登录失败",
+    "run": "运行",
+    "debug": "调试",
+    "help": "帮助",
+    "check_update": "检查更新",
+    "report_issues": "提建议",
+    "wide_doc": "Wide 文档",
+    "about": "关于",
+    "start_page": "起始页",
+    "create_file": "创建文件",
+    "create": "创建",
+    "create_dir": "创建目录",
+    "delete": "删除",
+    "save": "保存",
+    "exit": "退出",
+    "close_file": "关闭文件",
+    "close_all_files": "关闭所有文件",
+    "save_all_files": "保存所有文件",
+    "format": "格式化",
+    "goget": "go get",
+    "goinstall": "go install",
+    "build_n_run": "构建 & 运行",
+    "full_screen": "全屏",
+    "unread_notification": "未读通知",
+    "notification_2": "没有检查到 gocode，这将会导致 [自动完成] 失效",
+    "notification_3": "没有检查到 ide_stub，这将会导致 [跳转到声明]、[查找使用] 失效",
+    "goto_line": "跳转到行",
+    "goto": "跳转",
+    "input_no_empty": "输入不能为空",
+    "tip": "提示",
+    "confirm": "确定",
+    "stop": "停止",
+    "output": "输出",
+    "search": "搜索",
+    "notification": "通知",
+    "min": "最小化",
+    "max_side": "左侧窗口最大化",
+    "max_bottom": "底部窗口最大化"
 }

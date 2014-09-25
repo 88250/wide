@@ -45,14 +45,14 @@ var wide = {
                             // 是文件的话，查看 editor 中是否被打开，如打开则移除
                             for (var i = 0, ii = editors.data.length; i < ii; i++) {
                                 if (editors.data[i].id === wide.curNode.tId) {
-                                    $(".edit-header .tabs > div[data-index=" + wide.curNode.tId + "]").find(".ico-close").click();
+                                    $(".edit-panel .tabs > div[data-index=" + wide.curNode.tId + "]").find(".ico-close").click();
                                     break;
                                 }
                             }
                         } else {
                             for (var i = 0, ii = editors.data.length; i < ii; i++) {
                                 if (tree._isParents(editors.data[i].id, wide.curNode.tId)) {
-                                    $(".edit-header .tabs > div[data-index=" + editors.data[i].id + "]").find(".ico-close").click();
+                                    $(".edit-panel .tabs > div[data-index=" + editors.data[i].id + "]").find(".ico-close").click();
                                     i--;
                                     ii--;
                                 }
@@ -412,7 +412,7 @@ var wide = {
     },
     _save: function () {
         var request = newWideRequest();
-        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.file = $(".edit-panel .tabs .current span:eq(0)").attr("title");
         request.code = wide.curEditor.getValue();
 
         $.ajax({
@@ -475,7 +475,7 @@ var wide = {
         }
 
         var request = newWideRequest();
-        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.file = $(".edit-panel .tabs .current span:eq(0)").attr("title");
         request.code = wide.curEditor.getValue();
 
         $.ajax({
@@ -494,7 +494,7 @@ var wide = {
     },
     goget: function () {
         var request = newWideRequest();
-        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.file = $(".edit-panel .tabs .current span:eq(0)").attr("title");
 
         $.ajax({
             type: 'POST',
@@ -510,7 +510,7 @@ var wide = {
     },
     goinstall: function () {
         var request = newWideRequest();
-        request.file = $(".edit-header .current span:eq(0)").attr("title");
+        request.file = $(".edit-panel .tabs .current span:eq(0)").attr("title");
         request.code = wide.curEditor.getValue();
 
         $.ajax({
@@ -526,7 +526,7 @@ var wide = {
         });
     },
     fmt: function () {
-        var path = $(".edit-header .current span:eq(0)").attr("title");
+        var path = $(".edit-panel .tabs .current span:eq(0)").attr("title");
         var mode = wide.curEditor.getOption("mode");
 
         var request = newWideRequest();

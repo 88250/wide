@@ -58,7 +58,7 @@ var editors = {
         });
 
 
-        $(".edit-header .tabs").on("dblclick", "div", function () {
+        $(".edit-panel .tabs").on("dblclick", "div", function () {
             editors.fullscreen();
         });
     },
@@ -81,7 +81,7 @@ var editors = {
             }
 
             var request = newWideRequest();
-            request.path = $(".edit-header .current > span:eq(0)").attr("title");
+            request.path = $(".edit-panel .tabs .current > span:eq(0)").attr("title");
             request.code = editor.getValue();
             request.cursorLine = cur.line;
             request.cursorCh = cur.ch;
@@ -133,7 +133,7 @@ var editors = {
             var cur = wide.curEditor.getCursor();
 
             var request = newWideRequest();
-            request.path = $(".edit-header .current > span:eq(0)").attr("title");
+            request.path = $(".edit-panel .tabs .current > span:eq(0)").attr("title");
             request.code = wide.curEditor.getValue();
             request.cursorLine = cur.line;
             request.cursorCh = cur.ch;
