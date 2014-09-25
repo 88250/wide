@@ -283,7 +283,7 @@ var editors = {
             // TODO: 关闭 tab 的时候要重置
         });
 
-        editor.setSize('100%', $(".edit-panel").height() - $(".edit-header").height());
+        editor.setSize('100%', $(".edit-panel").height() - $(".edit-panel .tabs").height());
         editor.setValue(data.content);
         editor.setOption("mode", data.mode);
 

@@ -3,6 +3,7 @@ body {
     font-size: 13px;
     margin: 0;
     color: #000;
+    overflow-x: hidden;
 }
 
 ul {
@@ -53,6 +54,14 @@ ul {
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: #666;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 18px;
+}
+
+.font-ico:hover {
+    color: #333;
 }
 
 .ico-play:before {
@@ -79,17 +88,18 @@ ul {
     content: "\e608";
 }
 
-.ico-close {
-    color: #666;
+.ico-max:before {
+    content: "\e60c";
 }
 
-.ico-close:hover {
-    color: #333;
+.ico-min:before {
+    content: "\e60d";
+    position: absolute;
+    right: 5px;
 }
 
 .ico-close:before {
     content: "\e60a";
-    cursor: pointer;
 }
 /* end reset & function */
 
@@ -143,7 +153,8 @@ ul {
 
 .tabs > div {
     float: left;
-    line-height: 19px;
+    line-height: 18px;
+    height: 18px;
     padding: 0 5px;
     cursor: pointer;
     background-color: #DDD;
@@ -160,6 +171,7 @@ ul {
 /* start framework */
 .content {
     position: relative;
+    overflow: hidden;
 }
 
 .side {
@@ -168,6 +180,7 @@ ul {
     position: absolute;
     border-right: 1px solid #9B9B9B;
     height: 100%;
+    z-index: 11;
 }
 
 .side-fullscreen {
@@ -194,18 +207,6 @@ ul {
     padding: 5px;
     text-decoration: none;
 }
-
-.toolbars > span {
-    color: #666;
-    cursor: pointer;
-    font-size: 16px;
-    line-height: 25px;
-    margin-right: 5px;
-}
-
-.toolbars > span:hover {
-    color: #333;
-}
 /* end menu */
 
 /* start editor */
@@ -216,6 +217,7 @@ ul {
     background-color: #D7D7D7;
     width: 80%;
     height: 70%;
+    overflow: hidden;
 }
 
 .edit-panel .tabs > div {
@@ -229,7 +231,13 @@ ul {
     background-color: #F7F7F7;
 }
 
-.edit-header .ico {
+.toolbars {
+    position: absolute;
+    right: 5px;
+    top: 1px;
+}
+
+.edit-panel .tabs .ico {
     background-image: url("../images/ico-file.png");
     float: left;
     height: 16px;
@@ -252,6 +260,7 @@ ul {
     width: 80%;
     height: 30%;
     top: 70%;
+    z-index: 11;
     background-color: #fff;
 }
 
@@ -295,6 +304,9 @@ ul {
 .footer {
     border-top: 1px solid #919191;
     background-color: #F0F0F0;
+    padding-left: 5px;
+    height: 19px;
+    line-height: 18px;
 }
 
 .notification-count {

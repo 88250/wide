@@ -298,6 +298,33 @@ var wide = {
         };
     },
     _initFullscreen: function () {
+        $(".footer .ico-max:eq(1)").click(function () {
+            $(".bottom-window-group").animate({
+                "top": "70%"
+            }, function () {
+                $(".edit-panel").css("height", "70%");
+
+                var editorDatas = editors.data;
+                for (var i = 0, ii = editorDatas.length; i < ii; i++) {
+                    editorDatas[i].editor.setSize("100%", $(".edit-panel").height() - $(".edit-panel .tabs").height());
+                }
+
+                $(".footer .ico-max:eq(1)").hide();
+            });
+        });
+
+        $(".bottom-window-group .ico-min").click(function () {
+            $(".edit-panel").css("height", "100%");
+
+            var editorDatas = editors.data;
+            for (var i = 0, ii = editorDatas.length; i < ii; i++) {
+                editorDatas[i].editor.setSize("100%", $(".content").height() - $(".edit-panel .tabs").height());
+            }
+
+            $(".bottom-window-group").css("top", "100%");
+            $(".footer .ico-max:eq(1)").show();
+        });
+
         $(".bottom-window-group .tabs").dblclick(function () {
             var $it = $(".bottom-window-group");
             if ($it.hasClass("bottom-window-group-fullscreen")) {
@@ -314,6 +341,30 @@ var wide = {
 
                 $(".bottom-window-group").addClass("bottom-window-group-fullscreen");
             }
+        });
+
+
+        $(".footer .ico-max:eq(0)").click(function () {
+            $(".side").animate({
+                "left": "0"
+            }, function () {
+                $(".edit-panel, .bottom-window-group").css({
+                    "left": "20%",
+                    "width": "80%"
+                });
+
+                $(".footer .ico-max:eq(0)").hide();
+            });
+        });
+
+        $(".side .ico-min").click(function () {
+            $(".side").css("left", "-20%");
+
+            $(".edit-panel, .bottom-window-group").css({
+                "left": "0",
+                "width": "100%"
+            });
+            $(".footer .ico-max:eq(0)").show();
         });
 
         $(".side .tabs").dblclick(function () {

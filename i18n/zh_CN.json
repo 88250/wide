@@ -40,5 +40,8 @@
     "stop": "停止",
     "output": "输出",
     "search": "搜索",
-    "notification": "通知"
+    "notification": "通知",
+    "min": "最小化",
+    "max_side": "左侧窗口最大化",
+    "max_bottom": "底部窗口最大化"
 }

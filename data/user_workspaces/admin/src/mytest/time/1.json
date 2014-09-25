@@ -1,24 +1,16 @@
-{
-    "Server": "{IP}:7070",
-    "StaticServer": "http://{IP}:7070",
-    "EditorChannel": "ws://{IP}:7070",
-    "OutputChannel": "ws://{IP}:7070",
-    "ShellChannel": "ws://{IP}:7070",
-    "SessionChannel": "ws://{IP}:7070",
-    "StaticResourceVersion": "201409032040",
-    "MaxProcs": 4,
-    "RuntimeMode": "dev",
-    "Pwd": "{pwd}",
-    "Users": [
-        {
-            "Name": "admin",
-            "Password": "admin",
-            "Workspace": "{pwd}/data/user_workspaces/admin",
-            "LatestSessionContent": {
-                "FileTree": [],
-                "Files": [],
-                "CurrentFile": ""
-            }
-        }
-    ]
+package main
+
+import (
+	"fmt"
+	"mytest/time/pkg"
+	"time"
+)
+
+func main() {
+	for i := 0; i < 50; i++ {
+		fmt.Println("Hello, 世界", pkg.Now())
+
+		time.Sleep(time.Second)
+	}
+
 }
