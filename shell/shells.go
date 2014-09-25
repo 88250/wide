@@ -20,7 +20,7 @@ import (
 
 // Shell 通道.
 // <sid, *util.WSChannel>>
-var shellWS = map[string]*util.WSChannel{}
+var ShellWS = map[string]*util.WSChannel{}
 
 // Shell 首页.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -70,12 +70,12 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
-	shellWS[sid] = &wsChan
+	ShellWS[sid] = &wsChan
 
 	ret := map[string]interface{}{"output": "Shell initialized", "cmd": "init-shell"}
 	wsChan.Conn.WriteJSON(&ret)
 
-	glog.V(4).Infof("Open a new [Shell] with session [%s], %d", sid, len(shellWS))
+	glog.V(4).Infof("Open a new [Shell] with session [%s], %d", sid, len(ShellWS))
 
 	input := map[string]interface{}{}
 

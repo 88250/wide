@@ -30,7 +30,7 @@ const (
 
 var (
 	// 会话通道. <sid, *util.WSChannel>var
-	sessionWS = map[string]*util.WSChannel{}
+	SessionWS = map[string]*util.WSChannel{}
 
 	// 输出通道. <sid, *util.WSChannel>
 	OutputWS = map[string]*util.WSChannel{}
@@ -98,12 +98,12 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
-	sessionWS[sid] = &wsChan
+	SessionWS[sid] = &wsChan
 
 	ret := map[string]interface{}{"output": "Ouput initialized", "cmd": "init-session"}
 	wsChan.Conn.WriteJSON(&ret)
 
-	glog.V(4).Infof("Open a new [Session Channel] with session [%s], %d", sid, len(sessionWS))
+	glog.V(4).Infof("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
 
 	input := map[string]interface{}{}
 
@@ -257,9 +257,9 @@ func (sessions *Sessions) Remove(sid string) {
 				delete(NotificationWS, sid)
 			}
 
-			if ws, ok := sessionWS[sid]; ok {
+			if ws, ok := SessionWS[sid]; ok {
 				ws.Close()
-				delete(sessionWS, sid)
+				delete(SessionWS, sid)
 			}
 
 			glog.V(3).Infof("Removed a session [%s]", s.Id)
