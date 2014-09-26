@@ -23,6 +23,7 @@ A <b>W</b>eb <b>IDE</b> IDE for Teams using Golang.
 * There are a few of GO IDEs, and no one developed by Go itself, this is a nice try
 
 ## Features
+
 * Code Highlight, Folding: Go/HTML/JavaScript/Markdown etc.
 * Autocomplete: Go/HTML etc.
 * Format: Go/HTML/JSON etc.
@@ -34,6 +35,11 @@ A <b>W</b>eb <b>IDE</b> IDE for Teams using Golang.
 * Web development: Frontend devlopment (HTML/JS/CSS) all in one
 * Go tool: go get/install/fmt etc.
 
+## Architecture 
+
+### Build & Run
+
+![Build & Run](https://cloud.githubusercontent.com/assets/873584/4389219/3642bc62-43f3-11e4-8d1f-06d7aaf22784.png)
 
 
 * A browser tab corresponds to a Wide session
