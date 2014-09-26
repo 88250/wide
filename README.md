@@ -43,8 +43,8 @@ A <b>W</b>eb <b>IDE</b> IDE for Teams using Golang.
 ![Build & Run](https://cloud.githubusercontent.com/assets/873584/4389219/3642bc62-43f3-11e4-8d1f-06d7aaf22784.png)
 
 
-* A browser tab corresponds to a Wide session
-* Execution output push via WebSocket
+ * A browser tab corresponds to a Wide session
+ * Execution output push via WebSocket
 
 
 1. Browser sends ````Build```` request
@@ -61,8 +61,8 @@ A <b>W</b>eb <b>IDE</b> IDE for Teams using Golang.
 ![Code Assist](https://cloud.githubusercontent.com/assets/873584/4399135/3b80c21c-4463-11e4-8e94-7f7e8d12a4df.png)
 
 
-* Autocompletion
-* Find Usages
+ * Autocompletion
+ * Find Usages
 
 
 1. Browser sends code assist request
