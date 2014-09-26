@@ -63,11 +63,11 @@ Flow:
  * Find Usages
 
 Flow: 
-1. Browser sends code assist request
-2. Handler gets user workspace of the request with HTTP session
-3. Server executes ````gocode````/````ide_stub````<br/>
-   3.1 Sets environment variables (e.g. ${GOPATH})<br/>
-   3.2 ````gocode```` with ````lib-path```` parameter
+ 1. Browser sends code assist request
+ 2. Handler gets user workspace of the request with HTTP session
+ 3. Server executes ````gocode````/````ide_stub````<br/>
+    3.1 Sets environment variables (e.g. ${GOPATH})<br/>
+    3.2 ````gocode```` with ````lib-path```` parameter
 
 ## Documents
 
