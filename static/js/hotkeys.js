@@ -200,7 +200,7 @@ var hotkeys = {
 
                     if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
                         // 当底部最小化时
-                        $(".bottom-window-group").css("top", "100%");
+                        $(".bottom-window-group").css("top", "100%").hide();
                     }
                 }
 

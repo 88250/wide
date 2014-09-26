@@ -77,8 +77,8 @@ var windows = {
             $it.attr("style", "");
 
             var bottomH = $(".content").height();
-            $(".bottom-window-group .output, notification").height(bottomH - 23);
-            $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 19);
+            $(".bottom-window-group .output").height(bottomH - 27);
+            $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
 
             $it.addClass("bottom-window-group-max");
         }
@@ -96,7 +96,7 @@ var windows = {
         $it.removeClass("bottom-window-group-max").attr("style", "");
         var bottomH = $it.height();
 
-        $(".bottom-window-group .output, notification").height(bottomH - 24);
+        $(".bottom-window-group .output").height(bottomH - 27);
         $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
 
         $it.animate({
@@ -109,8 +109,17 @@ var windows = {
                 editorDatas[i].editor.setSize("100%", $(".edit-panel").height() - $(".edit-panel .tabs").height());
             }
 
+            $it.show();
             $(".footer .ico-restore:eq(1)").hide();
         });
+
+        if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+            // 当文件树最小化时
+           $it.css({
+               "width": "100%",
+               "left": "0"
+           });
+        }
     },
     restoreSide: function () {
         $(".side").animate({
@@ -132,7 +141,7 @@ var windows = {
             editorDatas[i].editor.setSize("100%", $(".content").height() - $(".edit-panel .tabs").height());
         }
 
-        $(".bottom-window-group").css("top", "100%");
+        $(".bottom-window-group").css("top", "100%").hide();
         $(".footer .ico-restore:eq(1)").show();
     },
     minSide: function () {
@@ -185,7 +194,7 @@ var windows = {
                 "left": "0px",
                 "width": "100%",
                 "z-index": "8"
-            });
+            }).show();
 
             if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
                 // 当文件最小化时

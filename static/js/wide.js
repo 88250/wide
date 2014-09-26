@@ -210,12 +210,12 @@ var wide = {
         });
     },
     _initLayout: function () {
-        var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2,
+        var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 1,
                 bottomH = Math.floor(mainH * 0.3);
         $(".content").height(mainH);
         $(".side .tabs-panel").height(mainH - 20);
 
-        $(".bottom-window-group .output, notification").height(bottomH - 24);
+        $(".bottom-window-group .output").height(bottomH - 27);
         $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
     },
     _initBottomWindowGroup: function () {
