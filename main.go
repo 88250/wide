@@ -248,11 +248,7 @@ func stopwatch(handler func(w http.ResponseWriter, r *http.Request)) func(w http
 // Handler 包装 recover panic.
 func panicRecover(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		defer func() {
-			if r := recover(); r != nil {
-				glog.Errorf("PANIC RECOVERED: %v", r)
-			}
-		}()
+		defer util.Recover()
 
 		// Handler 处理
 		handler(w, r)

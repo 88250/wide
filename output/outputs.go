@@ -20,6 +20,19 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+const (
+	lintSeverityError = "error"   // Lint 严重级别：错误
+	lintSeverityWarn  = "warning" // Lint 严重级别：警告
+)
+
+// 代码 Lint 结构.
+type Lint struct {
+	File     string `json:"file"`
+	LineNo   int    `json:"lineNo"`
+	Severity string `json:"severity"`
+	Msg      string
+}
+
 // 建立输出通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
@@ -97,6 +110,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet["pid"] = cmd.Process.Pid
 
 	go func(runningId int) {
+		defer util.Recover()
+
 		glog.V(3).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
 
 		for {
@@ -242,6 +257,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		go func(runningId int) {
+			defer util.Recover()
+
 			glog.V(3).Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)
 
 			// 一次性读取
@@ -270,11 +287,28 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				}()
 			} else { // 构建失败
 				// 解析错误信息，返回给编辑器 gutter lint
-				lines := strings.Split(string(buf[:count]), "\n")[1:]
-				lints := []map[string]interface{}{}
+				errOut := string(buf[:count])
+				lines := strings.Split(errOut, "\n")
+
+				if lines[0][0] == '#' {
+					lines = lines[1:] // 跳过第一行
+				}
+
+				lints := []*Lint{}
 
 				for _, line := range lines {
-					if len(line) <= 1 {
+					if len(line) < 1 {
+						continue
+					}
+
+					if line[0] == '\t' {
+						// 添加到上一个 lint 中
+						last := len(lints)
+						msg := lints[last-1].Msg
+						msg += line
+
+						lints[last-1].Msg = msg
+
 						continue
 					}
 
@@ -283,11 +317,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 					lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
 					msg := left[strings.Index(left, ":")+2:]
 
-					lint := map[string]interface{}{}
-					lint["file"] = file
-					lint["lineNo"] = lineNo - 1
-					lint["msg"] = msg
-					lint["severity"] = "error" // warning
+					lint := &Lint{
+						File:     file,
+						LineNo:   lineNo - 1,
+						Severity: lintSeverityError,
+						Msg:      msg,
+					}
+
 					lints = append(lints, lint)
 				}
 
@@ -384,6 +420,8 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		cmd.Start()
 
 		go func(runningId int) {
+			defer util.Recover()
+
 			glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
 
 			// 一次性读取
@@ -396,24 +434,44 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 			if 0 != count { // 构建失败
 				// 解析错误信息，返回给编辑器 gutter lint
-				lines := strings.Split(string(buf[:count]), "\n")[1:]
-				lints := []map[string]interface{}{}
+				errOut := string(buf[:count])
+				lines := strings.Split(errOut, "\n")
+
+				if lines[0][0] == '#' {
+					lines = lines[1:] // 跳过第一行
+				}
+
+				lints := []*Lint{}
 
 				for _, line := range lines {
-					if len(line) <= 1 {
+					if len(line) < 1 {
+						continue
+					}
+
+					if line[0] == '\t' {
+						// 添加到上一个 lint 中
+						last := len(lints)
+						msg := lints[last-1].Msg
+						msg += line
+
+						lints[last-1].Msg = msg
+
 						continue
 					}
 
 					file := line[:strings.Index(line, ":")]
 					left := line[strings.Index(line, ":")+1:]
+					glog.Info("left: ", left)
 					lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
 					msg := left[strings.Index(left, ":")+2:]
 
-					lint := map[string]interface{}{}
-					lint["file"] = file
-					lint["lineNo"] = lineNo - 1
-					lint["msg"] = msg
-					lint["severity"] = "error" // warning
+					lint := &Lint{
+						File:     file,
+						LineNo:   lineNo - 1,
+						Severity: lintSeverityError,
+						Msg:      msg,
+					}
+
 					lints = append(lints, lint)
 				}
 
@@ -489,6 +547,8 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	go func(runningId int) {
+		defer util.Recover()
+
 		glog.V(3).Infof("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
 
 		for {
