@@ -58,13 +58,19 @@ var editors = {
         });
 
 
-        $(".edit-panel .tabs").on("dblclick", "div", function () {
-            editors.fullscreen();
+        $(".edit-panel .tabs").on("dblclick", function () {
+            if ($(".toolbars .ico-max").length === 1) {
+                windows.maxEditor();
+            } else {
+                windows.restoreEditor();
+            }
         });
     },
-    fullscreen: function () {
-        wide.curEditor.setOption("fullScreen", true);
-        wide.curEditor.focus();
+    getCurrentId: function () {
+        return $(".edit-panel .tabs .current").data("index");
+    },
+    getCurrentPath: function () {
+        return $(".edit-panel .tabs .current span:eq(0)").attr("title");
     },
     _initAutocomplete: function () {
         CodeMirror.registerHelper("hint", "go", function (editor) {
@@ -251,14 +257,6 @@ var editors = {
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
                 ".": "autocompleteAfterDot",
-                "Esc": function (cm) {
-                    if (cm.getOption("fullScreen")) {
-                        cm.setOption("fullScreen", false);
-                    }
-                },
-                "F11": function (cm) {
-                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
-                },
                 "Ctrl-G": "gotoLine",
                 "Ctrl-E": "deleteLine",
                 "Ctrl-D": "doNothing", // 取消默认的 deleteLine
@@ -281,6 +279,10 @@ var editors = {
 
             $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             // TODO: 关闭 tab 的时候要重置
+        });
+
+        editor.on('focus', function (cm) {
+            windows.clearFloat();
         });
 
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-panel .tabs").height());
@@ -306,5 +308,3 @@ var editors = {
         });
     }
 };
-
-editors.init();

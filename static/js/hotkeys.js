@@ -192,6 +192,18 @@ var hotkeys = {
             if (event.ctrlKey === hotKeys.goFileTree.ctrlKey
                     && event.which === hotKeys.goFileTree.which) { // Ctrl+1 焦点切换到文件树
                 // 有些元素需设置 tabindex 为 -1 时才可以 focus
+                if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+                    // 当文件树最小化时
+                    $(".side").css({
+                        "left": "0"
+                    });
+
+                    if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
+                        // 当底部最小化时
+                        $(".bottom-window-group").css("top", "100%");
+                    }
+                }
+
                 $("#files").focus();
                 event.preventDefault();
 
@@ -201,6 +213,8 @@ var hotkeys = {
             if (event.ctrlKey === hotKeys.goOutPut.ctrlKey
                     && event.which === hotKeys.goOutPut.which) { // Ctrl+4 焦点切换到输出窗口   
                 wide.bottomWindowTab.setCurrent("output");
+
+                windows.flowBottom();
                 $(".bottom-window-group .output").focus();
                 event.preventDefault();
 
@@ -209,6 +223,7 @@ var hotkeys = {
             if (event.ctrlKey === hotKeys.goSearch.ctrlKey
                     && event.which === hotKeys.goSearch.which) { // Ctrl+5 焦点切换到搜索窗口  
                 wide.bottomWindowTab.setCurrent("search");
+                windows.flowBottom();
                 $(".bottom-window-group .search").focus();
                 event.preventDefault();
 
@@ -218,6 +233,7 @@ var hotkeys = {
             if (event.ctrlKey === hotKeys.goNotification.ctrlKey
                     && event.which === hotKeys.goNotification.which) { // Ctrl+6 焦点切换到通知窗口          
                 wide.bottomWindowTab.setCurrent("notification");
+                windows.flowBottom();
                 $(".bottom-window-group .notification").focus();
                 event.preventDefault();
 

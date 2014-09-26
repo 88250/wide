@@ -3,7 +3,7 @@ body {
     font-size: 13px;
     margin: 0;
     color: #000;
-    overflow-x: hidden;
+    overflow: hidden;
 }
 
 ul {
@@ -72,8 +72,8 @@ ul {
     content: "\f0c7";
 }
 
-.ico-fullscreen:before {
-    content: "\e601";
+.ico-max:before {
+    content: "\f096";
 }
 
 .ico-format:before {
@@ -88,7 +88,7 @@ ul {
     content: "\e608";
 }
 
-.ico-max:before {
+.ico-restore:before {
     content: "\e60c";
 }
 
@@ -173,20 +173,6 @@ ul {
     position: relative;
     overflow: hidden;
 }
-
-.side {
-    background-color: #FFF;
-    width: 20%;
-    position: absolute;
-    border-right: 1px solid #9B9B9B;
-    height: 100%;
-    z-index: 11;
-}
-
-.side-fullscreen {
-    width: 100%;
-    z-index: 1000;
-}
 /* end framework */
 
 /* start menu */
@@ -260,16 +246,16 @@ ul {
     width: 80%;
     height: 30%;
     top: 70%;
-    z-index: 11;
+    z-index: 7;
     background-color: #fff;
 }
 
-.bottom-window-group-fullscreen {
+.bottom-window-group-max {
     height: 100%;
     left: 0;
-    top: -1px;
+    top: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 11;
 }
 
 .bottom-window-group textarea.output {
