@@ -38,8 +38,31 @@ A <b>W</b>eb <b>IDE</b> IDE for Teams using Golang.
 ### Build & Run
 ![](https://cloud.githubusercontent.com/assets/873584/4389219/3642bc62-43f3-11e4-8d1f-06d7aaf22784.png)
 
+* A browser tab corresponds to a Wide session
+* Execution output push via WebSocket
+
+
+1. Browser sends ````Build```` request
+2. Server executes ````go build```` command via ````os/exec````<br/>
+   2.1. Generates a executable file
+3. Browser sends ````Run```` request
+4. Server executes the file via ````os/exec````<br/>
+   4.1. A running process<br/>
+   4.2. Execution output push via WebSocket channel
+5. Browser renders with callback function ````ws.onmessage````
+
 ### Code Assist
 ![](https://cloud.githubusercontent.com/assets/873584/4399135/3b80c21c-4463-11e4-8e94-7f7e8d12a4df.png)
+
+* Autocompletion 
+* Find Usages
+
+
+1. Browser sends code assist request
+2. Handler gets user workspace of the request with HTTP session
+3. Server executes ````gocode````/````ide_stub````<br/>
+   3.1 Sets environment variables (e.g. ${GOPATH})<br/>
+   3.2 ````gocode```` with ````lib-path```` parameter
 
 ## Documents
 
