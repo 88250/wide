@@ -54,10 +54,12 @@ var windows = {
 
         $(window).click(function (event) {
             if ($(event.target).closest(".footer").length === 1
-                    || $(event.target).closest(".bottom-window-group").length === 1) {
+                    || $(event.target).closest(".bottom-window-group").length === 1
+                    || $(event.target).closest(".side").length === 1) {
                 return false;
             }
-            windows.clearSideBottom();
+
+            windows.clearFloat();
         });
     },
     maxBottom: function () {
@@ -65,11 +67,11 @@ var windows = {
 
         if ($it.hasClass("bottom-window-group-max")) {
             windows.restoreBottom();
-            if ($(".side").css("left") !== "0px") {
-               $it.css({
-                   "left": "0px",
-                   "width": "100%"
-               });
+            if ($(".side").css("left") !== "0px" && $(".side").css("left") !== "auto") {
+                $it.css({
+                    "left": "0px",
+                    "width": "100%"
+                });
             }
         } else {
             $it.attr("style", "");
@@ -90,13 +92,14 @@ var windows = {
         }
     },
     restoreBottom: function () {
-        $(".bottom-window-group").removeClass("bottom-window-group-max");
-        var bottomH = $(".bottom-window-group").height();
+        var $it = $(".bottom-window-group");
+        $it.removeClass("bottom-window-group-max").attr("style", "");
+        var bottomH = $it.height();
 
         $(".bottom-window-group .output, notification").height(bottomH - 24);
         $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
 
-        $(".bottom-window-group").animate({
+        $it.animate({
             "top": "70%"
         }, function () {
             $(".edit-panel").css("height", "70%");
@@ -163,26 +166,31 @@ var windows = {
         windows.restoreSide();
         wide.curEditor.focus();
     },
-    clearSideBottom: function () {
-        if (!this.isEditorMax()) {
-            return false;
-        }
-        $(".side").css("left", "-20%");
-        $(".bottom-window-group").css("top", "100%");
-    },
-    flowBottom: function () {
-        if (this.isEditorMax()) {
-            $(".bottom-window-group").animate({"top": "70%"});
-            $(".side").css("left", "-20%");
-        }
-    },
-    isEditorMax: function () {
-        if ($(".toolbars .ico-restore").length === 1
-                && $(".footer .ico-restore:eq(0)").css("display") === "inline"
-                && $(".footer .ico-restore:eq(1)").css("display") === "inline") {
-            return true;
+    clearFloat: function () {
+        if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+            // 当文件树最小化时
+            windows.minSide();
         }
 
-        return false;
+        if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
+            // 当底部最小化时
+            windows.minBottom();
+        }
+    },
+    flowBottom: function () {
+        if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
+            // 当底部树最小化时
+            $(".bottom-window-group").css({
+                "top": "70%",
+                "left": "0px",
+                "width": "100%",
+                "z-index": "8"
+            });
+
+            if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+                // 当文件最小化时
+                $(".side").css("left", "-20%");
+            }
+        }
     }
 };

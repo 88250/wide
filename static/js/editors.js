@@ -282,7 +282,7 @@ var editors = {
         });
 
         editor.on('focus', function (cm) {
-            windows.clearSideBottom();
+            windows.clearFloat();
         });
 
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-panel .tabs").height());

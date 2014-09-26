@@ -192,12 +192,16 @@ var hotkeys = {
             if (event.ctrlKey === hotKeys.goFileTree.ctrlKey
                     && event.which === hotKeys.goFileTree.which) { // Ctrl+1 焦点切换到文件树
                 // 有些元素需设置 tabindex 为 -1 时才可以 focus
-                if (windows.isEditorMax()) {
-                    // 编辑器全屏
-                    $(".bottom-window-group").css("top", "100%");
+                if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+                    // 当文件树最小化时
                     $(".side").css({
                         "left": "0"
                     });
+
+                    if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
+                        // 当底部最小化时
+                        $(".bottom-window-group").css("top", "100%");
+                    }
                 }
 
                 $("#files").focus();
