@@ -28,7 +28,8 @@
     "goget": "go get",
     "goinstall": "go install",
     "build_n_run": "构建 & 运行",
-    "full_screen": "全屏",
+    "max_editor": "编辑器窗口最大化",
+    "restore_editor": "编辑器窗口还原",
     "unread_notification": "未读通知",
     "notification_2": "没有检查到 gocode，这将会导致 [自动完成] 失效",
     "notification_3": "没有检查到 ide_stub，这将会导致 [跳转到声明]、[查找使用] 失效",
@@ -42,6 +43,6 @@
     "search": "搜索",
     "notification": "通知",
     "min": "最小化",
-    "max_side": "左侧窗口最大化",
-    "max_bottom": "底部窗口最大化"
+    "restore_side": "左侧窗口还原",
+    "restore_bottom": "底部窗口还原"
 }

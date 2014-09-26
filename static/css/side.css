@@ -1,4 +1,18 @@
 /* start side */
+.side {
+    background-color: #FFF;
+    width: 20%;
+    position: absolute;
+    border-right: 1px solid #9B9B9B;
+    height: 100%;
+    z-index: 8;
+}
+
+.side-max {
+    width: 100%;
+    z-index: 11;
+}
+
 .side .tabs-panel {
     overflow: auto;
 }

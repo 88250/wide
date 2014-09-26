@@ -6,7 +6,6 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/codemirror.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/show-hint.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/lint/lint.css">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/display/fullscreen.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/fold/foldgutter.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/theme/lesser-dark.css">
 
@@ -131,7 +130,7 @@
                     <span onclick="wide.run()" class="font-ico ico-buildrun" title="{{.i18n.build_n_run}}"></span>
                     <span onclick="wide.saveFile()" title="{{.i18n.save}}" class="font-ico ico-save"></span>
                     <span onclick="wide.fmt()" class="ico-format font-ico" title="{{.i18n.format}}"></span>
-                    <span class="font-ico ico-fullscreen" onclick="editors.fullscreen()" title="{{.i18n.full_screen}}"></span>
+                    <span class="font-ico ico-max" onclick="windows.maxEditor()" title="{{.i18n.max_editor}}"></span>
                 </div>
                 <div class="tabs"></div>
                 <div class="tabs-panel"></div>
@@ -165,10 +164,14 @@
         </div>
 
         <div class="footer fn-clear">
-            <span title="{{.i18n.max_side}}" class="font-ico ico-max fn-none"></span>
-            <span title="{{.i18n.max_bottom}}" class="font-ico ico-max fn-none"></span>
-            <span class="cursor fn-right"></span>
-            <span class="notification-count" title="{{.i18n.unread_notification}}">{{.i18n.notification}}!</span>
+            <div class="fn-left">
+                <span title="{{.i18n.restore_side}}" class="font-ico ico-restore fn-none"></span>
+                <span title="{{.i18n.resotre_bottom}}" class="font-ico ico-restore fn-none"></span>
+            </div>
+            <div class="fn-right">
+                <span class="cursor"></span>
+                <span class="notification-count" title="{{.i18n.unread_notification}}">{{.i18n.notification}}!</span>
+            </div>
         </div>
 
         <div id="dialogRemoveConfirm">
@@ -188,7 +191,9 @@
                     var config = {
                     "latestSessionContent": {{.latestSessionContent}},
                             "label": {
-                            "delete": "{{.i18n.delete}}",
+                            "restore_editor": "{{.i18n.restore_editor}}",
+                                    "max_editor": "{{.i18n.max_editor}}",
+                                    "delete": "{{.i18n.delete}}",
                                     "cancel": "{{.i18n.cancel}}",
                                     "input_no_empty": "{{.i18n.input_no_empty}}",
                                     "goto_line": "{{.i18n.goto_line}}",
@@ -228,7 +233,6 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/selection/active-line.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/show-hint.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/anyword-hint.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/display/fullscreen.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/display/rulers.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/edit/closebrackets.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/edit/matchbrackets.js"></script>
@@ -260,6 +264,7 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/wide.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/session.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/menu.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/windows.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/hotkeys.js?{{.conf.StaticResourceVersion}}"></script>
     </body>
 </html>
