@@ -47,14 +47,14 @@ A <b>W</b>eb <b>IDE</b> IDE for Teams using Golang.
  * Execution output push via WebSocket
 
 
- 1. Browser sends ````Build```` request
- 2. Server executes ````go build```` command via ````os/exec````<br/>
-    2.1. Generates a executable file
- 3. Browser sends ````Run```` request
- 4. Server executes the file via ````os/exec````<br/>
-    4.1. A running process<br/>
-    4.2. Execution output push via WebSocket channel
- 5. Browser renders with callback function ````ws.onmessage````
+1. Browser sends ````Build```` request
+2. Server executes ````go build```` command via ````os/exec````<br/>
+   2.1. Generates a executable file
+3. Browser sends ````Run```` request
+4. Server executes the file via ````os/exec````<br/>
+   4.1. A running process<br/>
+   4.2. Execution output push via WebSocket channel
+5. Browser renders with callback function ````ws.onmessage````
 
 ### Code Assist
 
@@ -65,11 +65,11 @@ A <b>W</b>eb <b>IDE</b> IDE for Teams using Golang.
  * Find Usages
 
 
- 1. Browser sends code assist request
- 2. Handler gets user workspace of the request with HTTP session
- 3. Server executes ````gocode````/````ide_stub````<br/>
-    3.1 Sets environment variables (e.g. ${GOPATH})<br/>
-    3.2 ````gocode```` with ````lib-path```` parameter
+1. Browser sends code assist request
+2. Handler gets user workspace of the request with HTTP session
+3. Server executes ````gocode````/````ide_stub````<br/>
+   3.1 Sets environment variables (e.g. ${GOPATH})<br/>
+   3.2 ````gocode```` with ````lib-path```` parameter
 
 ## Documents
 
