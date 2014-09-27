@@ -14,6 +14,8 @@ A <b>W</b>eb <b>IDE</b> IDE for Teams using Golang.
 * **Web based** IDE:
   * Developer needs a browser only
   * Cross-platform, even on mobile devices
+  * Easy for extensions 
+  * Easy integration with other systems
   * For the geeks
 * A try for commercial-open source: versions customized for enterprises, close to their development work flows respectively
 * Currently more popular Go IDE has some defects or regrets: 
