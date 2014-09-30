@@ -120,6 +120,13 @@ func (*conf) GetUserWorkspace(username string) string {
 	return ""
 }
 
+// 获取工作空间路径.
+func (user *User) getWorkspace() string {
+	ret := strings.Replace(user.Workspace, "{pwd}", Wide.Pwd, 1)
+
+	return filepath.FromSlash(ret)
+}
+
 // 获取 username 指定的用户配置.
 func (*conf) GetUser(username string) *User {
 	for _, user := range Wide.Users {
