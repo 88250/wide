@@ -1,21 +1,22 @@
 var shell = {
+    _shellWS: undefined,
     _initWS: function () {
-        var shellWS = new WebSocket(config.channel.shell + '/shell/ws?sid=' + config.wideSessionId);
-        shellWS.onopen = function () {
+        shell.shellWS = new WebSocket(config.channel.shell + '/shell/ws?sid=' + config.wideSessionId);
+        shell.shellWS.onopen = function () {
             console.log('[shell onopen] connected');
         };
-        shellWS.onmessage = function (e) {
+        shell.shellWS.onmessage = function (e) {
             console.log('[shell onmessage]' + e.data);
             var data = JSON.parse(e.data);
             if ('init-shell' !== data.cmd) {
                 $('#shellOutput').val(data.output);
             }
         };
-        shellWS.onclose = function (e) {
+        shell.shellWS.onclose = function (e) {
             console.log('[shell onclose] disconnected (' + e.code + ')');
-            delete shellWS;
+            delete shell.shellWS;
         };
-        shellWS.onerror = function (e) {
+        shell.shellWS.onerror = function (e) {
             console.log('[shell onerror] ' + e);
         };
     },
@@ -27,7 +28,7 @@ var shell = {
                 var input = {
                     cmd: $('#shellInput').val()
                 };
-                shellWS.send(JSON.stringify(input));
+                shell.shellWS.send(JSON.stringify(input));
                 $('#shellInput').val('');
             }
         });
