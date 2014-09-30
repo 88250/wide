@@ -258,6 +258,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 		go func(runningId int) {
 			defer util.Recover()
+			defer cmd.Wait()
 
 			glog.V(3).Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)
 
@@ -421,6 +422,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 		go func(runningId int) {
 			defer util.Recover()
+			defer cmd.Wait()
 
 			glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
 
@@ -548,6 +550,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	go func(runningId int) {
 		defer util.Recover()
+		defer cmd.Wait()
 
 		glog.V(3).Infof("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
 
