@@ -127,6 +127,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// 以管道方式执行多个命令.
 func pipeCommands(username string, commands ...*exec.Cmd) string {
 	for i, command := range commands[:len(commands)-1] {
 		setCmdEnv(command, username)

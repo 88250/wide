@@ -343,8 +343,8 @@ func getEditorMode(filenameExtension string) string {
 //
 // fileType:
 //
-// "f": 文件
-// "d": 目录
+//  "f": 文件
+//  "d": 目录
 func createFile(path, fileType string) bool {
 	switch fileType {
 	case "f":

@@ -222,8 +222,8 @@ func main() {
 //
 // 共性处理：
 //
-// 1. panic recover
-// 2. 请求计时
+//  1. panic recover
+//  2. 请求计时
 func handlerWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	handler := panicRecover(f)
 	handler = stopwatch(handler)
