@@ -105,7 +105,7 @@ var tree = {
                         callback: {
                             onDblClick: function (event, treeId, treeNode) {
                                 if (treeNode) {
-                                    tree._openFile(treeNode);
+                                    tree.openFile(treeNode);
                                 }
                             },
                             onRightClick: function (event, treeId, treeNode) {
