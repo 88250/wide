@@ -105,9 +105,20 @@ var editors = {
 
                     if (autocompleteArray) {
                         for (var i = 0; i < autocompleteArray.length; i++) {
+                            var displayText = '';
+                            if (autocompleteArray[i].class === 'type') {
+                                displayText = '<span class="fn-clear">'// + autocompleteArray[i].class 
+                                        + '<b class="fn-left">' + autocompleteArray[i].name + '</b>'
+                                        + autocompleteArray[i].type + '</span>';
+                            } else {
+                                displayText = '<span>'// + autocompleteArray[i].class 
+                                        + '<b>' + autocompleteArray[i].name + '</b>    '
+                                        + autocompleteArray[i].type.substring(4) + '</span>';
+                            }
                             autocompleteHints[i] = {
                                 // TODO: 添加类型、图标
-                                displayText: '<b>' + autocompleteArray[i].name + '</b>',
+
+                                displayText: displayText,
                                 text: autocompleteArray[i].name
                             };
                         }

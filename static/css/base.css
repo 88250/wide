@@ -237,6 +237,16 @@ ul {
     background-position: bottom;
     background-repeat: repeat-x;
 }
+
+.CodeMirror-hint {
+    padding-right: 18px;    
+    max-width: none;
+}
+
+.CodeMirror-hint:hover {
+    background: #08f;
+    color: white;
+}
 /* end editor */
 
 /* start bottom-window-group */
