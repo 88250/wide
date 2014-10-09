@@ -103,9 +103,16 @@ var tree = {
                             selectedMulti: false
                         },
                         callback: {
+                            onDblClick: function (event, treeId, treeNode) {
+                                if (treeNode) {
+                                    tree._openFile(treeNode);
+                                }
+                            },
                             onRightClick: function (event, treeId, treeNode) {
                                 if (treeNode) {
                                     wide.curNode = treeNode;
+                                    tree.fileTree.selectNode(treeNode);
+
                                     if ("ico-ztree-dir " !== treeNode.iconSkin) { // 如果右击了文件
                                         $("#fileRMenu ul").show();
                                         fileRMenu.css({
@@ -121,10 +128,15 @@ var tree = {
                                             "display": "block"
                                         });
                                     }
+                                    $("#files").focus();
                                 }
                             },
                             onClick: function (event, treeId, treeNode, clickFlag) {
-                                tree._onClick(treeNode);
+                                if (treeNode) {
+                                    wide.curNode = treeNode;
+                                    tree.fileTree.selectNode(treeNode);
+                                    $("#files").focus();
+                                }
                             }
                         }
                     };
@@ -135,7 +147,7 @@ var tree = {
             }
         });
     },
-    _onClick: function (treeNode) {
+    openFile: function (treeNode) {
         wide.curNode = treeNode;
 
         for (var i = 0, ii = editors.data.length; i < ii; i++) {

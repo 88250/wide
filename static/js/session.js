@@ -70,7 +70,7 @@ var session = {
         for (var m = 0, mm = files.length; m < mm; m++) {
             for (var n = 0, nn = nodesToOpen.length; n < nn; n++) {
                 if (nodesToOpen[n].path === files[m]) {
-                    tree._onClick(nodesToOpen[n]);
+                    tree.openFile(nodesToOpen[n]);
                     break;
                 }
             }

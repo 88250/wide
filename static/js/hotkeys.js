@@ -76,7 +76,7 @@ var hotkeys = {
                     }
 
                     // 模拟点击：打开文件
-                    tree._onClick(wide.curNode);
+                    tree.openFile(wide.curNode);
 
                     break;
                 case 38: // 上
