@@ -105,7 +105,11 @@ var editors = {
 
                     if (autocompleteArray) {
                         for (var i = 0; i < autocompleteArray.length; i++) {
-                            autocompleteHints[i] = autocompleteArray[i].name;
+                            autocompleteHints[i] = {
+                                // TODO: 添加类型、图标
+                                displayText: '<b>' + autocompleteArray[i].name + '</b>',
+                                text: autocompleteArray[i].name
+                            };
                         }
                     }
                 }
