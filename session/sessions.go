@@ -71,7 +71,8 @@ var mutex sync.Mutex
 // 无效会话：在检查时间内 30 分钟都没有使用过的会话，参考 WideSession.Updated 字段.
 func FixedTimeRelease() {
 	go func() {
-		for {
+		// 1 小时进行一次检查
+		for _ = range time.Tick(time.Hour) {
 			hour, _ := time.ParseDuration("-30m")
 			threshold := time.Now().Add(hour)
 
@@ -82,8 +83,6 @@ func FixedTimeRelease() {
 					WideSessions.Remove(s.Id)
 				}
 			}
-
-			time.Sleep(time.Hour)
 		}
 	}()
 }

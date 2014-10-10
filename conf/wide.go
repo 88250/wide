@@ -60,7 +60,8 @@ var rawWide conf
 // 如果是特别严重的问题（比如 $GOPATH 不存在）则退出进程，另一些不太严重的问题（比如 gocode 不存在）则放入全局通知队列.
 func FixedTimeCheckEnv() {
 	go func() {
-		for {
+		// 7 分钟进行一次检查环境
+		for _ = range time.Tick(time.Minute * 7) {
 			if "" == os.Getenv("GOPATH") {
 				glog.Fatal("Not found $GOPATH")
 				os.Exit(-1)
@@ -87,23 +88,18 @@ func FixedTimeCheckEnv() {
 				event.EventQueue <- event.EvtCodeIDEStubNotFound
 				glog.Warningf("Not found ide_stub [%s]", ide_stub)
 			}
-
-			// TODO: 7 分钟进行一次检查环境
-			time.Sleep(time.Second * 7)
 		}
 	}()
 }
 
-// 定时（10 分钟）保存配置.
+// 定时（1 分钟）保存配置.
 //
 // 主要目的是保存用户会话内容，以备下一次用户打开 Wide 时进行会话还原.
 func FixedTimeSave() {
 	go func() {
-		for {
+		// 1 分钟进行一次配置保存
+		for _ = range time.Tick(time.Minute) {
 			Save()
-
-			// 10 分钟进行一次配置保存
-			time.Sleep(time.Minute * 10)
 		}
 	}()
 }
