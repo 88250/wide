@@ -161,6 +161,7 @@ var editors = {
             $("#dialogGoLinePrompt").dialog("open");
         };
 
+        // 用于覆盖 cm 默认绑定的某些快捷键功能.
         CodeMirror.commands.doNothing = function (cm) {
         };
         
@@ -342,10 +343,7 @@ var editors = {
 
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-panel .tabs").height());
         editor.setValue(data.content);
-        editor.setOption("mode", data.mode);
-
-        editor.setCursor(cursor);
-
+        editor.setOption("mode", data.mode);      
         editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
 
         if ("text/x-go" === data.mode || "application/json" === data.mode) {
@@ -355,6 +353,8 @@ var editors = {
         if ("application/xml" === data.mode || "text/html" === data.mode) {
             editor.setOption("autoCloseTags", true);
         }
+        
+        editor.setCursor(cursor);
 
         wide.curEditor = editor;
         editors.data.push({
