@@ -107,6 +107,7 @@ var editors = {
                         for (var i = 0; i < autocompleteArray.length; i++) {
                             var displayText = '';
 
+                            // TODO: 图标
                             switch (autocompleteArray[i].class) {
                                 case "type":
                                 case "const":
@@ -125,13 +126,11 @@ var editors = {
                                     break;
                                 default:
                                     console.warn("Can't handle autocomplete [" + autocompleteArray[i].class + "]");
-                                    
+
                                     break;
                             }
 
                             autocompleteHints[i] = {
-                                // TODO: 添加类型、图标
-
                                 displayText: displayText,
                                 text: autocompleteArray[i].name
                             };
@@ -164,7 +163,7 @@ var editors = {
         // 用于覆盖 cm 默认绑定的某些快捷键功能.
         CodeMirror.commands.doNothing = function (cm) {
         };
-        
+
         CodeMirror.commands.exprInfo = function (cm) {
             var cur = wide.curEditor.getCursor();
 
@@ -180,12 +179,13 @@ var editors = {
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
-                    // TODO: V
-                    console.log(data);
-
                     if (!data.succ) {
                         return;
                     }
+                    var position = wide.curEditor.cursorCoords();
+                    $("body").append('<div style="top:'
+                            + (position.top + 15) + 'px;left:' + position.left
+                            + 'px" class="edit-exprinfo">' + data.info + '</div>');
                 }
             });
         };
@@ -331,6 +331,7 @@ var editors = {
         });
 
         editor.on('cursorActivity', function (cm) {
+            $(".edit-exprinfo").remove();
             var cursor = cm.getCursor();
 
             $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
@@ -341,9 +342,13 @@ var editors = {
             windows.clearFloat();
         });
 
+        editor.on('blur', function (cm) {
+            $(".edit-exprinfo").remove();
+        });
+
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-panel .tabs").height());
         editor.setValue(data.content);
-        editor.setOption("mode", data.mode);      
+        editor.setOption("mode", data.mode);
         editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
 
         if ("text/x-go" === data.mode || "application/json" === data.mode) {
@@ -353,7 +358,7 @@ var editors = {
         if ("application/xml" === data.mode || "text/html" === data.mode) {
             editor.setOption("autoCloseTags", true);
         }
-        
+
         editor.setCursor(cursor);
 
         wide.curEditor = editor;
