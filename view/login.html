@@ -9,7 +9,7 @@
     <body>
         <div class="header">
             <div class="wrapper fn-clear">
-                <h1 class="fn-left">Wide</h1>
+                <h1 class="fn-left"><a href="/login">Wide</a></h1>
                 <ul class="fn-right">
                     <li><a href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
                     <li><a href="https://www.gitbook.io/book/88250/wide-user-guide" target="_blank">{{.i18n.help}}</a></li>
@@ -39,7 +39,7 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
         <script type="text/javascript">
 (function () {
-    var contentH = $(window).height() - $(".footer").height() - $(".header").height() - 42;
+    var contentH = $(window).height() - $(".footer").height() - $(".header").height() - 18;
     $(".content").height(contentH)
             .css("padding-top", (contentH - $(".content .fn-left").height()) / 2 + "px");
 
