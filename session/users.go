@@ -1,6 +1,6 @@
 package session
 
-// TODO: 这个包目前没有使用，只是开了个头 :p
+// TODO: 这个文件内的功能目前没有使用，只是开了个头 :p
 
 import (
 	"encoding/json"

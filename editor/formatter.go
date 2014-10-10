@@ -11,6 +11,8 @@ import (
 	"github.com/golang/glog"
 )
 
+// TODO: 加入 goimports 格式化 Go 源码文件
+
 // gofmt 格式化 Go 源码文件.
 func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
@@ -73,6 +75,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // 格式化 HTML 文件.
+// FIXME：依赖的工具 gohtml 格式化 HTML 时有问题
 func HTMLFmtHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)

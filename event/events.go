@@ -31,6 +31,7 @@ type UserEventQueue struct {
 	Handlers []Handler // 事件处理器集
 }
 
+// 事件队列集类型.
 type Queues map[string]*UserEventQueue
 
 // 用户事件队列集.

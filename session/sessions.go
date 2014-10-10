@@ -57,6 +57,7 @@ type WideSession struct {
 	Updated     time.Time                  // 最近一次使用时间
 }
 
+// 会话集类型.
 type Sessions []*WideSession
 
 // 所有 Wide 会话集.
@@ -67,7 +68,7 @@ var mutex sync.Mutex
 
 // 在一些特殊情况（例如浏览器不间断刷新/在源代码视图刷新）下 Wide 会话集内会出现无效会话，该函数定时（1 小时）检查并移除这些无效会话.
 //
-// 无效会话：在检查时间内 30 分钟都没有使用过的会话，WideSession.Updated 字段.
+// 无效会话：在检查时间内 30 分钟都没有使用过的会话，参考 WideSession.Updated 字段.
 func FixedTimeRelease() {
 	go func() {
 		for {

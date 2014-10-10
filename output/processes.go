@@ -8,11 +8,12 @@ import (
 	"github.com/golang/glog"
 )
 
+// 进程集类型.
+type procs map[string][]*os.Process
+
 // 所有用户正在运行的程序进程集.
 //
 // <sid, []*os.Process>
-type procs map[string][]*os.Process
-
 var processes = procs{}
 
 // 排它锁，防止并发修改.
