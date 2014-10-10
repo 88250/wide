@@ -163,6 +163,79 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(output)
 }
 
+// 查看表达式信息.
+func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	session, _ := session.HTTPSession.Get(r, "wide-session")
+	username := session.Values["username"].(string)
+
+	decoder := json.NewDecoder(r.Body)
+
+	var args map[string]interface{}
+	if err := decoder.Decode(&args); err != nil {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	path := args["path"].(string)
+	curDir := path[:strings.LastIndex(path, string(os.PathSeparator))]
+	filename := path[strings.LastIndex(path, string(os.PathSeparator))+1:]
+
+	fout, err := os.Create(path)
+
+	if nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	code := args["code"].(string)
+	fout.WriteString(code)
+
+	if err := fout.Close(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	line := int(args["cursorLine"].(float64))
+	ch := int(args["cursorCh"].(float64))
+
+	offset := getCursorOffset(code, line, ch)
+	glog.Infof("offset [%d]", offset)
+
+	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
+	ide_stub := conf.Wide.GetIDEStub()
+	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-info", "."}
+	cmd := exec.Command(ide_stub, argv...)
+	cmd.Dir = curDir
+
+	setCmdEnv(cmd, username)
+
+	output, err := cmd.CombinedOutput()
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	exprInfo := strings.TrimSpace(string(output))
+	if "" == exprInfo {
+		data["succ"] = false
+
+		return
+	}
+
+	data["info"] = exprInfo
+}
+
 // 查找声明.
 func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
@@ -208,7 +281,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	ch := int(args["cursorCh"].(float64))
 
 	offset := getCursorOffset(code, line, ch)
-	// glog.Infof("offset [%d]", offset)
+	glog.Infof("offset [%d]", offset)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
 	ide_stub := conf.Wide.GetIDEStub()
@@ -263,7 +336,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := args["file"].(string)
+	filePath := args["path"].(string)
 	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
 	filename := filePath[strings.LastIndex(filePath, string(os.PathSeparator))+1:]
 

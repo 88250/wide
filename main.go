@@ -191,6 +191,7 @@ func main() {
 	http.HandleFunc("/editor/ws", handlerWrapper(editor.WSHandler))
 	http.HandleFunc("/go/fmt", handlerWrapper(editor.GoFmtHandler))
 	http.HandleFunc("/autocomplete", handlerWrapper(editor.AutocompleteHandler))
+	http.HandleFunc("/exprinfo", handlerWrapper(editor.GetExprInfoHandler))
 	http.HandleFunc("/find/decl", handlerWrapper(editor.FindDeclarationHandler))
 	http.HandleFunc("/find/usages", handlerWrapper(editor.FindUsagesHandler))
 	http.HandleFunc("/html/fmt", handlerWrapper(editor.HTMLFmtHandler))

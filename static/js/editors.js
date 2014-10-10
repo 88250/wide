@@ -106,15 +106,29 @@ var editors = {
                     if (autocompleteArray) {
                         for (var i = 0; i < autocompleteArray.length; i++) {
                             var displayText = '';
-                            if (autocompleteArray[i].class === 'type') {
-                                displayText = '<span class="fn-clear">'// + autocompleteArray[i].class 
-                                        + '<b class="fn-left">' + autocompleteArray[i].name + '</b>'
-                                        + autocompleteArray[i].type + '</span>';
-                            } else {
-                                displayText = '<span>'// + autocompleteArray[i].class 
-                                        + '<b>' + autocompleteArray[i].name + '</b>    '
-                                        + autocompleteArray[i].type.substring(4) + '</span>';
+
+                            switch (autocompleteArray[i].class) {
+                                case "type":
+                                case "const":
+                                case "var":
+                                case "package":
+                                    displayText = '<span class="fn-clear">'// + autocompleteArray[i].class 
+                                            + '<b class="fn-left">' + autocompleteArray[i].name + '</b>    '
+                                            + autocompleteArray[i].type + '</span>';
+
+                                    break;
+                                case "func":
+                                    displayText = '<span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>'
+                                            + autocompleteArray[i].type.substring(4) + '</span>';
+
+                                    break;
+                                default:
+                                    console.warn("Can't handle autocomplete [" + autocompleteArray[i].class + "]");
+                                    
+                                    break;
                             }
+
                             autocompleteHints[i] = {
                                 // TODO: 添加类型、图标
 
@@ -148,6 +162,31 @@ var editors = {
         };
 
         CodeMirror.commands.doNothing = function (cm) {
+        };
+        
+        CodeMirror.commands.exprInfo = function (cm) {
+            var cur = wide.curEditor.getCursor();
+
+            var request = newWideRequest();
+            request.path = $(".edit-panel .tabs .current > span:eq(0)").attr("title");
+            request.code = wide.curEditor.getValue();
+            request.cursorLine = cur.line;
+            request.cursorCh = cur.ch;
+
+            $.ajax({
+                type: 'POST',
+                url: '/exprinfo',
+                data: JSON.stringify(request),
+                dataType: "json",
+                success: function (data) {
+                    // TODO: V
+                    console.log(data);
+
+                    if (!data.succ) {
+                        return;
+                    }
+                }
+            });
         };
 
         CodeMirror.commands.jumpToDecl = function (cm) {
@@ -204,7 +243,7 @@ var editors = {
             var cur = wide.curEditor.getCursor();
 
             var request = newWideRequest();
-            request.file = wide.curNode.path;
+            request.path = $(".edit-panel .tabs .current > span:eq(0)").attr("title");
             request.code = wide.curEditor.getValue();
             request.cursorLine = cur.line;
             request.cursorCh = cur.ch;
@@ -216,7 +255,7 @@ var editors = {
                 dataType: "json",
                 success: function (data) {
                     console.log(data);
-
+                    // TODO: V
                     if (!data.succ) {
                         return;
                     }
@@ -272,6 +311,7 @@ var editors = {
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
                 ".": "autocompleteAfterDot",
+                "Ctrl-I": "exprInfo",
                 "Ctrl-G": "gotoLine",
                 "Ctrl-E": "deleteLine",
                 "Ctrl-D": "doNothing", // 取消默认的 deleteLine
