@@ -23,6 +23,9 @@ import (
 	"github.com/golang/glog"
 )
 
+// 当前 Wide 版本.
+const Ver = "1.0.0-dev"
+
 // Wide 中唯一一个 init 函数.
 func init() {
 	// TODO:默认启动参数
@@ -53,7 +56,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method == "GET" {
 		// 展示登录页面
 
-		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
+		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r), "ver": Ver}
 
 		t, err := template.ParseFiles("view/login.html")
 
