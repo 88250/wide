@@ -12,6 +12,7 @@ import (
 	"strings"
 
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/file"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
@@ -19,14 +20,6 @@ import (
 )
 
 var editorWS = map[string]*websocket.Conn{}
-
-// 代码片段. 这个结构可用于“查找使用”、“文件搜索”的返回值.
-type snippet struct {
-	Path     string   `json:"path"`     // 文件路径
-	Line     int      `json:"line"`     // 行号
-	Ch       int      `json:"ch"`       // 列号
-	Contents []string `json:"contents"` // 附近几行
-}
 
 // 建立编辑器通道.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
@@ -388,7 +381,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	founds := strings.Split(result, "\n")
-	usages := []snippet{}
+	usages := []*file.Snippet{}
 	for _, found := range founds {
 		found = strings.TrimSpace(found)
 
@@ -398,7 +391,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 		cursorLine, _ := strconv.Atoi(found[cursorSep+1 : strings.LastIndex(found, ":")])
 		cursorCh, _ := strconv.Atoi(found[strings.LastIndex(found, ":")+1:])
 
-		usage := snippet{Path: path, Line: cursorLine, Ch: cursorCh /* TODO: 获取附近的代码片段 */}
+		usage := &file.Snippet{Path: path, Line: cursorLine, Ch: cursorCh /* TODO: 获取附近的代码片段 */}
 		usages = append(usages, usage)
 	}
 

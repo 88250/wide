@@ -17,6 +17,24 @@ import (
 	"github.com/golang/glog"
 )
 
+// 文件节点，用于构造文件树.
+type FileNode struct {
+	Name      string      `json:"name"`
+	Path      string      `json:"path"`
+	IconSkin  string      `json:"iconSkin"` // 值的末尾应该有一个空格
+	Type      string      `json:"type"`     // "f"：文件，"d"：文件夹
+	Mode      string      `json:"mode"`
+	FileNodes []*FileNode `json:"children"`
+}
+
+// 代码片段. 这个结构可用于“查找使用”、“文件搜索”等的返回值.
+type Snippet struct {
+	Path     string   `json:"path"`     // 文件路径
+	Line     int      `json:"line"`     // 行号
+	Ch       int      `json:"ch"`       // 列号
+	Contents []string `json:"contents"` // 附近几行
+}
+
 // 构造用户工作空间文件树.
 //
 // 将 Go API 源码包（$GOROOT/src/pkg）也作为子节点，这样能方便用户查看 Go API 源码.
@@ -203,14 +221,32 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// 文件节点，用于构造文件树.
-type FileNode struct {
-	Name      string      `json:"name"`
-	Path      string      `json:"path"`
-	IconSkin  string      `json:"iconSkin"` // 值的末尾应该有一个空格
-	Type      string      `json:"type"`     // "f"：文件，"d"：文件夹
-	Mode      string      `json:"mode"`
-	FileNodes []*FileNode `json:"children"`
+// 在目录中搜索包含指定字符串的文件.
+func Search(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	var args map[string]interface{}
+
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	// TODO: 选定目录
+	dir := args["dir"].(string)
+	dir = ""
+
+	_ = dir
+
+	founds := []*Snippet{}
+
+	usage := &Snippet{Path: "", Line: 1, Ch: 2 /* TODO: 获取附近的代码片段 */}
+	founds = append(founds, usage)
+
+	data["founds"] = founds
 }
 
 // 遍历指定的路径，构造文件树.
@@ -388,6 +424,23 @@ func removeFile(path string) bool {
 	glog.Infof("Removed [%s]", path)
 
 	return true
+}
+
+// 在 dir 指定的目录（包含子目录）中的 extension 指定后缀的文件中搜索包含 text 文本的文件，类似 grep/findstr 命令.
+func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
+	f, _ := os.Open(dir)
+	fi, err := f.Readdir(-1)
+	f.Close()
+
+	if nil != err {
+		glog.Errorf("Read dir [%s] failed: [%s]", dir, err.Error())
+
+		return snippets
+	}
+
+	_ = fi
+
+	return snippets
 }
 
 // 根据文件名后缀判断是否是图片文件.
