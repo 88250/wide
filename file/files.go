@@ -423,6 +423,10 @@ func removeFile(path string) bool {
 
 // 在 dir 指定的目录（包含子目录）中的 extension 指定后缀的文件中搜索包含 text 文本的文件，类似 grep/findstr 命令.
 func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
+	if !strings.HasSuffix(dir, string(os.PathSeparator)) {
+		dir += string(os.PathSeparator)
+	}
+
 	f, _ := os.Open(dir)
 	fileInfos, err := f.Readdir(-1)
 	f.Close()
@@ -434,12 +438,13 @@ func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
 	}
 
 	for _, fileInfo := range fileInfos {
-		name := fileInfo.Name()
-		path := dir + name
+		path := dir + fileInfo.Name()
 
-		if fileInfo.IsDir() { // 进入目录递归
-			search(path, extension, text, snippets)
-		} else if strings.HasSuffix(name, extension) { // 在文件中进行搜索
+		if fileInfo.IsDir() {
+			// 进入目录递归
+			snippets = search(path, extension, text, snippets)
+		} else if strings.HasSuffix(path, extension) {
+			// 在文件中进行搜索
 			ss := searchInFile(path, text)
 
 			snippets = append(snippets, ss...)
