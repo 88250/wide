@@ -429,7 +429,7 @@ func removeFile(path string) bool {
 // 在 dir 指定的目录（包含子目录）中的 extension 指定后缀的文件中搜索包含 text 文本的文件，类似 grep/findstr 命令.
 func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
 	f, _ := os.Open(dir)
-	fi, err := f.Readdir(-1)
+	fileInfos, err := f.Readdir(-1)
 	f.Close()
 
 	if nil != err {
@@ -438,9 +438,47 @@ func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
 		return snippets
 	}
 
-	_ = fi
+	for _, fileInfo := range fileInfos {
+		name := fileInfo.Name()
+		path := dir + name
+
+		if fileInfo.IsDir() { // 进入目录递归
+			search(path, extension, text, snippets)
+		} else if strings.HasSuffix(name, extension) { // 在文件中进行搜索
+			ss := searchInFile(path, text)
+
+			snippets = append(snippets, ss...)
+		}
+	}
 
 	return snippets
+}
+
+// 在 path 指定的文件内容中搜索 text 指定的文本.
+func searchInFile(path string, text string) []*Snippet {
+	ret := []*Snippet{}
+
+	bytes, err := ioutil.ReadFile(path)
+	if nil != err {
+		glog.Errorf("Read file [%s] failed: [%s]", path, err.Error())
+
+		return ret
+	}
+
+	content := string(bytes)
+	lines := strings.Split(content, "\n")
+
+	for idx, line := range lines {
+		ch := strings.Index(line, text)
+
+		if -1 != ch {
+			snippet := &Snippet{Path: path, Line: idx + 1, Ch: ch + 1, Contents: []string{line}}
+
+			ret = append(ret, snippet)
+		}
+	}
+
+	return ret
 }
 
 // 根据文件名后缀判断是否是图片文件.
