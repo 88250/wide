@@ -222,7 +222,7 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 }
 
 // 在目录中搜索包含指定字符串的文件.
-func Search(w http.ResponseWriter, r *http.Request) {
+func SearchText(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -235,16 +235,11 @@ func Search(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: 选定目录
 	dir := args["dir"].(string)
-	dir = ""
+	extension := args["extension"].(string)
+	text := args["text"].(string)
 
-	_ = dir
-
-	founds := []*Snippet{}
-
-	usage := &Snippet{Path: "", Line: 1, Ch: 2 /* TODO: 获取附近的代码片段 */}
-	founds = append(founds, usage)
+	founds := search(dir, extension, text, []*Snippet{})
 
 	data["founds"] = founds
 }

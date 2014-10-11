@@ -189,6 +189,7 @@ func main() {
 	http.HandleFunc("/file/save", handlerWrapper(file.SaveFile))
 	http.HandleFunc("/file/new", handlerWrapper(file.NewFile))
 	http.HandleFunc("/file/remove", handlerWrapper(file.RemoveFile))
+	http.HandleFunc("/file/search/text", handlerWrapper(file.SearchText))
 
 	// 编辑器
 	http.HandleFunc("/editor/ws", handlerWrapper(editor.WSHandler))
