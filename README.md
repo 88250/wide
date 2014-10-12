@@ -4,7 +4,7 @@
 
 A <b>W</b>eb <b>IDE</b> for Teams using Golang.
 
-<img src="https://cloud.githubusercontent.com/assets/873584/4606328/4e848b96-5219-11e4-8db1-fa12774b57b4.png" width="96px" />
+<img src="https://cloud.githubusercontent.com/assets/873584/4606328/4e848b96-5219-11e4-8db1-fa12774b57b4.png" width="256px" />
 
 ## Motivation
 
