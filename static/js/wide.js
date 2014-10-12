@@ -213,8 +213,8 @@ var wide = {
         $("#dialogSearchForm").dialog({
             "height": 52,
             "width": 260,
-            "title": config.label.create_dir,
-            "okText": config.label.create,
+            "title": config.label.search,
+            "okText": config.label.search,
             "cancelText": config.label.cancel,
             "afterOpen": function () {
                 $("#dialogSearchForm > input:eq(0)").val('').focus();
@@ -234,16 +234,9 @@ var wide = {
                         if (!data.succ) {
                             return;
                         }
-
-                        var searcHTML = '<ul>';
-
-                        for (var i = 0, ii = data.founds.length; i < ii; i++) {
-                            searcHTML += '<li>' + data.founds[i].path
-                                    + '</li>';
-                        }
-                        searcHTML += '</ul>';
-
-                        editors.appendSearch(searcHTML);
+                        
+                        $("#dialogSearchForm").dialog("close");
+                        editors.appendSearch(data.founds, 'founds', request.text);
                     }
                 });
             }

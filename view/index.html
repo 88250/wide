@@ -15,6 +15,8 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/wide.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
+
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
     <body>
         <!-- 主菜单 -->
@@ -155,12 +157,12 @@
                     <div class="fn-none" data-index="search">
                         <div tabindex="-1" class="search">
                             <div class="tabs fn-none">
-                                <div class="current" data-index="a">
-                                    <span title="a">a</span><span class="ico-close font-ico"></span>
+                                <div class="current" data-index="first">
+                                    <span class="first"></span><span class="ico-close font-ico"></span>
                                 </div>
                             </div>
                             <div class="tabs-panel">
-                                <div data-index="a"></div>
+                                <div data-index="first"></div>
                             </div>
                         </div>
                     </div>
@@ -216,7 +218,10 @@
                                     "tip": "{{.i18n.tip}}",
                                     "confirm": "{{.i18n.confirm}}",
                                     "build_n_run": "{{.i18n.build_n_run}}",
-                                    "stop": "{{.i18n.stop}}"
+                                    "stop": "{{.i18n.stop}}",
+                                    "usages": "{{.i18n.usages}}",
+                                    "search_text": "{{.i18n.search_text}}",
+                                    "search": "{{.i18n.search}}"
                             },
                             "channel": {
                             "editor": '{{.conf.EditorChannel}}',

@@ -5,11 +5,14 @@
         <title>{{.i18n.wide}} - {{.i18n.login}}</title>
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/login.css?{{.conf.StaticResourceVersion}}">
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
     <body>
         <div class="header">
             <div class="wrapper fn-clear">
-                <h1 class="fn-left"><a href="/login">Wide</a></h1>
+                <a href="/login">
+                    <img src="{{.conf.StaticServer}}/static/images/wide-logo.png" 
+                         class="logo"/></a>
                 <ul class="fn-right">
                     <li><a href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
                     <li><a href="https://www.gitbook.io/book/88250/wide-user-guide" target="_blank">{{.i18n.help}}</a></li>

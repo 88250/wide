@@ -356,6 +356,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	ch := int(args["cursorCh"].(float64))
 
 	offset := getCursorOffset(code, line, ch)
+	// glog.Infof("offset [%d]", offset)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找使用，后续需要重新实现
 	ide_stub := conf.Wide.GetIDEStub()
@@ -391,11 +392,11 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 		cursorLine, _ := strconv.Atoi(found[cursorSep+1 : strings.LastIndex(found, ":")])
 		cursorCh, _ := strconv.Atoi(found[strings.LastIndex(found, ":")+1:])
 
-		usage := &file.Snippet{Path: path, Line: cursorLine, Ch: cursorCh /* TODO: 获取附近的代码片段 */}
+		usage := &file.Snippet{Path: path, Line: cursorLine, Ch: cursorCh, Contents: []string{""}}
 		usages = append(usages, usage)
 	}
 
-	data["usages"] = usages
+	data["founds"] = usages
 }
 
 // 计算光标偏移位置.

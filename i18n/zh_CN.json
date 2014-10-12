@@ -44,5 +44,7 @@
     "notification": "通知",
     "min": "最小化",
     "restore_side": "左侧窗口还原",
+    "usages": "查找使用",
+    "search_text": "查找文本",
     "restore_bottom": "底部窗口还原"
 }

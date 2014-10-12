@@ -259,38 +259,69 @@ var editors = {
                         return;
                     }
 
-                    var usagesHTML = '<ul>';
-
-                    for (var i = 0, ii = data.usages.length; i < ii; i++) {
-                        usagesHTML += '<li>' + data.usages[i].path
-                                + '</li>';
-                    }
-                    usagesHTML += '</ul>';
-
-                    editors.appendSearch(usagesHTML);
+                    editors.appendSearch(data.founds, 'usages', '');
                 }
             });
         };
     },
-    appendSearch: function (html) {
-        var $usages = $('.bottom-window-group .search');
-        if ($usages.find("ul").length === 0) {
-            wide.usagesTab = new Tabs({
+    appendSearch: function (data, type, key) {
+        var searcHTML = '<ul>';
+
+        for (var i = 0, ii = data.length; i < ii; i++) {
+            var contents = data[i].contents[0],
+                    index = contents.indexOf(key);
+            contents = contents.substring(0, index)
+                    + '<b>' + key + '</b>'
+                    + contents.substring(index + key.length);
+
+            searcHTML += '<li title="' + data[i].path + '">'
+                    + contents + "&nbsp;&nbsp;&nbsp;&nbsp;<span class='path'>" + data[i].path
+                    + '<i class="position" data-line="'
+                    + data[i].line + '" data-ch="' + data[i].ch + '"> (' + data[i].line + ':'
+                    + data[i].ch + ')</i></span></li>';
+        }
+        searcHTML += '</ul>';
+
+        var $search = $('.bottom-window-group .search'),
+                title = config.label.usages;
+        if (type === "founds") {
+            title = config.label.search_text;
+        }
+        if ($search.find("ul").length === 0) {
+            wide.searchTab = new Tabs({
                 id: ".bottom-window-group .search",
                 removeAfter: function (id, prevId) {
-                    if ($usages.find("ul").length === 1) {
-                        $usages.find(".tabs").hide();
+                    if ($search.find("ul").length === 1) {
+                        $search.find(".tabs").hide();
                     }
                 }
             });
 
-            $usages.find(".tabs-panel > div").append(html);
-        } else if ($usages.find("ul").length === 1) {
-            $usages.find(".tabs").show();
-            wide.usagesTab.add({
-                id: "b",
-                "title": 'Usages of ',
-                "content": html + 1
+            $search.on("click", "li", function () {
+                $search.find("li").removeClass("selected");
+                $(this).addClass("selected");
+            });
+
+            $search.on("dblclick", "li", function () {
+                var $it = $(this),
+                        tId = tree.getTIdByPath($it.attr("title"));
+                tree.openFile(tree.fileTree.getNodeByTId(tId));
+                tree.fileTree.selectNode(wide.curNode);
+
+                var cursor = CodeMirror.Pos($it.find(".position").data("line") - 1, $it.find(".position").data("ch") - 1);
+                wide.curEditor.setCursor(cursor);
+                wide.curEditor.focus();
+            });
+
+            $search.find(".tabs-panel > div").append(searcHTML);
+
+            $search.find(".tabs .first").text(title);
+        } else {
+            $search.find(".tabs").show();
+            wide.searchTab.add({
+                "id": "search" + (new Date()).getTime(),
+                "title": title,
+                "content": searcHTML
             });
         }
 

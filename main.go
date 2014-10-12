@@ -149,9 +149,11 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, model)
 }
 
-// favicon.ico 请求处理.
-func faviconHandler(w http.ResponseWriter, r *http.Request) {
-	// TODO: favicon.ico 请求处理
+// 单个文件资源请求处理.
+func serveSingle(pattern string, filename string) {
+	http.HandleFunc(pattern, func(w http.ResponseWriter, r *http.Request) {
+		http.ServeFile(w, r, filename)
+	})
 }
 
 // 主程序入口.
@@ -160,16 +162,16 @@ func main() {
 
 	defer glog.Flush()
 
-	// 静态资源
-	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.HandleFunc("/favicon.ico", handlerWrapper(faviconHandler))
-
-	// 库资源
-	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
-
 	// IDE
 	http.HandleFunc("/login", handlerWrapper(loginHandler))
 	http.HandleFunc("/", handlerWrapper(indexHandler))
+
+	// 静态资源
+	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	serveSingle("/favicon.ico", "./static/favicon.ico")
+
+	// 库资源
+	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
 
 	// 会话
 	http.HandleFunc("/session/ws", handlerWrapper(session.WSHandler))

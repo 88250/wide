@@ -3,8 +3,10 @@
     width: 980px;
 }
 
-.header h1 {
-    margin: 0;
+.header .logo {
+    float: left;
+    height: 32px;
+    margin-top: 3px;
 }
 
 .header {
