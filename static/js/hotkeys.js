@@ -35,19 +35,26 @@ var hotkeys = {
             shiftKey: false,
             which: 54
         },
-        // Ctrl+Q 关闭当前编辑器   
-        closeCurEditor: {
-            ctrlKey: true,
-            altKey: false,
-            shiftKey: false,
-            which: 81
-        },
         // Ctrl+D 窗口组切换   
         changeEditor: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 68
+        },
+        // Ctrl+F 搜索  
+        search: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 70
+        },
+        // Ctrl+Q 关闭当前编辑器   
+        closeCurEditor: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 81
         },
         // F6 构建并运行
         buildRun: {
@@ -60,6 +67,13 @@ var hotkeys = {
     _bindFileTree: function () {
         $("#files").keydown(function (event) {
             event.preventDefault();
+
+            var hotKeys = hotkeys.defaultKeyMap;
+            if (event.ctrlKey === hotKeys.search.ctrlKey
+                    && event.which === hotKeys.search.which) {  // Ctrl+F 搜索
+                $("#dialogSearchForm").dialog("open");
+                return;
+            }
 
             switch (event.which) {
                 case 46: // 删除

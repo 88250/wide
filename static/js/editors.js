@@ -259,8 +259,7 @@ var editors = {
                         return;
                     }
 
-                    var $usages = $('.bottom-window-group .search'),
-                            usagesHTML = '<ul>';
+                    var usagesHTML = '<ul>';
 
                     for (var i = 0, ii = data.usages.length; i < ii; i++) {
                         usagesHTML += '<li>' + data.usages[i].path
@@ -268,33 +267,37 @@ var editors = {
                     }
                     usagesHTML += '</ul>';
 
-                    if ($usages.find("ul").length === 0) {
-                        wide.usagesTab = new Tabs({
-                            id: ".bottom-window-group .search",
-                            removeAfter: function (id, prevId) {
-                                if ($usages.find("ul").length === 1) {
-                                    $usages.find(".tabs").hide();
-                                }
-                            }
-                        });
-
-                        $usages.find(".tabs-panel > div").append(usagesHTML);
-                    } else if ($usages.find("ul").length === 1) {
-                        $usages.find(".tabs").show();
-                        wide.usagesTab.add({
-                            id: "b",
-                            "title": 'Usages of ',
-                            "content": usagesHTML + 1
-                        });
-                    }
-
-                    // focus
-                    wide.bottomWindowTab.setCurrent("search");
-                    windows.flowBottom();
-                    $(".bottom-window-group .search").focus();
+                    editors.appendSearch(usagesHTML);
                 }
             });
         };
+    },
+    appendSearch: function (html) {
+        var $usages = $('.bottom-window-group .search');
+        if ($usages.find("ul").length === 0) {
+            wide.usagesTab = new Tabs({
+                id: ".bottom-window-group .search",
+                removeAfter: function (id, prevId) {
+                    if ($usages.find("ul").length === 1) {
+                        $usages.find(".tabs").hide();
+                    }
+                }
+            });
+
+            $usages.find(".tabs-panel > div").append(html);
+        } else if ($usages.find("ul").length === 1) {
+            $usages.find(".tabs").show();
+            wide.usagesTab.add({
+                id: "b",
+                "title": 'Usages of ',
+                "content": html + 1
+            });
+        }
+
+        // focus
+        wide.bottomWindowTab.setCurrent("search");
+        windows.flowBottom();
+        $(".bottom-window-group .search").focus();
     },
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
     newEditor: function (data) {
