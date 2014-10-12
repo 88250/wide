@@ -3,6 +3,7 @@ var wide = {
     curEditor: undefined,
     curProcessId: undefined, // 当前正在运行的进程 id（pid）
     bottomWindowTab: undefined,
+    searchTab: undefined,
     _initDialog: function () {
         $("#dialogAlert").dialog({
             "height": 26,
@@ -216,7 +217,7 @@ var wide = {
         $(".side .tabs-panel").height(mainH - 20);
 
         $(".bottom-window-group .output").height(bottomH - 27);
-        $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
+        $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
     },
     _initBottomWindowGroup: function () {
         this.bottomWindowTab = new Tabs({

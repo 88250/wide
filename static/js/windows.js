@@ -78,7 +78,7 @@ var windows = {
 
             var bottomH = $(".content").height();
             $(".bottom-window-group .output").height(bottomH - 27);
-            $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
+            $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
 
             $it.addClass("bottom-window-group-max");
         }
@@ -97,7 +97,7 @@ var windows = {
         var bottomH = $it.height();
 
         $(".bottom-window-group .output").height(bottomH - 27);
-        $(".bottom-window-group .notification, .bottom-window-group .search").height(bottomH - 20);
+        $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
 
         $it.animate({
             "top": "70%"

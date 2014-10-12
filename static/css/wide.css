@@ -266,11 +266,11 @@
     overflow: auto;
 }
 
-.bottom-window-group .notification > table {
+.bottom-window-group table {
     width: 100%;
 }
 
-.bottom-window-group .notification td {
+.bottom-window-group td {
     border-bottom: 1px solid #DDD;
     line-height: 20px;
 }

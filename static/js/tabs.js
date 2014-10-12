@@ -1,6 +1,6 @@
 var Tabs = function(obj) {
-    obj._$tabsPanel = $(obj.id + " .tabs-panel");
-    obj._$tabs = $(obj.id + " .tabs");
+    obj._$tabsPanel = $(obj.id + " > .tabs-panel");
+    obj._$tabs = $(obj.id + " > .tabs");
 
     this.obj = obj;
 

@@ -255,13 +255,43 @@ var editors = {
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
-                    console.log(data);
-                    // TODO: V
                     if (!data.succ) {
                         return;
                     }
 
+                    var $usages = $('.bottom-window-group .search'),
+                            usagesHTML = '<ul>';
 
+                    for (var i = 0, ii = data.usages.length; i < ii; i++) {
+                        usagesHTML += '<li>' + data.usages[i].path
+                                + '</li>';
+                    }
+                    usagesHTML += '</ul>';
+
+                    if ($usages.find("ul").length === 0) {
+                        wide.usagesTab = new Tabs({
+                            id: ".bottom-window-group .search",
+                            removeAfter: function (id, prevId) {
+                                if ($usages.find("ul").length === 1) {
+                                    $usages.find(".tabs").hide();
+                                }
+                            }
+                        });
+
+                        $usages.find(".tabs-panel > div").append(usagesHTML);
+                    } else if ($usages.find("ul").length === 1) {
+                        $usages.find(".tabs").show();
+                        wide.usagesTab.add({
+                            id: "b",
+                            "title": 'Usages of ',
+                            "content": usagesHTML + 1
+                        });
+                    }
+
+                    // focus
+                    wide.bottomWindowTab.setCurrent("search");
+                    windows.flowBottom();
+                    $(".bottom-window-group .search").focus();
                 }
             });
         };
