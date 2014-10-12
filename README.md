@@ -4,7 +4,7 @@
 
 A <b>W</b>eb <b>IDE</b> for Teams using Golang.
 
-<img src="https://cloud.githubusercontent.com/assets/873584/4606328/4e848b96-5219-11e4-8db1-fa12774b57b4.png" width="256px" />
+<img src="https://cloud.githubusercontent.com/assets/873584/4606377/d0ca3c2a-521b-11e4-912c-d955ab05850b.png" width="100%" />
 
 ## Motivation
 
@@ -116,3 +116,8 @@ Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/maste
 * [LiteIDE](https://github.com/visualfc/liteide)
 * [gocode](https://github.com/nsf/gocode)
 * [Gorilla](https://github.com/gorilla)
+
+----
+
+<img src="https://cloud.githubusercontent.com/assets/873584/4606328/4e848b96-5219-11e4-8db1-fa12774b57b4.png" width="256px" />
+
