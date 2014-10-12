@@ -15,15 +15,11 @@
             "Password": "admin",
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "LatestSessionContent": {
-                "FileTree": [
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest",
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time",
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time\\pkg"
+                "FileTree": [ 
                 ],
-                "Files": [
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time\\main.go"
+                "Files": [                    
                 ],
-                "CurrentFile": "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time\\main.go"
+                "CurrentFile": ""
             }
         }
     ]

@@ -201,7 +201,8 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	ch := int(args["cursorCh"].(float64))
 
 	offset := getCursorOffset(code, line, ch)
-	glog.Infof("offset [%d]", offset)
+
+	// glog.Infof("offset [%d]", offset)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
 	ide_stub := conf.Wide.GetIDEStub()

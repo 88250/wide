@@ -53,7 +53,7 @@ func init() {
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
 
-	if r.Method == "GET" {
+	if "GET" == r.Method {
 		// 展示登录页面
 
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r), "ver": Ver}
