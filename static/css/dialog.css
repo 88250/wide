@@ -65,11 +65,13 @@
 
 #dialogRemoveConfirm,
 .dialog-prompt,
+.dialog-form,
 #dialogAlert {
     padding: 10px 20px 0;
     overflow: hidden;
 }
 
-.dialog-prompt > input {
+.dialog-main input {
     width: 100%;
+    margin: 2px auto;
 }

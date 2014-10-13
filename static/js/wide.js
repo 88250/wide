@@ -5,6 +5,20 @@ var wide = {
     bottomWindowTab: undefined,
     searchTab: undefined,
     _initDialog: function () {
+        $(".dialog-prompt > input").keyup(function (event) {
+            var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+            if (event.which === 13 && !$okBtn.prop("disabled")) {
+                $okBtn.click();
+            }
+
+            if ($.trim($(this).val()) === "") {
+                $okBtn.prop("disabled", true);
+            } else {
+                $okBtn.prop("disabled", false);
+            }
+        });
+
+
         $("#dialogAlert").dialog({
             "height": 26,
             "width": 260,
@@ -64,14 +78,6 @@ var wide = {
             }
         });
 
-        $(".dialog-prompt > input").keydown(function (event) {
-            $(".dialog-prompt > .tip").text('');
-
-            if (event.which === 13) {
-                $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)").click();
-            }
-        });
-
         $("#dialogNewFilePrompt").dialog({
             "height": 52,
             "width": 260,
@@ -80,14 +86,11 @@ var wide = {
             "cancelText": config.label.cancel,
             "afterOpen": function () {
                 $("#dialogNewFilePrompt > input").val('').focus();
+                $("#dialogNewFilePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
             },
             "ok": function () {
                 var request = newWideRequest(),
                         name = $("#dialogNewFilePrompt > input").val();
-                if ($.trim(name) === "") {
-                    $("#dialogNewFilePrompt > .tip").text(config.label.input_no_empty);
-                    return false;
-                }
 
                 request.path = wide.curNode.path + '\\' + name;
                 request.fileType = "f";
@@ -156,14 +159,12 @@ var wide = {
             "cancelText": config.label.cancel,
             "afterOpen": function () {
                 $("#dialogNewDirPrompt > input").val('').focus();
+                $("#dialogNewDirPrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
             },
             "ok": function () {
                 var name = $("#dialogNewDirPrompt > input").val(),
                         request = newWideRequest();
-                if ($.trim(name) === "") {
-                    $("#dialogNewDirPrompt > .tip").text(config.label.input_no_empty);
-                    return false;
-                }
+
                 request.path = wide.curNode.path + '\\' + name;
                 request.fileType = "d";
 
@@ -197,27 +198,46 @@ var wide = {
             "cancelText": config.label.cancel,
             "afterOpen": function () {
                 $("#dialogGoLinePrompt > input").val('').focus();
+                $("#dialogGoLinePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
             },
             "ok": function () {
                 var line = parseInt($("#dialogGoLinePrompt > input").val());
-                if ($.trim($("#dialogGoLinePrompt > input").val()) === "") {
-                    $("#dialogGoLinePrompt > .tip").text(config.label.input_no_empty);
-                    return false;
-                }
                 $("#dialogGoLinePrompt").dialog("close");
                 wide.curEditor.setCursor(CodeMirror.Pos(line - 1, 0));
                 wide.curEditor.focus();
             }
         });
 
+        $("#dialogSearchForm > input:eq(0)").keyup(function (event) {
+            var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+            if (event.which === 13 && !$okBtn.prop("disabled")) {
+                $okBtn.click();
+            }
+
+            if ($.trim($(this).val()) === "") {
+                $okBtn.prop("disabled", true);
+            } else {
+                $okBtn.prop("disabled", false);
+            }
+        });
+
+        $("#dialogSearchForm > input:eq(1)").keyup(function (event) {
+            var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+            if (event.which === 13 && !$okBtn.prop("disabled")) {
+                $okBtn.click();
+            }
+        });
+
         $("#dialogSearchForm").dialog({
-            "height": 52,
+            "height": 62,
             "width": 260,
             "title": config.label.search,
             "okText": config.label.search,
             "cancelText": config.label.cancel,
             "afterOpen": function () {
                 $("#dialogSearchForm > input:eq(0)").val('').focus();
+                $("#dialogSearchForm > input:eq(1)").val('');
+                $("#dialogSearchForm").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
             },
             "ok": function () {
                 var request = newWideRequest();
@@ -234,7 +254,7 @@ var wide = {
                         if (!data.succ) {
                             return;
                         }
-                        
+
                         $("#dialogSearchForm").dialog("close");
                         editors.appendSearch(data.founds, 'founds', request.text);
                     }

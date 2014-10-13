@@ -189,17 +189,17 @@
         </div>
         <div id="dialogAlert" class="fn-none"></div>
         <div id="dialogNewFilePrompt" class="dialog-prompt fn-none">
-            <input/><span class="tip"></span>
+            <input/>
         </div>
         <div id="dialogNewDirPrompt" class="dialog-prompt fn-none">
-            <input/><span class="tip"></span>
+            <input/>
         </div>
         <div id="dialogGoLinePrompt" class="dialog-prompt fn-none">
-            <input/><span class="tip"></span>
+            <input/>
         </div>
-        <div id="dialogSearchForm" class="dialog-prompt fn-none">
-            <input/>
-            <input/>
+        <div id="dialogSearchForm" class="dialog-form fn-none">
+            <input placeholder="{{.i18n.keyword}}" />
+            <input placeholder="{{.i18n.file_format}}" />
         </div>
         <script>
                     var config = {
@@ -209,7 +209,6 @@
                                     "max_editor": "{{.i18n.max_editor}}",
                                     "delete": "{{.i18n.delete}}",
                                     "cancel": "{{.i18n.cancel}}",
-                                    "input_no_empty": "{{.i18n.input_no_empty}}",
                                     "goto_line": "{{.i18n.goto_line}}",
                                     "goto": "{{.i18n.goto}}",
                                     "create": "{{.i18n.create}}",
