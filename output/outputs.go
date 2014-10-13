@@ -73,7 +73,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["executable"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
 
 	cmd := exec.Command(filePath)
 	cmd.Dir = curDir
@@ -183,7 +183,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
 
 	fout, err := os.Create(filePath)
 
@@ -219,7 +219,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(5).Infof("go build -o %s %s", executable, filePath)
 
-	executable = curDir + string(os.PathSeparator) + executable
+	executable = curDir + conf.PathSeparator + executable
 
 	// 先把可执行文件删了
 	err = os.RemoveAll(executable)
@@ -370,7 +370,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
 
 	fout, err := os.Create(filePath)
 
@@ -519,7 +519,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
+	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
 
 	cmd := exec.Command("go", "get")
 	cmd.Dir = curDir

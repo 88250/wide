@@ -126,7 +126,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
 	//glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
-	userLib := userWorkspace + string(os.PathSeparator) + "pkg" + string(os.PathSeparator) +
+	userLib := userWorkspace + conf.PathSeparator + "pkg" + conf.PathSeparator +
 		runtime.GOOS + "_" + runtime.GOARCH
 
 	libPath := userLib
@@ -175,8 +175,8 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string)
-	curDir := path[:strings.LastIndex(path, string(os.PathSeparator))]
-	filename := path[strings.LastIndex(path, string(os.PathSeparator))+1:]
+	curDir := path[:strings.LastIndex(path, conf.PathSeparator)]
+	filename := path[strings.LastIndex(path, conf.PathSeparator)+1:]
 
 	fout, err := os.Create(path)
 
@@ -249,8 +249,8 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string)
-	curDir := path[:strings.LastIndex(path, string(os.PathSeparator))]
-	filename := path[strings.LastIndex(path, string(os.PathSeparator))+1:]
+	curDir := path[:strings.LastIndex(path, conf.PathSeparator)]
+	filename := path[strings.LastIndex(path, conf.PathSeparator)+1:]
 
 	fout, err := os.Create(path)
 
@@ -332,8 +332,8 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["path"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, string(os.PathSeparator))]
-	filename := filePath[strings.LastIndex(filePath, string(os.PathSeparator))+1:]
+	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	filename := filePath[strings.LastIndex(filePath, conf.PathSeparator)+1:]
 
 	fout, err := os.Create(filePath)
 

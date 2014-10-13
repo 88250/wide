@@ -17,6 +17,9 @@ import (
 	"github.com/golang/glog"
 )
 
+// 系统文件路径分隔符.
+const PathSeparator = string(os.PathSeparator)
+
 // 最后一次会话内容结构.
 type LatestSessionContent struct {
 	FileTree    []string // 文件树展开的路径集
@@ -150,25 +153,25 @@ func getGOBIN() string {
 	// $GOBIN/
 	ret := os.Getenv("GOBIN")
 	if "" != ret {
-		return ret + string(os.PathSeparator)
+		return ret + PathSeparator
 	}
 
 	// $GOPATH/bin/$GOOS_$GOARCH/
-	ret = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+	ret = os.Getenv("GOPATH") + PathSeparator + "bin" + PathSeparator +
 		os.Getenv("GOOS") + "_" + os.Getenv("GOARCH")
 	if isExist(ret) {
-		return ret + string(os.PathSeparator)
+		return ret + PathSeparator
 	}
 
 	// $GOPATH/bin/{runtime.GOOS}_{runtime.GOARCH}/
-	ret = os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator) +
+	ret = os.Getenv("GOPATH") + PathSeparator + "bin" + PathSeparator +
 		runtime.GOOS + "_" + runtime.GOARCH
 	if isExist(ret) {
-		return ret + string(os.PathSeparator)
+		return ret + PathSeparator
 	}
 
 	// $GOPATH/bin/
-	return os.Getenv("GOPATH") + string(os.PathSeparator) + "bin" + string(os.PathSeparator)
+	return os.Getenv("GOPATH") + PathSeparator + "bin" + PathSeparator
 }
 
 // 保存 Wide 配置.
@@ -227,7 +230,7 @@ func Load() {
 	// 获取当前执行路径
 	file, _ := exec.LookPath(os.Args[0])
 	pwd, _ := filepath.Abs(file)
-	pwd = pwd[:strings.LastIndex(pwd, string(os.PathSeparator))]
+	pwd = pwd[:strings.LastIndex(pwd, PathSeparator)]
 	Wide.Pwd = pwd
 	glog.V(3).Infof("pwd [%s]", pwd)
 

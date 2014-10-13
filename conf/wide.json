@@ -16,9 +16,14 @@
             "Password": "admin",
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "LatestSessionContent": {
-                "FileTree": [],
-                "Files": [],
-                "CurrentFile": ""
+                "FileTree": [
+                    "/home/daniel/gogogo/src/github.com/b3log/wide/data/user_workspaces/admin/src/mytest",
+                    "/home/daniel/gogogo/src/github.com/b3log/wide/data/user_workspaces/admin/src/mytest/time"
+                ],
+                "Files": [
+                    "/home/daniel/gogogo/src/github.com/b3log/wide/data/user_workspaces/admin/src/mytest/time/main.go"
+                ],
+                "CurrentFile": "/home/daniel/gogogo/src/github.com/b3log/wide/data/user_workspaces/admin/src/mytest/time/main.go"
             }
         }
     ]

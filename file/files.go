@@ -45,12 +45,12 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
-	userSrc := conf.Wide.GetUserWorkspace(username) + string(os.PathSeparator) + "src"
+	userSrc := conf.Wide.GetUserWorkspace(username) + conf.PathSeparator + "src"
 
 	root := FileNode{Name: "projects", Path: userSrc, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
 
 	// 构造 Go API 节点
-	apiPath := runtime.GOROOT() + string(os.PathSeparator) + "src" + string(os.PathSeparator) + "pkg"
+	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
 	apiNode := FileNode{Name: "Go API", Path: apiPath, FileNodes: []*FileNode{}}
 
 	goapiBuildOKSignal := make(chan bool)
@@ -423,8 +423,8 @@ func removeFile(path string) bool {
 
 // 在 dir 指定的目录（包含子目录）中的 extension 指定后缀的文件中搜索包含 text 文本的文件，类似 grep/findstr 命令.
 func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
-	if !strings.HasSuffix(dir, string(os.PathSeparator)) {
-		dir += string(os.PathSeparator)
+	if !strings.HasSuffix(dir, conf.PathSeparator) {
+		dir += conf.PathSeparator
 	}
 
 	f, _ := os.Open(dir)

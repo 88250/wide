@@ -5,7 +5,6 @@ package session
 import (
 	"encoding/json"
 	"net/http"
-	"os"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/util"
@@ -52,7 +51,7 @@ func InitGitRepos(w http.ResponseWriter, r *http.Request) {
 	session, _ := HTTPSession.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
-	userRepos := conf.Wide.GetUserWorkspace(username) + string(os.PathSeparator) + "src"
+	userRepos := conf.Wide.GetUserWorkspace(username) + conf.PathSeparator + "src"
 
 	glog.Info(userRepos)
 
