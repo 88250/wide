@@ -5,6 +5,7 @@
     "OutputChannel": "ws://{IP}:7070",
     "ShellChannel": "ws://{IP}:7070",
     "SessionChannel": "ws://{IP}:7070",
+    "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "201409032040",
     "MaxProcs": 4,
     "RuntimeMode": "dev",
@@ -15,11 +16,7 @@
             "Password": "admin",
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "LatestSessionContent": {
-                "FileTree": [
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest",
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time",
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time\\pkg"
-                ],
+                "FileTree": [],
                 "Files": [],
                 "CurrentFile": ""
             }
