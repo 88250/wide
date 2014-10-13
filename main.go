@@ -135,7 +135,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	userConf := conf.Wide.GetUser(username)
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
-		"session": wideSession, "latestSessionContent": userConf.LatestSessionContent}
+		"session": wideSession, "latestSessionContent": userConf.LatestSessionContent,
+		"pathSeparator": conf.PathSeparator}
 
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 

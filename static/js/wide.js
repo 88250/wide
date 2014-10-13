@@ -92,7 +92,7 @@ var wide = {
                 var request = newWideRequest(),
                         name = $("#dialogNewFilePrompt > input").val();
 
-                request.path = wide.curNode.path + '\\' + name;
+                request.path = wide.curNode.path + config.pathSeparator + name;
                 request.fileType = "f";
 
                 $.ajax({
@@ -165,7 +165,7 @@ var wide = {
                 var name = $("#dialogNewDirPrompt > input").val(),
                         request = newWideRequest();
 
-                request.path = wide.curNode.path + '\\' + name;
+                request.path = wide.curNode.path + conf.pathSeparator + name;
                 request.fileType = "d";
 
                 $.ajax({
