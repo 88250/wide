@@ -24,6 +24,7 @@ var editors = {
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
                         editors.data.splice(i, 1);
+                        wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
                         break;
                     }
                 }
@@ -388,7 +389,7 @@ var editors = {
                     wide.saveAllFiles();
                 },
                 "Shift-Alt-F": function () {
-                    wide.fmt();
+                    wide.fmt(editors.getCurrentPath(), wide.curEditor);
                 },
                 "Alt-F7": "findUsages"
             }

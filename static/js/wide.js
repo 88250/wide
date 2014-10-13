@@ -398,20 +398,26 @@ var wide = {
     },
     saveFile: function () {
         // 格式化后会对文件进行保存
-        this.fmt();
+        this.fmt(editors.getCurrentPath(), wide.curEditor);
     },
     saveAllFiles: function () {
-        // TODO: save all open files
+        // TODO: 需要全部保存的接口
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
-
+            this.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
         }
-        console.log("TODO: save all files");
     },
     closeFile: function () {
         // TODO: close file
     },
     closeAllFiles: function () {
-        // TODO: close all files
+        this.saveAllFiles();
+        editors.data = [];
+        tree.fileTree.cancelSelectedNode();
+        wide.curNode = undefined;
+        wide.curEditor = undefined;
+        $(".toolbars").hide();
+        
+        $(".edit-panel .tabs, .edit-panel .tabs-panel").html('');
     },
     exit: function () {
         // TODO: exit
@@ -497,15 +503,14 @@ var wide = {
             }
         });
     },
-    fmt: function () {
-        var path = editors.getCurrentPath();
-        var mode = wide.curEditor.getOption("mode");
+    fmt: function (path, curEditor) {
+        var mode = curEditor.getOption("mode");
 
         var request = newWideRequest();
         request.file = path;
-        request.code = wide.curEditor.getValue();
-        request.cursorLine = wide.curEditor.getCursor().line;
-        request.cursorCh = wide.curEditor.getCursor().ch;
+        request.code = curEditor.getValue();
+        request.cursorLine = curEditor.getCursor().line;
+        request.cursorCh = curEditor.getCursor().ch;
 
         switch (mode) {
             case "text/x-go": // 会保存文件
@@ -516,7 +521,7 @@ var wide = {
                     dataType: "json",
                     success: function (data) {
                         if (data.succ) {
-                            wide.curEditor.setValue(data.code);
+                            curEditor.setValue(data.code);
                         }
                     }
                 });
@@ -530,7 +535,7 @@ var wide = {
                     dataType: "json",
                     success: function (data) {
                         if (data.succ) {
-                            wide.curEditor.setValue(data.code);
+                            curEditor.setValue(data.code);
                         }
                     }
                 });
@@ -539,14 +544,13 @@ var wide = {
             case "application/json":
                 try {
                     // 在客户端浏览器中进行 JSON 格式化
-                    var json = JSON.parse(wide.curEditor.getValue());
-                    wide.curEditor.setValue(JSON.stringify(json, "", "    "));
+                    var json = JSON.parse(curEditor.getValue());
+                    curEditor.setValue(JSON.stringify(json, "", "    "));
 
                     wide._save();
                 } catch (e) {
                     delete e;
                 }
-
                 break;
             default :
                 // TODO: XML 格式化处理

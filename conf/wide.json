@@ -5,7 +5,6 @@
     "OutputChannel": "ws://{IP}:7070",
     "ShellChannel": "ws://{IP}:7070",
     "SessionChannel": "ws://{IP}:7070",
-    "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "201409032040",
     "MaxProcs": 4,
     "RuntimeMode": "dev",
@@ -17,13 +16,12 @@
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "LatestSessionContent": {
                 "FileTree": [
-                    "/home/daniel/gogogo/src/github.com/b3log/wide/data/user_workspaces/admin/src/mytest",
-                    "/home/daniel/gogogo/src/github.com/b3log/wide/data/user_workspaces/admin/src/mytest/time"
+                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest",
+                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time",
+                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time\\pkg"
                 ],
-                "Files": [
-                    "/home/daniel/gogogo/src/github.com/b3log/wide/data/user_workspaces/admin/src/mytest/time/main.go"
-                ],
-                "CurrentFile": "/home/daniel/gogogo/src/github.com/b3log/wide/data/user_workspaces/admin/src/mytest/time/main.go"
+                "Files": [],
+                "CurrentFile": ""
             }
         }
     ]

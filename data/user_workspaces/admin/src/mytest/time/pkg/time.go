@@ -13,5 +13,5 @@ func Now1() time.Time {
 }
 
 func Now2() {
-    
+
 }
