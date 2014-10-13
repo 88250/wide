@@ -80,9 +80,18 @@
     cursor: pointer;
 }
 
+.frame li.disabled {
+    color: #999;
+}
+
 .frame li:hover {
     background-color: #3875D7;
     color: #FFF;
+}
+
+.frame li.disabled:hover {
+    background-color: #F8F8F8;
+    color: #999;
 }
 
 .frame a {

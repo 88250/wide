@@ -23,8 +23,8 @@ var editors = {
             removeAfter: function (id, nextId) {
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
-                        editors.data.splice(i, 1);
                         wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
+                        editors.data.splice(i, 1);
                         break;
                     }
                 }
@@ -36,6 +36,8 @@ var editors = {
                     wide.curNode = undefined;
 
                     wide.curEditor = undefined;
+                    
+                    menu.disabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
                     $(".toolbars").hide();
                     return false;
                 }
@@ -359,6 +361,8 @@ var editors = {
                     + wide.curNode.iconSkin + 'ico"></span>' + wide.curNode.name + '</span>',
             content: '<textarea id="editor' + id + '"></textarea>'
         });
+        
+        menu.undisabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
 
         var rulers = [];
         rulers.push({color: "#ccc", column: 120, lineStyle: "dashed"});

@@ -26,10 +26,10 @@
                     <span>{{.i18n.file}}</span>
                     <div class="frame">
                         <ul>     
-                            <li onclick="wide.saveAllFiles()">
+                            <li class="save-all disabled" onclick="wide.saveAllFiles()">
                                 <span>{{.i18n.save_all_files}}</span>
                             </li>
-                            <li onclick="wide.closeAllFiles()">
+                            <li class="close-all disabled" onclick="wide.closeAllFiles()">
                                 <span>{{.i18n.close_all_files}}</span>
                             </li>
                             <li class="hr"></li>
@@ -43,14 +43,14 @@
                     <span>{{.i18n.run}}</span>
                     <div class="frame">
                         <ul>
-                            <li onclick="wide.run()">
+                            <li class="run disabled" onclick="wide.run()">
                                 <span>{{.i18n.build_n_run}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li onclick="wide.goget()">
+                            <li class="go-get disabled" onclick="wide.goget()">
                                 <span>{{.i18n.goget}}</span>
                             </li>
-                            <li onclick="wide.goinstall()">
+                            <li class="go-install disabled" onclick="wide.goinstall()">
                                 <span>{{.i18n.goinstall}}</span>
                             </li>      
                         </ul>

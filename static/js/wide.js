@@ -402,6 +402,10 @@ var wide = {
     },
     saveAllFiles: function () {
         // TODO: 需要全部保存的接口
+        if ($(".menu li.save-all").hasClass("disabled")) {
+            return false;
+        }
+
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             this.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
         }
@@ -410,14 +414,18 @@ var wide = {
         // TODO: close file
     },
     closeAllFiles: function () {
+        if ($(".menu li.close-all").hasClass("disabled")) {
+            return false;
+        }
         this.saveAllFiles();
         editors.data = [];
         tree.fileTree.cancelSelectedNode();
         wide.curNode = undefined;
         wide.curEditor = undefined;
         $(".toolbars").hide();
-        
+
         $(".edit-panel .tabs, .edit-panel .tabs-panel").html('');
+        menu.disabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
     },
     exit: function () {
         // TODO: exit
@@ -447,6 +455,10 @@ var wide = {
     },
     // 构建 & 运行.
     run: function () {
+        if ($(".menu li.run").hasClass("disabled")) {
+            return false;
+        }
+
         if ($(".toolbars .ico-stop").length === 1) {
             wide.stop();
             return false;
@@ -471,6 +483,10 @@ var wide = {
         });
     },
     goget: function () {
+        if ($(".menu li.go-get").hasClass("disabled")) {
+            return false;
+        }
+
         var request = newWideRequest();
         request.file = editors.getCurrentPath();
 
@@ -487,6 +503,10 @@ var wide = {
         });
     },
     goinstall: function () {
+        if ($(".menu li.go-install").hasClass("disabled")) {
+            return false;
+        }
+
         var request = newWideRequest();
         request.file = editors.getCurrentPath();
         request.code = wide.curEditor.getValue();
