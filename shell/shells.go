@@ -35,6 +35,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	httpSession.Save(r, w)
 
 	// 创建一个 Wide 会话

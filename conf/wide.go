@@ -34,17 +34,18 @@ type User struct {
 
 // 配置结构.
 type conf struct {
-	Server                string
-	StaticServer          string
-	EditorChannel         string
-	OutputChannel         string
-	ShellChannel          string
-	SessionChannel        string
-	StaticResourceVersion string
-	MaxProcs              int
-	RuntimeMode           string
-	Pwd                   string
-	Users                 []*User
+	Server                string  // 服务地址（{IP}:7070）
+	StaticServer          string  // 静态资源服务地址（http://{IP}:7070）
+	EditorChannel         string  // 编辑器通道地址（ws://{IP}:7070）
+	OutputChannel         string  // 输出窗口通道地址（ws://{IP}:7070）
+	ShellChannel          string  // Shell 通道地址（ws://{IP}:7070）
+	SessionChannel        string  // Wide 会话通道地址（ws://{IP}:7070）
+	HTTPSessionMaxAge     int     // HTTP 会话失效时间（秒）
+	StaticResourceVersion string  // 静态资源版本
+	MaxProcs              int     // 并发执行数
+	RuntimeMode           string  // 运行模式
+	Pwd                   string  // 工作目录
+	Users                 []*User // 用户集
 }
 
 // 配置.

@@ -23,8 +23,9 @@ import (
 	"github.com/golang/glog"
 )
 
-// 当前 Wide 版本.
-const Ver = "1.0.0-dev"
+const (
+	Ver = "1.0.0-dev" // 当前 Wide 版本
+)
 
 // Wide 中唯一一个 init 函数.
 func init() {
@@ -104,7 +105,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	httpSession.Values["username"] = args.Username
 	httpSession.Values["id"] = strconv.Itoa(rand.Int())
-	httpSession.Options.MaxAge = 60 * 60 * 24 // 一天过期
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	httpSession.Save(r, w)
 
 	glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
@@ -122,6 +123,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	httpSession.Save(r, w)
 
 	// 创建一个 Wide 会话
