@@ -312,8 +312,7 @@ var wide = {
             }
 
             if ('run' === data.cmd) { // 正在运行
-                $('.bottom-window-group .output').text($('.bottom-window-group .output').text() + data.output);
-
+                wide.fillOutput($('.bottom-window-group .output').text() + data.output);
                 wide.curProcessId = data.pid;
             } else if ('run-done' === data.cmd) { // 运行结束                
                 wide.curProcessId = undefined;
@@ -321,7 +320,7 @@ var wide = {
                 $(".toolbars .ico-stop").removeClass("ico-stop")
                         .addClass("ico-buildrun").attr("title", config.label.build_n_run);
             } else if ('build' === data.cmd || 'go install' === data.cmd) {
-                $('.bottom-window-group .output').text(data.output);
+                 wide.fillOutput(data.output);
 
                 if (0 !== data.output.length) { // 说明编译有错误输出            
                     for (var i = 0; i < data.lints.length; i++) {
@@ -339,7 +338,7 @@ var wide = {
                 // 触发一次 gutter lint
                 CodeMirror.signal(wide.curEditor, "change", wide.curEditor);
             } else if ('go get' === data.cmd || 'go install' === data.cmd) {
-                $('.bottom-window-group .output').text($('.bottom-window-group .output').text() + data.output);
+                wide.fillOutput($('.bottom-window-group .output').text() + data.output);
             }
         };
         outputWS.onclose = function (e) {
@@ -452,6 +451,11 @@ var wide = {
                         .addClass("ico-buildrun").attr("title", config.label.build_n_run);
             }
         });
+    },
+    fillOutput: function (data) {
+        var $output = $('.bottom-window-group .output');
+        $output.text(data);
+        $output.scrollTop($output[0].scrollHeight);
     },
     // 构建 & 运行.
     run: function () {
