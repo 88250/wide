@@ -111,6 +111,17 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
 }
 
+// 退出（登出）.
+func logoutHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+
+	httpSession.Options.MaxAge = 0
+	httpSession.Save(r, w)
+}
+
 // Wide 首页.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
@@ -167,6 +178,7 @@ func main() {
 
 	// IDE
 	http.HandleFunc("/login", handlerWrapper(loginHandler))
+	http.HandleFunc("/logout", handlerWrapper(logoutHandler))
 	http.HandleFunc("/", handlerWrapper(indexHandler))
 
 	// 静态资源

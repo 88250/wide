@@ -400,7 +400,6 @@ var wide = {
         this.fmt(editors.getCurrentPath(), wide.curEditor);
     },
     saveAllFiles: function () {
-        // TODO: 需要全部保存的接口
         if ($(".menu li.save-all").hasClass("disabled")) {
             return false;
         }
@@ -408,9 +407,6 @@ var wide = {
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             this.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
         }
-    },
-    closeFile: function () {
-        // TODO: close file
     },
     closeAllFiles: function () {
         if ($(".menu li.close-all").hasClass("disabled")) {
@@ -427,7 +423,19 @@ var wide = {
         menu.disabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
     },
     exit: function () {
-        // TODO: exit
+        var request = newWideRequest();
+
+        $.ajax({
+            type: 'POST',
+            url: '/logout',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                if (data.succ) {
+                    window.location.href = "/login";
+                }
+            }
+        });
     },
     stop: function () {
         if ($(".toolbars .ico-buildrun").length === 1) {

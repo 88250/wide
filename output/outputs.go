@@ -179,7 +179,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// TODO: 会话校验
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
