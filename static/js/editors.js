@@ -110,7 +110,6 @@ var editors = {
                         for (var i = 0; i < autocompleteArray.length; i++) {
                             var displayText = '';
 
-                            // TODO: 图标
                             switch (autocompleteArray[i].class) {
                                 case "type":
                                 case "const":
