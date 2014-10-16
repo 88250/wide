@@ -111,8 +111,25 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	go func(runningId int) {
 		defer util.Recover()
+		defer cmd.Wait()
 
 		glog.V(3).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
+
+		// 在读取程序输出前先返回一次，使前端获取到 run 状态以及对应的 pid
+		if nil != session.OutputWS[sid] {
+			wsChannel := session.OutputWS[sid]
+
+			channelRet["cmd"] = "run"
+			channelRet["output"] = ""
+			err := wsChannel.Conn.WriteJSON(&channelRet)
+			if nil != err {
+				glog.Error(err)
+				return
+			}
+
+			// 更新通道最近使用时间
+			wsChannel.Time = time.Now()
+		}
 
 		for {
 			buf := make([]byte, 1024)
