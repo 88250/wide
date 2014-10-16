@@ -209,14 +209,14 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		suffix = ".exe"
 	}
 	executable := "main" + suffix
-	argv := []string{"build", "-o", executable, filePath}
+	argv := []string{"build", "-o", executable}
 
 	cmd := exec.Command("go", argv...)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)
 
-	glog.V(5).Infof("go build -o %s %s", executable, filePath)
+	glog.V(5).Infof("go build -o %s", executable)
 
 	executable = curDir + conf.PathSeparator + executable
 
@@ -259,7 +259,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			defer util.Recover()
 			defer cmd.Wait()
 
-			glog.V(3).Infof("Session [%s] is building [id=%d, file=%s]", sid, runningId, filePath)
+			glog.V(3).Infof("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
 
 			// 一次性读取
 			buf := make([]byte, 1024*8)
@@ -331,7 +331,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if nil != session.OutputWS[sid] {
-				glog.V(3).Infof("Session [%s] 's build [id=%d, file=%s] has done", sid, runningId, filePath)
+				glog.V(3).Infof("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
 
 				wsChannel := session.OutputWS[sid]
 				err := wsChannel.Conn.WriteJSON(&channelRet)
