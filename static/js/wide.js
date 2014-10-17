@@ -320,7 +320,7 @@ var wide = {
                 $(".toolbars .ico-stop").removeClass("ico-stop")
                         .addClass("ico-buildrun").attr("title", config.label.build_n_run);
             } else if ('build' === data.cmd || 'go install' === data.cmd) {
-                 wide.fillOutput(data.output);
+                wide.fillOutput(data.output);
 
                 if (0 !== data.output.length) { // 说明编译有错误输出            
                     for (var i = 0; i < data.lints.length; i++) {
@@ -382,8 +382,13 @@ var wide = {
         this._initLayout();
     },
     _save: function () {
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+
         var request = newWideRequest();
-        request.file = editors.getCurrentPath();
+        request.file = currentPath;
         request.code = wide.curEditor.getValue();
 
         $.ajax({
@@ -396,8 +401,12 @@ var wide = {
         });
     },
     saveFile: function () {
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
         // 格式化后会对文件进行保存
-        this.fmt(editors.getCurrentPath(), wide.curEditor);
+        this.fmt(currentPath, wide.curEditor);
     },
     saveAllFiles: function () {
         if ($(".menu li.save-all").hasClass("disabled")) {
@@ -467,6 +476,11 @@ var wide = {
     },
     // 构建 & 运行.
     run: function () {
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+
         if ($(".menu li.run").hasClass("disabled")) {
             return false;
         }
@@ -477,7 +491,7 @@ var wide = {
         }
 
         var request = newWideRequest();
-        request.file = editors.getCurrentPath();
+        request.file = currentPath;
         request.code = wide.curEditor.getValue();
 
         $.ajax({
@@ -495,12 +509,17 @@ var wide = {
         });
     },
     goget: function () {
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+
         if ($(".menu li.go-get").hasClass("disabled")) {
             return false;
         }
 
         var request = newWideRequest();
-        request.file = editors.getCurrentPath();
+        request.file = currentPath;
 
         $.ajax({
             type: 'POST',
@@ -515,12 +534,17 @@ var wide = {
         });
     },
     goinstall: function () {
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+
         if ($(".menu li.go-install").hasClass("disabled")) {
             return false;
         }
 
         var request = newWideRequest();
-        request.file = editors.getCurrentPath();
+        request.file = currentPath;
         request.code = wide.curEditor.getValue();
 
         $.ajax({

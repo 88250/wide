@@ -7,15 +7,14 @@ var session = {
             var request = newWideRequest(),
                     filse = [],
                     fileTree = [],
-                    currentFile = "";
+                    currentId = editors.getCurrentId(),
+                    currentFile = currentId ? editors.getCurrentPath() : "";
 
             editors.tabs.obj._$tabs.find("div").each(function () {
                 var $it = $(this);
-                if ($it.hasClass("current")) {
-                    currentFile = $it.find("span:eq(0)").attr("title");
+                if ($it.find("span:eq(0)").attr("title") !== config.label.initialise) {
+                    filse.push($it.find("span:eq(0)").attr("title"));
                 }
-
-                filse.push($it.find("span:eq(0)").attr("title"));
             });
 
             fileTree = tree.getOpenPaths();

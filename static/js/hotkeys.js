@@ -256,8 +256,9 @@ var hotkeys = {
 
             if (event.ctrlKey === hotKeys.closeCurEditor.ctrlKey
                     && event.which === hotKeys.closeCurEditor.which) {  // Ctrl+Q 关闭当前编辑器   
-                if (editors.tabs.getCurrentId()) {
-                    editors.tabs.del(editors.tabs.getCurrentId());
+                var currentId = editors.getCurrentId();
+                if (currentId) {
+                    editors.tabs.del(currentId);
                 }
                 event.preventDefault();
 
@@ -293,15 +294,18 @@ var hotkeys = {
                 if (editors.data.length > 1) {
                     var nextId = "";
                     for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                        if (editors.tabs.getCurrentId() === editors.data[i].id) {
-                            if (i < ii - 1) {
-                                nextId = editors.data[i + 1].id;
-                                wide.curEditor = editors.data[i + 1].editor;
-                            } else {
-                                nextId = editors.data[0].id;
-                                wide.curEditor = editors.data[0].editor;
+                        var currentId = editors.getCurrentId();
+                        if (currentId) {
+                            if (currentId === editors.data[i].id) {
+                                if (i < ii - 1) {
+                                    nextId = editors.data[i + 1].id;
+                                    wide.curEditor = editors.data[i + 1].editor;
+                                } else {
+                                    nextId = editors.data[0].id;
+                                    wide.curEditor = editors.data[0].editor;
+                                }
+                                break;
                             }
-                            break;
                         }
                     }
 

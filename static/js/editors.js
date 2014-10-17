@@ -2,10 +2,13 @@ var editors = {
     data: [],
     tabs: {},
     init: function () {
-        editors._initAutocomplete();
         editors.tabs = new Tabs({
             id: ".edit-panel",
             clickAfter: function (id) {
+                if (id === 'startPage') {
+                    return false;
+                }
+
                 // set tree node selected
                 var node = tree.fileTree.getNodeByTId(id);
                 tree.fileTree.selectNode(node);
@@ -21,6 +24,10 @@ var editors = {
                 wide.curEditor.focus();
             },
             removeAfter: function (id, nextId) {
+                if (id === 'startPage') {
+                    return false;
+                }
+
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
                         wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
@@ -36,7 +43,7 @@ var editors = {
                     wide.curNode = undefined;
 
                     wide.curEditor = undefined;
-                    
+
                     menu.disabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
                     $(".toolbars").hide();
                     return false;
@@ -60,7 +67,6 @@ var editors = {
             }
         });
 
-
         $(".edit-panel .tabs").on("dblclick", function () {
             if ($(".toolbars .ico-max").length === 1) {
                 windows.maxEditor();
@@ -68,14 +74,32 @@ var editors = {
                 windows.restoreEditor();
             }
         });
+
+        this._initCodeMirrorHotKeys();
+        this._initStartPage()
+    },
+    _initStartPage: function () {
+        editors.tabs.add({
+            id: "startPage",
+            title: '<span title="' + config.label.initialise + '">' + config.label.initialise + '</span>',
+            content: '<textarea id="editor"></textarea>'
+        });
     },
     getCurrentId: function () {
-        return $(".edit-panel .tabs .current").data("index");
+        var currentId = editors.tabs.getCurrentId();
+        if (currentId === 'startPage') {
+            currentId = null;
+        }
+        return currentId;
     },
     getCurrentPath: function () {
-        return $(".edit-panel .tabs .current span:eq(0)").attr("title");
+        var currentPath = $(".edit-panel .tabs .current span:eq(0)").attr("title");
+        if (currentPath === config.label.initialise) {
+            currentPath = null;
+        }
+        return currentPath;
     },
-    _initAutocomplete: function () {
+    _initCodeMirrorHotKeys: function () {
         CodeMirror.registerHelper("hint", "go", function (editor) {
             var word = /[\w$]+/;
 
@@ -360,7 +384,7 @@ var editors = {
                     + wide.curNode.iconSkin + 'ico"></span>' + wide.curNode.name + '</span>',
             content: '<textarea id="editor' + id + '"></textarea>'
         });
-        
+
         menu.undisabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
 
         var rulers = [];
@@ -392,7 +416,11 @@ var editors = {
                     wide.saveAllFiles();
                 },
                 "Shift-Alt-F": function () {
-                    wide.fmt(editors.getCurrentPath(), wide.curEditor);
+                    var currentPath = editors.getCurrentPath();
+                    if (!currentPath) {
+                        return false;
+                    }
+                    wide.fmt(currentPath, wide.curEditor);
                 },
                 "Alt-F7": "findUsages"
             }

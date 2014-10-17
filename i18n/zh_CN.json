@@ -46,5 +46,6 @@
     "search_text": "查找文本",
     "restore_bottom": "底部窗口还原",
     "file_format": "文件后缀",
-    "keyword": "关键字"
+    "keyword": "关键字",
+    "initialise": "初始化"
 }
