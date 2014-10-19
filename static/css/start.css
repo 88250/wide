@@ -1,0 +1,9 @@
+#startPage .details {
+    width: 40%;
+    float: left;
+}
+
+#startPage .news {
+    width: 60%;
+    float: left;
+}

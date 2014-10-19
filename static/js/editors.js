@@ -82,7 +82,43 @@ var editors = {
         editors.tabs.add({
             id: "startPage",
             title: '<span title="' + config.label.initialise + '">' + config.label.initialise + '</span>',
-            content: '<textarea id="editor"></textarea>'
+            content: '<div id="startPage"></div>'
+        });
+
+        $("#startPage").load('/start');
+        $.ajax({
+            url: "http://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=30",
+            type: "GET",
+            dataType: "jsonp",
+            jsonp: "callback",
+            error: function () {
+                $("#startPage").html("Loading B3log Announcement failed :-(");
+            },
+            success: function (data, textStatus) {
+                var articles = data.articles;
+                if (0 === articles.length) {
+                    return;
+                }
+                
+                // 按 size = 30 取，但只保留最多 10 篇
+                var length = articles.length;
+                if (length > 10) {
+                    length = 10;
+                }
+
+                var listHTML = "<ul>";
+                for (var i = 0; i < length; i++) {
+                    var article = articles[i];
+                    var articleLiHtml = "<li>"
+                            + "<a target='_blank' href='" + article.articlePermalink + "'>"
+                            + article.articleTitle + "</a>&nbsp; <span class='date'>" + article.articleCreateTime;
+                    +"</span></li>"
+                    listHTML += articleLiHtml;
+                }
+                listHTML += "</ul>";
+
+                $("#startPage .news").html(listHTML);
+            }
         });
     },
     getCurrentId: function () {
