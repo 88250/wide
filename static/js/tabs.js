@@ -1,4 +1,4 @@
-var Tabs = function(obj) {
+var Tabs = function (obj) {
     obj._$tabsPanel = $(obj.id + " > .tabs-panel");
     obj._$tabs = $(obj.id + " > .tabs");
 
@@ -8,10 +8,10 @@ var Tabs = function(obj) {
 };
 
 $.extend(Tabs.prototype, {
-    _init: function(obj) {
+    _init: function (obj) {
         var _that = this;
 
-        obj._$tabs.on("click", "div", function(event) {
+        obj._$tabs.on("click", "div", function (event) {
             var id = $(this).data("index");
             _that.setCurrent(id);
             if (typeof (obj.clickAfter) === "function") {
@@ -19,13 +19,31 @@ $.extend(Tabs.prototype, {
             }
         });
 
-        obj._$tabs.on("click", ".ico-close", function(event) {
+        obj._$tabs.on("click", ".ico-close", function (event) {
             var id = $(this).parent().data("index");
             _that.del(id);
             event.stopPropagation();
         });
     },
-    add: function(data) {
+    _hasId: function (id) {
+        var $tabs = this.obj._$tabs;
+        if ($tabs.find("div[data-index=" + id + "]").length === 0) {
+            return false;
+        }
+        return true;
+    },
+    add: function (data) {
+        // 添加当前 tab
+        if (this.getCurrentId() === data.id) {
+            return false;
+        }
+
+        // 当前 tab 已经存在
+        if (this._hasId(data.id)) {
+            this.setCurrent(data.id);
+            return false;
+        }
+
         var $tabsPanel = this.obj._$tabsPanel,
                 $tabs = this.obj._$tabs;
 
@@ -38,8 +56,12 @@ $.extend(Tabs.prototype, {
                 + data.title + '<span class="ico-close font-ico"></span></div>');
         $tabsPanel.append('<div data-index="' + data.id + '">' + data.content
                 + '</div>');
+        
+        if (typeof data.after === 'function') {
+            data.after();
+        }
     },
-    del: function(id) {
+    del: function (id) {
         var $tabsPanel = this.obj._$tabsPanel,
                 $tabs = this.obj._$tabs,
                 prevId = undefined,
@@ -60,11 +82,11 @@ $.extend(Tabs.prototype, {
         this.obj.removeAfter(id, prevId);
         this.setCurrent(prevId);
     },
-    getCurrentId: function() {
+    getCurrentId: function () {
         var $tabs = this.obj._$tabs;
         return $tabs.children(".current").data("index");
     },
-    setCurrent: function(id) {
+    setCurrent: function (id) {
         if (!id) {
             return false;
         }

@@ -17,11 +17,12 @@
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "LatestSessionContent": {
                 "FileTree": [
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest",
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\hello",
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time"
+                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest",
+                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\hello"
                 ],
-                "Files": [],
+                "Files": [
+                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\hello\\main.go"
+                ],
                 "CurrentFile": ""
             }
         }

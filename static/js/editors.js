@@ -76,48 +76,49 @@ var editors = {
         });
 
         this._initCodeMirrorHotKeys();
-        this._initStartPage()
+        this.openStartPage()
     },
-    _initStartPage: function () {
+    openStartPage: function () {
         editors.tabs.add({
             id: "startPage",
             title: '<span title="' + config.label.initialise + '">' + config.label.initialise + '</span>',
-            content: '<div id="startPage"></div>'
-        });
+            content: '<div id="startPage"></div>',
+            after: function () {
+                $("#startPage").load('/start');
+                $.ajax({
+                    url: "http://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=30",
+                    type: "GET",
+                    dataType: "jsonp",
+                    jsonp: "callback",
+                    error: function () {
+                        $("#startPage").html("Loading B3log Announcement failed :-(");
+                    },
+                    success: function (data, textStatus) {
+                        var articles = data.articles;
+                        if (0 === articles.length) {
+                            return;
+                        }
 
-        $("#startPage").load('/start');
-        $.ajax({
-            url: "http://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=30",
-            type: "GET",
-            dataType: "jsonp",
-            jsonp: "callback",
-            error: function () {
-                $("#startPage").html("Loading B3log Announcement failed :-(");
-            },
-            success: function (data, textStatus) {
-                var articles = data.articles;
-                if (0 === articles.length) {
-                    return;
-                }
-                
-                // 按 size = 30 取，但只保留最多 10 篇
-                var length = articles.length;
-                if (length > 10) {
-                    length = 10;
-                }
+                        // 按 size = 30 取，但只保留最多 10 篇
+                        var length = articles.length;
+                        if (length > 10) {
+                            length = 10;
+                        }
 
-                var listHTML = "<ul>";
-                for (var i = 0; i < length; i++) {
-                    var article = articles[i];
-                    var articleLiHtml = "<li>"
-                            + "<a target='_blank' href='http://symphony.b3log.org" + article.articlePermalink + "'>"
-                            + article.articleTitle + "</a>&nbsp; <span class='date'>" + article.articleCreateTime;
-                    +"</span></li>"
-                    listHTML += articleLiHtml;
-                }
-                listHTML += "</ul>";
+                        var listHTML = "<ul>";
+                        for (var i = 0; i < length; i++) {
+                            var article = articles[i];
+                            var articleLiHtml = "<li>"
+                                    + "<a target='_blank' href='http://symphony.b3log.org" + article.articlePermalink + "'>"
+                                    + article.articleTitle + "</a>&nbsp; <span class='date'>" + article.articleCreateTime;
+                            +"</span></li>"
+                            listHTML += articleLiHtml;
+                        }
+                        listHTML += "</ul>";
 
-                $("#startPage .news").html(listHTML);
+                        $("#startPage .news").html(listHTML);
+                    }
+                });
             }
         });
     },
