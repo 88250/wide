@@ -15,6 +15,7 @@
     filter: alpha(opacity=30);
     display: none;
     background-color: #000000;
+    z-index: 99;
 }
 
 .dialog-panel {
@@ -63,11 +64,15 @@
     text-align: right;
 }
 
+.dialog-footer button {
+    margin: 0 5px;
+}
+
 #dialogRemoveConfirm,
 .dialog-prompt,
 .dialog-form,
 #dialogAlert {
-    padding: 10px 20px 0;
+    padding: 10px 15px 0;
     overflow: hidden;
 }
 

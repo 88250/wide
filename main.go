@@ -202,6 +202,25 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, model)
 }
 
+// 关于页请求处理.
+func aboutHandler(w http.ResponseWriter, r *http.Request) {
+	i18n.Load()
+
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+		"ver": Ver}
+
+	t, err := template.ParseFiles("view/about.html")
+
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	t.Execute(w, model)
+}
+
 // 主程序入口.
 func main() {
 	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
@@ -213,6 +232,7 @@ func main() {
 	http.HandleFunc("/logout", handlerWrapper(logoutHandler))
 	http.HandleFunc("/", handlerWrapper(indexHandler))
 	http.HandleFunc("/start", handlerWrapper(startHandler))
+	http.HandleFunc("/about", handlerWrapper(aboutHandler))
 
 	// 静态资源
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))

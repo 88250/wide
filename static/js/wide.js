@@ -20,6 +20,7 @@ var wide = {
 
 
         $("#dialogAlert").dialog({
+            "modal": true,
             "height": 26,
             "width": 260,
             "title": config.label.tip,
@@ -31,6 +32,7 @@ var wide = {
         });
 
         $("#dialogRemoveConfirm").dialog({
+            "modal": true,
             "height": 26,
             "width": 260,
             "title": config.label.delete,
@@ -79,6 +81,7 @@ var wide = {
         });
 
         $("#dialogNewFilePrompt").dialog({
+            "modal": true,
             "height": 52,
             "width": 260,
             "title": config.label.create_file,
@@ -152,6 +155,7 @@ var wide = {
         });
 
         $("#dialogNewDirPrompt").dialog({
+            "modal": true,
             "height": 52,
             "width": 260,
             "title": config.label.create_dir,
@@ -191,6 +195,7 @@ var wide = {
         });
 
         $("#dialogGoLinePrompt").dialog({
+            "modal": true,
             "height": 52,
             "width": 260,
             "title": config.label.goto_line,
@@ -229,6 +234,7 @@ var wide = {
         });
 
         $("#dialogSearchForm").dialog({
+            "modal": true,
             "height": 62,
             "width": 260,
             "title": config.label.search,
@@ -614,6 +620,9 @@ var wide = {
                 wide._save();
                 break;
         }
+    },
+    openAbout: function () {
+
     }
 };
 
