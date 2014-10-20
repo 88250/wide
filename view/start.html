@@ -1,24 +1,24 @@
 <div class="fn-clear">
     <ul class="details">
         <li>
-            用户名{{.username}}
+            {{.i18n.username}} {{.username}}
         </li>
         <li>
-            用户指南 http://88250.gitbooks.io/wide-user-guide
+            {{.i18n.user_guide}} http://88250.gitbooks.io/wide-user-guide
         </li>
         <li>
-            开发指南 http://88250.gitbooks.io/wide-user-guide
+            {{.i18n.dev_guide}} http://88250.gitbooks.io/wide-user-guide
         </li>
         <li>
-            Wide 信息
-            版本 {{.ver}}
-            开发团队
+            Wide
+            {{.i18n.ver}} {{.ver}}
+            {{.i18n.dev_team}}
         </li>
         <li>
-            捐赠 http://b3log.org/donate.html
+            {{.i18n.donate}} http://b3log.org/donate.html
         </li>
     </ul>
-    
+
     <div class="news">
         aaa
     </div>

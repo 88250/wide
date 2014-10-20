@@ -187,7 +187,8 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 
 	username := httpSession.Values["username"].(string)
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r), "username": username}
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+		"username": username, "ver": Ver}
 
 	t, err := template.ParseFiles("view/start.html")
 
