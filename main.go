@@ -118,7 +118,7 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
-	httpSession.Options.MaxAge = 0
+	httpSession.Options.MaxAge = -1
 	httpSession.Save(r, w)
 }
 
@@ -129,7 +129,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
-		http.Redirect(w, r, "/login", http.StatusForbidden)
+		http.Redirect(w, r, "/login", http.StatusFound)
 
 		return
 	}
@@ -177,7 +177,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
-		http.Redirect(w, r, "/login", http.StatusForbidden)
+		http.Redirect(w, r, "/login", http.StatusFound)
 
 		return
 	}

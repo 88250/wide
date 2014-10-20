@@ -30,7 +30,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
-		http.Redirect(w, r, "/login", http.StatusForbidden)
+		http.Redirect(w, r, "/login", http.StatusFound)
 
 		return
 	}
