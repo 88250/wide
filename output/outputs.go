@@ -630,7 +630,7 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 	masterWorkspace := conf.Wide.GetWorkspace()
 
 	cmd.Env = append(cmd.Env,
-		"GOPATH="+userWorkspace+string(os.PathListSeparator)+masterWorkspace,
+		"GOPATH="+userWorkspace+conf.PathListSeparator+masterWorkspace,
 		"GOOS="+runtime.GOOS,
 		"GOARCH="+runtime.GOARCH,
 		"GOROOT="+runtime.GOROOT(),

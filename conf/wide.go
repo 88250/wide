@@ -17,8 +17,11 @@ import (
 	"github.com/golang/glog"
 )
 
-// 系统文件路径分隔符.
-const PathSeparator = string(os.PathSeparator)
+const (
+	PathSeparator     = string(os.PathSeparator)     // 系统文件路径分隔符
+	PathListSeparator = string(os.PathListSeparator) // 系统路径列表分隔符
+
+)
 
 // 最后一次会话内容结构.
 type LatestSessionContent struct {
