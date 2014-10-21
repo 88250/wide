@@ -218,14 +218,14 @@
 
     background: white;
     font-size: 90%;
-    font-family: monospace;
+    font-family: Consolas, Courier New, monospace;
 
     max-height: 20em;
     overflow-y: auto;
 }
 
 .CodeMirror {
-    font-family: monospace;
+    font-family: Consolas, Courier New, monospace;
 }
 
 .CodeMirror-focused .cm-matchhighlight {
