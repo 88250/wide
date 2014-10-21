@@ -1,28 +1,31 @@
 <div class="fn-clear">
     <ul class="details">
+        <li class="title">Wide</li>
         <li>
-            {{.i18n.username}} {{.username}}
+            <label>{{.i18n.username}}</label>
+            {{.username}}
+        </li>
+        <li class="border">
+            <label>{{.i18n.workspace}}</label>
+            {{.username}}
         </li>
         <li>
-            {{.i18n.workspace}} {{.username}}
-        </li>
-        <li>
-            {{.i18n.user_guide}}
+            <label>{{.i18n.user_guide}}</label> <br/>
             <a href="http://88250.gitbooks.io/wide-user-guide" target="_blank">88250.gitbooks.io/wide-user-guide</a>
         </li>
-        <li>
-            {{.i18n.dev_guide}}
+        <li class="border">
+            <label>{{.i18n.dev_guide}}</label><br/>
             <a href="http://88250.gitbooks.io/wide-dev-guide" target="_blank">88250.gitbooks.io/wide-dev-guide</a>
         </li>
         <li>
-            Wide <br/>
-            {{.i18n.ver}} {{.ver}}<br/>
-            {{.i18n.dev_team}} B3log<br/>
-            {{.i18n.project_address}} 
+            <label>{{.i18n.ver}}</label> {{.ver}}<br/>
+            <label>{{.i18n.dev_team}}</label> 
+            <a href="https://github.com/b3log/b3log-solo/wiki/About_us" target="_blank">B3log</a><br/>
+            <label>{{.i18n.project_address}}</label> 
             <a href="https://github.com/b3log/wide" target="_blank">github.com/b3log/wide</a>
         </li>
         <li>
-            {{.i18n.donate}}
+            <label>{{.i18n.donate}}</label>
             <a href="http://b3log.org/donate.html" target="_blank">b3log.org/donate.html</a>
         </li>
     </ul>
