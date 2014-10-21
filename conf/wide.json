@@ -10,17 +10,14 @@
     "MaxProcs": 4,
     "RuntimeMode": "dev",
     "Pwd": "{pwd}",
-    "Workspace": "",
+    "Workspace": "{pwd}/data/workspace",
     "Users": [
         {
             "Name": "admin",
             "Password": "admin",
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "LatestSessionContent": {
-                "FileTree": [
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest",
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\hello"
-                ],
+                "FileTree": [],
                 "Files": [],
                 "CurrentFile": ""
             }
