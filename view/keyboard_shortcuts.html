@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{.i18n.wide}} - {{.i18n.keyboard_shortcuts}}</title>
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    </head>
+    <body>
+        <h2>{{.i18n.editor}}</h2>
+        <ul>
+            <li>Ctrl+\{{.i18n.colon}}{{.i18n.autocomplete}}</li>
+            <li>Ctrl+B{{.i18n.colon}}{{.i18n.jump_to_decl}}</li>
+            <li>Ctrl+I{{.i18n.colon}}{{.i18n.show_expr_info}}</li>
+            <li>Alt+F7{{.i18n.colon}}{{.i18n.find_usages}}</li>
+            <li>Alt+Shift+F{{.i18n.colon}}{{.i18n.format}}</li>
+            <li>Ctrl+G{{.i18n.colon}}{{.i18n.goto_line}}</li>
+            <li>Ctrl+E{{.i18n.colon}}{{.i18n.delete_line}}</li>
+            <li>Ctrl+S{{.i18n.colon}}{{.i18n.save_editor_file}}</li>
+            <li>Ctrl+Q{{.i18n.colon}}{{.i18n.close_editor}}</li>
+            <li>F11{{.i18n.colon}}{{.i18n.full_screen}}</li>
+            <li>Shift+Tab{{.i18n.colon}}{{.i18n.auto_indent}}</li>
+            <li>Ctrl+]{{.i18n.colon}}{{.i18n.indent}}</li>
+            <li>Ctrl+[{{.i18n.colon}}{{.i18n.unindent}}</li>
+        </ul>
+        <h2>{{.i18n.focus}}</h2>
+        <ul>
+            <li>Ctrl+D{{.i18n.colon}}{{.i18n.switch_tab}}</li>
+            <li>Ctrl+0{{.i18n.colon}}{{.i18n.focus_editor}}</li>
+            <li>Ctrl+1{{.i18n.colon}}{{.i18n.focus_file_tree}}</li>
+            <li>Ctrl+4{{.i18n.colon}}{{.i18n.focus_output}}</li>
+            <li>Ctrl+5{{.i18n.colon}}{{.i18n.focus_search}}</li>
+            <li>Ctrl+6{{.i18n.colon}}{{.i18n.focus_notification}}</li>
+        </ul>
+        <h2>{{.i18n.run}}</h2>
+        <ul>
+            <li>F6{{.i18n.colon}}{{.i18n.build_run}}</li>
+        </ul>
+    </body>
+</html>

@@ -80,8 +80,12 @@
                                 {{.i18n.report_issues}}
                             </li>
                             <li class="hr"></li>
+                            <li onclick="window.open('/keyboard_shortcuts')">
+                                {{.i18n.keyboard_shortcuts}}
+                            </li>
+                            <li class="hr"></li>
                             <li onclick="editors.openStartPage()">
-                                 <span>{{.i18n.start_page}}</span>
+                                <span>{{.i18n.start_page}}</span>
                             </li>
                             <li onclick="wide.openAbout()">
                                 <span>{{.i18n.about}}</span>
@@ -216,7 +220,7 @@
                                     "usages": "{{.i18n.usages}}",
                                     "search_text": "{{.i18n.search_text}}",
                                     "search": "{{.i18n.search}}",
-                                    "initialise": "{{.i18n.initialise}}",
+                                    "start_page": "{{.i18n.start_page}}",
                                     "confirm_save": "{{.i18n.confirm_save}}",
                                     "community": "{{.i18n.community}}"
                             },

@@ -12,7 +12,7 @@ var session = {
 
             editors.tabs.obj._$tabs.find("div").each(function () {
                 var $it = $(this);
-                if ($it.find("span:eq(0)").attr("title") !== config.label.initialise) {
+                if ($it.find("span:eq(0)").attr("title") !== config.label.start_page) {
                     filse.push($it.find("span:eq(0)").attr("title"));
                 }
             });

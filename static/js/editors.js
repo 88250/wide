@@ -102,7 +102,7 @@ var editors = {
 
         editors.tabs.add({
             id: "startPage",
-            title: '<span title="' + config.label.initialise + '">' + config.label.initialise + '</span>',
+            title: '<span title="' + config.label.start_page + '">' + config.label.start_page + '</span>',
             content: '<div id="startPage"></div>',
             after: function () {
                 $("#startPage").load('/start');
@@ -149,7 +149,7 @@ var editors = {
     },
     getCurrentPath: function () {
         var currentPath = $(".edit-panel .tabs .current span:eq(0)").attr("title");
-        if (currentPath === config.label.initialise) {
+        if (currentPath === config.label.start_page) {
             currentPath = null;
         }
         return currentPath;

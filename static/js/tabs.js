@@ -1,6 +1,7 @@
 var Tabs = function (obj) {
     obj._$tabsPanel = $(obj.id + " > .tabs-panel");
     obj._$tabs = $(obj.id + " > .tabs");
+    obj._stack = [];
 
     this.obj = obj;
 
@@ -47,21 +48,19 @@ $.extend(Tabs.prototype, {
         var $tabsPanel = this.obj._$tabsPanel,
                 $tabs = this.obj._$tabs;
 
-        this.obj._prevId = $tabs.children("div.current").data("index");
-
-        $tabs.children("div").removeClass("current");
-        $tabsPanel.children("div").hide();
-
         $tabs.append('<div class="current" data-index="' + data.id + '">'
                 + data.title + '<span class="ico-close font-ico"></span></div>');
         $tabsPanel.append('<div data-index="' + data.id + '">' + data.content
                 + '</div>');
-        
+
+        this.setCurrent(data.id);
+
         if (typeof data.after === 'function') {
             data.after();
         }
     },
     del: function (id) {
+        // TODO: 
         var $tabsPanel = this.obj._$tabsPanel,
                 $tabs = this.obj._$tabs,
                 prevId = undefined,
@@ -99,7 +98,11 @@ $.extend(Tabs.prototype, {
             return false;
         }
 
-        this.obj._prevId = $currentTab.data("index");
+        if (this.obj._stack.length === 1024) {
+            this.obj._stack.splice(1023, 1);
+        } else {
+            this.obj._stack.push(id);
+        }
 
         $tabs.children("div").removeClass("current");
         $tabsPanel.children("div").hide();

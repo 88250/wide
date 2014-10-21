@@ -203,6 +203,24 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, model)
 }
 
+// 键盘快捷键页请求处理.
+func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
+	i18n.Load()
+
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
+
+	t, err := template.ParseFiles("view/keyboard_shortcuts.html")
+
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	t.Execute(w, model)
+}
+
 // 关于页请求处理.
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
@@ -234,6 +252,7 @@ func main() {
 	http.HandleFunc("/", handlerWrapper(indexHandler))
 	http.HandleFunc("/start", handlerWrapper(startHandler))
 	http.HandleFunc("/about", handlerWrapper(aboutHandler))
+	http.HandleFunc("/keyboard_shortcuts", handlerWrapper(keyboardShortcutsHandler))
 
 	// 静态资源
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
