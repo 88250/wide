@@ -5,6 +5,7 @@
     "file": "文件",
     "login": "登录",
     "username": "用户名",
+    "current_user": "当前用户",
     "password": "密码",
     "login_failed": "登录失败",
     "run": "运行",
@@ -56,5 +57,6 @@
     "confirm_save": "请确认所有文件已保存",
     "workspace": "工作空间",
     "project_address": "项目地址",
-    "community": "社区"
+    "community": "社区",
+    "colon": "："
 }

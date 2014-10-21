@@ -2,30 +2,28 @@
     <ul class="details">
         <li class="title">Wide</li>
         <li>
-            <label>{{.i18n.username}}</label>
+            <label>{{.i18n.current_user}}</label>{{.i18n.colon}}
             {{.username}}
         </li>
         <li class="border">
-            <label>{{.i18n.workspace}}</label>
-            {{.username}}
+            <label>{{.i18n.workspace}}</label>{{.i18n.colon}}
+            {{.workspace}}
         </li>
         <li>
-            <label>{{.i18n.user_guide}}</label> <br/>
-            <a href="http://88250.gitbooks.io/wide-user-guide" target="_blank">88250.gitbooks.io/wide-user-guide</a>
+            <label><a href="http://88250.gitbooks.io/wide-user-guide" target="_blank">{{.i18n.user_guide}}</a></label> <br/>
         </li>
         <li class="border">
-            <label>{{.i18n.dev_guide}}</label><br/>
-            <a href="http://88250.gitbooks.io/wide-dev-guide" target="_blank">88250.gitbooks.io/wide-dev-guide</a>
+            <label><a href="http://88250.gitbooks.io/wide-dev-guide" target="_blank">{{.i18n.dev_guide}}</a></label><br/>
         </li>
         <li>
-            <label>{{.i18n.ver}}</label> {{.ver}}<br/>
-            <label>{{.i18n.dev_team}}</label> 
+            <label>{{.i18n.ver}}</label>{{.i18n.colon}}{{.ver}}<br/>
+            <label>{{.i18n.dev_team}}</label>{{.i18n.colon}}
             <a href="https://github.com/b3log/b3log-solo/wiki/About_us" target="_blank">B3log</a><br/>
-            <label>{{.i18n.project_address}}</label> 
+            <label>{{.i18n.project_address}}</label>{{.i18n.colon}} 
             <a href="https://github.com/b3log/wide" target="_blank">github.com/b3log/wide</a>
         </li>
         <li>
-            <label>{{.i18n.donate}}</label>
+            <label>{{.i18n.donate}}</label>{{.i18n.colon}}
             <a href="http://b3log.org/donate.html" target="_blank">b3log.org/donate.html</a>
         </li>
     </ul>

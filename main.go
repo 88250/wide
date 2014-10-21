@@ -186,9 +186,10 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
+	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
-		"username": username, "ver": Ver}
+		"username": username, "workspace": userWorkspace, "ver": Ver}
 
 	t, err := template.ParseFiles("view/start.html")
 
