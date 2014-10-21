@@ -435,7 +435,7 @@ var editors = {
             highlightSelectionMatches: {showToken: /\w/},
             rulers: rulers,
             styleActiveLine: true,
-            theme: 'lesser-dark',
+            theme: 'wide',
             indentUnit: 4,
             foldGutter: true,
             extraKeys: {

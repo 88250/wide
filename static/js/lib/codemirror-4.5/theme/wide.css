@@ -1,0 +1,23 @@
+.cm-s-wide span.cm-meta {color: rgb(98,143,181);}
+.cm-s-wide span.cm-keyword { color: rgb(0,0,230); }
+.cm-s-wide span.cm-atom {color: #219;}
+.cm-s-wide span.cm-number {color: #B35E4D;}
+.cm-s-wide span.cm-def {color: #00f;}
+.cm-s-wide span.cm-variable {color: black;}
+.cm-s-wide span.cm-variable-2 {color: #0000C0;}
+.cm-s-wide span.cm-variable-3 {color: #0000C0;}
+.cm-s-wide span.cm-property {color: black;}
+.cm-s-wide span.cm-operator {color: rgb(0,153,0);}
+.cm-s-wide span.cm-comment {color: rgb(150,150,150);}
+.cm-s-wide span.cm-string {color: rgb(206,123,0);}
+.cm-s-wide span.cm-string-2 {color: #f50;}
+.cm-s-wide span.cm-qualifier {color: #555;}
+.cm-s-wide span.cm-builtin {color: #30a;}
+.cm-s-wide span.cm-bracket {color: #cc7;}
+.cm-s-wide span.cm-tag {color: #170;}
+.cm-s-wide span.cm-attribute {color: #00c;}
+.cm-s-wide span.cm-link {color: #219;}
+.cm-s-wide span.cm-error {color: #f00;}
+
+.cm-s-wide .CodeMirror-activeline-background {background: #e8f2ff !important;}
+.cm-s-wide .CodeMirror-matchingbracket {outline:1px solid grey; color:black !important;}
