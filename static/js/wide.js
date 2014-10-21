@@ -576,6 +576,7 @@ var wide = {
         var mode = curEditor.getOption("mode");
 
         var cursor = curEditor.getCursor();
+        var scrollInfo = curEditor.getScrollInfo();
 
         var request = newWideRequest();
         request.file = path;
@@ -594,6 +595,7 @@ var wide = {
                         if (data.succ) {
                             curEditor.setValue(data.code);
                             curEditor.setCursor(cursor);
+                            curEditor.scrollTo(null, scrollInfo.top);
                         }
                     }
                 });
