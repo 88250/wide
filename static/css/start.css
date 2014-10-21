@@ -1,9 +1,32 @@
+#startPage {
+    font-size: 15px;
+    padding: 50px 70px;
+    line-height: 28px;
+    color: #666;
+}
+
 #startPage .details {
     width: 40%;
     float: left;
+    border-right: 1px solid #DDD;
+    margin-right: 10%;
 }
 
 #startPage .news {
-    width: 60%;
+    width: 50%;
     float: left;
+}
+
+#startPage a {
+    color: #4183c4;
+    text-decoration: none;
+}
+
+#startPage a:hover {
+    text-decoration: underline;
+}
+
+#startPage .date {
+    color: #bbb;
+    font-size: 13px;
 }

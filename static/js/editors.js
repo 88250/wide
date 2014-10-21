@@ -79,6 +79,27 @@ var editors = {
         this.openStartPage()
     },
     openStartPage: function () {
+        var dateFormat = function (time, fmt) {
+            var date = new Date(time);
+            var dateObj = {
+                "M+": date.getMonth() + 1, //月份 
+                "d+": date.getDate(), //日 
+                "h+": date.getHours(), //小时 
+                "m+": date.getMinutes(), //分 
+                "s+": date.getSeconds(), //秒 
+                "q+": Math.floor((date.getMonth() + 3) / 3), //季度 
+                "S": date.getMilliseconds() //毫秒 
+            };
+            if (/(y+)/.test(fmt))
+                fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in dateObj)
+                if (new RegExp("(" + k + ")").test(fmt)) {
+                    fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1)
+                            ? (dateObj[k]) : (("00" + dateObj[k]).substr(("" + dateObj[k]).length)));
+                }
+            return fmt;
+        };
+
         editors.tabs.add({
             id: "startPage",
             title: '<span title="' + config.label.initialise + '">' + config.label.initialise + '</span>',
@@ -90,9 +111,6 @@ var editors = {
                     type: "GET",
                     dataType: "jsonp",
                     jsonp: "callback",
-                    error: function () {
-                        $("#startPage").html("Loading B3log Announcement failed :-(");
-                    },
                     success: function (data, textStatus) {
                         var articles = data.articles;
                         if (0 === articles.length) {
@@ -108,15 +126,15 @@ var editors = {
                         var listHTML = "<ul>";
                         for (var i = 0; i < length; i++) {
                             var article = articles[i];
-                            var articleLiHtml = "<li>"
-                                    + "<a target='_blank' href='http://symphony.b3log.org" + article.articlePermalink + "'>"
-                                    + article.articleTitle + "</a>&nbsp; <span class='date'>" + new Date(article.articleCreateTime);
+                            listHTML += "<li>"
+                                    + "<a target='_blank' href='http://symphony.b3log.org"
+                                    + article.articlePermalink + "'>"
+                                    + article.articleTitle + "</a>&nbsp; <span class='date'>"
+                                    + dateFormat(article.articleCreateTime, 'yyyy-MM-dd hh:mm');
                             +"</span></li>"
-                            listHTML += articleLiHtml;
                         }
-                        listHTML += "</ul>";
 
-                        $("#startPage .news").html(listHTML);
+                        $("#startPage .news").html(listHTML + "</ul>");
                     }
                 });
             }
