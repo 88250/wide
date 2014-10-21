@@ -411,6 +411,7 @@ var wide = {
         if (!currentPath) {
             return false;
         }
+
         // 格式化后会对文件进行保存
         this.fmt(currentPath, wide.curEditor);
     },
@@ -568,11 +569,13 @@ var wide = {
     fmt: function (path, curEditor) {
         var mode = curEditor.getOption("mode");
 
+        var cursor = curEditor.getCursor();
+        
         var request = newWideRequest();
         request.file = path;
         request.code = curEditor.getValue();
-        request.cursorLine = curEditor.getCursor().line;
-        request.cursorCh = curEditor.getCursor().ch;
+        request.cursorLine = cursor.line;
+        request.cursorCh = cursor.ch;
 
         switch (mode) {
             case "text/x-go": // 会保存文件
@@ -584,6 +587,7 @@ var wide = {
                     success: function (data) {
                         if (data.succ) {
                             curEditor.setValue(data.code);
+                            curEditor.setCursor(cursor);
                         }
                     }
                 });
