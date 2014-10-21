@@ -224,7 +224,8 @@
     overflow-y: auto;
 }
 
-.CodeMirror {
+.CodeMirror,
+.CodeMirror-hints {
     font-family: Consolas, Courier New, monospace;
 }
 

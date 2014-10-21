@@ -123,7 +123,7 @@ var editors = {
                             length = 10;
                         }
 
-                        var listHTML = "<ul><li class='title'>社区</li>";
+                        var listHTML = "<ul><li class='title'>" + config.label.community + "</li>";
                         for (var i = 0; i < length; i++) {
                             var article = articles[i];
                             listHTML += "<li>"
