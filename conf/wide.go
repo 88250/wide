@@ -31,7 +31,7 @@ type LatestSessionContent struct {
 type User struct {
 	Name                 string
 	Password             string
-	Workspace            string // 指定了该用户的 GOPATH 路径
+	Workspace            string // 该用户的工作空间 GOPATH 路径
 	LatestSessionContent *LatestSessionContent
 }
 
@@ -48,6 +48,7 @@ type conf struct {
 	MaxProcs              int     // 并发执行数
 	RuntimeMode           string  // 运行模式
 	Pwd                   string  // 工作目录
+	Workspace             string  // 主工作空间 GOPATH 路径
 	Users                 []*User // 用户集
 }
 
@@ -109,10 +110,10 @@ func FixedTimeSave() {
 }
 
 // 获取 username 指定的用户的工作空间路径，查找不到时返回空字符串.
-func (*conf) GetUserWorkspace(username string) string {
-	for _, user := range Wide.Users {
+func (c *conf) GetUserWorkspace(username string) string {
+	for _, user := range c.Users {
 		if user.Name == username {
-			ret := strings.Replace(user.Workspace, "{pwd}", Wide.Pwd, 1)
+			ret := strings.Replace(user.Workspace, "{pwd}", c.Pwd, 1)
 			return filepath.FromSlash(ret)
 		}
 	}
@@ -120,7 +121,12 @@ func (*conf) GetUserWorkspace(username string) string {
 	return ""
 }
 
-// 获取工作空间路径.
+// 获取主工作空间路径.
+func (c *conf) GetWorkspace() string {
+	return filepath.FromSlash(strings.Replace(c.Workspace, "{pwd}", c.Pwd, 1))
+}
+
+// 获取 user 的工作空间路径.
 func (user *User) getWorkspace() string {
 	ret := strings.Replace(user.Workspace, "{pwd}", Wide.Pwd, 1)
 

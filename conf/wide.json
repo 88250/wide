@@ -10,6 +10,7 @@
     "MaxProcs": 4,
     "RuntimeMode": "dev",
     "Pwd": "{pwd}",
+	"Workspace": "{pwd}/data/workspace",
     "Users": [
         {
             "Name": "admin",
