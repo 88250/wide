@@ -367,6 +367,7 @@ var wide = {
 
         this._initBottomWindowGroup();
 
+        // 点击隐藏弹出层
         $("body").bind("mousedown", function (event) {
             if (!(event.target.id === "dirRMenu" || $(event.target).closest("#dirRMenu").length > 0)) {
                 $("#dirRMenu").hide();
@@ -383,10 +384,16 @@ var wide = {
             }
         });
 
+        // 刷新提示
         window.onbeforeunload = function () {
             if (editors.data.length > 0) {
                 return config.label.confirm_save;
             }
+        };
+        
+        // 禁止鼠标右键菜单
+        document.oncontextmenu = function () {
+            return false;
         };
 
         this._initDialog();
