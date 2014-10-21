@@ -110,7 +110,7 @@ var editors = {
                             var article = articles[i];
                             var articleLiHtml = "<li>"
                                     + "<a target='_blank' href='http://symphony.b3log.org" + article.articlePermalink + "'>"
-                                    + article.articleTitle + "</a>&nbsp; <span class='date'>" + article.articleCreateTime;
+                                    + article.articleTitle + "</a>&nbsp; <span class='date'>" + new Date(article.articleCreateTime);
                             +"</span></li>"
                             listHTML += articleLiHtml;
                         }

@@ -52,5 +52,6 @@
     "dev_guide": "开发指南",
     "ver": "版本",
     "dev_team": "开发团队",
-    "donate": "捐赠"
+    "donate": "捐赠",
+    "confirm_save": "请确认所有文件已保存"
 }

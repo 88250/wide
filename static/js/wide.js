@@ -383,6 +383,12 @@ var wide = {
             }
         });
 
+        window.onbeforeunload = function () {
+            if (editors.data.length > 0) {
+                return config.label.confirm_save;
+            }
+        };
+
         this._initDialog();
 
         this._initLayout();
@@ -570,7 +576,7 @@ var wide = {
         var mode = curEditor.getOption("mode");
 
         var cursor = curEditor.getCursor();
-        
+
         var request = newWideRequest();
         request.file = path;
         request.code = curEditor.getValue();
