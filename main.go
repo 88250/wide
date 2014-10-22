@@ -48,6 +48,13 @@ func init() {
 
 	// 定时检查无效会话
 	session.FixedTimeRelease()
+
+	// 定时输出日志（TODO: 后面考虑换一个日志库）
+	go func() {
+		for _ = range time.Tick(time.Second) {
+			glog.Flush()
+		}
+	}()
 }
 
 // 登录.
