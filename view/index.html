@@ -16,6 +16,7 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/wide.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/start.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
@@ -189,6 +190,7 @@
             {{.i18n.isDelete}} <b></b>?
         </div>
         <div id="dialogAlert" class="fn-none"></div>
+        <div id="dialogAbout" class="fn-none"></div>
         <div id="dialogNewFilePrompt" class="dialog-prompt fn-none">
             <input/>
         </div>
@@ -225,7 +227,8 @@
                                     "search": "{{.i18n.search}}",
                                     "start_page": "{{.i18n.start_page}}",
                                     "confirm_save": "{{.i18n.confirm_save}}",
-                                    "community": "{{.i18n.community}}"
+                                    "community": "{{.i18n.community}}",
+                                    "about": "{{.i18n.about}}"
                             },
                             "channel": {
                             "editor": '{{.conf.EditorChannel}}',
