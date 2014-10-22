@@ -310,8 +310,8 @@ var wide = {
 
             if (goLintFound) {
                 goLintFound = [];
-            }
-
+            }            
+            
             if ('run' === data.nextCmd) {
                 var request = newWideRequest();
                 request.executable = data.executable;
@@ -330,6 +330,8 @@ var wide = {
                 });
             }
 
+            // TODO: 重构成 switch-case
+            
             if ('run' === data.cmd) { // 正在运行
                 wide.fillOutput($('.bottom-window-group .output').text() + data.output);
                 wide.curProcessId = data.pid;
@@ -358,6 +360,8 @@ var wide = {
                 CodeMirror.signal(wide.curEditor, "change", wide.curEditor);
             } else if ('go get' === data.cmd || 'go install' === data.cmd) {
                 wide.fillOutput($('.bottom-window-group .output').text() + data.output);
+            } else if ('pre-build' === data.cmd) {
+                wide.fillOutput(data.output);
             }
         };
         outputWS.onclose = function (e) {
