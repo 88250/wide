@@ -524,8 +524,6 @@ var wide = {
                 $('.bottom-window-group .output').text('');
             },
             success: function (data) {
-                $(".toolbars .ico-buildrun").addClass("ico-stop")
-                        .removeClass("ico-buildrun").attr("title", config.label.stop);
             }
         });
     },
