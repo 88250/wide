@@ -262,106 +262,128 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if data["succ"].(bool) {
-		reader := io.MultiReader(stdout, stderr)
+	if !data["succ"].(bool) {
+		return
+	}
 
-		if err := cmd.Start(); nil != err {
+	channelRet := map[string]interface{}{}
+
+	if nil != session.OutputWS[sid] {
+		// 在前端 output 中显示“开始构建”
+
+		channelRet["output"] = "go build"
+		channelRet["cmd"] = "pre-build"
+
+		wsChannel := session.OutputWS[sid]
+
+		err := wsChannel.Conn.WriteJSON(&channelRet)
+		if nil != err {
 			glog.Error(err)
-			data["succ"] = false
-
 			return
 		}
 
-		go func(runningId int) {
-			defer util.Recover()
-			defer cmd.Wait()
-
-			glog.V(3).Infof("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
-
-			// 一次性读取
-			buf := make([]byte, 1024*8)
-			count, _ := reader.Read(buf)
-
-			channelRet := map[string]interface{}{}
-			channelRet["output"] = string(buf[:count])
-			channelRet["cmd"] = "build"
-			channelRet["executable"] = executable
-
-			if 0 == count { // 说明构建成功，没有错误信息输出
-				// 设置下一次执行命令（前端会根据这个发送请求）
-				channelRet["nextCmd"] = args["nextCmd"]
-
-				go func() { // 运行 go install，生成的库用于 gocode lib-path
-					cmd := exec.Command("go", "install")
-					cmd.Dir = curDir
-
-					setCmdEnv(cmd, username)
-
-					out, _ := cmd.CombinedOutput()
-					if len(out) > 0 {
-						glog.Warning(string(out))
-					}
-				}()
-			} else { // 构建失败
-				// 解析错误信息，返回给编辑器 gutter lint
-				errOut := string(buf[:count])
-				lines := strings.Split(errOut, "\n")
-
-				if lines[0][0] == '#' {
-					lines = lines[1:] // 跳过第一行
-				}
-
-				lints := []*Lint{}
-
-				for _, line := range lines {
-					if len(line) < 1 {
-						continue
-					}
-
-					if line[0] == '\t' {
-						// 添加到上一个 lint 中
-						last := len(lints)
-						msg := lints[last-1].Msg
-						msg += line
-
-						lints[last-1].Msg = msg
-
-						continue
-					}
-
-					file := line[:strings.Index(line, ":")]
-					left := line[strings.Index(line, ":")+1:]
-					lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
-					msg := left[strings.Index(left, ":")+2:]
-
-					lint := &Lint{
-						File:     file,
-						LineNo:   lineNo - 1,
-						Severity: lintSeverityError,
-						Msg:      msg,
-					}
-
-					lints = append(lints, lint)
-				}
-
-				channelRet["lints"] = lints
-			}
-
-			if nil != session.OutputWS[sid] {
-				glog.V(3).Infof("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
-
-				wsChannel := session.OutputWS[sid]
-				err := wsChannel.Conn.WriteJSON(&channelRet)
-				if nil != err {
-					glog.Error(err)
-				}
-
-				// 更新通道最近使用时间
-				wsChannel.Time = time.Now()
-			}
-
-		}(rand.Int())
+		// 更新通道最近使用时间
+		wsChannel.Time = time.Now()
 	}
+
+	reader := io.MultiReader(stdout, stderr)
+
+	if err := cmd.Start(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	go func(runningId int) {
+		defer util.Recover()
+		defer cmd.Wait()
+
+		glog.V(3).Infof("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
+
+		// 一次性读取
+		buf := make([]byte, 1024*8)
+		count, _ := reader.Read(buf)
+
+		channelRet := map[string]interface{}{}
+		channelRet["output"] = string(buf[:count])
+		channelRet["cmd"] = "build"
+		channelRet["executable"] = executable
+
+		if 0 == count { // 说明构建成功，没有错误信息输出
+			// 设置下一次执行命令（前端会根据这个发送请求）
+			channelRet["nextCmd"] = args["nextCmd"]
+
+			go func() { // 运行 go install，生成的库用于 gocode lib-path
+				cmd := exec.Command("go", "install")
+				cmd.Dir = curDir
+
+				setCmdEnv(cmd, username)
+
+				out, _ := cmd.CombinedOutput()
+				if len(out) > 0 {
+					glog.Warning(string(out))
+				}
+			}()
+		} else { // 构建失败
+			// 解析错误信息，返回给编辑器 gutter lint
+			errOut := string(buf[:count])
+			lines := strings.Split(errOut, "\n")
+
+			if lines[0][0] == '#' {
+				lines = lines[1:] // 跳过第一行
+			}
+
+			lints := []*Lint{}
+
+			for _, line := range lines {
+				if len(line) < 1 {
+					continue
+				}
+
+				if line[0] == '\t' {
+					// 添加到上一个 lint 中
+					last := len(lints)
+					msg := lints[last-1].Msg
+					msg += line
+
+					lints[last-1].Msg = msg
+
+					continue
+				}
+
+				file := line[:strings.Index(line, ":")]
+				left := line[strings.Index(line, ":")+1:]
+				lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
+				msg := left[strings.Index(left, ":")+2:]
+
+				lint := &Lint{
+					File:     file,
+					LineNo:   lineNo - 1,
+					Severity: lintSeverityError,
+					Msg:      msg,
+				}
+
+				lints = append(lints, lint)
+			}
+
+			channelRet["lints"] = lints
+		}
+
+		if nil != session.OutputWS[sid] {
+			glog.V(3).Infof("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
+
+			wsChannel := session.OutputWS[sid]
+			err := wsChannel.Conn.WriteJSON(&channelRet)
+			if nil != err {
+				glog.Error(err)
+			}
+
+			// 更新通道最近使用时间
+			wsChannel.Time = time.Now()
+		}
+
+	}(rand.Int())
 }
 
 // go install.
