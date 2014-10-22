@@ -390,7 +390,7 @@ var wide = {
                 return config.label.confirm_save;
             }
         };
-        
+
         // 禁止鼠标右键菜单
         document.oncontextmenu = function () {
             return false;
@@ -494,7 +494,11 @@ var wide = {
         $output.text(data);
         $output.scrollTop($output[0].scrollHeight);
     },
-    // 构建 & 运行.
+    // 构建.
+    build: function () {
+        // TODO: 构建
+    },
+    // 构建并运行.
     run: function () {
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {

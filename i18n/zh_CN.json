@@ -27,7 +27,8 @@
     "format": "格式化",
     "goget": "go get",
     "goinstall": "go install",
-    "build_n_run": "构建 & 运行",
+    "build": "构建",
+    "build_n_run": "构建并运行",
     "editor": "编辑器",
     "max_editor": "编辑器窗口最大化",
     "restore_editor": "编辑器窗口还原",
@@ -83,7 +84,6 @@
     "focus_output": "焦点切换到输出窗口",
     "focus_search": "焦点切换到搜索窗口",
     "focus_notification": "焦点切换到通知窗口",
-    "build_run": "构建并运行",
     
     "colon": "："
 }
