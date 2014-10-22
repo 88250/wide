@@ -116,10 +116,10 @@ var windows = {
 
         if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
             // 当文件树最小化时
-           $it.css({
-               "width": "100%",
-               "left": "0"
-           });
+            $it.css({
+                "width": "100%",
+                "left": "0"
+            });
         }
     },
     restoreSide: function () {
@@ -163,8 +163,10 @@ var windows = {
 
         windows.minBottom();
         windows.minSide();
-        wide.curEditor.focus();
-        
+        if (wide.curEditor) {
+            wide.curEditor.focus();
+        }
+
         windows.isMaxEditor = true;
     },
     restoreEditor: function () {
@@ -176,8 +178,10 @@ var windows = {
 
         windows.restoreBottom();
         windows.restoreSide();
-        wide.curEditor.focus();
-        
+        if (wide.curEditor) {
+            wide.curEditor.focus();
+        }
+
         windows.isMaxEditor = false;
     },
     clearFloat: function () {
