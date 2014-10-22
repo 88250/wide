@@ -276,7 +276,7 @@ var wide = {
                 "title": config.label.about,
                 "hideFooter": true
             });
-            
+
             // TODO: remove
             $("#dialogAbout").dialog("open");
         });
@@ -310,8 +310,8 @@ var wide = {
 
             if (goLintFound) {
                 goLintFound = [];
-            }            
-            
+            }
+
             if ('run' === data.nextCmd) {
                 var request = newWideRequest();
                 request.executable = data.executable;
@@ -321,8 +321,7 @@ var wide = {
                     url: '/run',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    beforeSend: function (data) {
-                        $('.bottom-window-group .output').text('');
+                    beforeSend: function (data) {                        
                     },
                     success: function (data) {
 
@@ -330,38 +329,51 @@ var wide = {
                 });
             }
 
-            // TODO: 重构成 switch-case
-            
-            if ('run' === data.cmd) { // 正在运行
-                wide.fillOutput($('.bottom-window-group .output').text() + data.output);
-                wide.curProcessId = data.pid;
-            } else if ('run-done' === data.cmd) { // 运行结束                
-                wide.curProcessId = undefined;
-                // 运行结束后修改 [构建&运行] 图标状态为可用状态
-                $(".toolbars .ico-stop").removeClass("ico-stop")
-                        .addClass("ico-buildrun").attr("title", config.label.build_n_run);
-            } else if ('build' === data.cmd || 'go install' === data.cmd) {
-                wide.fillOutput(data.output);
+            switch (data.cmd) {
+                case 'run': // 正在运行
+                    wide.fillOutput($('.bottom-window-group .output').text() + data.output);
+                    wide.curProcessId = data.pid;
 
-                if (0 !== data.output.length) { // 说明编译有错误输出            
-                    for (var i = 0; i < data.lints.length; i++) {
-                        var lint = data.lints[i];
-
-                        goLintFound.push({from: CodeMirror.Pos(lint.lineNo, 0),
-                            to: CodeMirror.Pos(lint.lineNo, 0),
-                            message: lint.msg, severity: lint.severity});
-                    }
-
+                    break;
+                case 'run-done': // 运行结束  
+                    wide.curProcessId = undefined;
+                    // 运行结束后修改 [构建&运行] 图标状态为可用状态
                     $(".toolbars .ico-stop").removeClass("ico-stop")
                             .addClass("ico-buildrun").attr("title", config.label.build_n_run);
-                }
 
-                // 触发一次 gutter lint
-                CodeMirror.signal(wide.curEditor, "change", wide.curEditor);
-            } else if ('go get' === data.cmd || 'go install' === data.cmd) {
-                wide.fillOutput($('.bottom-window-group .output').text() + data.output);
-            } else if ('pre-build' === data.cmd) {
-                wide.fillOutput(data.output);
+                    break;
+                case 'start-build':
+                    wide.fillOutput(data.output);
+
+                    break;
+                case 'go install':
+                    wide.fillOutput($('.bottom-window-group .output').text() + data.output);
+
+                    break;
+                case 'go get':
+                    wide.fillOutput($('.bottom-window-group .output').text() + data.output);
+
+                    break;
+                case 'build':
+                    wide.fillOutput($('.bottom-window-group .output').text() + data.output);
+
+                    if (data.lints) { // 说明编译有错误输出            
+                        for (var i = 0; i < data.lints.length; i++) {
+                            var lint = data.lints[i];
+
+                            goLintFound.push({from: CodeMirror.Pos(lint.lineNo, 0),
+                                to: CodeMirror.Pos(lint.lineNo, 0),
+                                message: lint.msg, severity: lint.severity});
+                        }
+
+                        $(".toolbars .ico-stop").removeClass("ico-stop")
+                                .addClass("ico-buildrun").attr("title", config.label.build_n_run);
+                    }
+
+                    // 触发一次 gutter lint
+                    CodeMirror.signal(wide.curEditor, "change", wide.curEditor);
+
+                    break;
             }
         };
         outputWS.onclose = function (e) {
@@ -449,7 +461,7 @@ var wide = {
         if ($(".menu li.save-all").hasClass("disabled")) {
             return false;
         }
-        
+
         // TODO: 只保存未保存过的文件
 
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
@@ -516,7 +528,7 @@ var wide = {
     // 构建.
     build: function () {
         wide.saveAllFiles();
-        
+
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
@@ -542,7 +554,7 @@ var wide = {
     // 构建并运行.
     run: function () {
         wide.saveAllFiles();
-        
+
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
@@ -603,7 +615,7 @@ var wide = {
     },
     goinstall: function () {
         wide.saveAllFiles();
-        
+
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
