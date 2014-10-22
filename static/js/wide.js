@@ -496,6 +496,8 @@ var wide = {
     },
     // 构建.
     build: function () {
+        wide.saveAllFiles();
+        
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
@@ -520,6 +522,8 @@ var wide = {
     },
     // 构建并运行.
     run: function () {
+        wide.saveAllFiles();
+        
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
@@ -579,6 +583,8 @@ var wide = {
         });
     },
     goinstall: function () {
+        wide.saveAllFiles();
+        
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
