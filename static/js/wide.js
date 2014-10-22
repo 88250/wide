@@ -267,6 +267,16 @@ var wide = {
                 });
             }
         });
+
+        $("#dialogAbout").load('/about', function () {
+            $("#dialogAbout").dialog({
+                "modal": true,
+                "height": 460,
+                "width": 860,
+                "title": config.label.about,
+                "hideFooter": true
+            });
+        });
     },
     _initLayout: function () {
         var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 1,
@@ -645,7 +655,7 @@ var wide = {
         }
     },
     openAbout: function () {
-
+        $("#dialogAbout").dialog("open");
     }
 };
 
