@@ -664,6 +664,8 @@ var wide = {
                     success: function (data) {
                         if (data.succ) {
                             curEditor.setValue(data.code);
+                            curEditor.setCursor(cursor);
+                            curEditor.scrollTo(null, scrollInfo.top);
                         }
                     }
                 });
@@ -674,6 +676,8 @@ var wide = {
                     // 在客户端浏览器中进行 JSON 格式化
                     var json = JSON.parse(curEditor.getValue());
                     curEditor.setValue(JSON.stringify(json, "", "    "));
+                    curEditor.setCursor(cursor);
+                    curEditor.scrollTo(null, scrollInfo.top);
 
                     wide._save();
                 } catch (e) {

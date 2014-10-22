@@ -50,7 +50,6 @@
     "restore_bottom": "底部窗口还原",
     "file_format": "文件后缀",
     "keyword": "关键字",
-    "start_page": "起始页",
     "user_guide": "用户指南",
     "dev_guide": "开发指南",
     "keyboard_shortcuts": "键盘快捷键",
@@ -67,8 +66,6 @@
     "jump_to_decl": "跳转到声明",
     "show_expr_info": "查看表达式信息",
     "find_usages": "查找使用",
-    "format": "格式化",
-    "goto_line": "跳转到行",
     "delete_line": "删除当前行",
     "save_editor_file": "保存当前编辑器文件",
     "save_all_editors_files": "保存所有编辑器文件",
@@ -84,6 +81,8 @@
     "focus_output": "焦点切换到输出窗口",
     "focus_search": "焦点切换到搜索窗口",
     "focus_notification": "焦点切换到通知窗口",
-    
+    "start-build": "开始构建",
+    "build-succ": "构建成功",
+    "build-failed": "构建失败",
     "colon": "："
 }

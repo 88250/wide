@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
@@ -271,7 +272,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != session.OutputWS[sid] {
 		// 在前端 output 中显示“开始构建”
 
-		channelRet["output"] = "go build"
+		channelRet["output"] = i18n
 		channelRet["cmd"] = "pre-build"
 
 		wsChannel := session.OutputWS[sid]
