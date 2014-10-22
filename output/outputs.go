@@ -306,13 +306,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		count, _ := reader.Read(buf)
 
 		channelRet := map[string]interface{}{}
-		channelRet["output"] = string(buf[:count])
 		channelRet["cmd"] = "build"
 		channelRet["executable"] = executable
 
 		if 0 == count { // 说明构建成功，没有错误信息输出
 			// 设置下一次执行命令（前端会根据这个发送请求）
 			channelRet["nextCmd"] = args["nextCmd"]
+			channelRet["output"] = "Build Succ"
 
 			go func() { // 运行 go install，生成的库用于 gocode lib-path
 				cmd := exec.Command("go", "install")
@@ -328,6 +328,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		} else { // 构建失败
 			// 解析错误信息，返回给编辑器 gutter lint
 			errOut := string(buf[:count])
+			channelRet["output"] = "Build Failed\n" + errOut
+
 			lines := strings.Split(errOut, "\n")
 
 			if lines[0][0] == '#' {
