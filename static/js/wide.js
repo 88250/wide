@@ -501,15 +501,6 @@ var wide = {
             return false;
         }
 
-        if ($(".menu li.run").hasClass("disabled")) {
-            return false;
-        }
-
-        if ($(".toolbars .ico-stop").length === 1) {
-            wide.stop();
-            return false;
-        }
-
         var request = newWideRequest();
         request.file = currentPath;
         request.code = wide.curEditor.getValue();
