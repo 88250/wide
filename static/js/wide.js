@@ -432,6 +432,8 @@ var wide = {
         if ($(".menu li.save-all").hasClass("disabled")) {
             return false;
         }
+        
+        // TODO: 只保存未保存过的文件
 
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             this.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
