@@ -1,4 +1,5 @@
 var windows = {
+    isMaxEditor: false,
     init: function () {
         $(".footer .ico-restore:eq(1)").click(function () {
             windows.restoreBottom();
@@ -163,6 +164,8 @@ var windows = {
         windows.minBottom();
         windows.minSide();
         wide.curEditor.focus();
+        
+        windows.isMaxEditor = true;
     },
     restoreEditor: function () {
         $(".toolbars .ico-restore").removeClass("ico-restore").addClass("ico-max")
@@ -174,6 +177,8 @@ var windows = {
         windows.restoreBottom();
         windows.restoreSide();
         wide.curEditor.focus();
+        
+        windows.isMaxEditor = false;
     },
     clearFloat: function () {
         if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {

@@ -70,6 +70,7 @@
     "goto_line": "跳转到行",
     "delete_line": "删除当前行",
     "save_editor_file": "保存当前编辑器文件",
+    "save_all_editors_files": "保存所有编辑器文件",
     "close_editor": "关闭当前编辑器",
     "full_screen": "编辑器全屏",
     "auto_indent": "自动缩进",

@@ -477,7 +477,14 @@ var editors = {
                     }
                     wide.fmt(currentPath, wide.curEditor);
                 },
-                "Alt-F7": "findUsages"
+                "Alt-F7": "findUsages",
+                "Shift-Alt-Enter": function () {
+                    if (windows.isMaxEditor) {
+                        windows.restoreEditor();
+                    } else {
+                        windows.maxEditor();
+                    }
+                },
             }
         });
 
