@@ -276,6 +276,9 @@ var wide = {
                 "title": config.label.about,
                 "hideFooter": true
             });
+            
+            // TODO: remove
+            $("#dialogAbout").dialog("open");
         });
     },
     _initLayout: function () {
