@@ -4,6 +4,7 @@ var Tabs = function (obj) {
     obj._stack = [];
 
     this.obj = obj;
+    this.obj.STACKSIZE = 64;
 
     this._init(obj);
 };
@@ -60,25 +61,26 @@ $.extend(Tabs.prototype, {
         }
     },
     del: function (id) {
-        // TODO: 
         var $tabsPanel = this.obj._$tabsPanel,
                 $tabs = this.obj._$tabs,
-                prevId = undefined,
-                currentId = $tabs.children(".current").data("index");
+                stack = this.obj._stack,
+                prevId = null;
         $tabs.children("div[data-index='" + id + "']").remove();
         $tabsPanel.children("div[data-index='" + id + "']").remove();
 
-        if (this.obj._prevId === id) {
-            this.obj._prevId = $tabs.children("div:first").data("index");
+        // 移除堆栈中该 id
+        for (var i = 0; i < stack.length; i++) {
+            if (id === stack[i]) {
+                stack.splice(i, 1);
+            }
+        }
+        
+        prevId = stack[stack.length - 1];
+
+        if (typeof this.obj.removeAfter === 'function') {
+            this.obj.removeAfter(id, prevId);
         }
 
-        if (currentId !== id) {
-            prevId = currentId;
-        } else {
-            prevId = this.obj._prevId;
-        }
-
-        this.obj.removeAfter(id, prevId);
         this.setCurrent(prevId);
     },
     getCurrentId: function () {
@@ -98,9 +100,12 @@ $.extend(Tabs.prototype, {
             return false;
         }
 
-        if (this.obj._stack.length === 1024) {
-            this.obj._stack.splice(1023, 1);
-        } else {
+        // tab 顺序入栈，如栈满则清除
+        var stack = this.obj._stack;
+        if (stack.length === this.obj.STACKSIZE) {
+            stack.splice(0, 1);
+        }
+        if (stack[stack.length - 1] !== id) {
             this.obj._stack.push(id);
         }
 

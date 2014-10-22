@@ -6,11 +6,6 @@
     word-wrap: break-word;
 }
 
-#startPage .workspace {
-    line-height: 16px;
-    margin-bottom: 6px;
-}
-
 #startPage a {
     color: #4183c4;
     text-decoration: none;
@@ -42,6 +37,14 @@
     padding-bottom: 5px;
     margin-bottom: 5px;
     border-bottom: 1px solid #f1f1f1;
+}
+
+#startPage .details li.border.workspace {
+    line-height: 18px;
+    padding-bottom: 10px !important;
+    word-wrap: break-word;
+    white-space: normal;
+    word-break: break-all;
 }
 
 #startPage .news {
