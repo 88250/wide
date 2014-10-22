@@ -115,7 +115,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 		glog.V(3).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
 
-		// 在读取程序输出前先返回一次，使前端获取到 run 状态与 pid
+		// 在读取程序输出前先返回一次，使前端获取到 run 状态以及对应的 pid
 		if nil != session.OutputWS[sid] {
 			wsChannel := session.OutputWS[sid]
 
@@ -289,7 +289,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 			if 0 == count { // 说明构建成功，没有错误信息输出
 				// 设置下一次执行命令（前端会根据这个发送请求）
-				channelRet["nextCmd"] = args["nextCmd"]
+				channelRet["nextCmd"] = "run"
 
 				go func() { // 运行 go install，生成的库用于 gocode lib-path
 					cmd := exec.Command("go", "install")
