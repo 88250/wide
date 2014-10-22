@@ -344,13 +344,11 @@ var wide = {
                     break;
                 case 'start-build':
                 case 'start-install':
+                case 'start-get':
                     wide.fillOutput(data.output);
 
                     break;
                 case 'go install':
-                    wide.fillOutput($('.bottom-window-group .output').text() + data.output);
-
-                    break;
                 case 'go get':
                     wide.fillOutput($('.bottom-window-group .output').text() + data.output);
 

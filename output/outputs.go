@@ -463,7 +463,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	if nil != session.OutputWS[sid] {
-		// 在前端 output 中显示“开始构建”
+		// 在前端 output 中显示“开始 go install”
 
 		channelRet["output"] = i18n.Get(r, "start-install").(string) + "\n"
 		channelRet["cmd"] = "start-install"
@@ -613,11 +613,38 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reader := io.MultiReader(stdout, stderr)
-
-	cmd.Start()
+	if !data["succ"].(bool) {
+		return
+	}
 
 	channelRet := map[string]interface{}{}
+
+	if nil != session.OutputWS[sid] {
+		// 在前端 output 中显示“开始 go get
+
+		channelRet["output"] = i18n.Get(r, "start-get").(string) + "\n"
+		channelRet["cmd"] = "start-get"
+
+		wsChannel := session.OutputWS[sid]
+
+		err := wsChannel.Conn.WriteJSON(&channelRet)
+		if nil != err {
+			glog.Error(err)
+			return
+		}
+
+		// 更新通道最近使用时间
+		wsChannel.Time = time.Now()
+	}
+
+	reader := io.MultiReader(stdout, stderr)
+
+	if err := cmd.Start(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
 
 	go func(runningId int) {
 		defer util.Recover()
@@ -625,17 +652,19 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 
 		glog.V(3).Infof("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
 
+		channelRet := map[string]interface{}{}
+		channelRet["cmd"] = "go get"
+
 		for {
 			buf := make([]byte, 1024)
 			count, err := reader.Read(buf)
 
-			if nil != err || 0 == count {
-				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
+			channelRet["output"] = string(buf[:count])
 
-				break
-			} else {
-				channelRet["output"] = string(buf[:count])
-				channelRet["cmd"] = "go get"
+			if nil != err {
+				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
+
+				channelRet["output"] = i18n.Get(r, "get-failed").(string) + "\n" + string(buf[:count])
 
 				if nil != session.OutputWS[sid] {
 					wsChannel := session.OutputWS[sid]
@@ -649,6 +678,42 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 					// 更新通道最近使用时间
 					wsChannel.Time = time.Now()
 				}
+
+				break
+			}
+
+			if 0 == count {
+				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
+
+				channelRet["output"] = i18n.Get(r, "get-succ").(string) + "\n"
+
+				if nil != session.OutputWS[sid] {
+					wsChannel := session.OutputWS[sid]
+
+					err := wsChannel.Conn.WriteJSON(&channelRet)
+					if nil != err {
+						glog.Error(err)
+						break
+					}
+
+					// 更新通道最近使用时间
+					wsChannel.Time = time.Now()
+				}
+
+				break
+			}
+
+			if nil != session.OutputWS[sid] {
+				wsChannel := session.OutputWS[sid]
+
+				err := wsChannel.Conn.WriteJSON(&channelRet)
+				if nil != err {
+					glog.Error(err)
+					break
+				}
+
+				// 更新通道最近使用时间
+				wsChannel.Time = time.Now()
 			}
 		}
 	}(rand.Int())
