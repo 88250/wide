@@ -496,7 +496,38 @@ var wide = {
     },
     // 构建.
     build: function () {
-        // TODO: 构建
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+
+        if ($(".menu li.run").hasClass("disabled")) {
+            return false;
+        }
+
+        if ($(".toolbars .ico-stop").length === 1) {
+            wide.stop();
+            return false;
+        }
+
+        var request = newWideRequest();
+        request.file = currentPath;
+        request.code = wide.curEditor.getValue();
+        request.nextCmd = ""; // 只构建，无下一步操作
+
+        $.ajax({
+            type: 'POST',
+            url: '/build',
+            data: JSON.stringify(request),
+            dataType: "json",
+            beforeSend: function (data) {
+                $('.bottom-window-group .output').text('');
+            },
+            success: function (data) {
+                $(".toolbars .ico-buildrun").addClass("ico-stop")
+                        .removeClass("ico-buildrun").attr("title", config.label.stop);
+            }
+        });
     },
     // 构建并运行.
     run: function () {
@@ -517,6 +548,7 @@ var wide = {
         var request = newWideRequest();
         request.file = currentPath;
         request.code = wide.curEditor.getValue();
+        request.nextCmd = "run";
 
         $.ajax({
             type: 'POST',
