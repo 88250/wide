@@ -442,6 +442,8 @@ var wide = {
         if ($(".menu li.save-all").hasClass("disabled")) {
             return false;
         }
+        
+        // TODO: 只保存未保存过的文件
 
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             this.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
@@ -506,10 +508,34 @@ var wide = {
     },
     // 构建.
     build: function () {
-        // TODO: 构建
+        wide.saveAllFiles();
+        
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+
+        var request = newWideRequest();
+        request.file = currentPath;
+        request.code = wide.curEditor.getValue();
+        request.nextCmd = ""; // 只构建，无下一步操作
+
+        $.ajax({
+            type: 'POST',
+            url: '/build',
+            data: JSON.stringify(request),
+            dataType: "json",
+            beforeSend: function (data) {
+                $('.bottom-window-group .output').text('');
+            },
+            success: function (data) {
+            }
+        });
     },
     // 构建并运行.
     run: function () {
+        wide.saveAllFiles();
+        
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
@@ -527,6 +553,7 @@ var wide = {
         var request = newWideRequest();
         request.file = currentPath;
         request.code = wide.curEditor.getValue();
+        request.nextCmd = "run";
 
         $.ajax({
             type: 'POST',
@@ -568,6 +595,8 @@ var wide = {
         });
     },
     goinstall: function () {
+        wide.saveAllFiles();
+        
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
