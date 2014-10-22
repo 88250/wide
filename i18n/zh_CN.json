@@ -84,5 +84,8 @@
     "start-build": "开始构建",
     "build-succ": "构建成功",
     "build-failed": "构建失败",
+	"start-install": "开始 go install",
+	"install-succ": "go install 成功",
+	"install-failed": "go install 失败",
     "colon": "："
 }

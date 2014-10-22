@@ -456,86 +456,116 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if data["succ"].(bool) {
-		reader := io.MultiReader(stdout, stderr)
-
-		cmd.Start()
-
-		go func(runningId int) {
-			defer util.Recover()
-			defer cmd.Wait()
-
-			glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
-
-			// 一次性读取
-			buf := make([]byte, 1024*8)
-			count, _ := reader.Read(buf)
-
-			channelRet := map[string]interface{}{}
-			channelRet["output"] = string(buf[:count])
-			channelRet["cmd"] = "go install"
-
-			if 0 != count { // 构建失败
-				// 解析错误信息，返回给编辑器 gutter lint
-				errOut := string(buf[:count])
-				lines := strings.Split(errOut, "\n")
-
-				if lines[0][0] == '#' {
-					lines = lines[1:] // 跳过第一行
-				}
-
-				lints := []*Lint{}
-
-				for _, line := range lines {
-					if len(line) < 1 {
-						continue
-					}
-
-					if line[0] == '\t' {
-						// 添加到上一个 lint 中
-						last := len(lints)
-						msg := lints[last-1].Msg
-						msg += line
-
-						lints[last-1].Msg = msg
-
-						continue
-					}
-
-					file := line[:strings.Index(line, ":")]
-					left := line[strings.Index(line, ":")+1:]
-					glog.Info("left: ", left)
-					lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
-					msg := left[strings.Index(left, ":")+2:]
-
-					lint := &Lint{
-						File:     file,
-						LineNo:   lineNo - 1,
-						Severity: lintSeverityError,
-						Msg:      msg,
-					}
-
-					lints = append(lints, lint)
-				}
-
-				channelRet["lints"] = lints
-			}
-
-			if nil != session.OutputWS[sid] {
-				glog.V(3).Infof("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
-
-				wsChannel := session.OutputWS[sid]
-				err := wsChannel.Conn.WriteJSON(&channelRet)
-				if nil != err {
-					glog.Error(err)
-				}
-
-				// 更新通道最近使用时间
-				wsChannel.Time = time.Now()
-			}
-
-		}(rand.Int())
+	if !data["succ"].(bool) {
+		return
 	}
+
+	channelRet := map[string]interface{}{}
+
+	if nil != session.OutputWS[sid] {
+		// 在前端 output 中显示“开始构建”
+
+		channelRet["output"] = i18n.Get(r, "start-install").(string) + "\n"
+		channelRet["cmd"] = "start-install"
+
+		wsChannel := session.OutputWS[sid]
+
+		err := wsChannel.Conn.WriteJSON(&channelRet)
+		if nil != err {
+			glog.Error(err)
+			return
+		}
+
+		// 更新通道最近使用时间
+		wsChannel.Time = time.Now()
+	}
+
+	reader := io.MultiReader(stdout, stderr)
+
+	if err := cmd.Start(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	go func(runningId int) {
+		defer util.Recover()
+		defer cmd.Wait()
+
+		glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
+
+		// 一次性读取
+		buf := make([]byte, 1024*8)
+		count, _ := reader.Read(buf)
+
+		channelRet := map[string]interface{}{}
+
+		channelRet["cmd"] = "go install"
+
+		if 0 != count { // 构建失败
+			// 解析错误信息，返回给编辑器 gutter lint
+			errOut := string(buf[:count])
+			lines := strings.Split(errOut, "\n")
+
+			if lines[0][0] == '#' {
+				lines = lines[1:] // 跳过第一行
+			}
+
+			lints := []*Lint{}
+
+			for _, line := range lines {
+				if len(line) < 1 {
+					continue
+				}
+
+				if line[0] == '\t' {
+					// 添加到上一个 lint 中
+					last := len(lints)
+					msg := lints[last-1].Msg
+					msg += line
+
+					lints[last-1].Msg = msg
+
+					continue
+				}
+
+				file := line[:strings.Index(line, ":")]
+				left := line[strings.Index(line, ":")+1:]
+				lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
+				msg := left[strings.Index(left, ":")+2:]
+
+				lint := &Lint{
+					File:     file,
+					LineNo:   lineNo - 1,
+					Severity: lintSeverityError,
+					Msg:      msg,
+				}
+
+				lints = append(lints, lint)
+			}
+
+			channelRet["lints"] = lints
+
+			channelRet["output"] = i18n.Get(r, "install-failed").(string) + "\n" + errOut
+		} else {
+			channelRet["output"] = i18n.Get(r, "install-succ").(string) + "\n"
+		}
+
+		if nil != session.OutputWS[sid] {
+			glog.V(3).Infof("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
+
+			wsChannel := session.OutputWS[sid]
+			err := wsChannel.Conn.WriteJSON(&channelRet)
+			if nil != err {
+				glog.Error(err)
+			}
+
+			// 更新通道最近使用时间
+			wsChannel.Time = time.Now()
+		}
+
+	}(rand.Int())
 }
 
 // go get.

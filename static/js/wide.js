@@ -343,6 +343,7 @@ var wide = {
 
                     break;
                 case 'start-build':
+                case 'start-install':
                     wide.fillOutput(data.output);
 
                     break;
