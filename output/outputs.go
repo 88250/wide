@@ -5,6 +5,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"io"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
@@ -287,7 +288,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		wsChannel.Time = time.Now()
 	}
 
-	reader := io.MultiReader(stdout, stderr)
+	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
 
 	if err := cmd.Start(); nil != err {
 		glog.Error(err)
@@ -303,14 +304,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		glog.V(3).Infof("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
 
 		// 一次性读取
-		buf := make([]byte, 1024*8)
-		count, _ := reader.Read(buf)
+		buf, _ := ioutil.ReadAll(reader)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "build"
 		channelRet["executable"] = executable
 
-		if 0 == count { // 说明构建成功，没有错误信息输出
+		if 0 == len(buf) { // 说明构建成功，没有错误信息输出
 			// 设置下一次执行命令（前端会根据该参数发送请求）
 			channelRet["nextCmd"] = args["nextCmd"]
 			channelRet["output"] = "<span class='build-succ'>" + i18n.Get(r, "build-succ").(string) + "</span>\n"
@@ -328,7 +328,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			}()
 		} else { // 构建失败
 			// 解析错误信息，返回给编辑器 gutter lint
-			errOut := string(buf[:count])
+			errOut := string(buf)
 			channelRet["output"] = "<span class='build-failed'>" + i18n.Get(r, "build-failed").(string) + "</span>\n" + errOut
 
 			lines := strings.Split(errOut, "\n")
