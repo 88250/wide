@@ -364,7 +364,7 @@ var editors = {
         searcHTML += '</ul>';
 
         var $search = $('.bottom-window-group .search'),
-                title = config.label.usages;
+                title = config.label.find_usages;
         if (type === "founds") {
             title = config.label.search_text;
         }
@@ -460,7 +460,7 @@ var editors = {
                 "Ctrl-\\": "autocompleteAnyWord",
                 ".": "autocompleteAfterDot",
                 "Ctrl-I": "exprInfo",
-                "Ctrl-G": "gotoLine",
+                "Ctrl-L": "gotoLine",
                 "Ctrl-E": "deleteLine",
                 "Ctrl-D": "doNothing", // 取消默认的 deleteLine
                 "Ctrl-B": "jumpToDecl",

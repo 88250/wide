@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/show-hint.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/lint/lint.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/fold/foldgutter.css">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/dialog/dialog.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/theme/wide.css">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/ztree/zTreeStyle.css">
@@ -222,7 +223,7 @@
                                     "confirm": "{{.i18n.confirm}}",
                                     "build_n_run": "{{.i18n.build_n_run}}",
                                     "stop": "{{.i18n.stop}}",
-                                    "usages": "{{.i18n.usages}}",
+                                    "find_usages": "{{.i18n.find_usages}}",
                                     "search_text": "{{.i18n.search_text}}",
                                     "search": "{{.i18n.search}}",
                                     "start_page": "{{.i18n.start_page}}",
@@ -261,10 +262,9 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/edit/closebrackets.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/edit/matchbrackets.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/edit/closetag.js"></script>
-        <!--
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/search/searchcursor.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/search/search.js"></script>
-        -->
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/dialog/dialog.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/search/match-highlighter.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/fold/foldcode.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/fold/foldgutter.js"></script>
