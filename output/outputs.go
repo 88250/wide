@@ -660,7 +660,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 			channelRet["output"] = string(buf)
 
 			if nil != err {
-				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error: %s)", sid, runningId, err.Error())
+				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error: %v)", sid, runningId, err)
 
 				channelRet["output"] = "<span class='get-failed'>" + i18n.Get(r, "get-failed").(string) + "</span>\n" + string(buf)
 
