@@ -141,7 +141,8 @@
                 top = settings.position.top;
                 left = settings.position.left;
             } else {
-                top = parseInt((windowH - dialogH) / 2);
+                // 20(footer) + 23(header)
+                top = parseInt((windowH - dialogH - 43) / 2);
                 left = parseInt((windowW - dialogW) / 2);
             }
             $dialog.css({

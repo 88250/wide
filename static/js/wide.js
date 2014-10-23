@@ -272,13 +272,28 @@ var wide = {
             $("#dialogAbout").dialog({
                 "modal": true,
                 "height": 460,
-                "width": 860,
+                "width": 800,
                 "title": config.label.about,
-                "hideFooter": true
+                "hideFooter": true,
+                "afterOpen": function () {
+                    $.ajax({
+                        url: "http://rhythm.b3log.org/version/wide/latest",
+                        type: "GET",
+                        dataType: "jsonp",
+                        jsonp: "callback",
+                        success: function (data, textStatus) {
+                           if ($("#dialogAbout .version").text() === data.wideVersion) {
+                               $(".upgrade").text('当前已是最新版本');
+                           } else {
+                                $(".upgrade").html("请下载最新版本<a href='' target='_blank'>" + data.wideVersion + "</a>");
+                           }
+                        }
+                    });
+                }
             });
 
             // TODO: remove
-            // $("#dialogAbout").dialog("open");
+            $("#dialogAbout").dialog("open");
         });
     },
     _initLayout: function () {
@@ -585,7 +600,7 @@ var wide = {
     },
     goget: function () {
         wide.saveAllFiles();
-        
+
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;

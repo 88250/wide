@@ -1,14 +1,71 @@
-logo
-Hello, 世界
-Coding with Go on the Wide way.
-wide 当前版本
-检查更新
+<div class="fn-clear">
+    <img class="logo" src="{{.conf.StaticServer}}/static/images/wide-logo.png" alt="wide logi"/>
+    <div class="fn-left">
+        <h2>Hello, 世界</h2>
+        <h3>Coding with Go on the Wide way. </h3>
+    </div>
+</div>
+<div class="space"></div>
+<div>
+    <label>{{.i18n.current_ver}}{{.i18n.colon}}</label> 
+    <span class="version">{{.ver}}</span> <br/>
+    <span class="upgrade">正在检查更新...</span>
+    <div class="space"></div>
 
-开发团队
-项目地址
-捐赠
-许可协议
-致谢
+    <div class="fn-clear">
+        <div class="fn-left">
+            <label>go环境{{.i18n.colon}}</label>
+            $G #20 (comment), $GOOS, $GOARCH <br/> 
+            <label>操作系统{{.i18n.colon}}</label>
+            Windows
+            <div class="space"></div>
 
-go环境
-操作系统
+            <label>{{.i18n.project_address}}{{.i18n.colon}}</label>
+            <a href="https://github.com/b3log/wide" target="_blank">github.com/b3log/wide</a><br/>
+
+            <label>{{.i18n.dev_team}}{{.i18n.colon}}</label>
+            <a href="https://github.com/b3log/b3log-solo/wiki/About_us" target="_blank">B3log</a><br/> 
+
+            <label>{{.i18n.dev_team}}{{.i18n.colon}}</label>
+            <a href="https://github.com/b3log/b3log-solo/wiki/About_us" target="_blank">B3log</a>
+        </div>
+        <div class="fn-left thx">
+            致谢{{.i18n.colon}}
+            <ul>
+                <li>
+                    <a href="http://golang.org">golang</a>
+                    <a href="https://github.com/marijnh/CodeMirror">CodeMirror</a>
+                </li>
+                <li>
+                    <a href="https://github.com/zTree/zTree_v3">zTree</a>
+                    <a href="https://github.com/visualfc/liteide">LiteIDE</a>
+                </li>
+                <li>
+                    <a href="https://github.com/nsf/gocode">gocode</a>
+                    <a href="https://github.com/gorilla">Gorilla</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="space"></div>
+    <div>
+        许可协议 
+        <div class="license">
+            /*
+            * Copyright (C) 2011, Liyuan Li
+            *
+            * Licensed under the Apache License, Version 2.0 (the "License");
+            * you may not use this file except in compliance with the License.
+            * You may obtain a copy of the License at
+            *
+            *     http://www.apache.org/licenses/LICENSE-2.0
+            *
+            * Unless required by applicable law or agreed to in writing, software
+            * distributed under the License is distributed on an "AS IS" BASIS,
+            * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+            * See the License for the specific language governing permissions and
+            * limitations under the License.
+            */
+        </div>
+    </div>
+</div>

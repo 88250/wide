@@ -1,3 +1,43 @@
 #dialogAbout {
-    
+    margin: 35px 100px 0 100px;
+    line-height: 20px;
+}
+
+#dialogAbout a {
+    color: #4183c4;
+    text-decoration: none;
+}
+
+#dialogAbout a:hover {
+    text-decoration: underline;
+}
+
+#startPage label {
+    color: #666;
+}
+
+#dialogAbout img {
+    width: 100px;
+    float: left;
+    margin-right: 60px;
+}
+
+#dialogAbout .space {
+    margin-bottom: 10px;
+}
+
+#dialogAbout .thx,
+#dialogAbout .thx ul {
+    margin-left: 50px;
+}
+
+#dialogAbout .thx a {
+    width: 100px;
+    display: inline-block;
+}
+
+#dialogAbout .license {
+    color: #999;
+    font-size: 12px;
+    line-height: normal;
 }
