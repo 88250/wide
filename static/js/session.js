@@ -79,7 +79,7 @@ var session = {
     },
     _initWS: function () {
         // 用于保持会话，如果该通道断开，则服务器端会销毁会话状态，回收相关资源.
-        var sessionWS = new WebSocket(config.channel.session + '/session/ws?sid=' + config.wideSessionId);
+        var sessionWS = new ReconnectingWebSocket(config.channel.session + '/session/ws?sid=' + config.wideSessionId);
 
         sessionWS.onopen = function () {
             console.log('[session onopen] connected');

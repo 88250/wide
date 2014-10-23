@@ -299,7 +299,7 @@ var wide = {
         });
     },
     _initWS: function () {
-        var outputWS = new WebSocket(config.channel.output + '/output/ws?sid=' + config.wideSessionId);
+        var outputWS = new ReconnectingWebSocket(config.channel.output + '/output/ws?sid=' + config.wideSessionId);
         outputWS.onopen = function () {
             console.log('[output onopen] connected');
         };
