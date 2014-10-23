@@ -146,7 +146,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run-done"
-					channelRet["output"] = string(buf[:count])
+					channelRet["output"] = "<pre>" + string(buf[:count]) + "</pre>"
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
