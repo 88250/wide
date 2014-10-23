@@ -199,7 +199,7 @@ var wide = {
             "height": 52,
             "width": 260,
             "title": config.label.goto_line,
-            "okText": config.label.goto,
+            "okText": config.label.go,
             "cancelText": config.label.cancel,
             "afterOpen": function () {
                 $("#dialogGoLinePrompt > input").val('').focus();
@@ -283,17 +283,16 @@ var wide = {
                         jsonp: "callback",
                         success: function (data, textStatus) {
                            if ($("#dialogAbout .version").text() === data.wideVersion) {
-                               $(".upgrade").text('当前已是最新版本');
+                               $(".upgrade").text(config.label.uptodate);
                            } else {
-                                $(".upgrade").html("请下载最新版本<a href='' target='_blank'>" + data.wideVersion + "</a>");
+                                $(".upgrade").html(config.label.new_version_available + config.label.colon 
+                                        + "<a href='" + data.wideDownload 
+                                        + "' target='_blank'>" + data.wideVersion + "</a>");
                            }
                         }
                     });
                 }
             });
-
-            // TODO: remove
-            $("#dialogAbout").dialog("open");
         });
     },
     _initLayout: function () {

@@ -256,7 +256,8 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale, "ver": Ver}
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale, "ver": Ver,
+		"goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
 
 	t, err := template.ParseFiles("view/about.html")
 

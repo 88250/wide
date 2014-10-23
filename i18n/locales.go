@@ -20,9 +20,10 @@ var Locales = map[string]locale{}
 
 // 加载国际化配置.
 func Load() {
-	// TODO: 加载所有语言配置
-	load("zh_CN")
+	// TODO: 自动加载所有语言配置
 
+	load("zh_CN")
+	load("en_US")
 }
 
 func load(localeStr string) {
