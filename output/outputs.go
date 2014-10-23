@@ -496,7 +496,6 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
 
 		// 一次性读取
-		// 一次性读取
 		buf, _ := ioutil.ReadAll(reader)
 
 		channelRet := map[string]interface{}{}
@@ -654,65 +653,30 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go get"
 
-		for {
-			buf, err := reader.ReadBytes('\n')
+		// 一次性读取
+		buf, _ := ioutil.ReadAll(reader)
 
-			channelRet["output"] = string(buf)
+		if 0 != len(buf) {
+			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
 
+			channelRet["output"] = "<span class='get-failed'>" + i18n.Get(r, "get-failed").(string) + "</span>\n" + string(buf)
+		} else {
+			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
+
+			channelRet["output"] = "<span class='get-succ'>" + i18n.Get(r, "get-succ").(string) + "</span>\n"
+
+		}
+
+		if nil != session.OutputWS[sid] {
+			wsChannel := session.OutputWS[sid]
+
+			err := wsChannel.Conn.WriteJSON(&channelRet)
 			if nil != err {
-				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error: %v)", sid, runningId, err)
-
-				channelRet["output"] = "<span class='get-failed'>" + i18n.Get(r, "get-failed").(string) + "</span>\n" + string(buf)
-
-				if nil != session.OutputWS[sid] {
-					wsChannel := session.OutputWS[sid]
-
-					err := wsChannel.Conn.WriteJSON(&channelRet)
-					if nil != err {
-						glog.Error(err)
-						break
-					}
-
-					// 更新通道最近使用时间
-					wsChannel.Time = time.Now()
-				}
-
-				break
+				glog.Error(err)
 			}
 
-			if 0 == len(buf) {
-				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
-
-				channelRet["output"] = "<span class='get-succ'>" + i18n.Get(r, "get-succ").(string) + "</span>\n"
-
-				if nil != session.OutputWS[sid] {
-					wsChannel := session.OutputWS[sid]
-
-					err := wsChannel.Conn.WriteJSON(&channelRet)
-					if nil != err {
-						glog.Error(err)
-						break
-					}
-
-					// 更新通道最近使用时间
-					wsChannel.Time = time.Now()
-				}
-
-				break
-			}
-
-			if nil != session.OutputWS[sid] {
-				wsChannel := session.OutputWS[sid]
-
-				err := wsChannel.Conn.WriteJSON(&channelRet)
-				if nil != err {
-					glog.Error(err)
-					break
-				}
-
-				// 更新通道最近使用时间
-				wsChannel.Time = time.Now()
-			}
+			// 更新通道最近使用时间
+			wsChannel.Time = time.Now()
 		}
 	}(rand.Int())
 }
