@@ -584,6 +584,8 @@ var wide = {
         });
     },
     goget: function () {
+        wide.saveAllFiles();
+        
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
