@@ -272,7 +272,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != session.OutputWS[sid] {
 		// 在前端 output 中显示“开始构建”
 
-		channelRet["output"] = i18n.Get(r, "start-build").(string) + "\n"
+		channelRet["output"] = "<span>" + i18n.Get(r, "start-build").(string) + "</span>\n"
 		channelRet["cmd"] = "start-build"
 
 		wsChannel := session.OutputWS[sid]
@@ -311,7 +311,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet["executable"] = executable
 
 		if 0 == count { // 说明构建成功，没有错误信息输出
-			// 设置下一次执行命令（前端会根据这个发送请求）
+			// 设置下一次执行命令（前端会根据该参数发送请求）
 			channelRet["nextCmd"] = args["nextCmd"]
 			channelRet["output"] = i18n.Get(r, "build-succ").(string) + "\n"
 
