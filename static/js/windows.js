@@ -56,6 +56,7 @@ var windows = {
         $(window).click(function (event) {
             if ($(event.target).closest(".footer").length === 1
                     || $(event.target).closest(".bottom-window-group").length === 1
+                    || $(event.target).closest(".toolbars").length === 1
                     || $(event.target).closest(".side").length === 1) {
                 return false;
             }
@@ -78,7 +79,6 @@ var windows = {
             $it.attr("style", "");
 
             var bottomH = $(".content").height();
-            $(".bottom-window-group .output").height(bottomH - 27);
             $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
 
             $it.addClass("bottom-window-group-max");
@@ -97,7 +97,6 @@ var windows = {
         $it.removeClass("bottom-window-group-max").attr("style", "");
         var bottomH = $it.height();
 
-        $(".bottom-window-group .output").height(bottomH - 27);
         $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
 
         $it.animate({

@@ -266,16 +266,7 @@
     z-index: 11;
 }
 
-.bottom-window-group textarea.output {
-    border-width: 0;
-    background-color: #FFF;
-    color: #555555;
-    width: 100%;
-    margin: 0;
-}
-
-.bottom-window-group .notification,
-.bottom-window-group .search {
+.bottom-window-group > div > div {
     overflow: auto;
 }
 

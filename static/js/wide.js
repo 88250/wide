@@ -278,7 +278,7 @@ var wide = {
             });
 
             // TODO: remove
-            $("#dialogAbout").dialog("open");
+            // $("#dialogAbout").dialog("open");
         });
     },
     _initLayout: function () {
@@ -320,18 +320,13 @@ var wide = {
                     type: 'POST',
                     url: '/run',
                     data: JSON.stringify(request),
-                    dataType: "json",
-                    beforeSend: function (data) {                        
-                    },
-                    success: function (data) {
-
-                    }
+                    dataType: "json"
                 });
             }
 
             switch (data.cmd) {
                 case 'run': // 正在运行
-                    wide.fillOutput($('.bottom-window-group .output').text() + data.output);
+                    wide.fillOutput($('.bottom-window-group .output > div').html() + data.output);
                     wide.curProcessId = data.pid;
 
                     break;
@@ -350,11 +345,11 @@ var wide = {
                     break;
                 case 'go install':
                 case 'go get':
-                    wide.fillOutput($('.bottom-window-group .output').text() + data.output);
+                    wide.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     break;
                 case 'build':
-                    wide.fillOutput($('.bottom-window-group .output').text() + data.output);
+                    wide.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     if (data.lints) { // 说明编译有错误输出            
                         for (var i = 0; i < data.lints.length; i++) {
@@ -510,9 +505,6 @@ var wide = {
             url: '/stop',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
-                // $('.bottom-window-group .output').text('');
-            },
             success: function (data) {
                 $(".toolbars .ico-stop").removeClass("ico-stop")
                         .addClass("ico-buildrun").attr("title", config.label.build_n_run);
@@ -521,8 +513,8 @@ var wide = {
     },
     fillOutput: function (data) {
         var $output = $('.bottom-window-group .output');
-        $output.text(data);
-        $output.scrollTop($output[0].scrollHeight);
+        $output.find("div").html(data.replace(/\n/g, '<br/>'));
+        $output.parent().scrollTop($output[0].scrollHeight);
     },
     // 构建.
     build: function () {
@@ -544,7 +536,9 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output').text('');
+                $('.bottom-window-group .output > div').text('');
+                wide.bottomWindowTab.setCurrent("output");
+                windows.flowBottom();
             },
             success: function (data) {
             }
@@ -579,7 +573,9 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output').text('');
+                $('.bottom-window-group .output > div').text('');
+                wide.bottomWindowTab.setCurrent("output");
+                windows.flowBottom();
             },
             success: function (data) {
                 $(".toolbars .ico-buildrun").addClass("ico-stop")
@@ -606,7 +602,9 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output').text('');
+                $('.bottom-window-group .output > div').text('');
+                wide.bottomWindowTab.setCurrent("output");
+                windows.flowBottom();
             },
             success: function (data) {
             }
@@ -634,7 +632,9 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output').text('');
+                $('.bottom-window-group .output > div').text('');
+                wide.bottomWindowTab.setCurrent("output");
+                windows.flowBottom();
             },
             success: function (data) {
             }
