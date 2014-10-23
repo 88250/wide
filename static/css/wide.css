@@ -274,6 +274,18 @@
     width: 100%;
 }
 
+.bottom-window-group .output .start-build, .start-install, .start-get {
+    color: #999;
+}
+
+.bottom-window-group .output .build-succ, .install-succ, .get-succ {
+    color: rgb(0,153,0);
+}
+
+.bottom-window-group .output .build-failed, .install-failed, .get-failed {
+    color: red;
+}
+
 .bottom-window-group td {
     border-bottom: 1px solid #DDD;
     line-height: 20px;
