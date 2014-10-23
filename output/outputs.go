@@ -2,6 +2,7 @@
 package output
 
 import (
+	"bufio"
 	"encoding/json"
 	"io"
 	"math/rand"
@@ -95,7 +96,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reader := io.MultiReader(stdout, stderr)
+	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
 
 	if err := cmd.Start(); nil != err {
 		glog.Error(err)
@@ -133,10 +134,9 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		for {
-			buf := make([]byte, 1024)
-			count, err := reader.Read(buf)
+			buf, err := reader.ReadBytes('\n')
 
-			if nil != err || 0 == count {
+			if nil != err || 0 == len(buf) {
 				// 从用户进程集中移除这个执行完毕（或是被主动停止）的进程
 				processes.remove(wSession, cmd.Process)
 
@@ -146,7 +146,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run-done"
-					channelRet["output"] = "<pre>" + string(buf[:count]) + "</pre>"
+					channelRet["output"] = "<pre>" + string(buf) + "</pre>"
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
@@ -163,7 +163,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run"
-					channelRet["output"] = "<pre>" + string(buf[:count]) + "</pre>"
+					channelRet["output"] = "<pre>" + string(buf) + "</pre>"
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
