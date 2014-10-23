@@ -480,7 +480,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		wsChannel.Time = time.Now()
 	}
 
-	reader := io.MultiReader(stdout, stderr)
+	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
 
 	if err := cmd.Start(); nil != err {
 		glog.Error(err)
@@ -496,15 +496,15 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
 
 		// 一次性读取
-		buf := make([]byte, 1024*8)
-		count, _ := reader.Read(buf)
+		// 一次性读取
+		buf, _ := ioutil.ReadAll(reader)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go install"
 
-		if 0 != count { // 构建失败
+		if 0 != len(buf) { // 构建失败
 			// 解析错误信息，返回给编辑器 gutter lint
-			errOut := string(buf[:count])
+			errOut := string(buf)
 			lines := strings.Split(errOut, "\n")
 
 			if lines[0][0] == '#' {
@@ -636,7 +636,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		wsChannel.Time = time.Now()
 	}
 
-	reader := io.MultiReader(stdout, stderr)
+	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
 
 	if err := cmd.Start(); nil != err {
 		glog.Error(err)
@@ -655,15 +655,14 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet["cmd"] = "go get"
 
 		for {
-			buf := make([]byte, 1024)
-			count, err := reader.Read(buf)
+			buf, err := reader.ReadBytes('\n')
 
-			channelRet["output"] = string(buf[:count])
+			channelRet["output"] = string(buf)
 
 			if nil != err {
 				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
 
-				channelRet["output"] = "<span class='get-failed'>" + i18n.Get(r, "get-failed").(string) + "</span>\n" + string(buf[:count])
+				channelRet["output"] = "<span class='get-failed'>" + i18n.Get(r, "get-failed").(string) + "</span>\n" + string(buf)
 
 				if nil != session.OutputWS[sid] {
 					wsChannel := session.OutputWS[sid]
@@ -681,7 +680,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
-			if 0 == count {
+			if 0 == len(buf) {
 				glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
 
 				channelRet["output"] = "<span class='get-succ'>" + i18n.Get(r, "get-succ").(string) + "</span>\n"
