@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"strconv"
+	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/session"
@@ -53,8 +54,12 @@ func event2Notification(e *event.Event) {
 		return
 	}
 
+	httpSession, _ := session.HTTPSession.Get(wsChannel.Request, "wide-session")
+	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
+
 	// 消息国际化处理
-	notification.Message = i18n.Get(wsChannel.Request, "notification_"+strconv.Itoa(e.Code)).(string)
+	notification.Message = i18n.Get(locale, "notification_"+strconv.Itoa(e.Code)).(string)
 
 	wsChannel.Conn.WriteJSON(&notification)
 

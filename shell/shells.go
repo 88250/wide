@@ -42,8 +42,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	wideSession := session.WideSessions.New(httpSession)
 
 	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession}
 
 	wideSessions := session.WideSessions.GetByUsername(username)

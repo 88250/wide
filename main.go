@@ -57,7 +57,8 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if "GET" == r.Method {
 		// 展示登录页面
 
-		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r), "ver": Ver}
+		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
+			"locale": conf.Wide.Locale, "ver": Ver}
 
 		t, err := template.ParseFiles("view/login.html")
 
@@ -141,11 +142,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	wideSession := session.WideSessions.New(httpSession)
 
 	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
 
 	wideSessions := session.WideSessions.GetByUsername(username)
 	userConf := conf.Wide.GetUser(username)
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession, "latestSessionContent": userConf.LatestSessionContent,
 		"pathSeparator": conf.PathSeparator}
 
@@ -186,9 +188,10 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"username": username, "workspace": userWorkspace, "ver": Ver}
 
 	t, err := template.ParseFiles("view/start.html")
@@ -207,7 +210,21 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r)}
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+
+	if httpSession.IsNew {
+		http.Redirect(w, r, "/login", http.StatusFound)
+
+		return
+	}
+
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	httpSession.Save(r, w)
+
+	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
+
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale}
 
 	t, err := template.ParseFiles("view/keyboard_shortcuts.html")
 
@@ -225,8 +242,21 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	i18n.Load()
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(r), "locale": i18n.GetLocale(r),
-		"ver": Ver}
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+
+	if httpSession.IsNew {
+		http.Redirect(w, r, "/login", http.StatusFound)
+
+		return
+	}
+
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	httpSession.Save(r, w)
+
+	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
+
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale, "ver": Ver}
 
 	t, err := template.ParseFiles("view/about.html")
 

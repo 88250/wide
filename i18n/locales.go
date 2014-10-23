@@ -4,7 +4,6 @@ package i18n
 import (
 	"encoding/json"
 	"io/ioutil"
-	"net/http"
 	"os"
 
 	"github.com/golang/glog"
@@ -22,39 +21,38 @@ var Locales = map[string]locale{}
 // 加载国际化配置.
 func Load() {
 	// TODO: 加载所有语言配置
-	bytes, _ := ioutil.ReadFile("i18n/zh_CN.json")
+	load("zh_CN")
 
-	zhCN := locale{Name: "zh_CN"}
+}
 
-	// TODO: 时区
-
-	err := json.Unmarshal(bytes, &zhCN.Langs)
-	if err != nil {
+func load(localeStr string) {
+	bytes, err := ioutil.ReadFile("i18n/" + localeStr + ".json")
+	if nil != err {
 		glog.Error(err)
 
 		os.Exit(-1)
 	}
 
-	Locales["zh_CN"] = zhCN
-	glog.V(5).Info("Loaded [zh_CN] locale configuration")
+	l := locale{Name: localeStr}
+
+	err = json.Unmarshal(bytes, &l.Langs)
+	if nil != err {
+		glog.Error(err)
+
+		os.Exit(-1)
+	}
+
+	Locales[localeStr] = l
+
+	glog.V(5).Infof("Loaded [%s] locale configuration", localeStr)
 }
 
-// 获取请求对应的本地语言配置项.
-func Get(r *http.Request, key string) interface{} {
-	locale := GetLocale(r)
-
+// 获取语言配置项.
+func Get(locale, key string) interface{} {
 	return Locales[locale].Langs[key]
 }
 
-// 获取请求对应的本地语言配置.
-func GetAll(r *http.Request) map[string]interface{} {
-	locale := GetLocale(r)
-
+// 获取语言配置.
+func GetAll(locale string) map[string]interface{} {
 	return Locales[locale].Langs
-}
-
-// 获取请求对应的 locale.
-func GetLocale(r *http.Request) string {
-	// TODO: 从请求中获取 locale
-	return "zh_CN"
 }

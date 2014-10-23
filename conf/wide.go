@@ -35,6 +35,7 @@ type User struct {
 	Name                 string
 	Password             string
 	Workspace            string // 该用户的工作空间 GOPATH 路径
+	Locale               string
 	LatestSessionContent *LatestSessionContent
 }
 
@@ -52,6 +53,7 @@ type conf struct {
 	RuntimeMode           string  // 运行模式
 	Pwd                   string  // 工作目录
 	Workspace             string  // 主工作空间 GOPATH 路径
+	Locale                string  // 默认的区域
 	Users                 []*User // 用户集
 }
 

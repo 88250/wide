@@ -186,6 +186,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
 
 	decoder := json.NewDecoder(r.Body)
 
@@ -273,7 +274,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != session.OutputWS[sid] {
 		// 在前端 output 中显示“开始构建”
 
-		channelRet["output"] = "<span class='start-build'>" + i18n.Get(r, "start-build").(string) + "</span>\n"
+		channelRet["output"] = "<span class='start-build'>" + i18n.Get(locale, "start-build").(string) + "</span>\n"
 		channelRet["cmd"] = "start-build"
 
 		wsChannel := session.OutputWS[sid]
@@ -313,7 +314,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		if 0 == len(buf) { // 说明构建成功，没有错误信息输出
 			// 设置下一次执行命令（前端会根据该参数发送请求）
 			channelRet["nextCmd"] = args["nextCmd"]
-			channelRet["output"] = "<span class='build-succ'>" + i18n.Get(r, "build-succ").(string) + "</span>\n"
+			channelRet["output"] = "<span class='build-succ'>" + i18n.Get(locale, "build-succ").(string) + "</span>\n"
 
 			go func() { // 运行 go install，生成的库用于 gocode lib-path
 				cmd := exec.Command("go", "install")
@@ -329,7 +330,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		} else { // 构建失败
 			// 解析错误信息，返回给编辑器 gutter lint
 			errOut := string(buf)
-			channelRet["output"] = "<span class='build-failed'>" + i18n.Get(r, "build-failed").(string) + "</span>\n" + errOut
+			channelRet["output"] = "<span class='build-failed'>" + i18n.Get(locale, "build-failed").(string) + "</span>\n" + errOut
 
 			lines := strings.Split(errOut, "\n")
 
@@ -396,6 +397,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
 
 	decoder := json.NewDecoder(r.Body)
 
@@ -465,7 +467,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != session.OutputWS[sid] {
 		// 在前端 output 中显示“开始 go install”
 
-		channelRet["output"] = "<span class='start-install'>" + i18n.Get(r, "start-install").(string) + "</span>\n"
+		channelRet["output"] = "<span class='start-install'>" + i18n.Get(locale, "start-install").(string) + "</span>\n"
 		channelRet["cmd"] = "start-install"
 
 		wsChannel := session.OutputWS[sid]
@@ -545,9 +547,9 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 			channelRet["lints"] = lints
 
-			channelRet["output"] = "<span class='install-failed'>" + i18n.Get(r, "install-failed").(string) + "</span>\n" + errOut
+			channelRet["output"] = "<span class='install-failed'>" + i18n.Get(locale, "install-failed").(string) + "</span>\n" + errOut
 		} else {
-			channelRet["output"] = "<span class='install-succ'>" + i18n.Get(r, "install-succ").(string) + "</span>\n"
+			channelRet["output"] = "<span class='install-succ'>" + i18n.Get(locale, "install-succ").(string) + "</span>\n"
 		}
 
 		if nil != session.OutputWS[sid] {
@@ -573,6 +575,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
 
 	decoder := json.NewDecoder(r.Body)
 
@@ -620,7 +623,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != session.OutputWS[sid] {
 		// 在前端 output 中显示“开始 go get
 
-		channelRet["output"] = "<span class='start-get'>" + i18n.Get(r, "start-get").(string) + "</span>\n"
+		channelRet["output"] = "<span class='start-get'>" + i18n.Get(locale, "start-get").(string) + "</span>\n"
 		channelRet["cmd"] = "start-get"
 
 		wsChannel := session.OutputWS[sid]
@@ -659,11 +662,11 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		if 0 != len(buf) {
 			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
 
-			channelRet["output"] = "<span class='get-failed'>" + i18n.Get(r, "get-failed").(string) + "</span>\n" + string(buf)
+			channelRet["output"] = "<span class='get-failed'>" + i18n.Get(locale, "get-failed").(string) + "</span>\n" + string(buf)
 		} else {
 			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
 
-			channelRet["output"] = "<span class='get-succ'>" + i18n.Get(r, "get-succ").(string) + "</span>\n"
+			channelRet["output"] = "<span class='get-succ'>" + i18n.Get(locale, "get-succ").(string) + "</span>\n"
 
 		}
 
