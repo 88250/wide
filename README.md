@@ -80,7 +80,7 @@ Flow:
 
 ## Demos
 
-* 20141024, png ![](http://b3log.org/wide/demo/20141024.png)
+* 20141024-1.0.0, png ![](http://b3log.org/wide/demo/20141024.png)
 
 ### Olds
 * [20140927, png](http://b3log.org/wide/demo/20140927.png)
