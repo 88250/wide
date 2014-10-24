@@ -60,7 +60,7 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
 			"locale": conf.Wide.Locale, "ver": Ver}
 
-		t, err := template.ParseFiles("view/login.html")
+		t, err := template.ParseFiles("views/login.html")
 
 		if nil != err {
 			glog.Error(err)
@@ -153,7 +153,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
-	t, err := template.ParseFiles("view/index.html")
+	t, err := template.ParseFiles("views/index.html")
 
 	if nil != err {
 		glog.Error(err)
@@ -194,7 +194,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"username": username, "workspace": userWorkspace, "ver": Ver}
 
-	t, err := template.ParseFiles("view/start.html")
+	t, err := template.ParseFiles("views/start.html")
 
 	if nil != err {
 		glog.Error(err)
@@ -226,7 +226,7 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale}
 
-	t, err := template.ParseFiles("view/keyboard_shortcuts.html")
+	t, err := template.ParseFiles("views/keyboard_shortcuts.html")
 
 	if nil != err {
 		glog.Error(err)
@@ -259,7 +259,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale, "ver": Ver,
 		"goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
 
-	t, err := template.ParseFiles("view/about.html")
+	t, err := template.ParseFiles("views/about.html")
 
 	if nil != err {
 		glog.Error(err)

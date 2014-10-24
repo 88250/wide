@@ -51,7 +51,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
-	t, err := template.ParseFiles("view/shell.html")
+	t, err := template.ParseFiles("views/shell.html")
 
 	if nil != err {
 		glog.Error(err)
