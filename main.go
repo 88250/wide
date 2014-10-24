@@ -24,7 +24,7 @@ import (
 )
 
 const (
-	Ver = "1.0.0-dev" // 当前 Wide 版本
+	Ver = "1.0.0" // 当前 Wide 版本
 )
 
 // Wide 中唯一一个 init 函数.

@@ -60,7 +60,6 @@
     "ver": "Version",
     "current_ver": "Current Version",
     "dev_team": "Dev Team",
-    "donate": "Donate",
     "donate_us": "Donate Us",
     "confirm_save": "Confirm Save",
     "workspace": "Workspace",
@@ -101,5 +100,6 @@
     "project": "Project",
     "license": "License",
     "credits": "Credits",
+    "uptodate": "it is up to date",
     "colon": ": "
 }
