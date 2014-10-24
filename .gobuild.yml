@@ -1,0 +1,21 @@
+author: DL88250@gmail.com
+description: A Web IDE for Teams using Golang.
+
+filesets:
+    includes:
+        - conf
+	- data
+	- doc
+	- i18n
+	- static
+	- views
+        - README.md
+        - LICENSE
+    excludes:
+        - \.git
+settings:
+        targetdir: ""
+        build: |
+            test -d Godeps && go(){ godep go "$@";} ; go install -v
+        outfiles:
+            - packer
