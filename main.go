@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"strconv"
 	"time"
+	"mime"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
@@ -273,6 +274,12 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 
 // 主程序入口.
 func main() {
+
+	//解决Windows环境下问题
+	mime.AddExtensionType(".css", "text/css")
+	mime.AddExtensionType(".js", "application/x-javascript")
+	mime.AddExtensionType(".json", "application/json")
+
 	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
 
 	defer glog.Flush()
