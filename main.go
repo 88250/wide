@@ -9,6 +9,7 @@ import (
 	"runtime"
 	"strconv"
 	"time"
+	"mime"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
@@ -48,6 +49,11 @@ func init() {
 
 	// 定时检查无效会话
 	session.FixedTimeRelease()
+
+	//解决Windows环境下问题
+	mime.AddExtensionType(".css", "text/css")
+	mime.AddExtensionType(".js", "application/x-javascript")
+	mime.AddExtensionType(".json", "application/json")
 }
 
 // 登录.

@@ -1,0 +1,3 @@
+go install
+wide
+pause
