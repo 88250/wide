@@ -11,22 +11,17 @@
     "RuntimeMode": "dev",
     "Pwd": "{pwd}",
     "Workspace": "{pwd}/data/workspace",
-    "Locale": "en_US",
+    "Locale": "zh_CN",
     "Users": [
         {
             "Name": "admin",
             "Password": "admin",
             "Workspace": "{pwd}/data/user_workspaces/admin",
-            "Locale": "en_US",
+            "Locale": "zh_CN",
             "LatestSessionContent": {
-                "FileTree": [
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest",
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time"
-                ],
-                "Files": [
-                    "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time\\main.go"
-                ],
-                "CurrentFile": "E:\\Work\\go\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\mytest\\time\\main.go"
+                "FileTree": [],
+                "Files": [],
+                "CurrentFile": ""
             }
         }
     ]
