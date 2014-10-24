@@ -29,7 +29,7 @@ const (
 
 // Wide 中唯一一个 init 函数.
 func init() {
-	// TODO:默认启动参数
+	// TODO: 默认启动参数
 	flag.Set("logtostderr", "true")
 	flag.Set("v", "3")
 	flag.Parse()
