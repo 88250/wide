@@ -18,4 +18,4 @@ settings:
         build: |
             test -d Godeps && go(){ godep go "$@";} ; go install -v
         outfiles:
-            - packer
+            - wide
