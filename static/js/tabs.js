@@ -49,7 +49,7 @@ $.extend(Tabs.prototype, {
         var $tabsPanel = this.obj._$tabsPanel,
                 $tabs = this.obj._$tabs;
 
-        $tabs.append('<div class="current" data-index="' + data.id + '">'
+        $tabs.append('<div data-index="' + data.id + '">'
                 + data.title + '<span class="ico-close font-ico"></span></div>');
         $tabsPanel.append('<div data-index="' + data.id + '">' + data.content
                 + '</div>');
