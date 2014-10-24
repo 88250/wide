@@ -270,20 +270,36 @@
     overflow: auto;
 }
 
-.bottom-window-group table {
-    width: 100%;
+.bottom-window-group .output {
+    padding: 2px 5px;
+    line-height: 16px;
+    font-size: 12px;
 }
 
-.bottom-window-group .output .start-build, .start-install, .start-get {
+.bottom-window-group .output pre {
+    margin: 0;
+}
+
+.bottom-window-group .output .start-build,
+.bottom-window-group .output .start-install,
+.bottom-window-group .output .start-get {
     color: #999;
 }
 
-.bottom-window-group .output .build-succ, .install-succ, .get-succ {
+.bottom-window-group .output .build-succ, 
+.bottom-window-group .output .install-succ,
+.bottom-window-group .output .get-succ {
     color: rgb(0,153,0);
 }
 
-.bottom-window-group .output .build-failed, .install-failed, .get-failed {
+.bottom-window-group .output .build-failed, 
+.bottom-window-group .output .install-failed, 
+.bottom-window-group .output .get-failed {
     color: red;
+}
+
+.bottom-window-group table {
+    width: 100%;
 }
 
 .bottom-window-group td {
