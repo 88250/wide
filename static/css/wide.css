@@ -271,7 +271,7 @@
 }
 
 .bottom-window-group .output {
-    padding: 2px 5px;
+    padding: 0 5px;
     line-height: 16px;
     font-size: 12px;
 }
@@ -356,5 +356,11 @@
     float: right;
     display: none;
     cursor: pointer;
+    background-color: red;
+    color: #FFF;
+    margin: 1px 5px;
+    padding: 0 2px;
+    border-radius: 3px;
+    line-height: 16px;
 }
 /* end footer */

@@ -301,7 +301,6 @@ var wide = {
         $(".content").height(mainH);
         $(".side .tabs-panel").height(mainH - 20);
 
-        $(".bottom-window-group .output").height(bottomH - 27);
         $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
     },
     _initBottomWindowGroup: function () {
