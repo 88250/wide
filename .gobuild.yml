@@ -4,11 +4,11 @@ description: A Web IDE for Teams using Golang.
 filesets:
     includes:
         - conf
-		- data
-		- doc
-		- i18n
-		- static
-		- views
+        - data
+        - doc
+        - i18n
+        - static
+        - views
         - README.md
         - LICENSE
     excludes:
