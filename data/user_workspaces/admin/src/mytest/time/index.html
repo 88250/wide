@@ -3,7 +3,8 @@
     <head>
         <meta charset="UTF-8">
         <title>
-            {{.i18n.wide}}
+                        {{.i18n.wide}}
+                    
         </title>
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/codemirror.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-4.5/addon/hint/show-hint.css">
@@ -24,25 +25,29 @@
             <ul class="fn-cleaer">
                 <li>
                     <span>
-                        {{.i18n.file}}
+                                                {{.i18n.file}}
+                                            
                     </span>
                     <div class="frame">
                         <ul>
                             <li class="save-all disabled" onclick="wide.saveAllFiles()">
                                 <span>
-                                    {{.i18n.save_all_files}}
+                                                                        {{.i18n.save_all_files}}
+                                                                    
                                 </span>
                             </li>
                             <li class="close-all disabled" onclick="wide.closeAllFiles()">
                                 <span>
-                                    {{.i18n.close_all_files}}
+                                                                        {{.i18n.close_all_files}}
+                                                                    
                                 </span>
                             </li>
                             <li class="hr">
                             </li>
                             <li onclick="wide.exit()">
                                 <span>
-                                    {{.i18n.exit}}
+                                                                        {{.i18n.exit}}
+                                                                    
                                 </span>
                             </li>
                         </ul>
@@ -50,25 +55,29 @@
                 </li>
                 <li>
                     <span>
-                        {{.i18n.run}}
+                                                {{.i18n.run}}
+                                            
                     </span>
                     <div class="frame">
                         <ul>
                             <li class="run disabled" onclick="wide.run()">
                                 <span>
-                                    {{.i18n.build_n_run}}
+                                                                        {{.i18n.build_n_run}}
+                                                                    
                                 </span>
                             </li>
                             <li class="hr">
                             </li>
                             <li class="go-get disabled" onclick="wide.goget()">
                                 <span>
-                                    {{.i18n.goget}}
+                                                                        {{.i18n.goget}}
+                                                                    
                                 </span>
                             </li>
                             <li class="go-install disabled" onclick="wide.goinstall()">
                                 <span>
-                                    {{.i18n.goinstall}}
+                                                                        {{.i18n.goinstall}}
+                                                                    
                                 </span>
                             </li>
                         </ul>
@@ -88,28 +97,33 @@
                 -->
                 <li>
                     <span>
-                        {{.i18n.help}}
+                                                {{.i18n.help}}
+                                            
                     </span>
                     <div class="frame">
                         <ul>
                             <li onclick="window.open('https://www.gitbook.io/book/88250/wide-user-guide')">
                                 <span>
-                                    {{.i18n.wide_doc}}
+                                                                        {{.i18n.wide_doc}}
+                                                                    
                                 </span>
                             </li>
                             <li onclick="window.open('https://github.com/b3log/wide/issues/new')">
-                                {{.i18n.report_issues}}
+                                                                {{.i18n.report_issues}}
+                                                            
                             </li>
                             <li class="hr">
                             </li>
                             <li onclick="editors.openStartPage()">
                                 <span>
-                                    {{.i18n.start_page}}
+                                                                        {{.i18n.start_page}}
+                                                                    
                                 </span>
                             </li>
                             <li onclick="wide.openAbout()">
                                 <span>
-                                    {{.i18n.about}}
+                                                                        {{.i18n.about}}
+                                                                    
                                 </span>
                             </li>
                         </ul>
@@ -124,7 +138,8 @@
                 <div class="tabs">
                     <div class="current" data-index="filreTree">
                         <span title="{{.i18n.file}}">
-                            {{.i18n.file}}
+                                                        {{.i18n.file}}
+                                                    
                         </span>
                     </div>
                 </div>
@@ -136,13 +151,16 @@
                         <div id="dirRMenu" class="frame">
                             <ul>
                                 <li onclick="tree.newFile();">
-                                    {{.i18n.create_file}}
+                                                                        {{.i18n.create_file}}
+                                                                    
                                 </li>
                                 <li onclick="tree.newDir();">
-                                    {{.i18n.create_dir}}
+                                                                        {{.i18n.create_dir}}
+                                                                    
                                 </li>
                                 <li onclick="tree.removeIt();">
-                                    {{.i18n.delete}}
+                                                                        {{.i18n.delete}}
+                                                                    
                                 </li>
                             </ul>
                         </div>
@@ -150,7 +168,8 @@
                         <div id="fileRMenu" class="frame">
                             <ul>
                                 <li onclick="tree.removeIt();">
-                                    {{.i18n.delete}}
+                                                                        {{.i18n.delete}}
+                                                                    
                                 </li>
                             </ul>
                         </div>
@@ -179,17 +198,20 @@
                 <div class="tabs">
                     <div class="current" data-index="output">
                         <span title="{{.i18n.output}}">
-                            {{.i18n.output}}
+                                                        {{.i18n.output}}
+                                                    
                         </span>
                     </div>
                     <div data-index="search">
                         <span title="{{.i18n.search}}">
-                            {{.i18n.search}}
+                                                        {{.i18n.search}}
+                                                    
                         </span>
                     </div>
                     <div data-index="notification">
                         <span title="{{.i18n.notification}}">
-                            {{.i18n.notification}}
+                                                        {{.i18n.notification}}
+                                                    
                         </span>
                     </div>
                 </div>
@@ -234,15 +256,18 @@
                 <span class="cursor">
                 </span>
                 <span class="notification-count" title="{{.i18n.unread_notification}}">
-                    {{.i18n.notification}}!
+                                        {{.i18n.notification}}!
+                                    
                 </span>
             </div>
         </div>
         <div id="dialogRemoveConfirm" class="fn-none">
-            {{.i18n.isDelete}} 
+                        {{.i18n.isDelete}} 
+                        
             <b>
             </b>
-            ?
+                        ?
+                    
         </div>
         <div id="dialogAlert" class="fn-none">
         </div>
@@ -260,44 +285,45 @@
             <input placeholder="{{.i18n.file_format}}" />
         </div>
         <script>
-                    var config = {
-                    "pathSeparator": {{.pathSeparator}},
-                            "latestSessionContent": {{.latestSessionContent}},
-                            "label": {
-                            "restore_editor": "{{.i18n.restore_editor}}",
-                                    "max_editor": "{{.i18n.max_editor}}",
-                                    "delete": "{{.i18n.delete}}",
-                                    "cancel": "{{.i18n.cancel}}",
-                                    "goto_line": "{{.i18n.goto_line}}",
-                                    "goto": "{{.i18n.goto}}",
-                                    "create": "{{.i18n.create}}",
-                                    "create_file": "{{.i18n.create_file}}",
-                                    "create_dir": "{{.i18n.create_dir}}",
-                                    "tip": "{{.i18n.tip}}",
-                                    "confirm": "{{.i18n.confirm}}",
-                                    "build_n_run": "{{.i18n.build_n_run}}",
-                                    "stop": "{{.i18n.stop}}",
-                                    "usages": "{{.i18n.find_usages}}",
-                                    "search_text": "{{.i18n.search_text}}",
-                                    "search": "{{.i18n.search}}",
-                                    "initialise": "{{.i18n.initialise}}",
-                                    "confirm_save": "{{.i18n.confirm_save}}"
-                            },
-                            "channel": {
-                            "editor": '{{.conf.EditorChannel}}',
-                                    "shell": '{{.conf.ShellChannel}}',
-                                    "output": '{{.conf.OutputChannel}}',
-                                    "session": '{{.conf.SessionChannel}}'
-                            },
-                            "wideSessionId": '{{.session.Id}}'
-                    };
-                    // 发往 Wide 的所有 AJAX 请求需要使用该函数创建请求参数.
-                            function newWideRequest() {
-                            var ret = {
-                            sid: config.wideSessionId
-                            }
-                            return ret;
-                            }
+                                var config = {
+                                "pathSeparator": {{.pathSeparator}},
+                                        "latestSessionContent": {{.latestSessionContent}},
+                                        "label": {
+                                        "restore_editor": "{{.i18n.restore_editor}}",
+                                                "max_editor": "{{.i18n.max_editor}}",
+                                                "delete": "{{.i18n.delete}}",
+                                                "cancel": "{{.i18n.cancel}}",
+                                                "goto_line": "{{.i18n.goto_line}}",
+                                                "goto": "{{.i18n.goto}}",
+                                                "create": "{{.i18n.create}}",
+                                                "create_file": "{{.i18n.create_file}}",
+                                                "create_dir": "{{.i18n.create_dir}}",
+                                                "tip": "{{.i18n.tip}}",
+                                                "confirm": "{{.i18n.confirm}}",
+                                                "build_n_run": "{{.i18n.build_n_run}}",
+                                                "stop": "{{.i18n.stop}}",
+                                                "usages": "{{.i18n.find_usages}}",
+                                                "search_text": "{{.i18n.search_text}}",
+                                                "search": "{{.i18n.search}}",
+                                                "initialise": "{{.i18n.initialise}}",
+                                                "confirm_save": "{{.i18n.confirm_save}}"
+                                        },
+                                        "channel": {
+                                        "editor": '{{.conf.EditorChannel}}',
+                                                "shell": '{{.conf.ShellChannel}}',
+                                                "output": '{{.conf.OutputChannel}}',
+                                                "session": '{{.conf.SessionChannel}}'
+                                        },
+                                        "wideSessionId": '{{.session.Id}}'
+                                };
+                                // 发往 Wide 的所有 AJAX 请求需要使用该函数创建请求参数.
+                                        function newWideRequest() {
+                                        var ret = {
+                                        sid: config.wideSessionId
+                                        }
+                                        return ret;
+                                        }
+                    
         </script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js">
         </script>

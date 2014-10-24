@@ -1,6 +1,5 @@
 #startPage {
-    font-size: 15px;
-    padding: 30px 70px;
+    padding: 50px 70px;
     line-height: 28px;
     white-space: normal;
     word-wrap: break-word;
@@ -19,7 +18,7 @@
     background-color: #f5f5f5;
     border-bottom-width: 0 !important;
     border-radius: 3px 3px 0 0;
-    font-size: 18px;
+    font-size: 15px;
     margin-bottom: 10px;
     padding: 5px 10px;
 }

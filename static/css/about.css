@@ -4,7 +4,7 @@
 
 #dialogAbout {
     margin: 35px 100px 0 100px;
-    line-height: 20px;
+    line-height: 28px;
 }
 
 #dialogAbout a {
@@ -36,7 +36,6 @@
 #dialogAbout .thx {
     border-left: 1px solid #f1f1f1;
     padding-left: 24px;
-    margin-top: 16px;
 }
 
 #dialogAbout .thx,
