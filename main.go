@@ -5,6 +5,7 @@ import (
 	"flag"
 	"html/template"
 	"math/rand"
+	"mime"
 	"net/http"
 	"runtime"
 	"strconv"
@@ -275,6 +276,8 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
 	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
 
+	initMime()
+
 	defer glog.Flush()
 
 	// IDE
@@ -379,4 +382,13 @@ func panicRecover(handler func(w http.ResponseWriter, r *http.Request)) func(w h
 		// Handler 处理
 		handler(w, r)
 	}
+}
+
+// 初始化 mime.
+//
+// 有的操作系统（例如 Windows XP）上运行时根据文件后缀获取不到对应的 mime 类型，会导致响应的 HTTP content-type 不正确。
+func initMime() {
+	mime.AddExtensionType(".css", "text/css")
+	mime.AddExtensionType(".js", "application/x-javascript")
+	mime.AddExtensionType(".json", "application/json")
 }
