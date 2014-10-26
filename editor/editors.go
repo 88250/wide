@@ -124,13 +124,15 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	// glog.Infof("offset: %d", offset)
 
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	workspaces := strings.Split(userWorkspace, conf.PathListSeparator)
+	libPath := ""
+	for _, workspace := range workspaces {
+		userLib := workspace + conf.PathSeparator + "pkg" + conf.PathSeparator +
+			runtime.GOOS + "_" + runtime.GOARCH
+		libPath += userLib + conf.PathListSeparator
+	}
 
-	//glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
-	userLib := userWorkspace + conf.PathSeparator + "pkg" + conf.PathSeparator +
-		runtime.GOOS + "_" + runtime.GOARCH
-
-	libPath := userLib
-	//glog.Infof("gocode set lib-path %s", libPath)
+	glog.V(5).Infof("gocode set lib-path %s", libPath)
 
 	// FIXME: 使用 gocode set lib-path 在多工作空间环境下肯定是有问题的，需要考虑其他实现方式
 	gocode := conf.Wide.GetGocode()
