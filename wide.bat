@@ -1,5 +1,5 @@
 go install
 
-wide
+%GOPATH%\bin\wide.exe
 
 pause
