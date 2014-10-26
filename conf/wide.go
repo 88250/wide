@@ -36,6 +36,7 @@ type User struct {
 	Password             string
 	Workspace            string // 该用户的工作空间 GOPATH 路径
 	Locale               string
+	GoFormat             string
 	LatestSessionContent *LatestSessionContent
 }
 
@@ -131,11 +132,23 @@ func (c *conf) GetWorkspace() string {
 	return filepath.FromSlash(strings.Replace(c.Workspace, "{pwd}", c.Pwd, 1))
 }
 
-// 获取 user 的工作空间路径.
-func (user *User) getWorkspace() string {
-	ret := strings.Replace(user.Workspace, "{pwd}", Wide.Pwd, 1)
+// 获取 username 指定的用户的 Go 源码格式化工具路径，查找不到时返回 "gofmt".
+func (c *conf) GetGoFmt(username string) string {
+	for _, user := range c.Users {
+		if user.Name == username {
+			switch user.GoFormat {
+			case "gofmt":
+				return "gofmt"
+			case "goimports":
+				return c.GetExecutableInGOBIN("goimports")
+			default:
+				glog.Errorf("Unsupported Go Format tool [%s]", user.GoFormat)
+				return "gofmt"
+			}
+		}
+	}
 
-	return filepath.FromSlash(ret)
+	return "gofmt"
 }
 
 // 获取 username 指定的用户配置.

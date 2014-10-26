@@ -10,22 +10,25 @@ import (
 
 	"github.com/88250/gohtml"
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 )
 
-// TODO: 加入 goimports 格式化 Go 源码文件
-
-// gofmt 格式化 Go 源码文件.
+// 格式化 Go 源码文件.
+// 根据用户的 GoFormat 配置选择格式化工具：
+//  1. gofmt
+//  2. goimports
 func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	decoder := json.NewDecoder(r.Body)
+	session, _ := session.HTTPSession.Get(r, "wide-session")
+	username := session.Values["username"].(string)
 
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		data["succ"] = false
 
@@ -59,8 +62,10 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	fmt := conf.Wide.GetGoFmt(username)
+
 	argv := []string{filePath}
-	cmd := exec.Command("gofmt", argv...)
+	cmd := exec.Command(fmt, argv...)
 
 	bytes, _ := cmd.Output()
 	output := string(bytes)
