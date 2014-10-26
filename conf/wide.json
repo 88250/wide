@@ -18,7 +18,7 @@
             "Password": "admin",
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "Locale": "zh_CN",
-			"GoFormat": "gofmt",
+            "GoFormat": "gofmt",
             "LatestSessionContent": {
                 "FileTree": [],
                 "Files": [],
