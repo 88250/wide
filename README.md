@@ -96,7 +96,7 @@ Flow:
    * `go get -u github.com/88250/ide_stub`
    * `go get -u github.com/nsf/gocode`
 3. Compiles wide with `go build` 
-4. Configures `conf/wide.json`
+4. Configures `conf/wide.json` (optional)
 5. Runs the executable `wide` or `wide.exe`
 
 ## Known Issues
