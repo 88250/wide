@@ -5,8 +5,11 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"runtime"
+	"strings"
 
 	"github.com/88250/gohtml"
+	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 )
@@ -30,6 +33,12 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["file"].(string)
+
+	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
+	if strings.HasPrefix(filePath, apiPath) { // 如果是 Go API 源码文件
+		// 忽略修改
+		return
+	}
 
 	fout, err := os.Create(filePath)
 
