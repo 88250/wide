@@ -83,7 +83,7 @@ func FixedTimeCheckEnv() {
 				os.Exit(-1)
 			}
 
-			gocode := Wide.GetGocode()
+			gocode := Wide.GetExecutableInGOBIN("gocode")
 			cmd := exec.Command(gocode, "close")
 			_, err := cmd.Output()
 			if nil != err {
@@ -91,7 +91,7 @@ func FixedTimeCheckEnv() {
 				glog.Warningf("Not found gocode [%s]", gocode)
 			}
 
-			ide_stub := Wide.GetIDEStub()
+			ide_stub := Wide.GetExecutableInGOBIN("ide_stub")
 			cmd = exec.Command(ide_stub, "version")
 			_, err = cmd.Output()
 			if nil != err {
@@ -149,40 +149,40 @@ func (*conf) GetUser(username string) *User {
 	return nil
 }
 
-// 获取 gocode 路径.
-func (*conf) GetGocode() string {
-	return getGOBIN() + "gocode"
-}
-
-// 获取 ide_stub 路径.
-func (*conf) GetIDEStub() string {
-	return getGOBIN() + "ide_stub"
-}
-
-// 获取 GOBIN 路径，末尾带路径分隔符.
-func getGOBIN() string {
-	// $GOBIN/
-	ret := os.Getenv("GOBIN")
-	if "" != ret {
-		return ret + PathSeparator
+// 获取 GOBIN 中 executable 指定的文件路径.
+//
+// 函数内部会判断操作系统，如果是 Windows 则在 executable 实参后加入 .exe 后缀.
+func (*conf) GetExecutableInGOBIN(executable string) string {
+	if util.OS.IsWindows() {
+		executable += ".exe"
 	}
 
-	// $GOPATH/bin/$GOOS_$GOARCH/
-	ret = os.Getenv("GOPATH") + PathSeparator + "bin" + PathSeparator +
-		os.Getenv("GOOS") + "_" + os.Getenv("GOARCH")
-	if isExist(ret) {
-		return ret + PathSeparator
+	gopaths := strings.Split(os.Getenv("GOPATH"), PathListSeparator)
+
+	for _, gopath := range gopaths {
+		// $GOPATH/bin/$GOOS_$GOARCH/executable
+		ret := gopath + PathSeparator + "bin" + PathSeparator +
+			os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + PathSeparator + executable
+		if isExist(ret) {
+			return ret
+		}
+
+		// $GOPATH/bin/{runtime.GOOS}_{runtime.GOARCH}/executable
+		ret = gopath + PathSeparator + "bin" + PathSeparator +
+			runtime.GOOS + "_" + runtime.GOARCH + PathSeparator + executable
+		if isExist(ret) {
+			return ret
+		}
+
+		// $GOPATH/bin/executable
+		ret = gopath + PathSeparator + "bin" + PathSeparator + executable
+		if isExist(ret) {
+			return ret
+		}
 	}
 
-	// $GOPATH/bin/{runtime.GOOS}_{runtime.GOARCH}/
-	ret = os.Getenv("GOPATH") + PathSeparator + "bin" + PathSeparator +
-		runtime.GOOS + "_" + runtime.GOARCH
-	if isExist(ret) {
-		return ret + PathSeparator
-	}
-
-	// $GOPATH/bin/
-	return os.Getenv("GOPATH") + PathSeparator + "bin" + PathSeparator
+	// $GOBIN/executable
+	return os.Getenv("GOBIN") + PathSeparator + executable
 }
 
 // 保存 Wide 配置.
