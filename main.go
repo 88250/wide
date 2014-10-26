@@ -53,8 +53,6 @@ func init() {
 
 // 登录.
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	i18n.Load()
-
 	if "GET" == r.Method {
 		// 展示登录页面
 
@@ -126,8 +124,6 @@ func logoutHandler(w http.ResponseWriter, r *http.Request) {
 
 // Wide 首页.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
-	i18n.Load()
-
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
@@ -175,8 +171,6 @@ func serveSingle(pattern string, filename string) {
 
 // 起始页请求处理.
 func startHandler(w http.ResponseWriter, r *http.Request) {
-	i18n.Load()
-
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
@@ -209,8 +203,6 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 
 // 键盘快捷键页请求处理.
 func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
-	i18n.Load()
-
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
@@ -241,8 +233,6 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 
 // 关于页请求处理.
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
-	i18n.Load()
-
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
@@ -356,8 +346,19 @@ func main() {
 func handlerWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	handler := panicRecover(f)
 	handler = stopwatch(handler)
+	handler = i18nLoad(handler)
 
 	return handler
+}
+
+// 国际化处理包装.
+func i18nLoad(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		i18n.Load()
+
+		// Handler 处理
+		handler(w, r)
+	}
 }
 
 // Handler 包装请求计时.
