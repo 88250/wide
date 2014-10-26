@@ -225,7 +225,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	suffix := ""
-	if "windows" == runtime.GOOS {
+	if util.OS.IsWindows() {
 		suffix = ".exe"
 	}
 	executable := "main" + suffix

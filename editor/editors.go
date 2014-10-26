@@ -56,7 +56,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		// glog.Infof("offset: %d", offset)
 
-		gocode := conf.Wide.GetGocode()
+		gocode := conf.Wide.GetExecutableInGOBIN("gocode")
 		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
 
 		var output bytes.Buffer
@@ -124,16 +124,18 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	// glog.Infof("offset: %d", offset)
 
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	workspaces := strings.Split(userWorkspace, conf.PathListSeparator)
+	libPath := ""
+	for _, workspace := range workspaces {
+		userLib := workspace + conf.PathSeparator + "pkg" + conf.PathSeparator +
+			runtime.GOOS + "_" + runtime.GOARCH
+		libPath += userLib + conf.PathListSeparator
+	}
 
-	//glog.Infof("User [%s] workspace [%s]", username, userWorkspace)
-	userLib := userWorkspace + conf.PathSeparator + "pkg" + conf.PathSeparator +
-		runtime.GOOS + "_" + runtime.GOARCH
-
-	libPath := userLib
-	//glog.Infof("gocode set lib-path %s", libPath)
+	glog.V(5).Infof("gocode set lib-path %s", libPath)
 
 	// FIXME: 使用 gocode set lib-path 在多工作空间环境下肯定是有问题的，需要考虑其他实现方式
-	gocode := conf.Wide.GetGocode()
+	gocode := conf.Wide.GetExecutableInGOBIN("gocode")
 	argv := []string{"set", "lib-path", libPath}
 	exec.Command(gocode, argv...).Run()
 
@@ -205,7 +207,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	// glog.Infof("offset [%d]", offset)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
-	ide_stub := conf.Wide.GetIDEStub()
+	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-info", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
@@ -279,7 +281,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	// glog.Infof("offset [%d]", offset)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
-	ide_stub := conf.Wide.GetIDEStub()
+	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
@@ -361,7 +363,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	// glog.Infof("offset [%d]", offset)
 
 	// TODO: 目前是调用 liteide_stub 工具来查找使用，后续需要重新实现
-	ide_stub := conf.Wide.GetIDEStub()
+	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir

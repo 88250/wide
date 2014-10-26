@@ -45,9 +45,24 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 
 	username := session.Values["username"].(string)
-	userSrc := conf.Wide.GetUserWorkspace(username) + conf.PathSeparator + "src"
+	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	workspaces := strings.Split(userWorkspace, conf.PathListSeparator)
 
-	root := FileNode{Name: "projects", Path: userSrc, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
+	root := FileNode{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
+
+	// 工作空间节点处理
+	for _, workspace := range workspaces {
+		workspacePath := workspace + conf.PathSeparator + "src"
+
+		workspaceNode := FileNode{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:] + " (" +
+			workspace + ")",
+			Path: workspacePath, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
+
+		walk(workspacePath, &workspaceNode)
+
+		// 添加工作空间节点
+		root.FileNodes = append(root.FileNodes, &workspaceNode)
+	}
 
 	// 构造 Go API 节点
 	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
@@ -64,9 +79,6 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 		// 放行信号
 		close(goapiBuildOKSignal)
 	}()
-
-	// 构造用户工作空间文件树
-	walk(userSrc, &root)
 
 	// 等待放行
 	<-goapiBuildOKSignal
@@ -381,28 +393,30 @@ func createFile(path, fileType string) bool {
 	case "f":
 		file, err := os.OpenFile(path, os.O_CREATE, 0664)
 		if nil != err {
-			glog.Info(err)
+			glog.Error(err)
 
 			return false
 		}
 
 		defer file.Close()
 
-		glog.Infof("Created file [%s]", path)
+		glog.V(5).Infof("Created file [%s]", path)
 
 		return true
 	case "d":
 		err := os.Mkdir(path, 0775)
 
 		if nil != err {
-			glog.Info(err)
+			glog.Error(err)
+
+			return false
 		}
 
-		glog.Infof("Created directory [%s]", path)
+		glog.V(5).Infof("Created directory [%s]", path)
 
 		return true
 	default:
-		glog.Infof("Unsupported file type [%s]", fileType)
+		glog.Errorf("Unsupported file type [%s]", fileType)
 
 		return false
 	}

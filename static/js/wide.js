@@ -509,6 +509,10 @@ var wide = {
             wide.run();
             return false;
         }
+		
+		if (!wide.curProcessId) {
+			return false;
+		}
 
         var request = newWideRequest();
         request.pid = wide.curProcessId;

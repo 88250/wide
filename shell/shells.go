@@ -25,8 +25,6 @@ var ShellWS = map[string]*util.WSChannel{}
 
 // Shell 首页.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	i18n.Load()
-
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
