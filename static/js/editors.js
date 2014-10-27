@@ -445,7 +445,10 @@ var editors = {
         var rulers = [];
         rulers.push({color: "#ccc", column: 120, lineStyle: "dashed"});
 
-        var editor = CodeMirror.fromTextArea(document.getElementById("editor" + id), {
+        var textArea = document.getElementById("editor" + id);
+        textArea.value = data.content;
+
+        var editor = CodeMirror.fromTextArea(textArea, {
             lineNumbers: true,
             autofocus: true,
             autoCloseBrackets: true,
@@ -505,7 +508,6 @@ var editors = {
         });
 
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-panel .tabs").height());
-        editor.setValue(data.content);
         editor.setOption("mode", data.mode);
         editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
 
