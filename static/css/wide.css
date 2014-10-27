@@ -271,6 +271,7 @@
 }
 
 .bottom-window-group .output {
+    font-family: Consolas, Courier New, monospace;
     padding: 0 5px;
     line-height: 16px;
     font-size: 12px;
@@ -281,20 +282,23 @@
 }
 
 .bottom-window-group .output .start-build,
+.bottom-window-group .output .start-test,
 .bottom-window-group .output .start-install,
 .bottom-window-group .output .start-get {
     color: #999;
 }
 
-.bottom-window-group .output .build-succ, 
+.bottom-window-group .output .build-succ,
+.bottom-window-group .output .test-succ,
 .bottom-window-group .output .install-succ,
 .bottom-window-group .output .get-succ {
     color: rgb(0,153,0);
 }
 
-.bottom-window-group .output .build-failed, 
-.bottom-window-group .output .install-failed, 
-.bottom-window-group .output .get-failed {
+.bottom-window-group .output .build-error,
+.bottom-window-group .output .test-error,
+.bottom-window-group .output .install-error, 
+.bottom-window-group .output .get-error {
     color: red;
 }
 

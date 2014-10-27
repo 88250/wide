@@ -11,13 +11,13 @@
     "RuntimeMode": "dev",
     "Pwd": "{pwd}",
     "Workspace": "{pwd}/data/workspace",
-    "Locale": "zh_CN",
+    "Locale": "en_US",
     "Users": [
         {
             "Name": "admin",
             "Password": "admin",
             "Workspace": "{pwd}/data/user_workspaces/admin",
-            "Locale": "zh_CN",
+            "Locale": "en_US",
             "GoFormat": "gofmt",
             "LatestSessionContent": {
                 "FileTree": [],

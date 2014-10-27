@@ -56,11 +56,9 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		data["succ"] = false
 
@@ -188,11 +186,9 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		data["succ"] = false
 
@@ -330,7 +326,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		} else { // 构建失败
 			// 解析错误信息，返回给编辑器 gutter lint
 			errOut := string(buf)
-			channelRet["output"] = "<span class='build-failed'>" + i18n.Get(locale, "build-failed").(string) + "</span>\n" + errOut
+			channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n" + errOut
 
 			lines := strings.Split(errOut, "\n")
 
@@ -390,8 +386,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}(rand.Int())
 }
 
-// go install.
-func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
+// go test.
+func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -399,11 +395,9 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		data["succ"] = false
 
@@ -415,8 +409,12 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
 
-	fout, err := os.Create(filePath)
+	cmd := exec.Command("go", "test", "-v")
+	cmd.Dir = curDir
 
+	setCmdEnv(cmd, username)
+
+	stdout, err := cmd.StdoutPipe()
 	if nil != err {
 		glog.Error(err)
 		data["succ"] = false
@@ -424,16 +422,107 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	code := args["code"].(string)
-
-	fout.WriteString(code)
-
-	if err := fout.Close(); nil != err {
+	stderr, err := cmd.StderrPipe()
+	if nil != err {
 		glog.Error(err)
 		data["succ"] = false
 
 		return
 	}
+
+	if !data["succ"].(bool) {
+		return
+	}
+
+	channelRet := map[string]interface{}{}
+
+	if nil != session.OutputWS[sid] {
+		// 在前端 output 中显示“开始 go test
+
+		channelRet["output"] = "<span class='start-test'>" + i18n.Get(locale, "start-test").(string) + "</span>\n"
+		channelRet["cmd"] = "start-test"
+
+		wsChannel := session.OutputWS[sid]
+
+		err := wsChannel.Conn.WriteJSON(&channelRet)
+		if nil != err {
+			glog.Error(err)
+			return
+		}
+
+		// 更新通道最近使用时间
+		wsChannel.Time = time.Now()
+	}
+
+	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
+
+	if err := cmd.Start(); nil != err {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	go func(runningId int) {
+		defer util.Recover()
+
+		glog.V(3).Infof("Session [%s] is running [go test] [runningId=%d]", sid, runningId)
+
+		channelRet := map[string]interface{}{}
+		channelRet["cmd"] = "go test"
+
+		// 一次性读取
+		buf, _ := ioutil.ReadAll(reader)
+
+		// 同步点，等待 go test 执行完成
+		cmd.Wait()
+
+		if !cmd.ProcessState.Success() {
+			glog.V(3).Infof("Session [%s] 's running [go test] [runningId=%d] has done (with error)", sid, runningId)
+
+			channelRet["output"] = "<span class='test-error'>" + i18n.Get(locale, "test-error").(string) + "</span>\n" + string(buf)
+		} else {
+			glog.V(3).Infof("Session [%s] 's running [go test] [runningId=%d] has done", sid, runningId)
+
+			channelRet["output"] = "<span class='test-succ'>" + i18n.Get(locale, "test-succ").(string) + "</span>\n" + string(buf)
+		}
+
+		if nil != session.OutputWS[sid] {
+			wsChannel := session.OutputWS[sid]
+
+			err := wsChannel.Conn.WriteJSON(&channelRet)
+			if nil != err {
+				glog.Error(err)
+			}
+
+			// 更新通道最近使用时间
+			wsChannel.Time = time.Now()
+		}
+	}(rand.Int())
+}
+
+// go install.
+func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
+
+	var args map[string]interface{}
+
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	sid := args["sid"].(string)
+
+	filePath := args["file"].(string)
+	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
 
 	cmd := exec.Command("go", "install")
 	cmd.Dir = curDir
@@ -547,7 +636,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 			channelRet["lints"] = lints
 
-			channelRet["output"] = "<span class='install-failed'>" + i18n.Get(locale, "install-failed").(string) + "</span>\n" + errOut
+			channelRet["output"] = "<span class='install-error'>" + i18n.Get(locale, "install-error").(string) + "</span>\n" + errOut
 		} else {
 			channelRet["output"] = "<span class='install-succ'>" + i18n.Get(locale, "install-succ").(string) + "</span>\n"
 		}
@@ -577,11 +666,9 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		data["succ"] = false
 
@@ -662,7 +749,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		if 0 != len(buf) {
 			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
 
-			channelRet["output"] = "<span class='get-failed'>" + i18n.Get(locale, "get-failed").(string) + "</span>\n" + string(buf)
+			channelRet["output"] = "<span class='get-error'>" + i18n.Get(locale, "get-error").(string) + "</span>\n" + string(buf)
 		} else {
 			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
 
