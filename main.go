@@ -25,7 +25,8 @@ import (
 )
 
 const (
-	Ver = "1.0.1" // 当前 Wide 版本
+	Ver           = "1.0.1" // Wide 版本
+	CodeMirrorVer = "4.7"   // 编辑器版本
 )
 
 // Wide 中唯一一个 init 函数.
@@ -146,7 +147,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession, "latestSessionContent": userConf.LatestSessionContent,
-		"pathSeparator": conf.PathSeparator}
+		"pathSeparator": conf.PathSeparator, "codeMirrorVer": CodeMirrorVer}
 
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
