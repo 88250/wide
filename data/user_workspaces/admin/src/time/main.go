@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"mytest/time/pkg"
 	"time"
+	"time/pkg"
 )
 
 func main() {
