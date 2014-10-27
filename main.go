@@ -294,6 +294,7 @@ func main() {
 	http.HandleFunc("/build", handlerWrapper(output.BuildHandler))
 	http.HandleFunc("/run", handlerWrapper(output.RunHandler))
 	http.HandleFunc("/stop", handlerWrapper(output.StopHandler))
+	http.HandleFunc("/go/test", handlerWrapper(output.GoTestHandler))
 	http.HandleFunc("/go/get", handlerWrapper(output.GoGetHandler))
 	http.HandleFunc("/go/install", handlerWrapper(output.GoInstallHandler))
 	http.HandleFunc("/output/ws", handlerWrapper(output.WSHandler))

@@ -351,11 +351,13 @@ var wide = {
 
                     break;
                 case 'start-build':
+                case 'start-test':
                 case 'start-install':
                 case 'start-get':
                     wide.fillOutput(data.output);
 
                     break;
+                case 'go test':
                 case 'go install':
                 case 'go get':
                     wide.fillOutput($('.bottom-window-group .output > div').html() + data.output);
@@ -541,6 +543,10 @@ var wide = {
         if (!currentPath) {
             return false;
         }
+        
+        if ($(".menu li.build").hasClass("disabled")) {
+            return false;
+        }
 
         var request = newWideRequest();
         request.file = currentPath;
@@ -600,6 +606,36 @@ var wide = {
             }
         });
     },
+    // 测试.
+    test: function () {
+        wide.saveAllFiles();
+
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+        
+        if ($(".menu li.test").hasClass("disabled")) {
+            return false;
+        }
+
+        var request = newWideRequest();
+        request.file = currentPath;
+
+        $.ajax({
+            type: 'POST',
+            url: '/go/test',
+            data: JSON.stringify(request),
+            dataType: "json",
+            beforeSend: function (data) {
+                $('.bottom-window-group .output > div').text('');
+                wide.bottomWindowTab.setCurrent("output");
+                windows.flowBottom();
+            },
+            success: function (data) {
+            }
+        });
+    },
     goget: function () {
         wide.saveAllFiles();
 
@@ -643,7 +679,6 @@ var wide = {
 
         var request = newWideRequest();
         request.file = currentPath;
-        request.code = wide.curEditor.getValue();
 
         $.ajax({
             type: 'POST',

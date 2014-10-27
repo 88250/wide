@@ -87,6 +87,9 @@
     "start-build": "开始 [go build]",
     "build-succ": "[go build] 成功",
     "build-failed": "[go build] 失败",
+    "start-test": "开始 [go test]",
+    "test-succ": "[go test] 成功",
+    "test-failed": "[go test] 失败",
     "start-install": "开始 [go install]",
     "install-succ": "[go install] 成功",
     "install-failed": "[go install] 失败",
@@ -101,5 +104,6 @@
     "license": "许可协议",
     "credits": "致谢",
     "uptodate": "已是最新版本",
+    "test": "测试",
     "colon": "："
 }

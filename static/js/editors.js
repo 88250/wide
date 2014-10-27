@@ -24,7 +24,7 @@ var editors = {
                 wide.curEditor.focus();
             },
             removeAfter: function (id, nextId) {
-                if (id === 'startPage') {
+                if (id === 'startPage') { // 当前关闭的 tab 是起始页
                     return false;
                 }
 
@@ -35,6 +35,10 @@ var editors = {
                         break;
                     }
                 }
+                if (editors.data.length === 0) { // 起始页可能存在，所以用编辑器数据判断
+                    menu.disabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install']);
+                    $(".toolbars").hide();
+                }
 
                 if (!nextId) {
                     // 不存在打开的编辑器
@@ -43,9 +47,6 @@ var editors = {
                     wide.curNode = undefined;
 
                     wide.curEditor = undefined;
-
-                    menu.disabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
-                    $(".toolbars").hide();
                     return false;
                 }
 
@@ -440,7 +441,7 @@ var editors = {
             content: '<textarea id="editor' + id + '"></textarea>'
         });
 
-        menu.undisabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
+        menu.undisabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install']);
 
         var rulers = [];
         rulers.push({color: "#ccc", column: 120, lineStyle: "dashed"});
