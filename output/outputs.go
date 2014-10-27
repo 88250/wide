@@ -326,7 +326,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		} else { // 构建失败
 			// 解析错误信息，返回给编辑器 gutter lint
 			errOut := string(buf)
-			channelRet["output"] = "<span class='build-failed'>" + i18n.Get(locale, "build-failed").(string) + "</span>\n" + errOut
+			channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n" + errOut
 
 			lines := strings.Split(errOut, "\n")
 
@@ -480,7 +480,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 		if !cmd.ProcessState.Success() {
 			glog.V(3).Infof("Session [%s] 's running [go test] [runningId=%d] has done (with error)", sid, runningId)
 
-			channelRet["output"] = "<span class='test-failed'>" + i18n.Get(locale, "test-failed").(string) + "</span>\n" + string(buf)
+			channelRet["output"] = "<span class='test-error'>" + i18n.Get(locale, "test-error").(string) + "</span>\n" + string(buf)
 		} else {
 			glog.V(3).Infof("Session [%s] 's running [go test] [runningId=%d] has done", sid, runningId)
 
@@ -636,7 +636,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 			channelRet["lints"] = lints
 
-			channelRet["output"] = "<span class='install-failed'>" + i18n.Get(locale, "install-failed").(string) + "</span>\n" + errOut
+			channelRet["output"] = "<span class='install-error'>" + i18n.Get(locale, "install-error").(string) + "</span>\n" + errOut
 		} else {
 			channelRet["output"] = "<span class='install-succ'>" + i18n.Get(locale, "install-succ").(string) + "</span>\n"
 		}
@@ -749,7 +749,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		if 0 != len(buf) {
 			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
 
-			channelRet["output"] = "<span class='get-failed'>" + i18n.Get(locale, "get-failed").(string) + "</span>\n" + string(buf)
+			channelRet["output"] = "<span class='get-error'>" + i18n.Get(locale, "get-error").(string) + "</span>\n" + string(buf)
 		} else {
 			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
 
