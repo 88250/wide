@@ -35,7 +35,7 @@
     "unread_notification": "Unread",
     "notification_2": "Not found [gocode], thereby [Autocomplete] will not work",
     "notification_3": "Not found [ide_stub], thereby [Jump to Decl], [Find Usages] will not work",
-    "notification_4": "Server internal error",
+    "notification_4": "Server Internal Error",
     "goto_line": "Goto Line",
     "go": "Go",
     "tip": "Tip",
