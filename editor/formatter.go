@@ -94,11 +94,9 @@ func HTMLFmtHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		data["succ"] = false
 
@@ -151,11 +149,9 @@ func JSONFmtHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		data["succ"] = false
 
