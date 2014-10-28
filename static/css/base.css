@@ -4,7 +4,7 @@ body {
     margin: 0;
     color: #000;
     overflow: hidden;
-    font-family: Helvetica, 'Microsoft Yahei';
+    font-family: Helvetica;
 }
 
 ul {
@@ -19,7 +19,7 @@ ul {
 
 input,
 button {
-    font-family: Helvetica, 'Microsoft Yahei';
+    font-family: Helvetica, 'Microsoft Yahei', 'MS Gothic';
 }
 
 .fn-left {
