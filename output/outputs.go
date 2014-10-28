@@ -33,7 +33,7 @@ type Lint struct {
 	File     string `json:"file"`
 	LineNo   int    `json:"lineNo"`
 	Severity string `json:"severity"`
-	Msg      string
+	Msg      string `json:"msg"`
 }
 
 // 建立输出通道.
@@ -354,8 +354,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 				file := line[:strings.Index(line, ":")]
 				left := line[strings.Index(line, ":")+1:]
-				lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
-				msg := left[strings.Index(left, ":")+2:]
+				index := strings.Index(left, ":")
+				lineNo := 1
+				msg := left
+				if index >= 0 {
+					lineNo, _ = strconv.Atoi(left[:index])
+					msg = left[index+2:]
+				}
 
 				lint := &Lint{
 					File:     file,
@@ -621,8 +626,13 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 				file := line[:strings.Index(line, ":")]
 				left := line[strings.Index(line, ":")+1:]
-				lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
-				msg := left[strings.Index(left, ":")+2:]
+				index := strings.Index(left, ":")
+				lineNo := 1
+				msg := left
+				if index >= 0 {
+					lineNo, _ = strconv.Atoi(left[:index])
+					msg = left[index+2:]
+				}
 
 				lint := &Lint{
 					File:     file,
