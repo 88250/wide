@@ -355,7 +355,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				file := line[:strings.Index(line, ":")]
 				left := line[strings.Index(line, ":")+1:]
 				index := strings.Index(left, ":")
-				lineNo := 1
+				lineNo := 0
 				msg := left
 				if index >= 0 {
 					lineNo, _ = strconv.Atoi(left[:index])
@@ -627,7 +627,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 				file := line[:strings.Index(line, ":")]
 				left := line[strings.Index(line, ":")+1:]
 				index := strings.Index(left, ":")
-				lineNo := 1
+				lineNo := 0
 				msg := left
 				if index >= 0 {
 					lineNo, _ = strconv.Atoi(left[:index])
