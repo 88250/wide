@@ -2,7 +2,7 @@
 
 ## Intro
 
-A <b>W</b>eb <b>IDE</b> for Teams using Golang.
+A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 
 <img src="https://cloud.githubusercontent.com/assets/873584/4606377/d0ca3c2a-521b-11e4-912c-d955ab05850b.png" width="100%" />
 
@@ -13,7 +13,7 @@ A <b>W</b>eb <b>IDE</b> for Teams using Golang.
   * Unified environment: server unified development environment configuration, the developer machine without any additional configuration 
   * Out of the box: 5 minutes to setup a server then open browser to develop, debug
   * Version Control: each developer has its own source code repository, easy sync with the trunk 
-* **Web based** IDE:
+* **Web-based** IDE:
   * Developer needs a browser only
   * Cross-platform, even on mobile devices
   * Easy for extensions 
