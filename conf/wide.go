@@ -128,6 +128,10 @@ func (c *conf) GetUserWorkspace(username string) string {
 }
 
 // 获取主工作空间路径.
+//
+// 相比起使用 Wide.Workspace，该函数会做如下处理：
+//  1. 替换里面的 {pwd} 变量为实际的目录路径
+//  2. 把 / 替换为 \\ （Windows）
 func (c *conf) GetWorkspace() string {
 	return filepath.FromSlash(strings.Replace(c.Workspace, "{pwd}", c.Pwd, 1))
 }
@@ -149,6 +153,15 @@ func (c *conf) GetGoFmt(username string) string {
 	}
 
 	return "gofmt"
+}
+
+// 获取用户的工作空间路径.
+//
+// 相比起使用 User.Workspace，该函数会做如下处理：
+//  1. 替换里面的 {pwd} 变量为实际的目录路径
+//  2. 把 / 替换为 \\ （Windows）
+func (u *User) GetWorkspace() string {
+	return filepath.FromSlash(strings.Replace(u.Workspace, "{pwd}", Wide.Pwd, 1))
 }
 
 // 获取 username 指定的用户配置.
@@ -259,6 +272,57 @@ func Load() {
 	glog.V(3).Infof("pwd [%s]", pwd)
 
 	glog.V(3).Info("Conf: \n" + string(bytes))
+
+	initWorkspaceDirs()
+}
+
+// 初始化主工作空间、各个用户的工作空间目录.
+//
+// 如果不存在 Workspace 配置所指定的目录路径则创建该目录.
+func initWorkspaceDirs() {
+	paths := strings.Split(Wide.GetWorkspace(), PathListSeparator)
+
+	for _, user := range Wide.Users {
+		paths = append(paths, strings.Split(user.GetWorkspace(), PathListSeparator)...)
+
+	}
+
+	for _, path := range paths {
+		createWorkspaceDir(path)
+	}
+}
+
+// 在 path 指定的路径下创建工作空间目录.
+//
+//  1. 根目录：{path}
+//  2. 源码目录：{path}/src
+//  3. 包目录：{path}/pkg
+//  4. 可执行文件目录：{path}/bin
+func createWorkspaceDir(path string) {
+	// {path}, workspace root
+	createDir(path)
+
+	// {path}/src
+	createDir(path + PathSeparator + "src")
+
+	// {path}/pkg
+	createDir(path + PathSeparator + "pkg")
+
+	// {path}/bin
+	createDir(path + PathSeparator + "bin")
+}
+
+// 在 path 指定的路径下不存在目录或文件则创建目录.
+func createDir(path string) {
+	if !isExist(path) {
+		if err := os.MkdirAll(path, 0775); nil != err {
+			glog.Error(err)
+
+			os.Exit(-1)
+		}
+
+		glog.V(7).Infof("Created a directory [%s]", path)
+	}
 }
 
 // 检查文件或目录是否存在.
