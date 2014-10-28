@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -74,7 +75,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["executable"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command(filePath)
 	cmd.Dir = curDir
@@ -198,7 +199,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	fout, err := os.Create(filePath)
 
@@ -234,7 +235,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(5).Infof("go build -o %s", executable)
 
-	executable = curDir + conf.PathSeparator + executable
+	executable = filepath.Join(curDir, executable)
 
 	// 先把可执行文件删了
 	err = os.RemoveAll(executable)
@@ -407,7 +408,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command("go", "test", "-v")
 	cmd.Dir = curDir
@@ -522,7 +523,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command("go", "install")
 	cmd.Dir = curDir
@@ -678,7 +679,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command("go", "get")
 	cmd.Dir = curDir
@@ -802,7 +803,7 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 	masterWorkspace := conf.Wide.GetWorkspace()
 
 	cmd.Env = append(cmd.Env,
-		"GOPATH="+userWorkspace+conf.PathListSeparator+masterWorkspace,
+		"GOPATH="+filepath.Join(userWorkspace, masterWorkspace),
 		"GOOS="+runtime.GOOS,
 		"GOARCH="+runtime.GOARCH,
 		"GOROOT="+runtime.GOROOT(),
