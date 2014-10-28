@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -124,7 +125,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	// glog.Infof("offset: %d", offset)
 
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
-	workspaces := strings.Split(userWorkspace, conf.PathListSeparator)
+	workspaces := filepath.SplitList(userWorkspace)
 	libPath := ""
 	for _, workspace := range workspaces {
 		userLib := workspace + conf.PathSeparator + "pkg" + conf.PathSeparator +

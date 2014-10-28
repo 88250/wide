@@ -183,7 +183,7 @@ func (*conf) GetExecutableInGOBIN(executable string) string {
 		executable += ".exe"
 	}
 
-	gopaths := strings.Split(os.Getenv("GOPATH"), PathListSeparator)
+	gopaths := filepath.SplitList(os.Getenv("GOPATH"))
 
 	for _, gopath := range gopaths {
 		// $GOPATH/bin/$GOOS_$GOARCH/executable
@@ -280,10 +280,10 @@ func Load() {
 //
 // 如果不存在 Workspace 配置所指定的目录路径则创建该目录.
 func initWorkspaceDirs() {
-	paths := strings.Split(Wide.GetWorkspace(), PathListSeparator)
+	paths := filepath.SplitList(Wide.GetWorkspace())
 
 	for _, user := range Wide.Users {
-		paths = append(paths, strings.Split(user.GetWorkspace(), PathListSeparator)...)
+		paths = append(paths, filepath.SplitList(user.GetWorkspace())...)
 
 	}
 
