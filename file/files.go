@@ -46,7 +46,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	username := session.Values["username"].(string)
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
-	workspaces := strings.Split(userWorkspace, conf.PathListSeparator)
+	workspaces := filepath.SplitList(userWorkspace)
 
 	root := FileNode{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
 

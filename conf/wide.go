@@ -183,7 +183,7 @@ func (*conf) GetExecutableInGOBIN(executable string) string {
 		executable += ".exe"
 	}
 
-	gopaths := strings.Split(os.Getenv("GOPATH"), PathListSeparator)
+	gopaths := filepath.SplitList(os.Getenv("GOPATH"))
 
 	for _, gopath := range gopaths {
 		// $GOPATH/bin/$GOOS_$GOARCH/executable
@@ -264,12 +264,8 @@ func Load() {
 	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{IP}", ip, 1)
 	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", ip, 1)
 
-	// 获取当前执行路径
-	file, _ := exec.LookPath(os.Args[0])
-	pwd, _ := filepath.Abs(file)
-	pwd = pwd[:strings.LastIndex(pwd, PathSeparator)]
-	Wide.Pwd = pwd
-	glog.V(3).Infof("pwd [%s]", pwd)
+	Wide.Pwd = util.OS.Pwd()
+	glog.V(3).Infof("pwd [%s]", Wide.Pwd)
 
 	glog.V(3).Info("Conf: \n" + string(bytes))
 
@@ -280,10 +276,10 @@ func Load() {
 //
 // 如果不存在 Workspace 配置所指定的目录路径则创建该目录.
 func initWorkspaceDirs() {
-	paths := strings.Split(Wide.GetWorkspace(), PathListSeparator)
+	paths := filepath.SplitList(Wide.GetWorkspace())
 
 	for _, user := range Wide.Users {
-		paths = append(paths, strings.Split(user.GetWorkspace(), PathListSeparator)...)
+		paths = append(paths, filepath.SplitList(user.GetWorkspace())...)
 
 	}
 

@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
@@ -33,7 +34,7 @@ type Lint struct {
 	File     string `json:"file"`
 	LineNo   int    `json:"lineNo"`
 	Severity string `json:"severity"`
-	Msg      string
+	Msg      string `json:"msg"`
 }
 
 // 建立输出通道.
@@ -74,7 +75,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["executable"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command(filePath)
 	cmd.Dir = curDir
@@ -198,7 +199,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	fout, err := os.Create(filePath)
 
@@ -234,7 +235,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(5).Infof("go build -o %s", executable)
 
-	executable = curDir + conf.PathSeparator + executable
+	executable = filepath.Join(curDir, executable)
 
 	// 先把可执行文件删了
 	err = os.RemoveAll(executable)
@@ -354,8 +355,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 				file := line[:strings.Index(line, ":")]
 				left := line[strings.Index(line, ":")+1:]
-				lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
-				msg := left[strings.Index(left, ":")+2:]
+				index := strings.Index(left, ":")
+				lineNo := 0
+				msg := left
+				if index >= 0 {
+					lineNo, _ = strconv.Atoi(left[:index])
+					msg = left[index+2:]
+				}
 
 				lint := &Lint{
 					File:     file,
@@ -407,7 +413,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command("go", "test", "-v")
 	cmd.Dir = curDir
@@ -522,7 +528,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command("go", "install")
 	cmd.Dir = curDir
@@ -621,8 +627,13 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 				file := line[:strings.Index(line, ":")]
 				left := line[strings.Index(line, ":")+1:]
-				lineNo, _ := strconv.Atoi(left[:strings.Index(left, ":")])
-				msg := left[strings.Index(left, ":")+2:]
+				index := strings.Index(left, ":")
+				lineNo := 0
+				msg := left
+				if index >= 0 {
+					lineNo, _ = strconv.Atoi(left[:index])
+					msg = left[index+2:]
+				}
 
 				lint := &Lint{
 					File:     file,
@@ -678,7 +689,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
-	curDir := filePath[:strings.LastIndex(filePath, conf.PathSeparator)]
+	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command("go", "get")
 	cmd.Dir = curDir
