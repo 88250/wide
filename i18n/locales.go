@@ -23,6 +23,7 @@ func Load() {
 	// TODO: 自动加载所有语言配置
 
 	load("zh_CN")
+	load("ja_JP")
 	load("en_US")
 }
 
