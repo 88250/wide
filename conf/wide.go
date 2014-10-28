@@ -80,7 +80,6 @@ func FixedTimeCheckEnv() {
 
 			if "" == os.Getenv("GOROOT") {
 				glog.Fatal("Not found $GOROOT")
-
 				os.Exit(-1)
 			}
 
