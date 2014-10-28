@@ -264,12 +264,8 @@ func Load() {
 	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{IP}", ip, 1)
 	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", ip, 1)
 
-	// 获取当前执行路径
-	file, _ := exec.LookPath(os.Args[0])
-	pwd, _ := filepath.Abs(file)
-	pwd = pwd[:strings.LastIndex(pwd, PathSeparator)]
-	Wide.Pwd = pwd
-	glog.V(3).Infof("pwd [%s]", pwd)
+	Wide.Pwd = util.OS.Pwd()
+	glog.V(3).Infof("pwd [%s]", Wide.Pwd)
 
 	glog.V(3).Info("Conf: \n" + string(bytes))
 

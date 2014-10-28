@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"strings"
 
 	"github.com/golang/glog"
 )
@@ -20,11 +21,18 @@ var Locales = map[string]locale{}
 
 // 加载国际化配置.
 func Load() {
-	// TODO: 自动加载所有语言配置
+	f, _ := os.Open("i18n")
+	names, _ := f.Readdirnames(-1)
+	f.Close()
 
-	load("zh_CN")
-	load("ja_JP")
-	load("en_US")
+	for _, name := range names {
+		if !strings.HasSuffix(name, ".json") {
+			continue
+		}
+
+		loc := name[:strings.LastIndex(name, ".")]
+		load(loc)
+	}
 }
 
 func load(localeStr string) {
