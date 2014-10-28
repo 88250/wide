@@ -1,4 +1,4 @@
-// 文件树操作.
+// File tree manipulations.
 package file
 
 import (
@@ -12,17 +12,18 @@ import (
 	"strings"
 
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 )
 
-// 文件节点，用于构造文件树.
+// File node, used to construct the file tree.
 type FileNode struct {
 	Name      string      `json:"name"`
 	Path      string      `json:"path"`
-	IconSkin  string      `json:"iconSkin"` // 值的末尾应该有一个空格
-	Type      string      `json:"type"`     // "f"：文件，"d"：文件夹
+	IconSkin  string      `json:"iconSkin"` // Value should be end with a space
+	Type      string      `json:"type"`     // "f": file，"d": directory
 	Mode      string      `json:"mode"`
 	FileNodes []*FileNode `json:"children"`
 }
@@ -175,7 +176,7 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// 新建文件/目录.
+// NewFile handles request of creating file or directory.
 func NewFile(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -191,9 +192,15 @@ func NewFile(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 	fileType := args["fileType"].(string)
+	sid := args["sid"].(string)
+
+	wSession := session.WideSessions.Get(sid)
 
 	if !createFile(path, fileType) {
 		data["succ"] = false
+
+		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
+			Data: "can't create file " + path}
 
 		return
 	}
@@ -204,7 +211,7 @@ func NewFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// 删除文件/目录.
+// RemoveFile handles request of removing file or directory.
 func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -225,7 +232,7 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// 在目录中搜索包含指定字符串的文件.
+// SearchText handles request of searching files under the specified directory with the specified keyword.
 func SearchText(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)

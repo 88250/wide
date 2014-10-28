@@ -75,11 +75,13 @@ func FixedTimeCheckEnv() {
 		for _ = range time.Tick(time.Minute * 7) {
 			if "" == os.Getenv("GOPATH") {
 				glog.Fatal("Not found $GOPATH")
+
 				os.Exit(-1)
 			}
 
 			if "" == os.Getenv("GOROOT") {
 				glog.Fatal("Not found $GOROOT")
+
 				os.Exit(-1)
 			}
 
@@ -87,7 +89,8 @@ func FixedTimeCheckEnv() {
 			cmd := exec.Command(gocode, "close")
 			_, err := cmd.Output()
 			if nil != err {
-				event.EventQueue <- event.EvtCodeGocodeNotFound
+				event.EventQueue <- &event.Event{Code: event.EvtCodeGocodeNotFound}
+
 				glog.Warningf("Not found gocode [%s]", gocode)
 			}
 
@@ -95,7 +98,8 @@ func FixedTimeCheckEnv() {
 			cmd = exec.Command(ide_stub, "version")
 			_, err = cmd.Output()
 			if nil != err {
-				event.EventQueue <- event.EvtCodeIDEStubNotFound
+				event.EventQueue <- &event.Event{Code: event.EvtCodeIDEStubNotFound}
+
 				glog.Warningf("Not found ide_stub [%s]", ide_stub)
 			}
 		}

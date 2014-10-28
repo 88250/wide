@@ -19,3 +19,8 @@ type WSChannel struct {
 func (c *WSChannel) Close() {
 	c.Conn.Close()
 }
+
+// Refresh refreshes the channel by updating its Time.
+func (c *WSChannel) Refresh() {
+	c.Time = time.Now()
+}

@@ -3,7 +3,6 @@ package notification
 
 import (
 	"net/http"
-
 	"time"
 
 	"strconv"
@@ -21,7 +20,8 @@ const (
 	Warn  = "WARN"  // 通知.严重程度：WARN
 	Info  = "INFO"  // 通知.严重程度：INFO
 
-	Setup = "Setup" // 通知.类型：安装
+	Setup  = "Setup"  // 通知.类型：安装
+	Server = "Server" // 通知.类型：服务器
 )
 
 // 通知结构.
@@ -41,16 +41,7 @@ func event2Notification(e *event.Event) {
 	}
 
 	wsChannel := session.NotificationWS[e.Sid]
-
-	var notification Notification
-
-	switch e.Code {
-	case event.EvtCodeGocodeNotFound:
-		notification = Notification{event: e, Type: Setup, Severity: Error}
-	case event.EvtCodeIDEStubNotFound:
-		notification = Notification{event: e, Type: Setup, Severity: Error}
-	default:
-		glog.Warningf("Can't handle event[code=%d]", e.Code)
+	if nil == wsChannel {
 		return
 	}
 
@@ -58,13 +49,26 @@ func event2Notification(e *event.Event) {
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
-	// 消息国际化处理
-	notification.Message = i18n.Get(locale, "notification_"+strconv.Itoa(e.Code)).(string)
+	var notification *Notification
 
-	wsChannel.Conn.WriteJSON(&notification)
+	switch e.Code {
+	case event.EvtCodeGocodeNotFound:
+		fallthrough
+	case event.EvtCodeIDEStubNotFound:
+		notification = &Notification{event: e, Type: Setup, Severity: Error,
+			Message: i18n.Get(locale, "notification_"+strconv.Itoa(e.Code)).(string)}
+	case event.EvtCodeServerInternalError:
+		notification = &Notification{event: e, Type: Server, Severity: Error,
+			Message: i18n.Get(locale, "notification_"+strconv.Itoa(e.Code)).(string) + " [" + e.Data.(string) + "]"}
+	default:
+		glog.Warningf("Can't handle event[code=%d]", e.Code)
 
-	// 更新通道最近使用时间
-	wsChannel.Time = time.Now()
+		return
+	}
+
+	wsChannel.Conn.WriteJSON(notification)
+
+	wsChannel.Refresh()
 }
 
 // 建立通知通道.
@@ -101,6 +105,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			glog.Error("Notification WS ERROR: " + err.Error())
+
 			return
 		}
 	}
