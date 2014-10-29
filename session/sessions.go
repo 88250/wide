@@ -1,11 +1,11 @@
-// 会话操作.
+// Session manipulations.
 //
-// Wide 服务器端需要维护两种会话：
+// Wide server side needs maintain two kinds of sessions:
 //
-//  1. HTTP 会话：主要用于验证登录
-//  2. Wide 会话：浏览器 tab 打开/刷新会创建一个，并和 HTTP 会话进行关联
+//  1. HTTP session: mainly used for login authentication
+//  2. Wide session: browser tab open/refresh will create one, and associates with HTTP session
 //
-// 当会话失效时：释放所有和该会话相关的资源，例如运行中的程序进程、事件队列等.
+// When a session gone: release all resources associated with it, such as running processes, event queues.
 package session
 
 import (
@@ -26,52 +26,55 @@ import (
 )
 
 const (
-	SessionStateActive = iota // 会话状态：活的
-	SessionStateClosed        // 会话状态：已关闭（这个状态目前暂时没有使用到）
+	SessionStateActive = iota // session state: active
+	SessionStateClosed        // session state: closed (not used so far)
 )
 
 var (
-	// 会话通道. <sid, *util.WSChannel>
+	// Session channels. <sid, *util.WSChannel>
 	SessionWS = map[string]*util.WSChannel{}
 
-	// 输出通道. <sid, *util.WSChannel>
+	// Editor channels. <sid, *util.WSChannel>
+	EditorWS = map[string]*util.WSChannel{}
+
+	// Output channels. <sid, *util.WSChannel>
 	OutputWS = map[string]*util.WSChannel{}
 
-	// 通知通道. <sid, *util.WSChannel>
+	// Notification channels. <sid, *util.WSChannel>
 	NotificationWS = map[string]*util.WSChannel{}
 )
 
-// 用户 HTTP 会话，用于验证登录.
+// HTTP session store.
 var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
 
-// Wide 会话，对应一个浏览器 tab.
+// Wide session, associated with a browser tab.
 type WideSession struct {
-	Id          string                     // 唯一标识
-	Username    string                     // 用户名
-	HTTPSession *sessions.Session          // 关联的 HTTP 会话
-	Processes   []*os.Process              // 关联的进程集
-	EventQueue  *event.UserEventQueue      // 关联的事件队列
-	State       int                        // 状态
-	Content     *conf.LatestSessionContent // 最近一次会话内容
-	Created     time.Time                  // 创建时间
-	Updated     time.Time                  // 最近一次使用时间
+	Id          string                     // id
+	Username    string                     // username
+	HTTPSession *sessions.Session          // HTTP session related
+	Processes   []*os.Process              // process set
+	EventQueue  *event.UserEventQueue      // event queue
+	State       int                        // state
+	Content     *conf.LatestSessionContent // the latest session content
+	Created     time.Time                  // create time
+	Updated     time.Time                  // the latest use time
 }
 
-// 会话集类型.
+// Type of wide sessions.
 type Sessions []*WideSession
 
-// 所有 Wide 会话集.
+// Wide sessions.
 var WideSessions Sessions
 
-// 排它锁，防止并发修改.
+// Exclusive lock.
 var mutex sync.Mutex
 
-// 在一些特殊情况（例如浏览器不间断刷新/在源代码视图刷新）下 Wide 会话集内会出现无效会话，该函数定时（1 小时）检查并移除这些无效会话.
+// In some special cases (such as a browser uninterrupted refresh / refresh in the source code view) will occur
+// some invalid sessions, the function checks and removes these invalid sessions periodically (1 hour).
 //
-// 无效会话：在检查时间内 30 分钟都没有使用过的会话，参考 WideSession.Updated 字段.
+// Invalid sessions: sessions that not used within 30 minutes, refers to WideSession.Updated field.
 func FixedTimeRelease() {
 	go func() {
-		// 1 小时进行一次检查
 		for _ = range time.Tick(time.Hour) {
 			hour, _ := time.ParseDuration("-30m")
 			threshold := time.Now().Add(hour)
@@ -87,7 +90,9 @@ func FixedTimeRelease() {
 	}()
 }
 
-// 建立会话通道. 通道断开时销毁会话状态，回收相关资源.
+// WSHandler handles request of creating session channel.
+//
+// When a channel closed, releases all resources associated with it.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
 	wSession := WideSessions.Get(sid)
@@ -129,7 +134,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// 会话内容保存.
+// SaveContent handles request of session content storing.
 func SaveContent(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -157,7 +162,7 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 
 	for _, user := range conf.Wide.Users {
 		if user.Name == wSession.Username {
-			// 更新配置（内存变量），conf.FixedTimeSave() 会负责定时持久化
+			// update the variable in-memory, conf.FixedTimeSave() function will persist it periodically
 			user.LatestSessionContent = wSession.Content
 
 			wSession.Refresh()
@@ -167,19 +172,19 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// 设置会话关联的进程集.
+// SetProcesses binds process set with the wide session.
 func (s *WideSession) SetProcesses(ps []*os.Process) {
 	s.Processes = ps
 
 	s.Refresh()
 }
 
-// 刷新会话最近一次使用时间.
+// Refresh refreshes the channel by updating its use time.
 func (s *WideSession) Refresh() {
 	s.Updated = time.Now()
 }
 
-// 创建一个 Wide 会话.
+// New creates a wide session.
 func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
@@ -189,7 +194,7 @@ func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
 	id := strconv.Itoa(rand.Int())
 	now := time.Now()
 
-	// 创建用户事件队列
+	// create user event queue
 	userEventQueue := event.UserEventQueues.New(id)
 
 	ret := &WideSession{
@@ -208,7 +213,7 @@ func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
 	return ret
 }
 
-// 获取 Wide 会话.
+// Get gets a wide session with the specified session id.
 func (sessions *Sessions) Get(sid string) *WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
@@ -222,26 +227,26 @@ func (sessions *Sessions) Get(sid string) *WideSession {
 	return nil
 }
 
-// 移除 Wide 会话，释放相关资源.
+// Remove removes a wide session specified with the given session id, releases resources associated with it.
 //
-// 会话相关资源：
+// Session-related resources:
 //
-//  1. 用户事件队列
-//  2. 运行中的进程集
-//  3. WebSocket 通道
+//  1. user event queue
+//  2. process set
+//  3. websocket channels
 func (sessions *Sessions) Remove(sid string) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	for i, s := range *sessions {
 		if s.Id == sid {
-			// 从会话集中移除
+			// remove from session set
 			*sessions = append((*sessions)[:i], (*sessions)[i+1:]...)
 
-			// 关闭用户事件队列
+			// close user event queue
 			event.UserEventQueues.Close(sid)
 
-			// 杀进程
+			// kill processes
 			for _, p := range s.Processes {
 				if err := p.Kill(); nil != err {
 					glog.Errorf("Can't kill process [%d] of session [%s]", p.Pid, sid)
@@ -250,7 +255,7 @@ func (sessions *Sessions) Remove(sid string) {
 				}
 			}
 
-			// 回收所有通道
+			// close websocket channels
 			if ws, ok := OutputWS[sid]; ok {
 				ws.Close()
 				delete(OutputWS, sid)
@@ -268,12 +273,13 @@ func (sessions *Sessions) Remove(sid string) {
 
 			glog.V(3).Infof("Removed a session [%s]", s.Id)
 
-			cnt := 0 // 统计当前 HTTP 会话关联的 Wide 会话数量
+			cnt := 0 // count wide sessions associated with HTTP session
 			for _, s := range *sessions {
 				if s.HTTPSession.ID == s.HTTPSession.ID {
 					cnt++
 				}
 			}
+
 			glog.V(3).Infof("User [%s] has [%d] sessions", s.Username, cnt)
 
 			return
@@ -281,7 +287,7 @@ func (sessions *Sessions) Remove(sid string) {
 	}
 }
 
-// 获取 username 指定的用户的所有 Wide 会话.
+// GetByUsername gets wide sessions.
 func (sessions *Sessions) GetByUsername(username string) []*WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()

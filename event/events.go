@@ -1,53 +1,52 @@
-// 事件处理.
+// Event manipulations.
 package event
 
 import "github.com/golang/glog"
 
 const (
-	EvtCodeGOPATHNotFound      = iota // 事件代码：找不到环境变量 $GOPATH
-	EvtCodeGOROOTNotFound             // 事件代码：找不到环境变量 $GOROOT
-	EvtCodeGocodeNotFound             // 事件代码：找不到 gocode
-	EvtCodeIDEStubNotFound            // 事件代码：找不到 IDE stub
-	EvtCodeServerInternalError        // 事件代码：服务器内部错误
+	EvtCodeGOPATHNotFound      = iota // event code: not found $GOPATH env variable
+	EvtCodeGOROOTNotFound             // event code: not found $GOROOT env variable
+	EvtCodeGocodeNotFound             // event code: not found gocode
+	EvtCodeIDEStubNotFound            // event code: not found ide_stub
+	EvtCodeServerInternalError        // event code: server internal error
 )
 
-// 事件队列最大长度.
+// Max length of queue.
 const MaxQueueLength = 10
 
-// 事件结构.
+// Event.
 type Event struct {
-	Code int         `json:"code"` // 事件代码
-	Sid  string      `json:"sid"`  // 用户会话 id
-	Data interface{} `json:"data"` // 事件数据
+	Code int         `json:"code"` // event code
+	Sid  string      `json:"sid"`  // wide session id related
+	Data interface{} `json:"data"` // event data
 }
 
-// 全局事件队列.
+// Global event queue.
 //
-// 入队的事件将分发到每个用户的事件队列中.
+// Every event in this queue will be dispatched to each user event queue.
 var EventQueue = make(chan *Event, MaxQueueLength)
 
-// 用户事件队列.
+// User event queue.
 type UserEventQueue struct {
-	Sid      string      // 关联的会话 id
-	Queue    chan *Event // 队列
-	Handlers []Handler   // 事件处理器集
+	Sid      string      // wide session id related
+	Queue    chan *Event // queue
+	Handlers []Handler   // event handlers
 }
 
-// 事件队列集类型.
 type Queues map[string]*UserEventQueue
 
-// 用户事件队列集.
+// User event queues.
 //
 // <sid, *UserEventQueue>
 var UserEventQueues = Queues{}
 
-// 加载事件处理.
+// Load initializes the event handling.
 func Load() {
 	go func() {
 		for event := range EventQueue {
-			glog.V(5).Infof("收到全局事件 [%d]", event.Code)
+			glog.V(5).Infof("Received a global event [code=%d]", event.Code)
 
-			// 将事件分发到每个用户的事件队列里
+			// dispatch the event to each user event queue
 			for _, userQueue := range UserEventQueues {
 				event.Sid = userQueue.Sid
 
@@ -57,14 +56,14 @@ func Load() {
 	}()
 }
 
-// 为用户队列添加事件处理器.
+// AddHandler adds the specified handlers to user event queues.
 func (uq *UserEventQueue) AddHandler(handlers ...Handler) {
 	for _, handler := range handlers {
 		uq.Handlers = append(uq.Handlers, handler)
 	}
 }
 
-// 初始化一个用户事件队列.
+// New initializes a user event queue with the specified wide session id.
 func (ueqs Queues) New(sid string) *UserEventQueue {
 	q := ueqs[sid]
 	if nil != q {
@@ -80,11 +79,11 @@ func (ueqs Queues) New(sid string) *UserEventQueue {
 
 	ueqs[sid] = q
 
-	go func() { // 队列开始监听事件
+	go func() { // start listening
 		for evt := range q.Queue {
 			glog.V(5).Infof("Session [%s] received a event [%d]", sid, evt.Code)
 
-			// 将事件交给事件处理器进行处理
+			// process event by each handlers
 			for _, handler := range q.Handlers {
 				handler.Handle(evt)
 			}
@@ -94,7 +93,7 @@ func (ueqs Queues) New(sid string) *UserEventQueue {
 	return q
 }
 
-// 关闭一个用户事件队列.
+// Close closes a user event queue with the specified wide session id.
 func (ueqs Queues) Close(sid string) {
 	q := ueqs[sid]
 	if nil == q {
@@ -104,15 +103,15 @@ func (ueqs Queues) Close(sid string) {
 	delete(ueqs, sid)
 }
 
-// 事件处理接口.
+// Type of event handler.
 type Handler interface {
 	Handle(event *Event)
 }
 
-// 函数指针包装.
+// Type of handler function.
 type HandleFunc func(event *Event)
 
-// 事件处理默认实现.
+// Default implementation of event handling.
 func (fn HandleFunc) Handle(event *Event) {
 	fn(event)
 }

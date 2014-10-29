@@ -7,7 +7,7 @@ import (
 	"github.com/golang/glog"
 )
 
-// HTTP 返回 JSON 统一处理.
+// RetJSON writes HTTP response with "Content-Type, application/json".
 func RetJSON(w http.ResponseWriter, r *http.Request, res map[string]interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 

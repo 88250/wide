@@ -15,8 +15,9 @@ import (
 	"github.com/golang/glog"
 )
 
-// 格式化 Go 源码文件.
-// 根据用户的 GoFormat 配置选择格式化工具：
+// GoFmtHandler handles request of formatting Go source code.
+//
+// This function will select a format tooll based on user's configuration:
 //  1. gofmt
 //  2. goimports
 func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
@@ -38,8 +39,8 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 
 	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
-	if strings.HasPrefix(filePath, apiPath) { // 如果是 Go API 源码文件
-		// 忽略修改
+	if strings.HasPrefix(filePath, apiPath) { // if it is Go API source code
+		// ignore it
 		return
 	}
 
@@ -88,8 +89,8 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// 格式化 HTML 文件.
-// FIXME：依赖的工具 gohtml 格式化 HTML 时有问题
+// HTMLFmtHandler handles request of formatting HTML source code.
+// FIXME: gohtml has some issues...
 func HTMLFmtHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -132,71 +133,6 @@ func HTMLFmtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	code = string(output)
-	data["code"] = code
-
-	fout, err = os.Create(filePath)
-	fout.WriteString(code)
-	if err := fout.Close(); nil != err {
-		glog.Error(err)
-		data["succ"] = false
-
-		return
-	}
-}
-
-// 格式化 JSON 文件.
-func JSONFmtHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
-
-	var args map[string]interface{}
-
-	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
-		data["succ"] = false
-
-		return
-	}
-
-	filePath := args["file"].(string)
-
-	fout, err := os.Create(filePath)
-
-	if nil != err {
-		glog.Error(err)
-		data["succ"] = false
-
-		return
-	}
-
-	code := args["code"].(string)
-
-	fout.WriteString(code)
-	if err := fout.Close(); nil != err {
-		glog.Error(err)
-		data["succ"] = false
-
-		return
-	}
-
-	obj := new(interface{})
-	if err := json.Unmarshal([]byte(code), &obj); nil != err {
-		glog.Error(err)
-		data["succ"] = false
-
-		return
-	}
-
-	glog.Info(obj)
-
-	bytes, err := json.MarshalIndent(obj, "", "    ")
-	if nil != err {
-		data["succ"] = false
-
-		return
-	}
-
-	code = string(bytes)
 	data["code"] = code
 
 	fout, err = os.Create(filePath)

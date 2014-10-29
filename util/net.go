@@ -1,4 +1,4 @@
-// 工具.
+// Utilities.
 package util
 
 import (
@@ -8,10 +8,10 @@ import (
 
 type mynet struct{}
 
-// 网络工具.
+// Network utilities.
 var Net = mynet{}
 
-// 获取第一块网卡的 IP 地址.
+// LocalIP gets the first NIC's IP address.
 func (*mynet) LocalIP() (string, error) {
 	tt, err := net.Interfaces()
 

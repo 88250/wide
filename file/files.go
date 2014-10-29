@@ -23,7 +23,7 @@ type FileNode struct {
 	Name      string      `json:"name"`
 	Path      string      `json:"path"`
 	IconSkin  string      `json:"iconSkin"` // Value should be end with a space
-	Type      string      `json:"type"`     // "f": file，"d": directory
+	Type      string      `json:"type"`     // "f": file, "d": directory
 	Mode      string      `json:"mode"`
 	FileNodes []*FileNode `json:"children"`
 }

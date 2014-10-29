@@ -7,20 +7,20 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// 一个用户会话的 WebSocket 通道结构.
+// WebSocket channel.
 type WSChannel struct {
-	Sid     string          // 用户会话 id
-	Conn    *websocket.Conn // WebSocket 连接
-	Request *http.Request   // 关联的 HTTP 请求
-	Time    time.Time       // 该通道最近一次使用时间
+	Sid     string          // wide session id
+	Conn    *websocket.Conn // websocket connection
+	Request *http.Request   // HTTP request related
+	Time    time.Time       // the latest use time
 }
 
-// 关闭通道.
+// Close closed the channel.
 func (c *WSChannel) Close() {
 	c.Conn.Close()
 }
 
-// Refresh refreshes the channel by updating its Time.
+// Refresh refreshes the channel by updating its use time.
 func (c *WSChannel) Refresh() {
 	c.Time = time.Now()
 }

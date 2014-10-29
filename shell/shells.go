@@ -18,12 +18,12 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// Shell 通道.
+// Shell channel.
 //
 // <sid, *util.WSChannel>>
 var ShellWS = map[string]*util.WSChannel{}
 
-// Shell 首页.
+// IndexHandler handles request of Shell index.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 
@@ -36,7 +36,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	httpSession.Save(r, w)
 
-	// 创建一个 Wide 会话
+	// create a wide session
 	wideSession := session.WideSessions.New(httpSession)
 
 	username := httpSession.Values["username"].(string)
@@ -61,7 +61,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, model)
 }
 
-// 建立 Shell 通道.
+// WSHandler handles request of creating Shell channel.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	username := httpSession.Values["username"].(string)
@@ -122,12 +122,10 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// 更新通道最近使用时间
-		wsChan.Time = time.Now()
+		wsChan.Refresh()
 	}
 }
 
-// 以管道方式执行多个命令.
 func pipeCommands(username string, commands ...*exec.Cmd) string {
 	for i, command := range commands[:len(commands)-1] {
 		setCmdEnv(command, username)
@@ -147,7 +145,7 @@ func pipeCommands(username string, commands ...*exec.Cmd) string {
 
 	out, err := last.CombinedOutput()
 
-	// 结束进程，释放资源
+	// release resources
 	for _, command := range commands[:len(commands)-1] {
 		command.Wait()
 	}

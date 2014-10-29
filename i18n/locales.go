@@ -1,4 +1,4 @@
-// 国际化操作.
+// Internationalization manipulations.
 package i18n
 
 import (
@@ -10,16 +10,17 @@ import (
 	"github.com/golang/glog"
 )
 
+// Locale.
 type locale struct {
 	Name     string
 	Langs    map[string]interface{}
 	TimeZone string
 }
 
-// 所有的 locales.
+// All locales.
 var Locales = map[string]locale{}
 
-// 加载国际化配置.
+// Load loads i18n message configurations.
 func Load() {
 	f, _ := os.Open("i18n")
 	names, _ := f.Readdirnames(-1)
@@ -57,12 +58,12 @@ func load(localeStr string) {
 	glog.V(5).Infof("Loaded [%s] locale configuration", localeStr)
 }
 
-// 获取语言配置项.
+// Get gets message with the specified locale and key.
 func Get(locale, key string) interface{} {
 	return Locales[locale].Langs[key]
 }
 
-// 获取语言配置.
+// GetAll gets all messages with the specified locale.
 func GetAll(locale string) map[string]interface{} {
 	return Locales[locale].Langs
 }

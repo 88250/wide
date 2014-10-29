@@ -1,4 +1,4 @@
-// 通知.
+// Notification manipulations.
 package notification
 
 import (
@@ -16,15 +16,15 @@ import (
 )
 
 const (
-	Error = "ERROR" // 通知.严重程度：ERROR
-	Warn  = "WARN"  // 通知.严重程度：WARN
-	Info  = "INFO"  // 通知.严重程度：INFO
+	Error = "ERROR" // notification.severity: ERROR
+	Warn  = "WARN"  // notification.severity: WARN
+	Info  = "INFO"  // notification.severity: INFO
 
-	Setup  = "Setup"  // 通知.类型：安装
-	Server = "Server" // 通知.类型：服务器
+	Setup  = "Setup"  // notification.type: setup
+	Server = "Server" // notification.type: server
 )
 
-// 通知结构.
+// Notification.
 type Notification struct {
 	event    *event.Event
 	Type     string `json:"type"`
@@ -32,9 +32,9 @@ type Notification struct {
 	Message  string `json:"message"`
 }
 
-// 用户事件处理：将事件转为通知，并通过通知通道推送给前端.
+// event2Notification processes user event by converting the specified event to a notification, and then push it to front
+// browser with notification channel.
 //
-// 当用户事件队列接收到事件时将会调用该函数进行处理.
 func event2Notification(e *event.Event) {
 	if nil == session.NotificationWS[e.Sid] {
 		return
@@ -71,7 +71,7 @@ func event2Notification(e *event.Event) {
 	wsChannel.Refresh()
 }
 
-// 建立通知通道.
+// WSHandler handles request of creating notification channel.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
 
@@ -89,7 +89,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(4).Infof("Open a new [Notification] with session [%s], %d", sid, len(session.NotificationWS))
 
-	// 添加用户事件处理器
+	// add user event handler
 	wSession.EventQueue.AddHandler(event.HandleFunc(event2Notification))
 
 	input := map[string]interface{}{}

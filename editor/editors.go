@@ -1,4 +1,4 @@
-// 编辑器操作.
+// Editor manipulations.
 package editor
 
 import (
@@ -11,6 +11,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/file"
@@ -20,23 +21,24 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var editorWS = map[string]*websocket.Conn{}
-
-// 建立编辑器通道.
+// WSHandler handles request of creating editor channel.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	session, _ := session.HTTPSession.Get(r, "wide-session")
-	sid := session.Values["id"].(string)
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	sid := httpSession.Values["id"].(string)
 
-	editorWS[sid], _ = websocket.Upgrade(w, r, nil, 1024, 1024)
+	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
+	editorChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
+
+	session.EditorWS[sid] = &editorChan
 
 	ret := map[string]interface{}{"output": "Editor initialized", "cmd": "init-editor"}
-	editorWS[sid].WriteJSON(&ret)
+	editorChan.Conn.WriteJSON(&ret)
 
-	glog.Infof("Open a new [Editor] with session [%s], %d", sid, len(editorWS))
+	glog.Infof("Open a new [Editor] with session [%s], %d", sid, len(session.EditorWS))
 
 	args := map[string]interface{}{}
 	for {
-		if err := editorWS[sid].ReadJSON(&args); err != nil {
+		if err := session.EditorWS[sid].Conn.ReadJSON(&args); err != nil {
 			if err.Error() == "EOF" {
 				return
 			}
@@ -73,14 +75,14 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		ret = map[string]interface{}{"output": string(output.Bytes()), "cmd": "autocomplete"}
 
-		if err := editorWS[sid].WriteJSON(&ret); err != nil {
+		if err := session.EditorWS[sid].Conn.WriteJSON(&ret); err != nil {
 			glog.Error("Editor WS ERROR: " + err.Error())
 			return
 		}
 	}
 }
 
-// 自动完成（代码补全）.
+// AutocompleteHandler handles request of code autocompletion.
 func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
@@ -133,7 +135,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	glog.V(5).Infof("gocode set lib-path %s", libPath)
 
-	// FIXME: 使用 gocode set lib-path 在多工作空间环境下肯定是有问题的，需要考虑其他实现方式
+	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
 	gocode := conf.Wide.GetExecutableInGOBIN("gocode")
 	argv := []string{"set", "lib-path", libPath}
 	exec.Command(gocode, argv...).Run()
@@ -157,7 +159,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(output)
 }
 
-// 查看表达式信息.
+// GetExprInfoHandler handles request of getting expression infomation.
 func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -203,7 +205,6 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset [%d]", offset)
 
-	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
 	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-info", "."}
 	cmd := exec.Command(ide_stub, argv...)
@@ -229,7 +230,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	data["info"] = exprInfo
 }
 
-// 查找声明.
+// FindDeclarationHandler handles request of finding declaration.
 func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -275,7 +276,6 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset [%d]", offset)
 
-	// TODO: 目前是调用 liteide_stub 工具来查找声明，后续需要重新实现
 	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
 	cmd := exec.Command(ide_stub, argv...)
@@ -309,7 +309,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	data["cursorCh"] = cursorCh
 }
 
-// 查找使用.
+// FindUsagesHandler handles request of finding usages.
 func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -355,7 +355,6 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 	// glog.Infof("offset [%d]", offset)
 
-	// TODO: 目前是调用 liteide_stub 工具来查找使用，后续需要重新实现
 	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
 	cmd := exec.Command(ide_stub, argv...)
@@ -396,18 +395,19 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	data["founds"] = usages
 }
 
-// 计算光标偏移位置.
+// getCursorOffset calculates the cursor offset.
 //
-// line 指定了行号（第一行为 0），ch 指定了列号（第一列为 0）.
+// line is the line number, starts with 0 that means the first line
+// ch is the column number, starts with 0 that means the first column
 func getCursorOffset(code string, line, ch int) (offset int) {
 	lines := strings.Split(code, "\n")
 
-	// 计算前几行长度
+	// calculate sum length of lines before
 	for i := 0; i < line; i++ {
 		offset += len(lines[i])
 	}
 
-	// 计算当前行、当前列长度
+	// calculate length of the current line and column
 	curLine := lines[line]
 	var buffer bytes.Buffer
 	r := []rune(curLine)
@@ -415,8 +415,8 @@ func getCursorOffset(code string, line, ch int) (offset int) {
 		buffer.WriteString(string(r[i]))
 	}
 
-	offset += line                 // 加换行符
-	offset += len(buffer.String()) // 加当前行列偏移
+	offset += len(buffer.String()) // append length of current line
+	offset += line                 // append number of '\n'
 
 	return offset
 }

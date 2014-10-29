@@ -9,15 +9,15 @@ import (
 
 type myos struct{}
 
-// 操作系统工具.
+// OS utilities.
 var OS = myos{}
 
-// 判断是否是 Windows 操作系统.
+// IsWindows determines whether current OS is Windows.
 func (*myos) IsWindows() bool {
 	return "windows" == runtime.GOOS
 }
 
-// 获取当前执行程序的工作目录的绝对路径.
+// Pwd gets the path of current working directory.
 func (*myos) Pwd() string {
 	file, _ := exec.LookPath(os.Args[0])
 	pwd, _ := filepath.Abs(file)

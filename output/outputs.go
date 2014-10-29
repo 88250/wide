@@ -1,4 +1,4 @@
-// 构建、运行、go tool 操作.
+// Build, run and go tool manipulations.
 package output
 
 import (
@@ -25,11 +25,11 @@ import (
 )
 
 const (
-	lintSeverityError = "error"   // Lint 严重级别：错误
-	lintSeverityWarn  = "warning" // Lint 严重级别：警告
+	lintSeverityError = "error"   // lint severity: error
+	lintSeverityWarn  = "warning" // lint severity: warning
 )
 
-// 代码 Lint 结构.
+// Code lint.
 type Lint struct {
 	File     string `json:"file"`
 	LineNo   int    `json:"lineNo"`
@@ -37,7 +37,7 @@ type Lint struct {
 	Msg      string `json:"msg"`
 }
 
-// 建立输出通道.
+// WSHandler handles request of creating output channel.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
 
@@ -52,7 +52,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	glog.V(4).Infof("Open a new [Output] with session [%s], %d", sid, len(session.OutputWS))
 }
 
-// 运行一个可执行文件.
+// RunHandler handles request of executing a binary file.
 func RunHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -105,7 +105,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// 添加到用户进程集中
+	// add the process to user's process set
 	processes.add(wSession, cmd.Process)
 
 	channelRet := map[string]interface{}{}
@@ -117,7 +117,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 		glog.V(3).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
 
-		// 在读取程序输出前先返回一次，使前端获取到 run 状态与 pid
+		// push once for front-end to get the 'run' state and pid
 		if nil != session.OutputWS[sid] {
 			wsChannel := session.OutputWS[sid]
 
@@ -129,15 +129,14 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
-			// 更新通道最近使用时间
-			wsChannel.Time = time.Now()
+			wsChannel.Refresh()
 		}
 
 		for {
 			buf, err := reader.ReadBytes('\n')
 
 			if nil != err || 0 == len(buf) {
-				// 从用户进程集中移除这个执行完毕（或是被主动停止）的进程
+				// remove the exited process from user process set
 				processes.remove(wSession, cmd.Process)
 
 				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
@@ -153,8 +152,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 						break
 					}
 
-					// 更新通道最近使用时间
-					wsChannel.Time = time.Now()
+					wsChannel.Refresh()
 				}
 
 				break
@@ -170,15 +168,14 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 						break
 					}
 
-					// 更新通道最近使用时间
-					wsChannel.Time = time.Now()
+					wsChannel.Refresh()
 				}
 			}
 		}
 	}(rand.Int())
 }
 
-// 构建可执行文件.
+// BuildHandler handles request of building.
 func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -237,7 +234,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	executable = filepath.Join(curDir, executable)
 
-	// 先把可执行文件删了
+	// remove executable file before building
 	err = os.RemoveAll(executable)
 	if nil != err {
 		glog.Info(err)
@@ -269,7 +266,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	if nil != session.OutputWS[sid] {
-		// 在前端 output 中显示“开始构建”
+		// display "START [go build]" in front-end browser
 
 		channelRet["output"] = "<span class='start-build'>" + i18n.Get(locale, "start-build").(string) + "</span>\n"
 		channelRet["cmd"] = "start-build"
@@ -282,8 +279,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// 更新通道最近使用时间
-		wsChannel.Time = time.Now()
+		wsChannel.Refresh()
 	}
 
 	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
@@ -301,19 +297,18 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 		glog.V(3).Infof("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
 
-		// 一次性读取
+		// read all
 		buf, _ := ioutil.ReadAll(reader)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "build"
 		channelRet["executable"] = executable
 
-		if 0 == len(buf) { // 说明构建成功，没有错误信息输出
-			// 设置下一次执行命令（前端会根据该参数发送请求）
+		if 0 == len(buf) { // build success
 			channelRet["nextCmd"] = args["nextCmd"]
 			channelRet["output"] = "<span class='build-succ'>" + i18n.Get(locale, "build-succ").(string) + "</span>\n"
 
-			go func() { // 运行 go install，生成的库用于 gocode lib-path
+			go func() { // go install, for subsequent gocode lib-path
 				cmd := exec.Command("go", "install")
 				cmd.Dir = curDir
 
@@ -324,15 +319,16 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 					glog.Warning(string(out))
 				}
 			}()
-		} else { // 构建失败
-			// 解析错误信息，返回给编辑器 gutter lint
+		} else { // build error
+			// build gutter lint
+
 			errOut := string(buf)
 			channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n" + errOut
 
 			lines := strings.Split(errOut, "\n")
 
 			if lines[0][0] == '#' {
-				lines = lines[1:] // 跳过第一行
+				lines = lines[1:] // skip the first line
 			}
 
 			lints := []*Lint{}
@@ -343,7 +339,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if line[0] == '\t' {
-					// 添加到上一个 lint 中
+					// append to the last lint
 					last := len(lints)
 					msg := lints[last-1].Msg
 					msg += line
@@ -385,14 +381,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				glog.Error(err)
 			}
 
-			// 更新通道最近使用时间
-			wsChannel.Time = time.Now()
+			wsChannel.Refresh()
 		}
 
 	}(rand.Int())
 }
 
-// go test.
+// GoTestHandler handles request of go test.
 func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -443,7 +438,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	if nil != session.OutputWS[sid] {
-		// 在前端 output 中显示“开始 go test
+		// display "START [go test]" in front-end browser
 
 		channelRet["output"] = "<span class='start-test'>" + i18n.Get(locale, "start-test").(string) + "</span>\n"
 		channelRet["cmd"] = "start-test"
@@ -456,8 +451,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// 更新通道最近使用时间
-		wsChannel.Time = time.Now()
+		wsChannel.Refresh()
 	}
 
 	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
@@ -477,10 +471,10 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go test"
 
-		// 一次性读取
+		// read all
 		buf, _ := ioutil.ReadAll(reader)
 
-		// 同步点，等待 go test 执行完成
+		// waiting for go test finished
 		cmd.Wait()
 
 		if !cmd.ProcessState.Success() {
@@ -501,13 +495,12 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 				glog.Error(err)
 			}
 
-			// 更新通道最近使用时间
-			wsChannel.Time = time.Now()
+			wsChannel.Refresh()
 		}
 	}(rand.Int())
 }
 
-// go install.
+// GoInstallHandler handles request of go install.
 func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -560,7 +553,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	if nil != session.OutputWS[sid] {
-		// 在前端 output 中显示“开始 go install”
+		// display "START [go install]" in front-end browser
 
 		channelRet["output"] = "<span class='start-install'>" + i18n.Get(locale, "start-install").(string) + "</span>\n"
 		channelRet["cmd"] = "start-install"
@@ -573,8 +566,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// 更新通道最近使用时间
-		wsChannel.Time = time.Now()
+		wsChannel.Refresh()
 	}
 
 	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
@@ -592,19 +584,20 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 		glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
 
-		// 一次性读取
+		// read all
 		buf, _ := ioutil.ReadAll(reader)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go install"
 
-		if 0 != len(buf) { // 构建失败
-			// 解析错误信息，返回给编辑器 gutter lint
+		if 0 != len(buf) { // build error
+			// build gutter lint
+
 			errOut := string(buf)
 			lines := strings.Split(errOut, "\n")
 
 			if lines[0][0] == '#' {
-				lines = lines[1:] // 跳过第一行
+				lines = lines[1:] // skip the first line
 			}
 
 			lints := []*Lint{}
@@ -615,7 +608,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				if line[0] == '\t' {
-					// 添加到上一个 lint 中
+					// append to the last lint
 					last := len(lints)
 					msg := lints[last-1].Msg
 					msg += line
@@ -661,14 +654,13 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 				glog.Error(err)
 			}
 
-			// 更新通道最近使用时间
-			wsChannel.Time = time.Now()
+			wsChannel.Refresh()
 		}
 
 	}(rand.Int())
 }
 
-// go get.
+// GoGetHandler handles request of go get.
 func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -719,7 +711,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	if nil != session.OutputWS[sid] {
-		// 在前端 output 中显示“开始 go get
+		// display "START [go get]" in front-end browser
 
 		channelRet["output"] = "<span class='start-get'>" + i18n.Get(locale, "start-get").(string) + "</span>\n"
 		channelRet["cmd"] = "start-get"
@@ -732,8 +724,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// 更新通道最近使用时间
-		wsChannel.Time = time.Now()
+		wsChannel.Refresh()
 	}
 
 	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
@@ -754,7 +745,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go get"
 
-		// 一次性读取
+		// read all
 		buf, _ := ioutil.ReadAll(reader)
 
 		if 0 != len(buf) {
@@ -776,13 +767,12 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 				glog.Error(err)
 			}
 
-			// 更新通道最近使用时间
-			wsChannel.Time = time.Now()
+			wsChannel.Refresh()
 		}
 	}(rand.Int())
 }
 
-// 结束正在运行的进程.
+// StopHandler handles request of stoping a running process.
 func StopHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
