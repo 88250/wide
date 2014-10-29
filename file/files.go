@@ -155,6 +155,7 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["file"].(string)
+	sid := args["sid"].(string)
 
 	fout, err := os.Create(filePath)
 
@@ -173,6 +174,7 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 		glog.Error(err)
 		data["succ"] = false
 
+		wSession := session.WideSessions.Get(sid)
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't save file " + filePath}
 
@@ -230,6 +232,9 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string)
+	sid := args["sid"].(string)
+
+	wSession := session.WideSessions.Get(sid)
 
 	if !removeFile(path) {
 		data["succ"] = false
