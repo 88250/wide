@@ -1,4 +1,4 @@
-// Wide 配置相关，所有配置（包括用户配置）都是保存在 wide.json 中.
+// Configurations manipulations, all configurations (including user configurations) are stored in wide.json.
 package conf
 
 import (
@@ -18,60 +18,60 @@ import (
 )
 
 const (
-	PathSeparator     = string(os.PathSeparator)     // 系统文件路径分隔符
-	PathListSeparator = string(os.PathListSeparator) // 系统路径列表分隔符
+	PathSeparator     = string(os.PathSeparator)     // OS-specific path separator
+	PathListSeparator = string(os.PathListSeparator) // OS-specific path list separator
 
 )
 
-// 最后一次会话内容结构.
+// The latest session content.
 type LatestSessionContent struct {
-	FileTree    []string // 文件树展开的路径集
-	Files       []string // 编辑器打开的文件路径集
-	CurrentFile string   // 当前编辑器文件路径
+	FileTree    []string // paths of expanding nodes of file tree
+	Files       []string // paths of files of opening editor tabs
+	CurrentFile string   // path of file of the current focused editor tab
 }
 
-// 用户结构.
+// User.
 type User struct {
 	Name                 string
 	Password             string
-	Workspace            string // 该用户的工作空间 GOPATH 路径
+	Workspace            string // the GOPATH of this user
 	Locale               string
 	GoFormat             string
 	LatestSessionContent *LatestSessionContent
 }
 
-// 配置结构.
+// Configuration.
 type conf struct {
-	Server                string  // 服务地址（{IP}:7070）
-	StaticServer          string  // 静态资源服务地址（http://{IP}:7070）
-	EditorChannel         string  // 编辑器通道地址（ws://{IP}:7070）
-	OutputChannel         string  // 输出窗口通道地址（ws://{IP}:7070）
-	ShellChannel          string  // Shell 通道地址（ws://{IP}:7070）
-	SessionChannel        string  // Wide 会话通道地址（ws://{IP}:7070）
-	HTTPSessionMaxAge     int     // HTTP 会话失效时间（秒）
-	StaticResourceVersion string  // 静态资源版本
-	MaxProcs              int     // 并发执行数
-	RuntimeMode           string  // 运行模式
-	Pwd                   string  // 工作目录
-	Workspace             string  // 主工作空间 GOPATH 路径
-	Locale                string  // 默认的区域
-	Users                 []*User // 用户集
+	Server                string  // server host and port ({IP}:7070)
+	StaticServer          string  // static resources server scheme, host and port (http://{IP}:7070)
+	EditorChannel         string  // editor channel (ws://{IP}:7070)
+	OutputChannel         string  // output channel (ws://{IP}:7070)
+	ShellChannel          string  // shell channel(ws://{IP}:7070)
+	SessionChannel        string  // wide session channel (ws://{IP}:7070)
+	HTTPSessionMaxAge     int     // HTTP session max age (in seciond)
+	StaticResourceVersion string  // version of static resources
+	MaxProcs              int     // Go max procs
+	RuntimeMode           string  // runtime mode (dev/prod)
+	Pwd                   string  // current working direcitory
+	Workspace             string  // path of master workspace
+	Locale                string  // default locale
+	Users                 []*User // configurations of users
 }
 
-// 配置.
+// Configuration variable.
 var Wide conf
 
-// 维护非变化部分的配置.
+// A raw copy of configuration variable.
 //
-// 只有 Users 是会运行时变化的，保存回写文件时要使用这个变量.
+// Save function will use this variable to persist.
 var rawWide conf
 
-// 定时检查 Wide 运行环境.
+// FixedTimeCheckEnv checks Wide runtime enviorment periodically (7 minutes).
 //
-// 如果是特别严重的问题（比如 $GOPATH 不存在）则退出进程，另一些不太严重的问题（比如 gocode 不存在）则放入全局通知队列.
+// Exits process if found fatal issues (such as not found $GOPATH),
+// Notifies user by notification queue if found warning issues (such as not found gocode).
 func FixedTimeCheckEnv() {
 	go func() {
-		// 7 分钟进行一次检查环境
 		for _ = range time.Tick(time.Minute * 7) {
 			if "" == os.Getenv("GOPATH") {
 				glog.Fatal("Not found $GOPATH")
@@ -106,9 +106,9 @@ func FixedTimeCheckEnv() {
 	}()
 }
 
-// 定时（1 分钟）保存配置.
+// FixedTimeSave saves configurations (wide.json) periodically (1 minute).
 //
-// 主要目的是保存用户会话内容，以备下一次用户打开 Wide 时进行会话还原.
+// Main goal of this function is to save user session content, for restoring session content while user open Wide next time.
 func FixedTimeSave() {
 	go func() {
 		// 1 分钟进行一次配置保存
@@ -118,11 +118,12 @@ func FixedTimeSave() {
 	}()
 }
 
-// 获取 username 指定的用户的工作空间路径，查找不到时返回空字符串.
+// GetUserWorkspace gets workspace path with the specified username, returns "" if not found.
 func (c *conf) GetUserWorkspace(username string) string {
 	for _, user := range c.Users {
 		if user.Name == username {
 			ret := strings.Replace(user.Workspace, "{pwd}", c.Pwd, 1)
+
 			return filepath.FromSlash(ret)
 		}
 	}
@@ -130,16 +131,16 @@ func (c *conf) GetUserWorkspace(username string) string {
 	return ""
 }
 
-// 获取主工作空间路径.
+// GetWorkspace gets the master workspace path.
 //
-// 相比起使用 Wide.Workspace，该函数会做如下处理：
-//  1. 替换里面的 {pwd} 变量为实际的目录路径
-//  2. 把 / 替换为 \\ （Windows）
+// Compared to the use of Wide.Workspace, this function will be processed as follows:
+//  1. Replace {pwd} variable with the actual directory path
+//  2. Replace "/" with "\\" (Windows)
 func (c *conf) GetWorkspace() string {
 	return filepath.FromSlash(strings.Replace(c.Workspace, "{pwd}", c.Pwd, 1))
 }
 
-// 获取 username 指定的用户的 Go 源码格式化工具路径，查找不到时返回 "gofmt".
+// GetGoFmt gets the path of Go format tool, returns "gofmt" if not found.
 func (c *conf) GetGoFmt(username string) string {
 	for _, user := range c.Users {
 		if user.Name == username {
@@ -158,16 +159,16 @@ func (c *conf) GetGoFmt(username string) string {
 	return "gofmt"
 }
 
-// 获取用户的工作空间路径.
+// GetWorkspace gets workspace path of the user.
 //
-// 相比起使用 User.Workspace，该函数会做如下处理：
-//  1. 替换里面的 {pwd} 变量为实际的目录路径
-//  2. 把 / 替换为 \\ （Windows）
+// Compared to the use of Wide.Workspace, this function will be processed as follows:
+//  1. Replace {pwd} variable with the actual directory path
+//  2. Replace "/" with "\\" (Windows)
 func (u *User) GetWorkspace() string {
 	return filepath.FromSlash(strings.Replace(u.Workspace, "{pwd}", Wide.Pwd, 1))
 }
 
-// 获取 username 指定的用户配置.
+// GetUser gets configuration of the user specified by the given username, returns nil if not found.
 func (*conf) GetUser(username string) *User {
 	for _, user := range Wide.Users {
 		if user.Name == username {
@@ -178,9 +179,9 @@ func (*conf) GetUser(username string) *User {
 	return nil
 }
 
-// 获取 GOBIN 中 executable 指定的文件路径.
+// GetExecutableInGOBIN gets executable file under GOBIN path.
 //
-// 函数内部会判断操作系统，如果是 Windows 则在 executable 实参后加入 .exe 后缀.
+// The specified executable should not with extension, this function will append .exe if on Windows.
 func (*conf) GetExecutableInGOBIN(executable string) string {
 	if util.OS.IsWindows() {
 		executable += ".exe"
@@ -214,12 +215,12 @@ func (*conf) GetExecutableInGOBIN(executable string) string {
 	return os.Getenv("GOBIN") + PathSeparator + executable
 }
 
-// 保存 Wide 配置.
+// Save saves Wide configurations.
 func Save() bool {
-	// 只有 Users 是会运行时变化的，其他属性只能手工维护 wide.json 配置文件
+	// just the Users field are volatile
 	rawWide.Users = Wide.Users
 
-	// 原始配置文件内容
+	// format
 	bytes, err := json.MarshalIndent(rawWide, "", "    ")
 
 	if nil != err {
@@ -237,7 +238,7 @@ func Save() bool {
 	return true
 }
 
-// 加载 Wide 配置.
+// Load loads the configurations from wide.json.
 func Load() {
 	bytes, _ := ioutil.ReadFile("conf/wide.json")
 
@@ -248,7 +249,7 @@ func Load() {
 		os.Exit(-1)
 	}
 
-	// 保存未经变量替换处理的原始配置文件，用于写回时
+	// keep the raw content
 	json.Unmarshal(bytes, &rawWide)
 
 	ip, err := util.Net.LocalIP()
@@ -275,9 +276,9 @@ func Load() {
 	initWorkspaceDirs()
 }
 
-// 初始化主工作空间、各个用户的工作空间目录.
+// initWorkspaceDirs initializes the directories of master workspace, users' workspaces.
 //
-// 如果不存在 Workspace 配置所指定的目录路径则创建该目录.
+// Creates directories if not found on path of workspace.
 func initWorkspaceDirs() {
 	paths := filepath.SplitList(Wide.GetWorkspace())
 
@@ -291,27 +292,20 @@ func initWorkspaceDirs() {
 	}
 }
 
-// 在 path 指定的路径下创建工作空间目录.
+// createWorkspaceDir creates directories on the path.
 //
-//  1. 根目录：{path}
-//  2. 源码目录：{path}/src
-//  3. 包目录：{path}/pkg
-//  4. 可执行文件目录：{path}/bin
+//  1. root directory:{path}
+//  2. src directory: {path}/src
+//  3. package directory: {path}/pkg
+//  4. binary directory: {path}/bin
 func createWorkspaceDir(path string) {
-	// {path}, workspace root
 	createDir(path)
-
-	// {path}/src
 	createDir(path + PathSeparator + "src")
-
-	// {path}/pkg
 	createDir(path + PathSeparator + "pkg")
-
-	// {path}/bin
 	createDir(path + PathSeparator + "bin")
 }
 
-// 在 path 指定的路径下不存在目录或文件则创建目录.
+// createDir creates a directory on the path if it not exists.
 func createDir(path string) {
 	if !isExist(path) {
 		if err := os.MkdirAll(path, 0775); nil != err {
@@ -324,9 +318,7 @@ func createDir(path string) {
 	}
 }
 
-// 检查文件或目录是否存在.
-//
-// 如果由 filename 指定的文件或目录存在则返回 true，否则返回 false.
+// isExist determines whether the file spcified by the given filename is exists.
 func isExist(filename string) bool {
 	_, err := os.Stat(filename)
 
