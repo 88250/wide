@@ -20,7 +20,11 @@ import (
 const (
 	PathSeparator     = string(os.PathSeparator)     // OS-specific path separator
 	PathListSeparator = string(os.PathListSeparator) // OS-specific path list separator
+)
 
+const (
+	WideVersion   = "1.0.1" // wide version
+	CodeMirrorVer = "4.7"   // editor version
 )
 
 // The latest session content.
@@ -288,7 +292,7 @@ func initWorkspaceDirs() {
 	}
 
 	for _, path := range paths {
-		createWorkspaceDir(path)
+		CreateWorkspaceDir(path)
 	}
 }
 
@@ -298,7 +302,7 @@ func initWorkspaceDirs() {
 //  2. src directory: {path}/src
 //  3. package directory: {path}/pkg
 //  4. binary directory: {path}/bin
-func createWorkspaceDir(path string) {
+func CreateWorkspaceDir(path string) {
 	createDir(path)
 	createDir(path + PathSeparator + "src")
 	createDir(path + PathSeparator + "pkg")

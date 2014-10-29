@@ -1,14 +1,11 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"html/template"
-	"math/rand"
 	"mime"
 	"net/http"
 	"runtime"
-	"strconv"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -22,11 +19,6 @@ import (
 	"github.com/b3log/wide/shell"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
-)
-
-const (
-	Ver           = "1.0.1" // wide version
-	CodeMirrorVer = "4.7"   // editor version
 )
 
 // The only one init function in Wide.
@@ -43,78 +35,6 @@ func init() {
 	conf.FixedTimeSave()
 
 	session.FixedTimeRelease()
-}
-
-// loginHandler handles request of user login.
-func loginHandler(w http.ResponseWriter, r *http.Request) {
-	if "GET" == r.Method {
-		// show the login page
-
-		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
-			"locale": conf.Wide.Locale, "ver": Ver}
-
-		t, err := template.ParseFiles("views/login.html")
-
-		if nil != err {
-			glog.Error(err)
-			http.Error(w, err.Error(), 500)
-
-			return
-		}
-
-		t.Execute(w, model)
-
-		return
-	}
-
-	// non-GET request as login request
-
-	succ := false
-
-	data := map[string]interface{}{"succ": &succ}
-	defer util.RetJSON(w, r, data)
-
-	args := struct {
-		Username string
-		Password string
-	}{}
-
-	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
-		succ = true
-
-		return
-	}
-
-	for _, user := range conf.Wide.Users {
-		if user.Name == args.Username && user.Password == args.Password {
-			succ = true
-		}
-	}
-
-	if !succ {
-		return
-	}
-
-	// create a HTTP session
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-	httpSession.Values["username"] = args.Username
-	httpSession.Values["id"] = strconv.Itoa(rand.Int())
-	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
-	httpSession.Save(r, w)
-
-	glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
-}
-
-// logoutHandler handles request of user logout (exit).
-func logoutHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
-
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
-	httpSession.Options.MaxAge = -1
-	httpSession.Save(r, w)
 }
 
 // indexHandler handles request of Wide index.
@@ -141,7 +61,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession, "latestSessionContent": userConf.LatestSessionContent,
-		"pathSeparator": conf.PathSeparator, "codeMirrorVer": CodeMirrorVer}
+		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer}
 
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
 
@@ -182,7 +102,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"username": username, "workspace": userWorkspace, "ver": Ver}
+		"username": username, "workspace": userWorkspace, "ver": conf.WideVersion}
 
 	t, err := template.ParseFiles("views/start.html")
 
@@ -242,8 +162,8 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale, "ver": Ver,
-		"goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
+		"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
 
 	t, err := template.ParseFiles("views/about.html")
 
@@ -266,8 +186,6 @@ func main() {
 	defer glog.Flush()
 
 	// IDE
-	http.HandleFunc("/login", handlerWrapper(loginHandler))
-	http.HandleFunc("/logout", handlerWrapper(logoutHandler))
 	http.HandleFunc("/", handlerWrapper(indexHandler))
 	http.HandleFunc("/start", handlerWrapper(startHandler))
 	http.HandleFunc("/about", handlerWrapper(aboutHandler))
@@ -318,8 +236,9 @@ func main() {
 	http.HandleFunc("/notification/ws", handlerWrapper(notification.WSHandler))
 
 	// user
-	http.HandleFunc("/user/new", handlerWrapper(session.AddUser))
-	http.HandleFunc("/user/repos/init", handlerWrapper(session.InitGitRepos))
+	http.HandleFunc("/login", handlerWrapper(session.LoginHandler))
+	http.HandleFunc("/logout", handlerWrapper(session.LogoutHandler))
+	http.HandleFunc("/signup", handlerWrapper(session.SignUpUser))
 
 	glog.V(0).Infof("Wide is running [%s]", conf.Wide.Server)
 
