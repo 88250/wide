@@ -35,6 +35,7 @@
     "unread_notification": "未読の通知",
     "notification_2": "[gocode] が見つかりません。[Autocomplete] は動作しません。",
     "notification_3": "[ide_stub] が見つかりません。[Jump to Decl]、[Find Usages] は動作しません。",
+    "notification_4": "内部サーバーエラー",
     "goto_line": "指定行にジャンプ",
     "go": "Go",
     "tip": "ヒント",

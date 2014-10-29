@@ -82,11 +82,9 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 // 自动完成（代码补全）.
 func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		http.Error(w, err.Error(), 500)
 
@@ -167,10 +165,8 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		http.Error(w, err.Error(), 500)
 
@@ -241,10 +237,8 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		http.Error(w, err.Error(), 500)
 
@@ -323,11 +317,9 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	username := session.Values["username"].(string)
 
-	decoder := json.NewDecoder(r.Body)
-
 	var args map[string]interface{}
 
-	if err := decoder.Decode(&args); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		http.Error(w, err.Error(), 500)
 

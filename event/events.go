@@ -4,10 +4,11 @@ package event
 import "github.com/golang/glog"
 
 const (
-	EvtCodeGOPATHNotFound  = iota // 事件代码：找不到环境变量 $GOPATH
-	EvtCodeGOROOTNotFound         // 事件代码：找不到环境变量 $GOROOT
-	EvtCodeGocodeNotFound         // 事件代码：找不到 gocode
-	EvtCodeIDEStubNotFound        // 事件代码：找不到 IDE stub
+	EvtCodeGOPATHNotFound      = iota // 事件代码：找不到环境变量 $GOPATH
+	EvtCodeGOROOTNotFound             // 事件代码：找不到环境变量 $GOROOT
+	EvtCodeGocodeNotFound             // 事件代码：找不到 gocode
+	EvtCodeIDEStubNotFound            // 事件代码：找不到 IDE stub
+	EvtCodeServerInternalError        // 事件代码：服务器内部错误
 )
 
 // 事件队列最大长度.
@@ -15,20 +16,21 @@ const MaxQueueLength = 10
 
 // 事件结构.
 type Event struct {
-	Code int    `json:"code"` // 事件代码
-	Sid  string `json:"sid"`  // 用户会话 id
+	Code int         `json:"code"` // 事件代码
+	Sid  string      `json:"sid"`  // 用户会话 id
+	Data interface{} `json:"data"` // 事件数据
 }
 
 // 全局事件队列.
 //
 // 入队的事件将分发到每个用户的事件队列中.
-var EventQueue = make(chan int, MaxQueueLength)
+var EventQueue = make(chan *Event, MaxQueueLength)
 
 // 用户事件队列.
 type UserEventQueue struct {
-	Sid      string    // 关联的会话 id
-	Queue    chan int  // 队列
-	Handlers []Handler // 事件处理器集
+	Sid      string      // 关联的会话 id
+	Queue    chan *Event // 队列
+	Handlers []Handler   // 事件处理器集
 }
 
 // 事件队列集类型.
@@ -43,10 +45,12 @@ var UserEventQueues = Queues{}
 func Load() {
 	go func() {
 		for event := range EventQueue {
-			glog.V(5).Info("收到全局事件 [%d]", event)
+			glog.V(5).Infof("收到全局事件 [%d]", event.Code)
 
 			// 将事件分发到每个用户的事件队列里
 			for _, userQueue := range UserEventQueues {
+				event.Sid = userQueue.Sid
+
 				userQueue.Queue <- event
 			}
 		}
@@ -71,19 +75,18 @@ func (ueqs Queues) New(sid string) *UserEventQueue {
 
 	q = &UserEventQueue{
 		Sid:   sid,
-		Queue: make(chan int, MaxQueueLength),
+		Queue: make(chan *Event, MaxQueueLength),
 	}
 
 	ueqs[sid] = q
 
 	go func() { // 队列开始监听事件
-		for evtCode := range q.Queue {
-			glog.V(5).Infof("Session [%s] received a event [%d]", sid, evtCode)
+		for evt := range q.Queue {
+			glog.V(5).Infof("Session [%s] received a event [%d]", sid, evt.Code)
 
 			// 将事件交给事件处理器进行处理
 			for _, handler := range q.Handlers {
-				handler.Handle(&Event{Code: evtCode, Sid: sid})
-
+				handler.Handle(evt)
 			}
 		}
 	}()
