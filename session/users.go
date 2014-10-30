@@ -100,7 +100,8 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 		dir := filepath.Dir(firstUserWorkspace)
 
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
-			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "dir": dir}
+			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "dir": dir,
+			"pathSeparator": conf.PathSeparator}
 
 		t, err := template.ParseFiles("views/sign_up.html")
 

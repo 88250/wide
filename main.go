@@ -54,7 +54,16 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	wideSession := session.WideSessions.New(httpSession)
 
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	user := conf.Wide.GetUser(username)
+	if nil == user {
+		glog.Warningf("Not found user [%s]", username)
+
+		http.Redirect(w, r, "/login", http.StatusFound)
+
+		return
+	}
+
+	locale := user.Locale
 
 	wideSessions := session.WideSessions.GetByUsername(username)
 	userConf := conf.Wide.GetUser(username)

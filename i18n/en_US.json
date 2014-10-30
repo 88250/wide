@@ -1,4 +1,5 @@
 {
+    "colon": ": ",
     "wide": "Wide",
     "isDelete": "Delete",
     "cancel": "Cancel",
@@ -108,7 +109,6 @@
     "test": "Test",
     "sign_up": "Sign Up",
     "team": "Team",
-    "colon": ": ",
     "sing_up_error": "Sign Up Error",
     "user_name_ruler": "Username only by az, AZ, 0-9, _ consisting of a length of 16",
     "password_no_match": "Password doesn't match the confirmation"
