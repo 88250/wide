@@ -34,7 +34,6 @@ type Notification struct {
 
 // event2Notification processes user event by converting the specified event to a notification, and then push it to front
 // browser with notification channel.
-//
 func event2Notification(e *event.Event) {
 	if nil == session.NotificationWS[e.Sid] {
 		return
