@@ -108,5 +108,8 @@
     "test": "测试",
     "sign_up": "注册",
     "team": "团队",
-    "colon": "："
+    "colon": "：",
+    "sing_up_error": "注册失败",
+    "user_name_ruler": "用户名只能由 a-z, A-Z, 0-9, _ 组成，长度为16",
+    "password_no_match": "密码输入不一致"
 }

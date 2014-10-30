@@ -108,5 +108,8 @@
     "test": "測試",
     "sign_up": "註冊",
     "team": "團隊",
-    "colon": "："
+    "colon": "：",
+    "sing_up_error": "註冊失敗",
+    "user_name_ruler": "用戶名只能由az, AZ, 0-9, _ 組成，長度為16",
+    "password_no_match": "密碼輸入不一致"
 }

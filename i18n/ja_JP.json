@@ -108,5 +108,8 @@
     "test": "テスト",
     "sign_up": "登録",
     "team": "チーム",
-    "colon": "："
+    "colon": "：",
+    "sing_up_error": "登録に失敗しました",
+    "user_name_ruler": "16の長さからなる_ AZ、AZ、0-9、によってユーザ名のみ",
+    "password_no_match": "一貫性のないパスワード入力"
 }

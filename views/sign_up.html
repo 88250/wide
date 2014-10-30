@@ -3,9 +3,138 @@
     <head>
         <meta charset="UTF-8">
         <title>{{.i18n.wide}} - {{.i18n.sign_up}}</title>
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
     <body>
-        {{.dir}}
+        <div class="header">
+            <div class="wrapper fn-clear">
+                <a href="/login">
+                    <img src="{{.conf.StaticServer}}/static/images/wide-logo.png" 
+                         class="logo"/></a>
+                <ul class="fn-right">
+                    <li><a href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
+                    <li><a href="https://www.gitbook.io/book/88250/wide-user-guide" target="_blank">{{.i18n.help}}</a></li>
+                    <li><a href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.report_issues}}</a></li>
+                    <li><a href="/login">{{.i18n.login}}</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="content">
+            <div class="wrapper fn-clear">
+                <div class="fn-left">
+                    <h2>Join Wide</h2>
+                    <h3>Coding with Go on the Wide way.</h3>
+                </div>
+                <div class="form fn-right sign-up">
+                    <div id="msg" class="fn-none"></div>
+                    <div class="dir">
+                        Workspace： 
+                        <div id="dir" data-dir="{{.dir}}{{.pathSeparator}}">{{.dir}}</div>
+                    </div>
+                    <input id="username" placeholder="Username"/><br/>
+                    <input id="password" type="password" placeholder="Password"/><br/>
+                    <input id="confirmPassword" type="password" placeholder="Confirm your password"/>
+                </div>
+            </div>
+        </div>
+        <div class="footer">
+            <div class="wrapper">
+                Ver {{.ver}}, &copy; 2014 <a href="http://b3log.org" target="_blank">B3LOG.ORG</a>
+            </div>
+        </div>
+
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
+        <script>
+(function () {
+    var contentH = $(window).height() - $(".footer").height() - $(".header").height() - 18;
+    $(".content").height(contentH)
+            .css("padding-top", (contentH - $(".content .fn-left").height()) / 2 + "px");
+
+    var signUp = function () {
+        if ($.trim($("#username").val()) === ""
+                || !/^\w+$/.test($("#username").val())
+                || $.trim($("#username").val()).length > 16) {
+            $("#msg").text("{{.i18n.user_name_ruler}}").show();
+            $("#username").focus();
+            return false;
+        } else if ($.trim($("#password").val()) === "") {
+            $("#msg").text("{{.i18n.sing_up_error}}").show();
+            $("#password").focus();
+            return false;
+        } else if ($("#confirmPassword").val() !== $("#password").val()) {
+            $("#msg").text("{{.i18n.password_no_match}}").show();
+            $("#confirmPassword").focus();
+            return false;
+        }
+
+        var request = {
+            username: $("#username").val(),
+            password: $("#password").val()
+        };
+        $.ajax({
+            type: 'POST',
+            url: '/signup',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                if (!data.succ) {
+                    $("#msg").text(data.msg).show();
+                    return;
+                }
+
+                window.location.href = "/";
+            }
+        });
+    };
+
+    $("#username").keyup(function (event) {
+        if (event.which === 13) {
+            if ($.trim($(this).val()) === ""
+                    || !/^\w+$/.test($(this).val())
+                    || $.trim($(this).val()).length > 16) {
+                $("#msg").text("{{.i18n.user_name_ruler}}").show();
+            } else {
+                $("#password").focus();
+                $("#msg").hide();
+            }
+        } else {
+            if ($.trim($(this).val()) === ""
+                    || !/^\w+$/.test($(this).val())
+                    || $.trim($(this).val()).length > 16) {
+                $("#msg").text("{{.i18n.user_name_ruler}}").show();
+            } else {
+                $("#msg").hide();
+            }
+            $("#dir").html($("#dir").data('dir') + $(this).val());
+        }
+    }).focus();
+
+    $("#password").keydown(function (event) {
+        if (event.which === 13) {
+            if ($.trim($(this).val()) === "") {
+                $("#msg").text("{{.i18n.sing_up_error}}").show();
+            } else {
+                $("#confirmPassword").focus();
+            }
+        } else {
+            $("#msg").hide();
+        }
+    });
+
+    $("#confirmPassword").keydown(function (event) {
+        if (event.which === 13) {
+            if ($(this).val() !== $("#password").val()) {
+                $("#msg").text("{{.i18n.password_no_match}}").show();
+            } else {
+                signUp();
+            }
+        } else {
+            $("#msg").hide();
+        }
+    });
+})();
+        </script>
     </body>
 </html>

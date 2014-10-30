@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>{{.i18n.wide}} - {{.i18n.login}}</title>
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/login.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
     <body>
@@ -17,6 +17,7 @@
                     <li><a href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
                     <li><a href="https://www.gitbook.io/book/88250/wide-user-guide" target="_blank">{{.i18n.help}}</a></li>
                     <li><a href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.report_issues}}</a></li>
+                    <li><a href="/signup">{{.i18n.sign_up}}</a></li>
                 </ul>
             </div>
         </div>
@@ -47,10 +48,21 @@
             .css("padding-top", (contentH - $(".content .fn-left").height()) / 2 + "px");
 
     var login = function () {
+        if ($.trim($("#username").val()) === "") {
+            $("#msg").text("{{.i18n.login_error}}").show();
+            $("#username").focus();
+            return false;
+        } else if ($.trim($("#password").val()) === "") {
+            $("#msg").text("{{.i18n.login_error}}").show();
+            $("#password").focus();
+            return false;
+        }
+
         var request = {
             username: $("#username").val(),
             password: $("#password").val()
         };
+        
         $.ajax({
             type: 'POST',
             url: '/login',
