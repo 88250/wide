@@ -88,16 +88,26 @@ Flow:
 * [20140910, png](http://b3log.org/wide/demo/20140910.png)
 * [20140823, swf](http://b3log.org/wide/demo/20140823.html)
 
-## Setup from sources
+## Setup
 
-1. Downloads source
-2. Gets dependencies with 
+### Download Binary
+
+We have provided OS-specific executable binary as follows: 
+
+* linux-amd64/386
+* windows-amd64/386
+* darwin-amd64/386
+
+Download [here](http://pan.baidu.com/s/1dD3XwOT)!
+
+### Build Wide for yourself
+
+1. Download source or by `git clone`
+2. Get dependencies with 
    * `go get -u`
    * `go get -u github.com/88250/ide_stub`
    * `go get -u github.com/nsf/gocode`
-3. Compiles wide with `go build` 
-4. Configures `conf/wide.json` (optional)
-5. Runs the executable `wide` or `wide.exe`
+3. Compile wide with `go build` 
 
 ## Known Issues
 
