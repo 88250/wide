@@ -282,13 +282,13 @@ var wide = {
                         dataType: "jsonp",
                         jsonp: "callback",
                         success: function (data, textStatus) {
-                           if ($("#dialogAbout .version").text() === data.wideVersion) {
-                               $(".upgrade").text(config.label.uptodate);
-                           } else {
-                                $(".upgrade").html(config.label.new_version_available + config.label.colon 
-                                        + "<a href='" + data.wideDownload 
+                            if ($("#dialogAbout .version").text() === data.wideVersion) {
+                                $(".upgrade").text(config.label.uptodate);
+                            } else {
+                                $(".upgrade").html(config.label.new_version_available + config.label.colon
+                                        + "<a href='" + data.wideDownload
                                         + "' target='_blank'>" + data.wideVersion + "</a>");
-                           }
+                            }
                         }
                     });
                 }
@@ -511,10 +511,10 @@ var wide = {
             wide.run();
             return false;
         }
-		
-		if (!wide.curProcessId) {
-			return false;
-		}
+
+        if (!wide.curProcessId) {
+            return false;
+        }
 
         var request = newWideRequest();
         request.pid = wide.curProcessId;
@@ -543,7 +543,7 @@ var wide = {
         if (!currentPath) {
             return false;
         }
-        
+
         if ($(".menu li.build").hasClass("disabled")) {
             return false;
         }
@@ -614,7 +614,7 @@ var wide = {
         if (!currentPath) {
             return false;
         }
-        
+
         if ($(".menu li.test").hasClass("disabled")) {
             return false;
         }
@@ -707,7 +707,7 @@ var wide = {
         request.cursorCh = cursor.ch;
 
         switch (mode) {
-            case "text/x-go": // 会保存文件
+            case "text/x-go":
                 $.ajax({
                     type: 'POST',
                     url: '/go/fmt',
@@ -723,25 +723,21 @@ var wide = {
                 });
 
                 break;
-            case "text/html": // 会保存文件
-                $.ajax({
-                    type: 'POST',
-                    url: '/html/fmt',
-                    data: JSON.stringify(request),
-                    dataType: "json",
-                    success: function (data) {
-                        if (data.succ) {
-                            curEditor.setValue(data.code);
-                            curEditor.setCursor(cursor);
-                            curEditor.scrollTo(null, scrollInfo.top);
-                        }
-                    }
-                });
+            case "text/html":
+                try {
+                    var content = html_beautify(curEditor.getValue());
+                    curEditor.setValue(content);
+                    curEditor.setCursor(cursor);
+                    curEditor.scrollTo(null, scrollInfo.top);
+
+                    wide._save();
+                } catch (e) {
+                    delete e;
+                }
 
                 break;
             case "application/json":
                 try {
-                    // 在客户端浏览器中进行 JSON 格式化
                     var json = JSON.parse(curEditor.getValue());
                     curEditor.setValue(JSON.stringify(json, "", "    "));
                     curEditor.setCursor(cursor);
@@ -751,6 +747,7 @@ var wide = {
                 } catch (e) {
                     delete e;
                 }
+
                 break;
             default :
                 // TODO: XML 格式化处理
