@@ -706,6 +706,8 @@ var wide = {
         request.cursorLine = cursor.line;
         request.cursorCh = cursor.ch;
 
+        var formatted = null;
+
         switch (mode) {
             case "text/x-go":
                 $.ajax({
@@ -718,42 +720,33 @@ var wide = {
                             curEditor.setValue(data.code);
                             curEditor.setCursor(cursor);
                             curEditor.scrollTo(null, scrollInfo.top);
+
+                            return;
                         }
                     }
                 });
 
                 break;
             case "text/html":
-                try {
-                    var content = html_beautify(curEditor.getValue());
-                    curEditor.setValue(content);
-                    curEditor.setCursor(cursor);
-                    curEditor.scrollTo(null, scrollInfo.top);
-
-                    wide._save();
-                } catch (e) {
-                    delete e;
-                }
-
+                formatted = html_beautify(curEditor.getValue());
                 break;
+            case "text/javascript":
             case "application/json":
-                try {
-                    var json = JSON.parse(curEditor.getValue());
-                    curEditor.setValue(JSON.stringify(json, "", "    "));
-                    curEditor.setCursor(cursor);
-                    curEditor.scrollTo(null, scrollInfo.top);
-
-                    wide._save();
-                } catch (e) {
-                    delete e;
-                }
-
+                formatted = js_beautify(curEditor.getValue());
+                break;
+            case "text/css":
+                formatted = css_beautify(curEditor.getValue());
                 break;
             default :
-                // TODO: XML 格式化处理
-                // 所有文件格式化后都需要进行保存
-                wide._save();
                 break;
+        }
+
+        if (formatted) {
+            curEditor.setValue(formatted);
+            curEditor.setCursor(cursor);
+            curEditor.scrollTo(null, scrollInfo.top);
+
+            wide._save();
         }
     },
     openAbout: function () {

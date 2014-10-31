@@ -235,7 +235,6 @@ func main() {
 	http.HandleFunc("/exprinfo", handlerWrapper(editor.GetExprInfoHandler))
 	http.HandleFunc("/find/decl", handlerWrapper(editor.FindDeclarationHandler))
 	http.HandleFunc("/find/usages", handlerWrapper(editor.FindUsagesHandler))
-	http.HandleFunc("/html/fmt", handlerWrapper(editor.HTMLFmtHandler))
 
 	// shell
 	http.HandleFunc("/shell/ws", handlerWrapper(shell.WSHandler))

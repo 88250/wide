@@ -1,0 +1,36 @@
+{
+    "Server": "{IP}:7070",
+    "StaticServer": "http://{IP}:7070",
+    "EditorChannel": "ws://{IP}:7070",
+    "OutputChannel": "ws://{IP}:7070",
+    "ShellChannel": "ws://{IP}:7070",
+    "SessionChannel": "ws://{IP}:7070",
+    "HTTPSessionMaxAge": 86400,
+    "StaticResourceVersion": "201410271700",
+    "MaxProcs": 4,
+    "RuntimeMode": "dev",
+    "Pwd": "{pwd}",
+    "Workspace": "{pwd}/data/workspace",
+    "Locale": "en_US",
+    "Users": [{
+        "Name": "admin",
+        "Password": "admin",
+        "Workspace": "{pwd}/data/user_workspaces/admin",
+        "Locale": "en_US",
+        "GoFormat": "gofmt",
+        "LatestSessionContent": {
+            "FileTree": [
+                "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src",
+                "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\format",
+                "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\gotest",
+                "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\hello",
+                "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\time"
+            ],
+            "Files": [
+                "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\time\\main.go",
+                "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\format\\index.html"
+            ],
+            "CurrentFile": "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\format\\index.html"
+        }
+    }]
+}
