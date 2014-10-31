@@ -96,7 +96,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
+	outReader := bufio.NewReader(stdout)
+	errReader := bufio.NewReader(stderr)
 
 	if err := cmd.Start(); nil != err {
 		glog.Error(err)
@@ -132,14 +133,57 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			wsChannel.Refresh()
 		}
 
-		for {
-			buf, err := reader.ReadBytes('\n')
+		go func() {
+			for {
+				buf, err := outReader.ReadString('\n')
 
-			if nil != err || 0 == len(buf) {
+				if nil != err {
+					// remove the exited process from user process set
+					processes.remove(wSession, cmd.Process)
+
+					glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done [stdout err]", sid, runningId, filePath)
+
+					if nil != session.OutputWS[sid] {
+						wsChannel := session.OutputWS[sid]
+
+						channelRet["cmd"] = "run-done"
+						channelRet["output"] = "<pre>" + string(buf) + "</pre>"
+						err := wsChannel.Conn.WriteJSON(&channelRet)
+						if nil != err {
+							glog.Error(err)
+							break
+						}
+
+						wsChannel.Refresh()
+					}
+
+					break
+				} else {
+					if nil != session.OutputWS[sid] {
+						wsChannel := session.OutputWS[sid]
+
+						channelRet["cmd"] = "run"
+						channelRet["output"] = "<pre>" + string(buf) + "</pre>"
+						err := wsChannel.Conn.WriteJSON(&channelRet)
+						if nil != err {
+							glog.Error(err)
+							break
+						}
+
+						wsChannel.Refresh()
+					}
+				}
+			}
+		}()
+
+		for {
+			buf, err := errReader.ReadString('\n')
+
+			if nil != err {
 				// remove the exited process from user process set
 				processes.remove(wSession, cmd.Process)
 
-				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done", sid, runningId, filePath)
+				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done [stderr err]", sid, runningId, filePath)
 
 				if nil != session.OutputWS[sid] {
 					wsChannel := session.OutputWS[sid]
