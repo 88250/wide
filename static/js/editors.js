@@ -28,13 +28,16 @@ var editors = {
                     return false;
                 }
 
+                // 移除编辑器
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
+
                         wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
                         editors.data.splice(i, 1);
                         break;
                     }
                 }
+
                 if (editors.data.length === 0) { // 起始页可能存在，所以用编辑器数据判断
                     menu.disabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install']);
                     $(".toolbars").hide();
@@ -51,6 +54,7 @@ var editors = {
                 }
 
                 if (nextId === editors.tabs.getCurrentId()) {
+                    // 关闭的不是当前编辑器
                     return false;
                 }
 
@@ -219,6 +223,7 @@ var editors = {
                         }
                     }
 
+                    // 清除未保存状态
                     editor.doc.markClean();
                     $(".edit-panel .tabs > div.current > span").removeClass("changed");
                 }

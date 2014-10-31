@@ -470,9 +470,6 @@ var wide = {
         if ($(".menu li.save-all").hasClass("disabled")) {
             return false;
         }
-
-        // TODO: 只保存未保存过的文件
-
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             this.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
         }
@@ -695,6 +692,10 @@ var wide = {
         });
     },
     fmt: function (path, curEditor) {
+        if (curEditor.doc.isClean()) { // 没有修改过，不需要保存
+            return false;
+        }
+        
         var mode = curEditor.getOption("mode");
 
         var cursor = curEditor.getCursor();
@@ -749,8 +750,14 @@ var wide = {
             wide._save();
         }
 
+        // 清除未保存状态
         curEditor.doc.markClean();
-        $(".edit-panel .tabs > div.current > span").removeClass("changed");
+        $(".edit-panel .tabs > div").each(function () {
+            var $span = $(this).find("span:eq(0)");
+            if ($span.attr("title") === path) {
+                $span.removeClass("changed");
+            }
+        });
     },
     openAbout: function () {
         $("#dialogAbout").dialog("open");
