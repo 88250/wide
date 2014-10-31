@@ -122,19 +122,13 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	isBinary := false
-	// determine whether it is a binary file
-	for _, b := range buf {
-		if 0 == b {
-			isBinary = true
-		}
-	}
+	content := string(buf)
 
-	if isBinary {
+	if isBinary(content) {
 		data["succ"] = false
 		data["msg"] = "Can't open a binary file :("
 	} else {
-		data["content"] = string(buf)
+		data["content"] = content
 		data["mode"] = getEditorMode(extension)
 		data["path"] = path
 	}
@@ -491,6 +485,10 @@ func searchInFile(path string, text string) []*Snippet {
 	}
 
 	content := string(bytes)
+	if isBinary(content) {
+		return ret
+	}
+
 	lines := strings.Split(content, "\n")
 
 	for idx, line := range lines {
@@ -504,6 +502,17 @@ func searchInFile(path string, text string) []*Snippet {
 	}
 
 	return ret
+}
+
+// isBinary determines whether the specified content is a binary file content.
+func isBinary(content string) bool {
+	for _, b := range content {
+		if 0 == b {
+			return true
+		}
+	}
+
+	return false
 }
 
 // isImg determines whether the specified extension is a image.
