@@ -186,6 +186,10 @@
     background-color: #F7F7F7;
 }
 
+.edit-panel .tabs > div > span.changed {
+    font-weight: bold;
+}
+
 .toolbars {
     position: absolute;
     right: 5px;

@@ -748,6 +748,9 @@ var wide = {
 
             wide._save();
         }
+
+        curEditor.doc.markClean();
+        $(".edit-panel .tabs > div.current > span").removeClass("changed");
     },
     openAbout: function () {
         $("#dialogAbout").dialog("open");

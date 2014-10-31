@@ -218,6 +218,9 @@ var editors = {
                             };
                         }
                     }
+
+                    editor.doc.markClean();
+                    $(".edit-panel .tabs > div.current > span").removeClass("changed");
                 }
             });
 
@@ -488,7 +491,7 @@ var editors = {
                     } else {
                         windows.maxEditor();
                     }
-                },
+                }
             }
         });
 
@@ -506,6 +509,16 @@ var editors = {
 
         editor.on('blur', function (cm) {
             $(".edit-exprinfo").remove();
+        });
+
+        editor.on('changes', function (cm) {
+            if (cm.doc.isClean()) {
+                // 没有修改过
+                $(".edit-panel .tabs > div.current > span").removeClass("changed");
+            } else {
+                // 修改过
+                $(".edit-panel .tabs > div.current > span").addClass("changed");
+            }
         });
 
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-panel .tabs").height());
