@@ -338,7 +338,11 @@ func UpdateCustomizedConf(username string) {
 
 	defer fout.Close()
 
-	t.Execute(fout, model)
+	if err := t.Execute(fout, model); nil != err {
+		glog.Error(err)
+
+		os.Exit(-1)
+	}
 }
 
 // initWorkspaceDirs initializes the directories of master workspace, users' workspaces.
