@@ -2,6 +2,32 @@ var editors = {
     data: [],
     tabs: {},
     init: function () {
+        $("#dialogCloseEditor").dialog({
+            "modal": true,
+            "height": 26,
+            "width": 260,
+            "title": config.label.tip,
+            "hideFooter": true,
+            "afterInit": function () {
+                $("#dialogCloseEditor button.save").click(function () {
+                    var i = $("#dialogCloseEditor").data("index");
+                    wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
+                    editors.tabs.del(editors.data[i].id);
+                    $("#dialogCloseEditor").dialog("close");
+                });
+
+                $("#dialogCloseEditor button.discard").click(function () {
+                    $("#dialogCloseEditor").dialog("close");
+                });
+
+                $("#dialogCloseEditor button.cancel").click(function () {
+                    var i = $("#dialogCloseEditor").data("index");
+                    editors.tabs.del(editors.data[i].id);
+                    $("#dialogCloseEditor").dialog("close");
+                });
+            }
+        });
+
         editors.tabs = new Tabs({
             id: ".edit-panel",
             clickAfter: function (id) {
@@ -23,6 +49,26 @@ var editors = {
 
                 wide.curEditor.focus();
             },
+            removeBefore: function (id) {
+                if (id === 'startPage') { // 当前关闭的 tab 是起始页
+                    return false;
+                }
+
+                // 移除编辑器
+                for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                    if (editors.data[i].id === id) {
+                        if (editors.data[i].editor.doc.isClean()) {
+                            return true;
+                        } else {
+                            $("#dialogCloseEditor").dialog("open");
+                            $("#dialogCloseEditor").data("index", i);
+                            return false;
+                        }
+
+                        break;
+                    }
+                }
+            },
             removeAfter: function (id, nextId) {
                 if (id === 'startPage') { // 当前关闭的 tab 是起始页
                     return false;
@@ -31,8 +77,6 @@ var editors = {
                 // 移除编辑器
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
-
-                        wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
                         editors.data.splice(i, 1);
                         break;
                     }
@@ -81,7 +125,7 @@ var editors = {
         });
 
         this._initCodeMirrorHotKeys();
-        this.openStartPage()
+        this.openStartPage();
     },
     openStartPage: function () {
         var dateFormat = function (time, fmt) {
@@ -136,7 +180,7 @@ var editors = {
                                     + article.articlePermalink + "'>"
                                     + article.articleTitle + "</a>&nbsp; <span class='date'>"
                                     + dateFormat(article.articleCreateTime, 'yyyy-MM-dd hh:mm');
-                            +"</span></li>"
+                            +"</span></li>";
                         }
 
                         $("#startPage .news").html(listHTML + "</ul>");

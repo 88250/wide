@@ -37,7 +37,7 @@
                 "closeIconHover": "dialog-close-icon-hover",
                 "title": "dialog-title"
             }
-        }
+        };
     };
 
     $.extend(Dialog.prototype, {
@@ -174,6 +174,10 @@
                     $.dialog._close(id, settings);
                 }
             });
+
+            if (typeof settings.afterInit === "function") {
+                settings.afterInit();
+            }
         },
         _bindMove: function (id, className) {
             $("#" + id + "Dialog ." + className).mousedown(function (event) {

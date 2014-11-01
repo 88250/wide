@@ -22,8 +22,16 @@ $.extend(Tabs.prototype, {
         });
 
         obj._$tabs.on("click", ".ico-close", function (event) {
-            var id = $(this).parent().data("index");
-            _that.del(id);
+            var id = $(this).parent().data("index"),
+                    isRemove = true;
+
+            if (typeof obj.removeBefore === 'function') {
+                isRemove = obj.removeBefore(id);
+            }
+
+            if (isRemove) {
+                _that.del(id);
+            }
             event.stopPropagation();
         });
     },
@@ -65,6 +73,7 @@ $.extend(Tabs.prototype, {
                 $tabs = this.obj._$tabs,
                 stack = this.obj._stack,
                 prevId = null;
+
         $tabs.children("div[data-index='" + id + "']").remove();
         $tabsPanel.children("div[data-index='" + id + "']").remove();
 
@@ -74,7 +83,7 @@ $.extend(Tabs.prototype, {
                 stack.splice(i, 1);
             }
         }
-        
+
         prevId = stack[stack.length - 1];
 
         if (typeof this.obj.removeAfter === 'function') {
