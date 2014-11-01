@@ -299,7 +299,7 @@ func initCustomizedConfs() {
 //  1. /static/user/{username}/style.css
 func UpdateCustomizedConf(username string) {
 	var u *User = nil
-	for _, user := range Wide.Users { // ... maybe a beauty of the trade-off between design and implementation
+	for _, user := range Wide.Users { // maybe it is a beauty of the trade-off of the another world between design and implementation
 		if user.Name == username {
 			u = user
 		}
@@ -338,7 +338,11 @@ func UpdateCustomizedConf(username string) {
 
 	defer fout.Close()
 
-	t.Execute(fout, model)
+	if err := t.Execute(fout, model); nil != err {
+		glog.Error(err)
+
+		os.Exit(-1)
+	}
 }
 
 // initWorkspaceDirs initializes the directories of master workspace, users' workspaces.
