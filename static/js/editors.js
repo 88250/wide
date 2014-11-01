@@ -4,9 +4,9 @@ var editors = {
     _removeAllMarker: function () {
         var removeData = $("#dialogCloseEditor").data("removeData");
         if (removeData && removeData.length > 0) {
-            removeData.splice(0, 1);
+            var removeIndex = removeData.splice(0, 1);
             $("#dialogCloseEditor").data("removeData", removeData);
-            $(".edit-panel .tabs .ico-close:eq(0)").click();
+            $(".edit-panel .tabs > div[data-index=" + removeIndex + "] .ico-close").click();
         }
     },
     init: function () {
@@ -70,6 +70,7 @@ var editors = {
             },
             removeBefore: function (id) {
                 if (id === 'startPage') { // 当前关闭的 tab 是起始页
+                    editors._removeAllMarker();
                     return true;
                 }
 
@@ -77,6 +78,7 @@ var editors = {
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
                         if (editors.data[i].editor.doc.isClean()) {
+                            editors._removeAllMarker();
                             return true;
                         } else {
                             $("#dialogCloseEditor").dialog("open", $(".edit-panel .tabs > div[data-index="
@@ -90,8 +92,6 @@ var editors = {
                 }
             },
             removeAfter: function (id, nextId) {
-                editors._removeAllMarker();
-
                 if ($(".edit-panel .tabs > div").length === 0) {
                     // 全部 tab 都关闭时才 disables 菜单中“全部关闭”的按钮
                     menu.disabled(['close-all']);
