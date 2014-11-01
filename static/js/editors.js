@@ -1,6 +1,14 @@
 var editors = {
     data: [],
     tabs: {},
+    _removeAllMarker: function () {
+        var removeData = $("#dialogCloseEditor").data("removeData");
+        if (removeData && removeData.length > 0) {
+            removeData.splice(0, 1);
+            $("#dialogCloseEditor").data("removeData", removeData);
+            $(".edit-panel .tabs .ico-close:eq(0)").click();
+        }
+    },
     init: function () {
         $("#dialogCloseEditor").dialog({
             "modal": true,
@@ -9,7 +17,7 @@ var editors = {
             "title": config.label.tip,
             "hideFooter": true,
             "afterOpen": function (fileName) {
-                $("#dialogCloseEditor > div:eq(0)").html(config.label.file 
+                $("#dialogCloseEditor > div:eq(0)").html(config.label.file
                         + ' <b>' + fileName + '</b>. ' + config.label.confirm_save + '?');
                 $("#dialogCloseEditor button:eq(0)").focus();
             },
@@ -19,16 +27,22 @@ var editors = {
                     wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
                     editors.tabs.del(editors.data[i].id);
                     $("#dialogCloseEditor").dialog("close");
+
+                    editors._removeAllMarker();
                 });
 
                 $("#dialogCloseEditor button.discard").click(function () {
                     $("#dialogCloseEditor").dialog("close");
+
+                    editors._removeAllMarker();
                 });
 
                 $("#dialogCloseEditor button.cancel").click(function () {
                     var i = $("#dialogCloseEditor").data("index");
                     editors.tabs.del(editors.data[i].id);
                     $("#dialogCloseEditor").dialog("close");
+
+                    editors._removeAllMarker();
                 });
             }
         });
@@ -56,7 +70,7 @@ var editors = {
             },
             removeBefore: function (id) {
                 if (id === 'startPage') { // 当前关闭的 tab 是起始页
-                    return false;
+                    return true;
                 }
 
                 // 移除编辑器
@@ -76,6 +90,13 @@ var editors = {
                 }
             },
             removeAfter: function (id, nextId) {
+                editors._removeAllMarker();
+
+                if ($(".edit-panel .tabs > div").length === 0) {
+                    // 全部 tab 都关闭时才 disables 菜单中“全部关闭”的按钮
+                    menu.disabled(['close-all']);
+                }
+
                 if (id === 'startPage') { // 当前关闭的 tab 是起始页
                     return false;
                 }
@@ -89,7 +110,7 @@ var editors = {
                 }
 
                 if (editors.data.length === 0) { // 起始页可能存在，所以用编辑器数据判断
-                    menu.disabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install']);
+                    menu.disabled(['save-all', 'build', 'run', 'go-test', 'go-get', 'go-install']);
                     $(".toolbars").hide();
                 }
 
@@ -98,7 +119,6 @@ var editors = {
                     // remove selected tree node
                     tree.fileTree.cancelSelectedNode();
                     wide.curNode = undefined;
-
                     wide.curEditor = undefined;
                     return false;
                 }

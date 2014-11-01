@@ -478,15 +478,17 @@ var wide = {
         if ($(".menu li.close-all").hasClass("disabled")) {
             return false;
         }
-        this.saveAllFiles();
-        editors.data = [];
-        tree.fileTree.cancelSelectedNode();
-        wide.curNode = undefined;
-        wide.curEditor = undefined;
-        $(".toolbars").hide();
 
-        $(".edit-panel .tabs, .edit-panel .tabs-panel").html('');
-        menu.disabled(['save-all', 'close-all', 'run', 'go-get', 'go-install']);
+        // 设置全部关闭标识
+        var removeData = [];
+        $(".edit-panel .tabs > div").each(function (i) {
+            if (i !== 0) {
+                removeData.push($(this).data("index"));
+            }
+        });
+        $("#dialogCloseEditor").data("removeData", removeData);
+        // 开始关闭
+        $(".edit-panel .tabs .ico-close:eq(0)").click();
     },
     exit: function () {
         var request = newWideRequest();
