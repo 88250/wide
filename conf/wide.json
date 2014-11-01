@@ -19,6 +19,9 @@
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "Locale": "en_US",
             "GoFormat": "gofmt",
+            "Editor": {
+                "FontSize": "9"
+            },
             "LatestSessionContent": {
                 "FileTree": [],
                 "Files": [],

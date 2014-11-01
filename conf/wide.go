@@ -35,14 +35,20 @@ type LatestSessionContent struct {
 	CurrentFile string   // path of file of the current focused editor tab
 }
 
-// User.
+// User configuration.
 type User struct {
 	Name                 string
 	Password             string
 	Workspace            string // the GOPATH of this user
 	Locale               string
 	GoFormat             string
+	Editor               editor
 	LatestSessionContent *LatestSessionContent
+}
+
+// Editor configuration of a user.
+type editor struct {
+	FontSize string
 }
 
 // Configuration.
@@ -292,7 +298,20 @@ func initCustomizedConfs() {
 //
 //  1. /static/user/{username}/style.css
 func UpdateCustomizedConf(username string) {
-	model := map[string]interface{}{"font_family": "Helvetica, 'Microsoft Yahei'", "font_size": "9px"}
+	var u *User = nil
+	for _, user := range Wide.Users { // ... maybe a beauty of the trade-off between design and implementation
+		if user.Name == username {
+			u = user
+		}
+	}
+
+	if nil == u {
+		return
+	}
+
+	editor := u.Editor
+
+	model := map[string]interface{}{"font_family": "Helvetica, 'Microsoft Yahei'", "font_size": editor.FontSize}
 
 	t, err := template.ParseFiles("static/user/style.css.tmpl")
 
@@ -303,7 +322,7 @@ func UpdateCustomizedConf(username string) {
 	}
 
 	wd := util.OS.Pwd()
-	dir := filepath.Clean(wd + "/static/user/" + username)
+	dir := filepath.Clean(wd + "/static/user/" + u.Name)
 	if err := os.MkdirAll(dir, 0664); nil != err {
 		glog.Error(err)
 
