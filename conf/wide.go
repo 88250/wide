@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"text/template"
 	"time"
 
 	"github.com/b3log/wide/event"
@@ -115,7 +116,6 @@ func FixedTimeCheckEnv() {
 // Main goal of this function is to save user session content, for restoring session content while user open Wide next time.
 func FixedTimeSave() {
 	go func() {
-		// 1 分钟进行一次配置保存
 		for _ = range time.Tick(time.Minute) {
 			Save()
 		}
@@ -278,6 +278,48 @@ func Load() {
 	glog.V(3).Info("Conf: \n" + string(bytes))
 
 	initWorkspaceDirs()
+	initCustomizedConfs()
+}
+
+// initCustomizedConfs initializes the user customized configurations.
+func initCustomizedConfs() {
+	for _, user := range Wide.Users {
+		UpdateCustomizedConf(user.Name)
+	}
+}
+
+// UpdateCustomizedConf creates (if not exists) or updates user customized configuration files.
+//
+//  1. /static/user/{username}/style.css
+func UpdateCustomizedConf(username string) {
+	model := map[string]interface{}{"font_family": "Helvetica, 'Microsoft Yahei'", "font_size": "9px"}
+
+	t, err := template.ParseFiles("static/user/style.css.tmpl")
+
+	if nil != err {
+		glog.Error(err)
+
+		os.Exit(-1)
+	}
+
+	wd := util.OS.Pwd()
+	dir := filepath.Clean(wd + "/static/user/" + username)
+	if err := os.MkdirAll(dir, 0664); nil != err {
+		glog.Error(err)
+
+		os.Exit(-1)
+	}
+
+	fout, err := os.Create(dir + PathSeparator + "style.css")
+	if nil != err {
+		glog.Error(err)
+
+		os.Exit(-1)
+	}
+
+	defer fout.Close()
+
+	t.Execute(fout, model)
 }
 
 // initWorkspaceDirs initializes the directories of master workspace, users' workspaces.
@@ -288,7 +330,6 @@ func initWorkspaceDirs() {
 
 	for _, user := range Wide.Users {
 		paths = append(paths, filepath.SplitList(user.GetWorkspace())...)
-
 	}
 
 	for _, path := range paths {
@@ -296,7 +337,7 @@ func initWorkspaceDirs() {
 	}
 }
 
-// createWorkspaceDir creates directories on the path.
+// CreateWorkspaceDir creates (if not exists) directories on the path.
 //
 //  1. root directory:{path}
 //  2. src directory: {path}/src

@@ -164,6 +164,7 @@ func addUser(username, password string) string {
 	}
 
 	conf.CreateWorkspaceDir(workspace)
+	conf.UpdateCustomizedConf(username)
 
 	glog.Infof("Created a user [%s]", username)
 
