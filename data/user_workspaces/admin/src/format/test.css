@@ -1,6 +1,6 @@
 /* start icon */
 
-1 @font-face {
+@font-face {
     font-family: 'icomoon';
     src: url('fonts/icomoon.eot?35cb2z');
     src: url('fonts/icomoon.eot?#iefix35cb2z') format('embedded-opentype'), url('fonts/icomoon.woff?35cb2z') format('woff'), url('fonts/icomoon.ttf?35cb2z') format('truetype'), url('fonts/icomoon.svg?35cb2z#icomoon') format('svg');
