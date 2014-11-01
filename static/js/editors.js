@@ -4,10 +4,15 @@ var editors = {
     init: function () {
         $("#dialogCloseEditor").dialog({
             "modal": true,
-            "height": 26,
+            "height": 66,
             "width": 260,
             "title": config.label.tip,
             "hideFooter": true,
+            "afterOpen": function (fileName) {
+                $("#dialogCloseEditor > div:eq(0)").html(config.label.file 
+                        + ' <b>' + fileName + '</b>. ' + config.label.confirm_save + '?');
+                $("#dialogCloseEditor button:eq(0)").focus();
+            },
             "afterInit": function () {
                 $("#dialogCloseEditor button.save").click(function () {
                     var i = $("#dialogCloseEditor").data("index");
@@ -60,7 +65,8 @@ var editors = {
                         if (editors.data[i].editor.doc.isClean()) {
                             return true;
                         } else {
-                            $("#dialogCloseEditor").dialog("open");
+                            $("#dialogCloseEditor").dialog("open", $(".edit-panel .tabs > div[data-index="
+                                    + editors.data[i].id + "] > span:eq(0)").text());
                             $("#dialogCloseEditor").data("index", i);
                             return false;
                         }

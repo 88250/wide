@@ -264,11 +264,11 @@
                 $("." + styleClass.background).show();
             }
 
-            $("#" + id + "Dialog .dialog-footer button:eq(0)").focus();
-
             if (typeof settings.afterOpen === "function") {
                 settings.afterOpen(msg);
             }
+
+            $("#" + id + "Dialog .dialog-footer button:eq(0)").focus();
         },
         _updateDialog: function (target, data) {
             var inst = this._getInst(target);

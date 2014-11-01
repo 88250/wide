@@ -695,7 +695,7 @@ var wide = {
         if (curEditor.doc.isClean()) { // 没有修改过，不需要保存
             return false;
         }
-        
+
         var mode = curEditor.getOption("mode");
 
         var cursor = curEditor.getCursor();

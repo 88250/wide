@@ -64,7 +64,8 @@
     text-align: right;
 }
 
-.dialog-footer button {
+.dialog-footer button,
+#dialogCloseEditor button {
     margin: 0 5px;
 }
 

@@ -223,54 +223,58 @@
             <input placeholder="{{.i18n.file_format}}" />
         </div>
         <div id="dialogCloseEditor" class="dialog-form fn-none">
-            <button class="save">save</button>
-            <button class="discard">discard</button>
-            <button class="cancel">cancel</button>
+            <div></div><br/>
+            <div class="fn-right">
+                <button class="save">{{.i18n.save}}</button>
+                <button class="discard">{{.i18n.discard}}</button>
+                <button class="cancel">{{.i18n.cancel}}</button>
+            </div>
         </div>
         <script>
-            var config = {
-                "pathSeparator": '{{.pathSeparator}}',
-                "latestSessionContent": {{.latestSessionContent}},
-                "label": {
-                    "restore_editor": "{{.i18n.restore_editor}}",
-                    "max_editor": "{{.i18n.max_editor}}",
-                    "delete": "{{.i18n.delete}}",
-                    "cancel": "{{.i18n.cancel}}",
-                    "goto_line": "{{.i18n.goto_line}}",
-                    "go": "{{.i18n.go}}",
-                    "create": "{{.i18n.create}}",
-                    "create_file": "{{.i18n.create_file}}",
-                    "create_dir": "{{.i18n.create_dir}}",
-                    "tip": "{{.i18n.tip}}",
-                    "confirm": "{{.i18n.confirm}}",
-                    "build_n_run": "{{.i18n.build_n_run}}",
-                    "stop": "{{.i18n.stop}}",
-                    "find_usages": "{{.i18n.find_usages}}",
-                    "search_text": "{{.i18n.search_text}}",
-                    "search": "{{.i18n.search}}",
-                    "start_page": "{{.i18n.start_page}}",
-                    "confirm_save": "{{.i18n.confirm_save}}",
-                    "community": "{{.i18n.community}}",
-                    "about": "{{.i18n.about}}",
-                    "new_version_available": "{{.i18n.new_version_available}}",
-                    "colon": "{{.i18n.colon}}",
-                    "uptodate": "{{.i18n.uptodate}}"
-                },
-                "channel": {
-                    "editor": '{{.conf.EditorChannel}}',
-                    "shell": '{{.conf.ShellChannel}}',
-                    "output": '{{.conf.OutputChannel}}',
-                    "session": '{{.conf.SessionChannel}}'
-                },
-                "wideSessionId": '{{.session.Id}}'
-            };
-            // 发往 Wide 的所有 AJAX 请求需要使用该函数创建请求参数.
-            function newWideRequest() {
-                var ret = {
-                    sid: config.wideSessionId
-                };
-                return ret;
-            }
+                    var config = {
+                    "pathSeparator": '{{.pathSeparator}}',
+                            "latestSessionContent": {{.latestSessionContent}},
+                            "label": {
+                            "restore_editor": "{{.i18n.restore_editor}}",
+                                    "max_editor": "{{.i18n.max_editor}}",
+                                    "delete": "{{.i18n.delete}}",
+                                    "cancel": "{{.i18n.cancel}}",
+                                    "goto_line": "{{.i18n.goto_line}}",
+                                    "go": "{{.i18n.go}}",
+                                    "create": "{{.i18n.create}}",
+                                    "create_file": "{{.i18n.create_file}}",
+                                    "create_dir": "{{.i18n.create_dir}}",
+                                    "tip": "{{.i18n.tip}}",
+                                    "confirm": "{{.i18n.confirm}}",
+                                    "build_n_run": "{{.i18n.build_n_run}}",
+                                    "stop": "{{.i18n.stop}}",
+                                    "find_usages": "{{.i18n.find_usages}}",
+                                    "search_text": "{{.i18n.search_text}}",
+                                    "search": "{{.i18n.search}}",
+                                    "start_page": "{{.i18n.start_page}}",
+                                    "confirm_save": "{{.i18n.confirm_save}}",
+                                    "community": "{{.i18n.community}}",
+                                    "about": "{{.i18n.about}}",
+                                    "new_version_available": "{{.i18n.new_version_available}}",
+                                    "colon": "{{.i18n.colon}}",
+                                    "file": "{{.i18n.file}}",
+                                    "uptodate": "{{.i18n.uptodate}}"
+                            },
+                            "channel": {
+                            "editor": '{{.conf.EditorChannel}}',
+                                    "shell": '{{.conf.ShellChannel}}',
+                                    "output": '{{.conf.OutputChannel}}',
+                                    "session": '{{.conf.SessionChannel}}'
+                            },
+                            "wideSessionId": '{{.session.Id}}'
+                    };
+                    // 发往 Wide 的所有 AJAX 请求需要使用该函数创建请求参数.
+                            function newWideRequest() {
+                            var ret = {
+                            sid: config.wideSessionId
+                            };
+                                    return ret;
+                            }
 
         </script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
