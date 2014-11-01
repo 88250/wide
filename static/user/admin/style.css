@@ -1,0 +1,12 @@
+body {
+    font-family: Helvetica, 'Microsoft Yahei';
+}
+
+input,
+button {
+    font-family: Helvetica, 'Microsoft Yahei';
+}
+
+.edit-exprinfo, .CodeMirror, .CodeMirror-hints {
+    font-size: 9;
+}

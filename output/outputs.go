@@ -137,6 +137,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			for {
 				buf, err := outReader.ReadString('\n')
 
+				// TODO: fix the duplicated error
+
 				if nil != err {
 					// remove the exited process from user process set
 					processes.remove(wSession, cmd.Process)
