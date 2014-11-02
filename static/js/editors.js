@@ -538,6 +538,7 @@ var editors = {
             theme: 'wide',
             indentUnit: 4,
             foldGutter: true,
+            path: data.path,
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
                 ".": "autocompleteAfterDot",
@@ -589,10 +590,20 @@ var editors = {
         editor.on('changes', function (cm) {
             if (cm.doc.isClean()) {
                 // 没有修改过
-                $(".edit-panel .tabs > div.current > span").removeClass("changed");
+                $(".edit-panel .tabs > div").each(function () {
+                    var $span = $(this).find("span:eq(0)");
+                    if ($span.attr("title") === cm.options.path) {
+                        $span.removeClass("changed");
+                    }
+                });
             } else {
                 // 修改过
-                $(".edit-panel .tabs > div.current > span").addClass("changed");
+                $(".edit-panel .tabs > div").each(function () {
+                    var $span = $(this).find("span:eq(0)");
+                    if ($span.attr("title") === cm.options.path) {
+                        $span.addClass("changed");
+                    }
+                });
             }
         });
 

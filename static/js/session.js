@@ -47,7 +47,7 @@ var session = {
             // expand tree
             for (var j = 0, jj = fileTree.length; j < jj; j++) {
                 if (nodes[i].path === fileTree[j]) {
-                    tree.fileTree.expandNode(nodes[i], true, false, false);
+                    tree.fileTree.expandNode(nodes[i], true, false, true);
                     break;
                 }
             }
@@ -62,6 +62,10 @@ var session = {
 
             if (nodes[i].path === currentFile) {
                 id = nodes[i].tId;
+                
+                // FIXME: 上面的展开是异步进行的，所以执行到这里的时候可能还没有展开完，导致定位不了可视区域
+                tree.fileTree.selectNode(nodes[i]);
+                wide.curNode = nodes[i];
             }
         }
 
