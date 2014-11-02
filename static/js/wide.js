@@ -714,17 +714,14 @@ var wide = {
         switch (mode) {
             case "text/x-go":
                 $.ajax({
+                    async: false, // 同步执行
                     type: 'POST',
                     url: '/go/fmt',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (data) {
                         if (data.succ) {
-                            curEditor.setValue(data.code);
-                            curEditor.setCursor(cursor);
-                            curEditor.scrollTo(null, scrollInfo.top);
-
-                            return;
+                            formatted = data.code;
                         }
                     }
                 });
@@ -750,16 +747,16 @@ var wide = {
             curEditor.scrollTo(null, scrollInfo.top);
 
             wide._save();
-        }
 
-        // 清除未保存状态
-        curEditor.doc.markClean();
-        $(".edit-panel .tabs > div").each(function () {
-            var $span = $(this).find("span:eq(0)");
-            if ($span.attr("title") === path) {
-                $span.removeClass("changed");
-            }
-        });
+            // 清除未保存状态
+            curEditor.doc.markClean();
+            $(".edit-panel .tabs > div").each(function () {
+                var $span = $(this).find("span:eq(0)");
+                if ($span.attr("title") === path) {
+                    $span.removeClass("changed");
+                }
+            });
+        }
     },
     openAbout: function () {
         $("#dialogAbout").dialog("open");

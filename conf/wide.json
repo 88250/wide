@@ -20,7 +20,7 @@
             "Locale": "en_US",
             "GoFormat": "gofmt",
             "FontFamily": "Helvetica",
-            "FontSize": "inherit",
+            "FontSize": "13px",
             "Editor": {
                 "FontFamily": "Consolas, 'Courier New', monospace",
                 "FontSize": "inherit"

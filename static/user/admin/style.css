@@ -2,7 +2,7 @@ body,
 input,
 button {
     font-family: Helvetica;
-    font-size: inherit;
+    font-size: 13px;
 }
 
 .edit-exprinfo,
