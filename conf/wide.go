@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/b3log/wide/event"
-	_ "github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
 	"github.com/golang/glog"
 )
@@ -42,13 +41,16 @@ type User struct {
 	Workspace            string // the GOPATH of this user
 	Locale               string
 	GoFormat             string
-	Editor               editor
+	FontFamily           string
+	FontSize             string
+	Editor               *Editor
 	LatestSessionContent *LatestSessionContent
 }
 
 // Editor configuration of a user.
-type editor struct {
-	FontSize string
+type Editor struct {
+	FontFamily string
+	FontSize   string
 }
 
 // Configuration.
@@ -309,12 +311,9 @@ func UpdateCustomizedConf(username string) {
 		return
 	}
 
-	editor := u.Editor
-
-	model := map[string]interface{}{"font_family": "Helvetica, 'Microsoft Yahei'", "font_size": editor.FontSize}
+	model := map[string]interface{}{"user": u}
 
 	t, err := template.ParseFiles("static/user/style.css.tmpl")
-
 	if nil != err {
 		glog.Error(err)
 

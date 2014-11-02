@@ -19,8 +19,11 @@
             "Workspace": "{pwd}/data/user_workspaces/admin",
             "Locale": "en_US",
             "GoFormat": "gofmt",
+            "FontFamily": "Helvetica",
+            "FontSize": "inherit",
             "Editor": {
-                "FontSize": "9"
+                "FontFamily": "Consolas, 'Courier New', monospace",
+                "FontSize": "inherit"
             },
             "LatestSessionContent": {
                 "FileTree": [],

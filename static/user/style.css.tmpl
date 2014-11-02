@@ -1,12 +1,12 @@
-body {
-    font-family: {{.font_family}};
-}
-
+body,
 input,
 button {
-    font-family: {{.font_family}};
+    font-family: {{.user.FontFamily}};
 }
 
-.edit-exprinfo, .CodeMirror, .CodeMirror-hints {
-    font-size: {{.font_size}};
+.edit-exprinfo,
+.CodeMirror,
+.CodeMirror-hints {
+    font-family: {{.user.Editor.FontFamily}};
+    font-size: {{.user.Editor.FontSize}};
 }

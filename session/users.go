@@ -156,7 +156,7 @@ func addUser(username, password string) string {
 	workspace := filepath.Join(dir, username)
 
 	newUser := &conf.User{Name: username, Password: password, Workspace: workspace,
-		Locale: conf.Wide.Locale, GoFormat: "gofmt"}
+		Locale: conf.Wide.Locale, GoFormat: "gofmt", Editor: &conf.Editor{FontSize: "10px"}}
 	conf.Wide.Users = append(conf.Wide.Users, newUser)
 
 	if !conf.Save() {

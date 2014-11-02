@@ -1,12 +1,12 @@
-body {
-    font-family: Helvetica, 'Microsoft Yahei';
-}
-
+body,
 input,
 button {
-    font-family: Helvetica, 'Microsoft Yahei';
+    font-family: Helvetica;
 }
 
-.edit-exprinfo, .CodeMirror, .CodeMirror-hints {
-    font-size: ;
+.edit-exprinfo,
+.CodeMirror,
+.CodeMirror-hints {
+    font-family: Consolas, 'Courier New', monospace;
+    font-size: inherit;
 }

@@ -28,6 +28,8 @@ func init() {
 	flag.Set("v", "3")
 	flag.Parse()
 
+	i18n.Load()
+
 	event.Load()
 
 	conf.Load()
