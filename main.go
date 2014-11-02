@@ -3,9 +3,11 @@ package main
 import (
 	"flag"
 	"html/template"
+	"math/rand"
 	"mime"
 	"net/http"
 	"runtime"
+	"strconv"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -53,7 +55,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	// create a Wide session
-	wideSession := session.WideSessions.New(httpSession)
+	rand.Seed(time.Now().UnixNano())
+	sid := strconv.Itoa(rand.Int())
+	wideSession := session.WideSessions.New(httpSession, sid)
 
 	username := httpSession.Values["username"].(string)
 	user := conf.Wide.GetUser(username)
@@ -112,8 +116,14 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	locale := conf.Wide.GetUser(username).Locale
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 
+	sid := r.URL.Query()["sid"][0]
+	wSession := session.WideSessions.Get(sid)
+	if nil == wSession {
+		glog.Errorf("Session [%s] not found", sid)
+	}
+
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"username": username, "workspace": userWorkspace, "ver": conf.WideVersion}
+		"username": username, "workspace": userWorkspace, "ver": conf.WideVersion, "session": wSession}
 
 	t, err := template.ParseFiles("views/start.html")
 

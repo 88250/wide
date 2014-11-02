@@ -180,7 +180,7 @@ var editors = {
             title: '<span title="' + config.label.start_page + '">' + config.label.start_page + '</span>',
             content: '<div id="startPage"></div>',
             after: function () {
-                $("#startPage").load('/start');
+                $("#startPage").load('/start?sid=' + config.wideSessionId);
                 $.ajax({
                     url: "http://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=30",
                     type: "GET",

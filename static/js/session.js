@@ -83,16 +83,56 @@ var session = {
 
         sessionWS.onopen = function () {
             console.log('[session onopen] connected');
+
+            var dateFormat = function (time, fmt) {
+                var date = new Date(time);
+                var dateObj = {
+                    "M+": date.getMonth() + 1, //月份 
+                    "d+": date.getDate(), //日 
+                    "h+": date.getHours(), //小时 
+                    "m+": date.getMinutes(), //分 
+                    "s+": date.getSeconds(), //秒 
+                    "q+": Math.floor((date.getMonth() + 3) / 3), //季度 
+                    "S": date.getMilliseconds() //毫秒 
+                };
+                if (/(y+)/.test(fmt))
+                    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+                for (var k in dateObj)
+                    if (new RegExp("(" + k + ")").test(fmt)) {
+                        fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1)
+                                ? (dateObj[k]) : (("00" + dateObj[k]).substr(("" + dateObj[k]).length)));
+                    }
+                return fmt;
+            };
+
+            var data = {type: "Network", severity: "INFO",
+                message: "Connected to server [sid=" + config.wideSessionId + "], " + dateFormat(new Date().getTime(), 'yyyy-MM-dd hh:mm:ss')},
+            $notification = $('.bottom-window-group .notification > table'),
+                    notificationHTML = '';
+
+            notificationHTML += '<tr><td class="severity">' + data.severity
+                    + '</td><td class="message">' + data.message
+                    + '</td><td class="type">' + data.type + '</td></tr>';
+            $notification.append(notificationHTML);
         };
 
         sessionWS.onmessage = function (e) {
             console.log('[session onmessage]' + e.data);
-            var data = JSON.parse(e.data);
-
         };
         sessionWS.onclose = function (e) {
             console.log('[session onclose] disconnected (' + e.code + ')');
-            delete sessionWS;
+
+            var data = {type: "Network", severity: "ERROR",
+                message: "Disconnected from server, trying to reconnect it [sid=" + config.wideSessionId + "]"},
+            $notification = $('.bottom-window-group .notification > table'),
+                    notificationHTML = '';
+
+            notificationHTML += '<tr><td class="severity">' + data.severity
+                    + '</td><td class="message">' + data.message
+                    + '</td><td class="type">' + data.type + '</td></tr>';
+            $notification.append(notificationHTML);
+
+            $(".notification-count").show();
         };
         sessionWS.onerror = function (e) {
             console.log('[session onerror] ' + JSON.parse(e));

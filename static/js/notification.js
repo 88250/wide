@@ -30,7 +30,6 @@ var notification = {
 
         notificationWS.onclose = function (e) {
             console.log('[notification onclose] disconnected (' + e.code + ')');
-            delete notificationWS;
         };
 
         notificationWS.onerror = function (e) {

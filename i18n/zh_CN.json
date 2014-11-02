@@ -7,6 +7,7 @@
     "login": "登录",
     "username": "用户名",
     "current_user": "当前用户",
+    "current_session": "当前会话",
     "password": "密码",
     "login_error": "登录失败",
     "run": "运行",

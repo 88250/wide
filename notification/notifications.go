@@ -75,9 +75,8 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
 
 	wSession := session.WideSessions.Get(sid)
-	if nil == wSession {
-		glog.Errorf("Session [%s] not found", sid)
 
+	if nil == wSession {
 		return
 	}
 

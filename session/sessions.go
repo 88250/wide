@@ -10,10 +10,8 @@ package session
 
 import (
 	"encoding/json"
-	"math/rand"
 	"net/http"
 	"os"
-	"strconv"
 	"sync"
 	"time"
 
@@ -97,9 +95,18 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
 	wSession := WideSessions.Get(sid)
 	if nil == wSession {
-		glog.Errorf("Session [%s] not found", sid)
+		httpSession, _ := HTTPSession.Get(r, "wide-session")
 
-		return
+		if httpSession.IsNew {
+			return
+		}
+
+		httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+		httpSession.Save(r, w)
+
+		WideSessions.New(httpSession, sid)
+
+		glog.Infof("Created a wide session [%s] for websocket reconnecting", sid)
 	}
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -107,7 +114,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	SessionWS[sid] = &wsChan
 
-	ret := map[string]interface{}{"output": "Ouput initialized", "cmd": "init-session"}
+	ret := map[string]interface{}{"output": "Session initialized", "cmd": "init-session"}
 	wsChan.Conn.WriteJSON(&ret)
 
 	glog.V(4).Infof("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
@@ -185,20 +192,17 @@ func (s *WideSession) Refresh() {
 }
 
 // New creates a wide session.
-func (sessions *Sessions) New(httpSession *sessions.Session) *WideSession {
+func (sessions *Sessions) New(httpSession *sessions.Session, sid string) *WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	rand.Seed(time.Now().UnixNano())
-
-	id := strconv.Itoa(rand.Int())
 	now := time.Now()
 
-	// create user event queue
-	userEventQueue := event.UserEventQueues.New(id)
+	// create user event queuselect
+	userEventQueue := event.UserEventQueues.New(sid)
 
 	ret := &WideSession{
-		Id:          id,
+		Id:          sid,
 		Username:    httpSession.Values["username"].(string),
 		HTTPSession: httpSession,
 		EventQueue:  userEventQueue,

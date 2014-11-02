@@ -387,7 +387,6 @@ var wide = {
         };
         outputWS.onclose = function (e) {
             console.log('[output onclose] disconnected (' + e.code + ')');
-            delete outputWS;
         };
         outputWS.onerror = function (e) {
             console.log('[output onerror] ' + e);

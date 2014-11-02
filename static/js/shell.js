@@ -14,7 +14,6 @@ var shell = {
         };
         shell.shellWS.onclose = function (e) {
             console.log('[shell onclose] disconnected (' + e.code + ')');
-            delete shell.shellWS;
         };
         shell.shellWS.onerror = function (e) {
             console.log('[shell onerror] ' + e);

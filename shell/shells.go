@@ -3,10 +3,12 @@ package shell
 
 import (
 	"html/template"
+	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
 	"runtime"
+	"strconv"
 	"strings"
 	"time"
 
@@ -37,7 +39,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	// create a wide session
-	wideSession := session.WideSessions.New(httpSession)
+	rand.Seed(time.Now().UnixNano())
+	sid := strconv.Itoa(rand.Int())
+	wideSession := session.WideSessions.New(httpSession, sid)
 
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale

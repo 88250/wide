@@ -7,6 +7,7 @@
     "login": "ログイン",
     "username": "ユーザ名",
     "current_user": "現在のユーザ",
+    "current_session": "現在のセッション",
     "password": "パスワード",
     "login_error": "ログインエラー",
     "run": "実行",
