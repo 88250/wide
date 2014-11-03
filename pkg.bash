@@ -11,7 +11,7 @@ ver=$1
 target=$2
 list="conf data doc i18n static views README.md LICENSE"
 
-mkdir ${target}
+mkdir -p ${target}
 
 echo version=${ver}
 echo target=${target}
