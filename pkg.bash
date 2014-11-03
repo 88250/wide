@@ -2,17 +2,62 @@
 
 # Wide package tool.
 # 
-# See https://github.com/gobuild/gobuild3/tree/master/packer
+# Command: 
+#  ./pkg.bash ${version} ${target}
+# Example:
+#  ./pkg.bash 1.0.1 /home/daniel/1.0.1/
 
 ver=$1
+target=$2
+list="conf data doc i18n static views README.md LICENSE"
 
-echo $ver
+mkdir ${target}
 
-./packer --os darwin --arch 386 -o wide-$ver-darwin-386.tar.gz
-./packer --os darwin --arch amd64 -o wide-$ver-darwin-amd64.tar.gz
+echo version=${ver}
+echo target=${target}
+echo 
 
-./packer --os linux --arch 386 -o wide-$ver-linux-386.tar.gz
-./packer --os linux --arch amd64 -o wide-$ver-linux-amd64.tar.gz
+## darwin
+os=darwin
 
-./packer --os windows --arch 386 -o wide-$ver-windows-386.zip
-./packer --os windows --arch amd64 -o wide-$ver-windows-amd64.zip
+export GOOS=${os}
+export GOARCH=386
+go build
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs
+rm -f wide
+
+export GOOS=${os}
+export GOARCH=amd64
+go build
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs
+rm -f wide
+
+## linux
+os=linux
+
+export GOOS=${os}
+export GOARCH=386
+go build
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs
+rm -f wide
+
+export GOOS=${os}
+export GOARCH=amd64
+go build
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs
+rm -f wide
+
+## windows
+os=windows
+
+export GOOS=${os}
+export GOARCH=386
+go build
+zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} wide.exe
+rm -f wide.exe
+
+export GOOS=${os}
+export GOARCH=amd64
+go build
+zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} wide.exe
+rm -f wide.exe
