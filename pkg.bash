@@ -23,13 +23,13 @@ os=darwin
 export GOOS=${os}
 export GOARCH=386
 go build
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude conf/*.go --exclude i18n/*.go
 rm -f wide
 
 export GOOS=${os}
 export GOARCH=amd64
 go build
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude conf/*.go --exclude i18n/*.go
 rm -f wide
 
 ## linux
@@ -38,13 +38,13 @@ os=linux
 export GOOS=${os}
 export GOARCH=386
 go build
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude conf/*.go --exclude i18n/*.go
 rm -f wide
 
 export GOOS=${os}
 export GOARCH=amd64
 go build
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude conf/*.go --exclude i18n/*.go
 rm -f wide
 
 ## windows
@@ -53,11 +53,11 @@ os=windows
 export GOOS=${os}
 export GOARCH=386
 go build
-zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} wide.exe
+zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} wide.exe --exclude=conf/*.go --exclude=i18n/*.go
 rm -f wide.exe
 
 export GOOS=${os}
 export GOARCH=amd64
 go build
-zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} wide.exe
+zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} wide.exe --exclude=conf/*.go --exclude=i18n/*.go
 rm -f wide.exe
