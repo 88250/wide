@@ -437,15 +437,14 @@ var wide = {
 
         this._initLayout();
     },
-    _save: function () {
-        var currentPath = editors.getCurrentPath();
-        if (!currentPath) {
+    _save: function (path, editor) {
+        if (!path) {
             return false;
         }
 
         var request = newWideRequest();
-        request.file = currentPath;
-        request.code = wide.curEditor.getValue();
+        request.file = path;
+        request.code = editor.getValue();
 
         $.ajax({
             type: 'POST',
@@ -453,24 +452,50 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function (data) {
+                // reset the save state
+                
+                editor.doc.markClean();
+                $(".edit-panel .tabs > div").each(function () {
+                    var $span = $(this).find("span:eq(0)");
+                    if ($span.attr("title") === path) {
+                        $span.removeClass("changed");
+                    }
+                });
             }
         });
     },
     saveFile: function () {
-        var currentPath = editors.getCurrentPath();
-        if (!currentPath) {
+        var path = editors.getCurrentPath();
+        if (!path) {
+            return false;
+        }
+        
+        var editor = wide.curEditor;
+        if (editor.doc.isClean()) { // no modification
             return false;
         }
 
-        // 格式化后会对文件进行保存
-        this.fmt(currentPath, wide.curEditor);
+        if ("text/x-go" === editor.getOption("mode")) {
+            wide.gofmt(path, wide.curEditor); // go fmt will save
+
+            return;
+        }
+
+        wide._save(path, wide.curEditor);
     },
     saveAllFiles: function () {
         if ($(".menu li.save-all").hasClass("disabled")) {
             return false;
         }
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
-            this.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
+            var path = tree.fileTree.getNodeByTId(editors.data[i].id).path;
+            var editor = editors.data[i].editor;
+
+            if ("text/x-go" === editor.getOption("mode")) {
+                wide.fmt(path, editor);
+            } else {
+                wide._save(path, editor);
+            }
         }
     },
     closeAllFiles: function () {
@@ -692,19 +717,42 @@ var wide = {
             }
         });
     },
-    fmt: function (path, curEditor) {
-        if (curEditor.doc.isClean()) { // 没有修改过，不需要保存
-            return false;
-        }
-
-        var mode = curEditor.getOption("mode");
-
-        var cursor = curEditor.getCursor();
-        var scrollInfo = curEditor.getScrollInfo();
+    gofmt: function (path, editor) {
+        var cursor = editor.getCursor();
+        var scrollInfo = editor.getScrollInfo();
 
         var request = newWideRequest();
         request.file = path;
-        request.code = curEditor.getValue();
+        request.code = editor.getValue();
+        request.cursorLine = cursor.line;
+        request.cursorCh = cursor.ch;
+
+        $.ajax({
+            async: false, // sync
+            type: 'POST',
+            url: '/go/fmt',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                if (data.succ) {
+                    editor.setValue(data.code);
+                    editor.setCursor(cursor);
+                    editor.scrollTo(null, scrollInfo.top);
+
+                    wide._save(path, editor);
+                }
+            }
+        });
+    },
+    fmt: function (path, editor) {
+        var mode = editor.getOption("mode");
+
+        var cursor = editor.getCursor();
+        var scrollInfo = editor.getScrollInfo();
+
+        var request = newWideRequest();
+        request.file = path;
+        request.code = editor.getValue();
         request.cursorLine = cursor.line;
         request.cursorCh = cursor.ch;
 
@@ -713,7 +761,7 @@ var wide = {
         switch (mode) {
             case "text/x-go":
                 $.ajax({
-                    async: false, // 同步执行
+                    async: false, // sync
                     type: 'POST',
                     url: '/go/fmt',
                     data: JSON.stringify(request),
@@ -727,34 +775,25 @@ var wide = {
 
                 break;
             case "text/html":
-                formatted = html_beautify(curEditor.getValue());
+                formatted = html_beautify(editor.getValue());
                 break;
             case "text/javascript":
             case "application/json":
-                formatted = js_beautify(curEditor.getValue());
+                formatted = js_beautify(editor.getValue());
                 break;
             case "text/css":
-                formatted = css_beautify(curEditor.getValue());
+                formatted = css_beautify(editor.getValue());
                 break;
             default :
                 break;
         }
 
         if (formatted) {
-            curEditor.setValue(formatted);
-            curEditor.setCursor(cursor);
-            curEditor.scrollTo(null, scrollInfo.top);
+            editor.setValue(formatted);
+            editor.setCursor(cursor);
+            editor.scrollTo(null, scrollInfo.top);
 
-            wide._save();
-
-            // 清除未保存状态
-            curEditor.doc.markClean();
-            $(".edit-panel .tabs > div").each(function () {
-                var $span = $(this).find("span:eq(0)");
-                if ($span.attr("title") === path) {
-                    $span.removeClass("changed");
-                }
-            });
+            wide._save(path, editor);
         }
     },
     openAbout: function () {
