@@ -495,7 +495,6 @@ var editors = {
         $(".toolbars").show();
         var id = wide.curNode.tId;
 
-        // 光标位置
         var cursor = CodeMirror.Pos(0, 0);
         if (data.cursorLine && data.cursorCh) {
             cursor = CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1);
@@ -505,8 +504,28 @@ var editors = {
             if (editors.data[i].id === id) {
                 editors.tabs.setCurrent(id);
                 wide.curEditor = editors.data[i].editor;
-                wide.curEditor.setCursor(cursor);
-                wide.curEditor.focus();
+                var editor = wide.curEditor;
+                var oldLine = editor.getCursor().line + 1;
+
+                if (oldLine === data.cursorLine) {
+                    editor.focus();
+
+                    return false;
+                }
+
+                editor.setCursor(cursor);
+
+                var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
+                if (oldLine > data.cursorLine) {
+                    var offset = data.cursorLine - half;
+                    if (offset > 0) {
+                        editor.scrollIntoView(CodeMirror.Pos(offset, 0));
+                    }
+                } else if (oldLine < data.cursorLine) {
+                    editor.scrollIntoView(CodeMirror.Pos(data.cursorLine + half, 0));
+                }
+
+                editor.focus();
 
                 return false;
             }
@@ -620,6 +639,9 @@ var editors = {
         }
 
         editor.setCursor(cursor);
+
+        var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
+        editor.scrollIntoView(CodeMirror.Pos(cursor.line + half, 0));
 
         wide.curEditor = editor;
         editors.data.push({

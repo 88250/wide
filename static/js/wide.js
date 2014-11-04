@@ -208,8 +208,28 @@ var wide = {
             "ok": function () {
                 var line = parseInt($("#dialogGoLinePrompt > input").val());
                 $("#dialogGoLinePrompt").dialog("close");
-                wide.curEditor.setCursor(CodeMirror.Pos(line - 1, 0));
-                wide.curEditor.focus();
+                var editor = wide.curEditor;
+                var oldLine = editor.getCursor().line + 1;
+                
+                if (oldLine === line) {
+                    editor.focus();
+                    
+                    return;
+                }
+
+                editor.setCursor(CodeMirror.Pos(line - 1, 0));
+
+                var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
+                if (oldLine > line) {
+                    var offset = line - half;
+                    if (offset > 0) {
+                        editor.scrollIntoView(CodeMirror.Pos(offset, 0));
+                    }
+                } else if (oldLine < line) {
+                    editor.scrollIntoView(CodeMirror.Pos(line + half, 0));
+                }
+
+                editor.focus();
             }
         });
 
@@ -453,7 +473,7 @@ var wide = {
             dataType: "json",
             success: function (data) {
                 // reset the save state
-                
+
                 editor.doc.markClean();
                 $(".edit-panel .tabs > div").each(function () {
                     var $span = $(this).find("span:eq(0)");
@@ -469,7 +489,7 @@ var wide = {
         if (!path) {
             return false;
         }
-        
+
         var editor = wide.curEditor;
         if (editor.doc.isClean()) { // no modification
             return false;

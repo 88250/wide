@@ -301,8 +301,8 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	part := found[:strings.LastIndex(found, ":")]
 	cursorSep := strings.LastIndex(part, ":")
 	path = found[:cursorSep]
-	cursorLine := found[cursorSep+1 : strings.LastIndex(found, ":")]
-	cursorCh := found[strings.LastIndex(found, ":")+1:]
+	cursorLine, _ := strconv.Atoi(found[cursorSep+1 : strings.LastIndex(found, ":")])
+	cursorCh, _ := strconv.Atoi(found[strings.LastIndex(found, ":")+1:])
 
 	data["path"] = path
 	data["cursorLine"] = cursorLine
