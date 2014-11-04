@@ -84,39 +84,45 @@ var rawWide conf
 // Exits process if found fatal issues (such as not found $GOPATH),
 // Notifies user by notification queue if found warning issues (such as not found gocode).
 func FixedTimeCheckEnv() {
+	checkEnv() // check immediately
+
 	go func() {
 		for _ = range time.Tick(time.Minute * 7) {
-			if "" == os.Getenv("GOPATH") {
-				glog.Fatal("Not found $GOPATH")
-
-				os.Exit(-1)
-			}
-
-			if "" == os.Getenv("GOROOT") {
-				glog.Fatal("Not found $GOROOT")
-
-				os.Exit(-1)
-			}
-
-			gocode := Wide.GetExecutableInGOBIN("gocode")
-			cmd := exec.Command(gocode, "close")
-			_, err := cmd.Output()
-			if nil != err {
-				event.EventQueue <- &event.Event{Code: event.EvtCodeGocodeNotFound}
-
-				glog.Warningf("Not found gocode [%s]", gocode)
-			}
-
-			ide_stub := Wide.GetExecutableInGOBIN("ide_stub")
-			cmd = exec.Command(ide_stub, "version")
-			_, err = cmd.Output()
-			if nil != err {
-				event.EventQueue <- &event.Event{Code: event.EvtCodeIDEStubNotFound}
-
-				glog.Warningf("Not found ide_stub [%s]", ide_stub)
-			}
+			checkEnv()
 		}
 	}()
+}
+
+func checkEnv() {
+	if "" == os.Getenv("GOPATH") {
+		glog.Fatal("Not found $GOPATH, please configure it before running Wide")
+
+		os.Exit(-1)
+	}
+
+	if "" == os.Getenv("GOROOT") {
+		glog.Fatal("Not found $GOROOT, please configure it before running Wide")
+
+		os.Exit(-1)
+	}
+
+	gocode := Wide.GetExecutableInGOBIN("gocode")
+	cmd := exec.Command(gocode, "close")
+	_, err := cmd.Output()
+	if nil != err {
+		event.EventQueue <- &event.Event{Code: event.EvtCodeGocodeNotFound}
+
+		glog.Warningf("Not found gocode [%s]", gocode)
+	}
+
+	ide_stub := Wide.GetExecutableInGOBIN("ide_stub")
+	cmd = exec.Command(ide_stub, "version")
+	_, err = cmd.Output()
+	if nil != err {
+		event.EventQueue <- &event.Event{Code: event.EvtCodeIDEStubNotFound}
+
+		glog.Warningf("Not found ide_stub [%s]", ide_stub)
+	}
 }
 
 // FixedTimeSave saves configurations (wide.json) periodically (1 minute).
