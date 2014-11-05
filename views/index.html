@@ -154,6 +154,19 @@
                     <span onclick="wide.fmt(editors.getCurrentPath(), wide.curEditor)" class="ico-format font-ico" title="{{.i18n.format}}"></span>
                     <span class="font-ico ico-max" onclick="windows.maxEditor()" title="{{.i18n.max_editor}}"></span>
                 </div>
+                <div class="frame">
+                    <ul>
+                        <li onclick="editors.close()" title="{{.i18n.close}}">
+                            <span>{{.i18n.close}}</span>
+                        </li>    
+                        <li onclick="wide.closeAllFiles()" title="{{.i18n.close_all_files}}">
+                            <span>{{.i18n.close_all_files}}</span>
+                        </li>    
+                        <li onclick="editors.closeOther()" title="{{.i18n.close_other}}">
+                            <span>{{.i18n.close_other}}</span>
+                        </li>    
+                    </ul>
+                </div>
                 <div class="tabs"></div>
                 <div class="tabs-panel"></div>
             </div>

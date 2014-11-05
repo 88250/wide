@@ -115,5 +115,7 @@
     "sing_up_error": "登録に失敗しました",
     "user_name_ruler": "16の長さからなる_ AZ、AZ、0-9、によってユーザ名のみ",
     "password_no_match": "一貫性のないパスワード入力",
-    "discard": "あきらめる"
+    "discard": "あきらめる",
+    "close": "クローズ",
+    "close_other": "閉じるその他"
 }

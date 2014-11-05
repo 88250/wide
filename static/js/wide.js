@@ -210,10 +210,10 @@ var wide = {
                 $("#dialogGoLinePrompt").dialog("close");
                 var editor = wide.curEditor;
                 var oldLine = editor.getCursor().line + 1;
-                
+
                 if (oldLine === line) {
                     editor.focus();
-                    
+
                     return;
                 }
 

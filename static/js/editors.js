@@ -1,6 +1,24 @@
 var editors = {
     data: [],
     tabs: {},
+    close: function () {
+        $(".edit-panel .tabs > div[data-index=" + $(".edit-panel .frame").data("index") + "]").find(".ico-close").click();
+    },
+    closeOther: function () {
+        var currentIndex = $(".edit-panel .frame").data("index");
+
+        // 设置全部关闭标识
+        var removeData = [];
+        $(".edit-panel .tabs > div").each(function (i) {
+            if (currentIndex !== $(this).data("index")) {
+                removeData.push($(this).data("index"));
+            }
+        });
+        var firstIndex = removeData.splice(0, 1);
+        $("#dialogCloseEditor").data("removeData", removeData);
+        // 开始关闭
+        $(".edit-panel .tabs > div[data-index=" + firstIndex + "]").find(".ico-close").click();
+    },
     _removeAllMarker: function () {
         var removeData = $("#dialogCloseEditor").data("removeData");
         if (removeData && removeData.length > 0) {
@@ -8,6 +26,28 @@ var editors = {
             $("#dialogCloseEditor").data("removeData", removeData);
             $(".edit-panel .tabs > div[data-index=" + removeIndex + "] .ico-close").click();
         }
+    },
+    _initClose: function () {
+        // 关闭、关闭其他、关闭所有
+        $(".edit-panel").on("mousedown", '.tabs > div', function (event) {
+            event.stopPropagation();
+
+            if (event.button === 0) { // 左键
+                $(".edit-panel .frame").hide();
+                return false;
+            }
+
+            // event.button === 2 右键
+            var left = event.screenX;
+            if ($(".side").css("left") === "auto" || $(".side").css("left") === "0px") {
+                left = event.screenX - $(".side").width();
+            }
+            $(".edit-panel .frame").show().css({
+                "left": left + "px",
+                "top": "21px"
+            }).data('index', $(this).data("index"));
+            return false;
+        });
     },
     init: function () {
         $("#dialogCloseEditor").dialog({
@@ -152,6 +192,7 @@ var editors = {
 
         this._initCodeMirrorHotKeys();
         this.openStartPage();
+        this._initClose();
     },
     openStartPage: function () {
         var dateFormat = function (time, fmt) {
@@ -467,11 +508,11 @@ var editors = {
                         tId = tree.getTIdByPath($it.attr("title"));
                 tree.openFile(tree.fileTree.getNodeByTId(tId));
                 tree.fileTree.selectNode(wide.curNode);
-                
+
                 var oldLine = wide.curEditor.getCursor().line;
                 var line = $it.find(".position").data("line") - 1;
                 var cursor = CodeMirror.Pos(line, $it.find(".position").data("ch") - 1);
-                
+
                 wide.curEditor.setCursor(cursor);
 
                 var half = Math.floor(wide.curEditor.getScrollInfo().clientHeight / wide.curEditor.defaultTextHeight() / 2);
