@@ -5,6 +5,7 @@ var menu = {
         // 点击子菜单后消失
         $(".frame li").click(function () {
             $(this).closest(".frame").hide();
+            $(".menu > ul > li > a, .menu > ul> li > span").removeClass("selected");
         });
     },
     disabled: function (list) {
@@ -22,13 +23,16 @@ var menu = {
         $(".menu > ul > li > a, .menu > ul> li > span").click(function () {
             var $it = $(this);
             $it.next().show();
+            $(".menu > ul > li > a, .menu > ul> li > span").removeClass("selected");
+            $(this).addClass("selected");
 
             $(".menu > ul > li > a, .menu > ul> li > span").unbind();
 
             $(".menu > ul > li > a, .menu > ul> li > span").mouseover(function () {
                 $(".frame").hide();
-                var $it = $(this);
-                $it.next().show();
+                $(this).next().show();
+                $(".menu > ul > li > a, .menu > ul> li > span").removeClass("selected");
+                $(this).addClass("selected");
             });
         });
     }
