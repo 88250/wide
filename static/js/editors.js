@@ -467,9 +467,23 @@ var editors = {
                         tId = tree.getTIdByPath($it.attr("title"));
                 tree.openFile(tree.fileTree.getNodeByTId(tId));
                 tree.fileTree.selectNode(wide.curNode);
-
-                var cursor = CodeMirror.Pos($it.find(".position").data("line") - 1, $it.find(".position").data("ch") - 1);
+                
+                var oldLine = wide.curEditor.getCursor().line;
+                var line = $it.find(".position").data("line") - 1;
+                var cursor = CodeMirror.Pos(line, $it.find(".position").data("ch") - 1);
+                
                 wide.curEditor.setCursor(cursor);
+
+                var half = Math.floor(wide.curEditor.getScrollInfo().clientHeight / wide.curEditor.defaultTextHeight() / 2);
+                if (oldLine > line) {
+                    var offset = line - half;
+                    if (offset > 0) {
+                        wide.curEditor.scrollIntoView(CodeMirror.Pos(offset, 0));
+                    }
+                } else if (oldLine < line) {
+                    wide.curEditor.scrollIntoView(CodeMirror.Pos(line + half, 0));
+                }
+
                 wide.curEditor.focus();
             });
 
