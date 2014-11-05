@@ -99,7 +99,13 @@ var tree = {
                     var dirRMenu = $("#dirRMenu");
                     var fileRMenu = $("#fileRMenu");
                     var setting = {
+                        data: {
+                            key: {
+                                title: "title"
+                            }
+                        },
                         view: {
+                            showTitle: true,
                             selectedMulti: false
                         },
                         callback: {

@@ -68,7 +68,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	// construct Go API node
 	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
-	apiNode := FileNode{Name: "Go API", Path: apiPath, FileNodes: []*FileNode{}}
+	apiNode := FileNode{Name: "Go API", Title: apiPath, Path: apiPath, FileNodes: []*FileNode{}}
 
 	goapiBuildOKSignal := make(chan bool)
 	go func() {
@@ -270,7 +270,7 @@ func walk(path string, node *FileNode) {
 
 		fio, _ := os.Lstat(fpath)
 
-		child := FileNode{Name: filename, Path: fpath, FileNodes: []*FileNode{}}
+		child := FileNode{Name: filename, Title: fpath, Path: fpath, FileNodes: []*FileNode{}}
 		node.FileNodes = append(node.FileNodes, &child)
 
 		if nil == fio {
