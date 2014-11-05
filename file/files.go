@@ -21,6 +21,7 @@ import (
 // File node, used to construct the file tree.
 type FileNode struct {
 	Name      string      `json:"name"`
+	Title     string      `json:"title"`
 	Path      string      `json:"path"`
 	IconSkin  string      `json:"iconSkin"` // Value should be end with a space
 	Type      string      `json:"type"`     // "f": file, "d": directory
@@ -56,9 +57,8 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	for _, workspace := range workspaces {
 		workspacePath := workspace + conf.PathSeparator + "src"
 
-		workspaceNode := FileNode{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:] + " (" +
-			workspace + ")",
-			Path: workspacePath, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
+		workspaceNode := FileNode{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
+			Title: workspace, Path: workspacePath, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
 
 		walk(workspacePath, &workspaceNode)
 
