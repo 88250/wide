@@ -436,7 +436,7 @@ var wide = {
 
             if (!($(event.target).closest(".frame").length > 0 || event.target.className === "frame")) {
                 $(".frame").hide();
-                $(".menu > ul > li > a, .menu > ul> li > span").unbind("mouseover");
+                $(".menu > ul > li > a, .menu > ul> li > span").unbind("mouseover").removeClass("selected");
                 menu.subMenu();
             }
         });
