@@ -73,6 +73,8 @@
     "show_expr_info": "查看表达式信息",
     "find_usages": "查找使用",
     "delete_line": "删除当前行",
+    "copy_line_up": "复制当前行到上一行",
+    "copy_line_down": "复制当前行到下一行",
     "save_editor_file": "保存当前编辑器文件",
     "save_all_editors_files": "保存所有编辑器文件",
     "close_editor": "关闭当前编辑器",

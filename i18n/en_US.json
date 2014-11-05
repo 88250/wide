@@ -73,6 +73,8 @@
     "show_expr_info": "Show Expression Info",
     "find_usages": "Find Usages",
     "delete_line": "Delete Line",
+    "copy_line_up": "Copy Line Up",
+    "copy_line_down": "Copy Line Down",
     "save_editor_file": "Save File",
     "save_all_editors_files": "Save All",
     "close_editor": "Close File",

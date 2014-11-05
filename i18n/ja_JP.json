@@ -73,6 +73,8 @@
     "show_expr_info": "式の情報を表示",
     "find_usages": "使用方法を検索する",
     "delete_line": "行を削除",
+    "copy_line_up": "前行にコピー",
+    "copy_line_down": "次行にコピー",
     "save_editor_file": "保存",
     "save_all_editors_files": "全てを保存",
     "close_editor": "エディタを閉じる",

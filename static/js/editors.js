@@ -586,6 +586,28 @@ var editors = {
                     } else {
                         windows.maxEditor();
                     }
+                },
+                "Shift-Ctrl-Up": function (cm) {
+                    var cursor = cm.getCursor();
+                    var line = cursor.line;
+                    var content = cm.getLine(line);
+
+                    if (0 === line) {
+                        cm.replaceRange("", CodeMirror.Pos(0));
+                        line++;
+                    }
+
+                    cm.replaceRange("\n" + content, CodeMirror.Pos(line - 1));
+                    cm.setCursor(cursor);
+                },
+                "Shift-Ctrl-Down": function (cm) {
+                    var cursor = cm.getCursor();
+                    var line = cursor.line;
+                    var content = cm.getLine(line);
+
+                    cm.replaceRange("\n", CodeMirror.Pos(line));
+                    cm.replaceRange(content, CodeMirror.Pos(line + 1));
+                    cm.setCursor(CodeMirror.Pos(line + 1, cursor.ch));
                 }
             }
         });
