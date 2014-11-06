@@ -117,5 +117,6 @@
     "password_no_match": "Password doesn't match the confirmation",
     "discard": "Discard",
     "close": "Close",
-    "close_other": "Close Other"
+    "close_other": "Close Other",
+    "clear": "Clear"
 }

@@ -117,5 +117,6 @@
     "password_no_match": "一貫性のないパスワード入力",
     "discard": "あきらめる",
     "close": "クローズ",
-    "close_other": "閉じるその他"
+    "close_other": "閉じるその他",
+    "clear": "空の"
 }

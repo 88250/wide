@@ -117,5 +117,6 @@
     "password_no_match": "密码输入不一致",
     "discard": "放弃",
     "close": "关闭",
-    "close_other": "关闭其它"
+    "close_other": "关闭其它",
+    "clear": "清空"
 }

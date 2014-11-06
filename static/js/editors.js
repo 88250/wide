@@ -14,6 +14,9 @@ var editors = {
                 removeData.push($(this).data("index"));
             }
         });
+        if (removeData.length === 0) {
+            return false;
+        }
         var firstIndex = removeData.splice(0, 1);
         $("#dialogCloseEditor").data("removeData", removeData);
         // 开始关闭

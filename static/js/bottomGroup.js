@@ -3,6 +3,31 @@ var bottomGroup = {
     searchTab: undefined,
     init: function () {
         this._initTabs();
+        this._initFrame();
+    },
+    _initFrame: function () {
+        $(".bottom-window-group .output").mousedown(function (event) {
+            event.stopPropagation();
+
+            if (event.button === 0) { // 左键
+                $(".bottom-window-group .frame").hide();
+                return false;
+            }
+
+            // event.button === 2 右键
+            var left = event.screenX;
+            if ($(".side").css("left") === "auto" || $(".side").css("left") === "0px") {
+                left = event.screenX - $(".side").width();
+            }
+            $(".bottom-window-group .frame").show().css({
+                "left": left + "px",
+                "top": (event.offsetY + 20) + "px"
+            });
+            return false;
+        });
+    },
+    clear: function () {
+        $('.bottom-window-group .output > div').text('');
     },
     clearOutput: function () {
         $('.bottom-window-group .output > div').text('');
