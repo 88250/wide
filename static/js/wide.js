@@ -145,7 +145,9 @@ var wide = {
                                 "name": name,
                                 "iconSkin": iconSkin,
                                 "path": request.path,
-                                "mode": data.mode
+                                "mode": data.mode,
+                                "removable": true,
+                                "creatable": true
                             }]);
                     }
                 });
@@ -185,7 +187,9 @@ var wide = {
                         tree.fileTree.addNodes(wide.curNode, [{
                                 "name": name,
                                 "iconSkin": "ico-ztree-dir ",
-                                "path": request.path
+                                "path": request.path,
+                                "removable": true,
+                                "creatable": true
                             }]);
                     }
                 });
