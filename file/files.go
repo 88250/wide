@@ -58,7 +58,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 		workspacePath := workspace + conf.PathSeparator + "src"
 
 		workspaceNode := FileNode{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
-			Title: workspace, Path: workspacePath, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
+			Title: workspace, Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d", FileNodes: []*FileNode{}}
 
 		walk(workspacePath, &workspaceNode)
 
@@ -73,8 +73,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	goapiBuildOKSignal := make(chan bool)
 	go func() {
 		apiNode.Type = "d"
-		// TOOD: Go API use a special style
-		apiNode.IconSkin = "ico-ztree-dir "
+		apiNode.IconSkin = "ico-ztree-dir-api "
 
 		walk(apiPath, &apiNode)
 
