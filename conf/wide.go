@@ -55,6 +55,7 @@ type Editor struct {
 
 // Configuration.
 type conf struct {
+	IP                    string  // server ip, ${ip}
 	Server                string  // server host and port ({IP}:7070)
 	StaticServer          string  // static resources server scheme, host and port (http://{IP}:7070)
 	EditorChannel         string  // editor channel (ws://{IP}:7070)
@@ -65,7 +66,7 @@ type conf struct {
 	StaticResourceVersion string  // version of static resources
 	MaxProcs              int     // Go max procs
 	RuntimeMode           string  // runtime mode (dev/prod)
-	Pwd                   string  // current working direcitory
+	WD                    string  // current working direcitory, ${pwd}
 	Workspace             string  // path of master workspace
 	Locale                string  // default locale
 	Users                 []*User // configurations of users
@@ -140,7 +141,7 @@ func FixedTimeSave() {
 func (c *conf) GetUserWorkspace(username string) string {
 	for _, user := range c.Users {
 		if user.Name == username {
-			ret := strings.Replace(user.Workspace, "{pwd}", c.Pwd, 1)
+			ret := strings.Replace(user.Workspace, "{WD}", c.WD, 1)
 
 			return filepath.FromSlash(ret)
 		}
@@ -152,10 +153,10 @@ func (c *conf) GetUserWorkspace(username string) string {
 // GetWorkspace gets the master workspace path.
 //
 // Compared to the use of Wide.Workspace, this function will be processed as follows:
-//  1. Replace {pwd} variable with the actual directory path
+//  1. Replace {WD} variable with the actual directory path
 //  2. Replace "/" with "\\" (Windows)
 func (c *conf) GetWorkspace() string {
-	return filepath.FromSlash(strings.Replace(c.Workspace, "{pwd}", c.Pwd, 1))
+	return filepath.FromSlash(strings.Replace(c.Workspace, "{WD}", c.WD, 1))
 }
 
 // GetGoFmt gets the path of Go format tool, returns "gofmt" if not found.
@@ -180,10 +181,10 @@ func (c *conf) GetGoFmt(username string) string {
 // GetWorkspace gets workspace path of the user.
 //
 // Compared to the use of Wide.Workspace, this function will be processed as follows:
-//  1. Replace {pwd} variable with the actual directory path
+//  1. Replace {WD} variable with the actual directory path
 //  2. Replace "/" with "\\" (Windows)
 func (u *User) GetWorkspace() string {
-	return filepath.FromSlash(strings.Replace(u.Workspace, "{pwd}", Wide.Pwd, 1))
+	return filepath.FromSlash(strings.Replace(u.Workspace, "{WD}", Wide.WD, 1))
 }
 
 // GetUser gets configuration of the user specified by the given username, returns nil if not found.
@@ -277,19 +278,21 @@ func Load() {
 		os.Exit(-1)
 	}
 
-	glog.V(3).Infof("IP [%s]", ip)
+	glog.V(5).Infof("${ip} [%s]", ip)
 
-	Wide.Server = strings.Replace(Wide.Server, "{IP}", ip, 1)
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", ip, 1)
-	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{IP}", ip, 1)
-	Wide.OutputChannel = strings.Replace(Wide.OutputChannel, "{IP}", ip, 1)
-	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{IP}", ip, 1)
-	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", ip, 1)
+	Wide.WD = util.OS.Pwd()
+	glog.V(5).Infof("${pwd} [%s]", Wide.WD)
 
-	Wide.Pwd = util.OS.Pwd()
-	glog.V(3).Infof("pwd [%s]", Wide.Pwd)
+	Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
 
-	glog.V(3).Info("Conf: \n" + string(bytes))
+	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
+	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
+	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{IP}", Wide.IP, 1)
+	Wide.OutputChannel = strings.Replace(Wide.OutputChannel, "{IP}", Wide.IP, 1)
+	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{IP}", Wide.IP, 1)
+	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", Wide.IP, 1)
+
+	glog.V(5).Info("Conf: \n" + string(bytes))
 
 	initWorkspaceDirs()
 	initCustomizedConfs()
