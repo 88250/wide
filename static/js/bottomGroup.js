@@ -4,6 +4,10 @@ var bottomGroup = {
     init: function () {
         this._initTabs();
         this._initFrame();
+        
+        $('.bottom-window-group .output').click(function () {
+           $(this).focus(); 
+        });
     },
     _initFrame: function () {
         $(".bottom-window-group .output").mousedown(function (event) {
@@ -26,11 +30,11 @@ var bottomGroup = {
             return false;
         });
     },
-    clear: function () {
-        $('.bottom-window-group .output > div').text('');
+    clear: function (id) {
+        $('.bottom-window-group .' + id + ' > div').text('');
     },
-    clearOutput: function () {
-        $('.bottom-window-group .output > div').text('');
+    resetOutput: function () {
+        this.clear('output');
         bottomGroup.tabs.setCurrent("output");
         windows.flowBottom();
     },

@@ -585,7 +585,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                bottomGroup.clearOutput();
+                bottomGroup.resetOutput();
             },
             success: function (data) {
             }
@@ -620,7 +620,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                bottomGroup.clearOutput();
+                bottomGroup.resetOutput();
             },
             success: function (data) {
                 $(".toolbars .ico-buildrun").addClass("ico-stop")
@@ -650,7 +650,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                bottomGroup.clearOutput();
+                bottomGroup.resetOutput();
             },
             success: function (data) {
             }
@@ -677,7 +677,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                bottomGroup.clearOutput();
+                bottomGroup.resetOutput();
             },
             success: function (data) {
             }
@@ -704,7 +704,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                bottomGroup.clearOutput();
+                bottomGroup.resetOutput();
             },
             success: function (data) {
             }

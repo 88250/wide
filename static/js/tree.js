@@ -87,6 +87,10 @@ var tree = {
         $("#dialogRemoveConfirm").dialog("open");
     },
     init: function () {
+        $("#file").click(function () {
+            $(this).focus();
+        });
+
         var request = newWideRequest();
 
         $.ajax({

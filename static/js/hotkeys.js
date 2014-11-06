@@ -35,6 +35,13 @@ var hotkeys = {
             shiftKey: false,
             which: 54
         },
+        // Ctrl+C 清空窗口内容   
+        clearWindow: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 67
+        },
         // Ctrl+D 窗口组切换   
         changeEditor: {
             ctrlKey: true,
@@ -63,6 +70,18 @@ var hotkeys = {
             shiftKey: false,
             which: 117
         }
+    },
+    _bindOutput: function () {
+        $(".bottom-window-group .output").keydown(function (event) {
+            event.preventDefault();
+
+            var hotKeys = hotkeys.defaultKeyMap;
+            if (event.ctrlKey === hotKeys.clearWindow.ctrlKey
+                    && event.which === hotKeys.clearWindow.which) {  // Ctrl+F 搜索
+                bottomGroup.clear('output');
+                return;
+            }
+        });
     },
     _bindFileTree: function () {
         $("#files").keydown(function (event) {
@@ -188,9 +207,7 @@ var hotkeys = {
             }
         });
     },
-    init: function () {
-        this._bindFileTree();
-
+    _bindDocument: function () {
         var hotKeys = this.defaultKeyMap;
         $(document).keydown(function (event) {
             if (event.ctrlKey === hotKeys.goEditor.ctrlKey
@@ -234,6 +251,7 @@ var hotkeys = {
 
                 return;
             }
+            
             if (event.ctrlKey === hotKeys.goSearch.ctrlKey
                     && event.which === hotKeys.goSearch.which) { // Ctrl+5 焦点切换到搜索窗口  
                 bottomGroup.tabs.setCurrent("search");
@@ -327,6 +345,11 @@ var hotkeys = {
 
                 return;
             }
-        });
+        });  
+    },
+    init: function () {
+        this._bindFileTree();
+        this._bindOutput();
+        this._bindDocument();
     }
 };
