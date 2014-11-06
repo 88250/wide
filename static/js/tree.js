@@ -79,11 +79,19 @@ var tree = {
         }
         return false;
     },
-    newFile: function () {
+    newFile: function (it) {
+        if ($(it).hasClass("disabled")) {
+            return false;
+        }
+
         $("#dirRMenu").hide();
         $("#dialogNewFilePrompt").dialog("open");
     },
     newDir: function () {
+        if ($(it).hasClass("disabled")) {
+            return false;
+        }
+
         $("#dirRMenu").hide();
         $("#dialogNewDirPrompt").dialog("open");
     },
@@ -94,7 +102,7 @@ var tree = {
             }
         } else {
             // 直接调用时，如果为 api 及其子目录或者 workspace 则不能进行删除
-            if (wide.curNode.iconSkin === 'ico-ztree-dir-workspace ') {
+            if (!wide.curNode.removable) {
                 return false;
             }
         }
@@ -141,6 +149,12 @@ var tree = {
                                     tree.fileTree.selectNode(treeNode);
 
                                     if (!tree.isDir()) { // 如果右击了文件
+                                        if (wide.curNode.removable) {
+                                            $("#fileRMenu .remove").removeClass("disabled");
+                                        } else {
+                                            $("#fileRMenu .remove").addClass("disabled");
+                                        }
+                                        
                                         $("#fileRMenu").show();
 
                                         fileRMenu.css({
@@ -149,10 +163,16 @@ var tree = {
                                             "display": "block"
                                         });
                                     } else { // 右击了目录
-                                        if (wide.curNode.iconSkin === "ico-ztree-dir-workspace ") {
-                                            $("#dirRMenu .remove").addClass("disabled");
-                                        } else {
+                                        if (wide.curNode.removable) {
                                             $("#dirRMenu .remove").removeClass("disabled");
+                                        } else {
+                                            $("#dirRMenu .remove").addClass("disabled");
+                                        }
+
+                                        if (wide.curNode.creatable) {
+                                            $("#dirRMenu .create").removeClass("disabled");
+                                        } else {
+                                            $("#dirRMenu .create").addClass("disabled");
                                         }
 
                                         $("#dirRMenu").show();

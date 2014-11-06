@@ -36,7 +36,9 @@
 }
 
 .ztree li > a > span.button,
-.ztree li > a > span.button.ico-ztree-dir {
+.ztree li > a > span.button.ico-ztree-dir,
+.ztree li > a > span.button.ico-ztree-dir-api,
+.ztree li > a > span.button.ico-ztree-dir-workspace {
     margin-right: 2px;
 }
 
