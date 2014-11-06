@@ -144,6 +144,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		go func() {
 			for {
 				buf, err := outReader.ReadString('\n')
+				buf = strings.Replace(buf, "<", "&lt;", -1)
+				buf = strings.Replace(buf, ">", "&gt;", -1)
 
 				// TODO: fix the duplicated error
 
@@ -155,7 +157,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					if nil != wsChannel {
 						channelRet["cmd"] = "run-done"
-						channelRet["output"] = "<pre>" + string(buf) + "</pre>"
+						channelRet["output"] = "<pre>" + buf + "</pre>"
 						err := wsChannel.Conn.WriteJSON(&channelRet)
 						if nil != err {
 							glog.Error(err)
@@ -169,7 +171,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				} else {
 					if nil != wsChannel {
 						channelRet["cmd"] = "run"
-						channelRet["output"] = "<pre>" + string(buf) + "</pre>"
+						channelRet["output"] = "<pre>" + buf + "</pre>"
 						err := wsChannel.Conn.WriteJSON(&channelRet)
 						if nil != err {
 							glog.Error(err)
@@ -184,6 +186,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 		for {
 			buf, err := errReader.ReadString('\n')
+			buf = strings.Replace(buf, "<", "&lt;", -1)
+			buf = strings.Replace(buf, ">", "&gt;", -1)
 
 			if nil != err {
 				// remove the exited process from user process set
@@ -195,7 +199,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run-done"
-					channelRet["output"] = "<pre>" + string(buf) + "</pre>"
+					channelRet["output"] = "<pre>" + buf + "</pre>"
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
@@ -211,7 +215,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run"
-					channelRet["output"] = "<pre>" + string(buf) + "</pre>"
+					channelRet["output"] = "<pre>" + buf + "</pre>"
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
