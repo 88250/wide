@@ -23,8 +23,10 @@ type FileNode struct {
 	Name      string      `json:"name"`
 	Title     string      `json:"title"`
 	Path      string      `json:"path"`
-	IconSkin  string      `json:"iconSkin"` // Value should be end with a space
-	Type      string      `json:"type"`     // "f": file, "d": directory
+	IconSkin  string      `json:"iconSkin"`  // Value should be end with a space
+	Type      string      `json:"type"`      // "f": file, "d": directory
+	Creatable bool        `json:"creatable"` // whether can create file in this file node
+	Removable bool        `json:"removable"` // whether can remove this file node
 	Mode      string      `json:"mode"`
 	FileNodes []*FileNode `json:"children"`
 }
@@ -58,7 +60,8 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 		workspacePath := workspace + conf.PathSeparator + "src"
 
 		workspaceNode := FileNode{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
-			Title: workspace, Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d", FileNodes: []*FileNode{}}
+			Title: workspace, Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d",
+			Creatable: true, Removable: false, FileNodes: []*FileNode{}}
 
 		walk(workspacePath, &workspaceNode)
 
@@ -68,12 +71,11 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	// construct Go API node
 	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
-	apiNode := FileNode{Name: "Go API", Title: apiPath, Path: apiPath, FileNodes: []*FileNode{}}
+	apiNode := FileNode{Name: "Go API", Title: apiPath, Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
+		Creatable: true, Removable: false, FileNodes: []*FileNode{}}
 
 	goapiBuildOKSignal := make(chan bool)
 	go func() {
-		apiNode.Type = "d"
-		apiNode.IconSkin = "ico-ztree-dir-api "
 
 		walk(apiPath, &apiNode)
 
@@ -269,7 +271,7 @@ func walk(path string, node *FileNode) {
 
 		fio, _ := os.Lstat(fpath)
 
-		child := FileNode{Name: filename, Title: fpath, Path: fpath, FileNodes: []*FileNode{}}
+		child := FileNode{Name: filename, Title: fpath, Path: fpath, Removable: true, FileNodes: []*FileNode{}}
 		node.FileNodes = append(node.FileNodes, &child)
 
 		if nil == fio {
@@ -280,11 +282,13 @@ func walk(path string, node *FileNode) {
 
 		if fio.IsDir() {
 			child.Type = "d"
+			child.Creatable = true
 			child.IconSkin = "ico-ztree-dir "
 
 			walk(fpath, &child)
 		} else {
 			child.Type = "f"
+			child.Creatable = false
 			ext := filepath.Ext(fpath)
 
 			child.IconSkin = getIconSkin(ext)
