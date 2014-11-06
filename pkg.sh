@@ -15,7 +15,6 @@ mkdir -p ${target}
 
 echo version=${ver}
 echo target=${target}
-echo 
 
 ## darwin
 os=darwin
