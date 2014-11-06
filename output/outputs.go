@@ -62,16 +62,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
 		data["succ"] = false
-
-		return
 	}
 
 	sid := args["sid"].(string)
 	wSession := session.WideSessions.Get(sid)
 	if nil == wSession {
 		data["succ"] = false
-
-		return
 	}
 
 	filePath := args["executable"].(string)
@@ -84,16 +80,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != err {
 		glog.Error(err)
 		data["succ"] = false
-
-		return
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if nil != err {
 		glog.Error(err)
 		data["succ"] = false
-
-		return
 	}
 
 	outReader := bufio.NewReader(stdout)
@@ -102,15 +94,33 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	if err := cmd.Start(); nil != err {
 		glog.Error(err)
 		data["succ"] = false
+	}
+
+	wsChannel := session.OutputWS[sid]
+
+	channelRet := map[string]interface{}{}
+
+	if !data["succ"].(bool) {
+		if nil != wsChannel {
+			channelRet["cmd"] = "run-done"
+			channelRet["output"] = ""
+
+			err := wsChannel.Conn.WriteJSON(&channelRet)
+			if nil != err {
+				glog.Error(err)
+				return
+			}
+
+			wsChannel.Refresh()
+		}
 
 		return
 	}
 
+	channelRet["pid"] = cmd.Process.Pid
+
 	// add the process to user's process set
 	processes.add(wSession, cmd.Process)
-
-	channelRet := map[string]interface{}{}
-	channelRet["pid"] = cmd.Process.Pid
 
 	go func(runningId int) {
 		defer util.Recover()
@@ -119,9 +129,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		glog.V(3).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
 
 		// push once for front-end to get the 'run' state and pid
-		if nil != session.OutputWS[sid] {
-			wsChannel := session.OutputWS[sid]
-
+		if nil != wsChannel {
 			channelRet["cmd"] = "run"
 			channelRet["output"] = ""
 			err := wsChannel.Conn.WriteJSON(&channelRet)
@@ -145,9 +153,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done [stdout err]", sid, runningId, filePath)
 
-					if nil != session.OutputWS[sid] {
-						wsChannel := session.OutputWS[sid]
-
+					if nil != wsChannel {
 						channelRet["cmd"] = "run-done"
 						channelRet["output"] = "<pre>" + string(buf) + "</pre>"
 						err := wsChannel.Conn.WriteJSON(&channelRet)
@@ -161,9 +167,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					break
 				} else {
-					if nil != session.OutputWS[sid] {
-						wsChannel := session.OutputWS[sid]
-
+					if nil != wsChannel {
 						channelRet["cmd"] = "run"
 						channelRet["output"] = "<pre>" + string(buf) + "</pre>"
 						err := wsChannel.Conn.WriteJSON(&channelRet)
@@ -268,26 +272,16 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if util.OS.IsWindows() {
 		suffix = ".exe"
 	}
-	executable := "main" + suffix
-	argv := []string{"build", "-o", executable}
 
-	cmd := exec.Command("go", argv...)
+	cmd := exec.Command("go", "build")
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)
 
-	glog.V(5).Infof("go build -o %s", executable)
+	executable := filepath.Base(curDir) + suffix
+	glog.V(5).Infof("go build for [%s]", executable)
 
 	executable = filepath.Join(curDir, executable)
-
-	// remove executable file before building
-	err = os.RemoveAll(executable)
-	if nil != err {
-		glog.Info(err)
-		data["succ"] = false
-
-		return
-	}
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
