@@ -63,7 +63,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 			Title: workspace, Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d",
 			Creatable: true, Removable: false, FileNodes: []*FileNode{}}
 
-		walk(workspacePath, &workspaceNode)
+		walk(workspacePath, &workspaceNode, true, true)
 
 		// add workspace node
 		root.FileNodes = append(root.FileNodes, &workspaceNode)
@@ -72,12 +72,11 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	// construct Go API node
 	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
 	apiNode := FileNode{Name: "Go API", Title: apiPath, Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
-		Creatable: true, Removable: false, FileNodes: []*FileNode{}}
+		Creatable: false, Removable: false, FileNodes: []*FileNode{}}
 
 	goapiBuildOKSignal := make(chan bool)
 	go func() {
-
-		walk(apiPath, &apiNode)
+		walk(apiPath, &apiNode, false, false)
 
 		// go-ahead
 		close(goapiBuildOKSignal)
@@ -263,7 +262,7 @@ func SearchText(w http.ResponseWriter, r *http.Request) {
 }
 
 // walk traverses the specified path to build a file tree.
-func walk(path string, node *FileNode) {
+func walk(path string, node *FileNode, creatable, removable bool) {
 	files := listFiles(path)
 
 	for _, filename := range files {
@@ -271,7 +270,7 @@ func walk(path string, node *FileNode) {
 
 		fio, _ := os.Lstat(fpath)
 
-		child := FileNode{Name: filename, Title: fpath, Path: fpath, Removable: true, FileNodes: []*FileNode{}}
+		child := FileNode{Name: filename, Title: fpath, Path: fpath, Removable: removable, FileNodes: []*FileNode{}}
 		node.FileNodes = append(node.FileNodes, &child)
 
 		if nil == fio {
@@ -282,13 +281,13 @@ func walk(path string, node *FileNode) {
 
 		if fio.IsDir() {
 			child.Type = "d"
-			child.Creatable = true
+			child.Creatable = creatable
 			child.IconSkin = "ico-ztree-dir "
 
-			walk(fpath, &child)
+			walk(fpath, &child, creatable, removable)
 		} else {
 			child.Type = "f"
-			child.Creatable = false
+			child.Creatable = creatable
 			ext := filepath.Ext(fpath)
 
 			child.IconSkin = getIconSkin(ext)
