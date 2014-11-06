@@ -226,7 +226,7 @@ var hotkeys = {
 
             if (event.ctrlKey === hotKeys.goOutPut.ctrlKey
                     && event.which === hotKeys.goOutPut.which) { // Ctrl+4 焦点切换到输出窗口   
-                wide.bottomWindowTab.setCurrent("output");
+                bottomGroup.tabs.setCurrent("output");
 
                 windows.flowBottom();
                 $(".bottom-window-group .output").focus();
@@ -236,7 +236,7 @@ var hotkeys = {
             }
             if (event.ctrlKey === hotKeys.goSearch.ctrlKey
                     && event.which === hotKeys.goSearch.which) { // Ctrl+5 焦点切换到搜索窗口  
-                wide.bottomWindowTab.setCurrent("search");
+                bottomGroup.tabs.setCurrent("search");
                 windows.flowBottom();
                 $(".bottom-window-group .search").focus();
                 event.preventDefault();
@@ -246,7 +246,7 @@ var hotkeys = {
 
             if (event.ctrlKey === hotKeys.goNotification.ctrlKey
                     && event.which === hotKeys.goNotification.which) { // Ctrl+6 焦点切换到通知窗口          
-                wide.bottomWindowTab.setCurrent("notification");
+                bottomGroup.tabs.setCurrent("notification");
                 windows.flowBottom();
                 $(".bottom-window-group .notification").focus();
                 event.preventDefault();
@@ -283,7 +283,7 @@ var hotkeys = {
                             break;
                         }
                     }
-                    wide.bottomWindowTab.setCurrent(nextId);
+                    bottomGroup.tabs.setCurrent(nextId);
                     $(".bottom-window-group ." + nextId).focus();
 
                     event.preventDefault();

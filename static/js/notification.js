@@ -1,7 +1,7 @@
 var notification = {
     init: function () {
         $(".notification-count").click(function () {
-            wide.bottomWindowTab.setCurrent("notification");
+            bottomGroup.tabs.setCurrent("notification");
             $(".bottom-window-group .notification").focus();
             $(this).hide();
         });

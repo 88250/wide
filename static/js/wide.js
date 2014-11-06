@@ -2,8 +2,6 @@ var wide = {
     curNode: undefined,
     curEditor: undefined,
     curProcessId: undefined, // 当前正在运行的进程 id（pid）
-    bottomWindowTab: undefined,
-    searchTab: undefined,
     _initDialog: function () {
         $(".dialog-prompt > input").keyup(function (event) {
             var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
@@ -323,14 +321,6 @@ var wide = {
 
         $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
     },
-    _initBottomWindowGroup: function () {
-        this.bottomWindowTab = new Tabs({
-            id: ".bottom-window-group",
-            clickAfter: function (id) {
-                this._$tabsPanel.find("." + id).focus();
-            }
-        });
-    },
     _initWS: function () {
         var outputWS = new ReconnectingWebSocket(config.channel.output + '/output/ws?sid=' + config.wideSessionId);
         outputWS.onopen = function () {
@@ -359,7 +349,7 @@ var wide = {
 
             switch (data.cmd) {
                 case 'run': // 正在运行
-                    wide.fillOutput($('.bottom-window-group .output > div').html() + data.output);
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
                     wide.curProcessId = data.pid;
 
                     break;
@@ -374,17 +364,17 @@ var wide = {
                 case 'start-test':
                 case 'start-install':
                 case 'start-get':
-                    wide.fillOutput(data.output);
+                    bottomGroup.fillOutput(data.output);
 
                     break;
                 case 'go test':
                 case 'go install':
                 case 'go get':
-                    wide.fillOutput($('.bottom-window-group .output > div').html() + data.output);
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     break;
                 case 'build':
-                    wide.fillOutput($('.bottom-window-group .output > div').html() + data.output);
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     if (data.lints) { // 说明编译有错误输出            
                         for (var i = 0; i < data.lints.length; i++) {
@@ -421,8 +411,6 @@ var wide = {
         this._initFooter();
 
         this._initWS();
-
-        this._initBottomWindowGroup();
 
         // 点击隐藏弹出层
         $("body").bind("mousedown", function (event) {
@@ -573,11 +561,6 @@ var wide = {
             }
         });
     },
-    fillOutput: function (data) {
-        var $output = $('.bottom-window-group .output');
-        $output.find("div").html(data.replace(/\n/g, '<br/>'));
-        $output.parent().scrollTop($output[0].scrollHeight);
-    },
     // 构建.
     build: function () {
         wide.saveAllFiles();
@@ -602,9 +585,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output > div').text('');
-                wide.bottomWindowTab.setCurrent("output");
-                windows.flowBottom();
+                bottomGroup.clearOutput();
             },
             success: function (data) {
             }
@@ -639,9 +620,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output > div').text('');
-                wide.bottomWindowTab.setCurrent("output");
-                windows.flowBottom();
+                bottomGroup.clearOutput();
             },
             success: function (data) {
                 $(".toolbars .ico-buildrun").addClass("ico-stop")
@@ -671,9 +650,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output > div').text('');
-                wide.bottomWindowTab.setCurrent("output");
-                windows.flowBottom();
+                bottomGroup.clearOutput();
             },
             success: function (data) {
             }
@@ -700,9 +677,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output > div').text('');
-                wide.bottomWindowTab.setCurrent("output");
-                windows.flowBottom();
+                bottomGroup.clearOutput();
             },
             success: function (data) {
             }
@@ -729,9 +704,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
-                $('.bottom-window-group .output > div').text('');
-                wide.bottomWindowTab.setCurrent("output");
-                windows.flowBottom();
+                bottomGroup.clearOutput();
             },
             success: function (data) {
             }
@@ -830,4 +803,5 @@ $(document).ready(function () {
     session.init();
     editors.init();
     windows.init();
+    bottomGroup.init();
 });

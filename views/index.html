@@ -173,6 +173,13 @@
 
             <div class="bottom-window-group">
                 <span title="{{.i18n.min}}" class="font-ico ico-min"></span>
+                <div class="frame">
+                    <ul>
+                        <li onclick="editors.close()" title="{{.i18n.close}}">
+                            <span>{{.i18n.close}}</span>
+                        </li>   
+                    </ul>
+                </div>
                 <div class="tabs">
                     <div class="current" data-index="output">
                         <span title="{{.i18n.output}}">{{.i18n.output}}</span>
@@ -340,5 +347,6 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/menu.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/windows.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/hotkeys.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/bottomGroup.js?{{.conf.StaticResourceVersion}}"></script>
     </body>
 </html>

@@ -489,7 +489,7 @@ var editors = {
             title = config.label.search_text;
         }
         if ($search.find("ul").length === 0) {
-            wide.searchTab = new Tabs({
+            bottomGroup.searchTab = new Tabs({
                 id: ".bottom-window-group .search",
                 removeAfter: function (id, prevId) {
                     if ($search.find("ul").length === 1) {
@@ -533,7 +533,7 @@ var editors = {
             $search.find(".tabs .first").text(title);
         } else {
             $search.find(".tabs").show();
-            wide.searchTab.add({
+            bottomGroup.searchTab.add({
                 "id": "search" + (new Date()).getTime(),
                 "title": title,
                 "content": searcHTML
@@ -541,7 +541,7 @@ var editors = {
         }
 
         // focus
-        wide.bottomWindowTab.setCurrent("search");
+        bottomGroup.tabs.setCurrent("search");
         windows.flowBottom();
         $(".bottom-window-group .search").focus();
     },
