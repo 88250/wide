@@ -1,11 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 # Wide package tool.
 # 
 # Command: 
-#  ./pkg.bash ${version} ${target}
+#  ./pkg.sh ${version} ${target}
 # Example:
-#  ./pkg.bash 1.0.1 /home/daniel/1.0.1/
+#  ./pkg.sh 1.0.1 /home/daniel/1.0.1/
 
 ver=$1
 target=$2
