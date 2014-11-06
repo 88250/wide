@@ -314,9 +314,10 @@ var wide = {
         });
     },
     _initLayout: function () {
-        var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 1,
+        var mainH = $(window).height() - $(".menu").height() - $(".footer").height(),
                 bottomH = Math.floor(mainH * 0.3);
-        $(".content").height(mainH);
+        // 减小初始化界面抖动
+        $(".content").height(mainH).css("position", "relative");
         $(".side .tabs-panel").height(mainH - 20);
 
         $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
