@@ -87,7 +87,7 @@ var tree = {
         $("#dirRMenu").hide();
         $("#dialogNewFilePrompt").dialog("open");
     },
-    newDir: function () {
+    newDir: function (it) {
         if ($(it).hasClass("disabled")) {
             return false;
         }
