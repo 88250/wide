@@ -133,14 +133,14 @@
                             <ul>
                                 <li onclick="tree.newFile();">{{.i18n.create_file}}</li>
                                 <li onclick="tree.newDir();">{{.i18n.create_dir}}</li>
-                                <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
+                                <li class="remove" onclick="tree.removeIt(this);">{{.i18n.delete}}</li>
                             </ul>
                         </div>
 
                         <!-- 文件右键菜单 -->
                         <div id="fileRMenu" class="frame">
                             <ul>
-                                <li onclick="tree.removeIt();">{{.i18n.delete}}</li>
+                                <li onclick="tree.removeIt(this);">{{.i18n.delete}}</li>
                             </ul>
                         </div>
                     </div>

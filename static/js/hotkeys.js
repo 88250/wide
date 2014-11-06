@@ -103,7 +103,7 @@ var hotkeys = {
                         return false;
                     }
 
-                    if (wide.curNode.iconSkin === "ico-ztree-dir ") { // 选中节点是目录
+                    if (tree.isDir()) { // 选中节点是目录
                         // 不做任何处理
                         return false;
                     }
@@ -130,7 +130,7 @@ var hotkeys = {
                         }
 
                         var preNode = wide.curNode.getPreNode();
-                        if (preNode && preNode.iconSkin === "ico-ztree-dir "
+                        if (preNode && tree.isDir()
                                 && preNode.open) {
                             // 当前节点的上一个节点是目录且打开时，获取打开节点中的最后一个节点
                             node = tree.getCurrentNodeLastNode(preNode);
@@ -153,7 +153,7 @@ var hotkeys = {
                         }
 
                         node = wide.curNode.getNextNode();
-                        if (wide.curNode.iconSkin === "ico-ztree-dir " && wide.curNode.open) {
+                        if (tree.isDir() && wide.curNode.open) {
                             // 当前节点是目录且打开时
                             node = wide.curNode.children[0];
                         }
@@ -181,7 +181,7 @@ var hotkeys = {
                         return false;
                     }
 
-                    if (wide.curNode.iconSkin !== "ico-ztree-dir " || !wide.curNode.open) {
+                    if (!tree.isDir() || !wide.curNode.open) {
                         return false;
                     }
 
@@ -196,7 +196,7 @@ var hotkeys = {
                         return false;
                     }
 
-                    if (wide.curNode.iconSkin !== "ico-ztree-dir " || wide.curNode.open) {
+                    if (!tree.isDir() || wide.curNode.open) {
                         return false;
                     }
 

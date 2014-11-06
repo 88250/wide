@@ -56,7 +56,7 @@ var wide = {
                         $("#dialogRemoveConfirm").dialog("close");
                         tree.fileTree.removeNode(wide.curNode);
 
-                        if ("ico-ztree-dir " !== wide.curNode.iconSkin) {
+                        if (!tree.isDir()) {
                             // 是文件的话，查看 editor 中是否被打开，如打开则移除
                             for (var i = 0, ii = editors.data.length; i < ii; i++) {
                                 if (editors.data[i].id === wide.curNode.tId) {

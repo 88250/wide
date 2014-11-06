@@ -73,6 +73,12 @@ var tree = {
             }
         }
     },
+    isDir: function () {
+        if (wide.curNode.iconSkin.indexOf("ico-ztree-dir") === 0) {
+            return true;
+        }
+        return false;
+    },
     newFile: function () {
         $("#dirRMenu").hide();
         $("#dialogNewFilePrompt").dialog("open");
@@ -81,7 +87,18 @@ var tree = {
         $("#dirRMenu").hide();
         $("#dialogNewDirPrompt").dialog("open");
     },
-    removeIt: function () {
+    removeIt: function (it) {
+        if (it) {
+            if ($(it).hasClass("disabled")) {
+                return false;
+            }
+        } else {
+            // 直接调用时，如果为 api 及其子目录或者 workspace 则不能进行删除
+            if (wide.curNode.iconSkin === 'ico-ztree-dir-workspace ') {
+                return false;
+            }
+        }
+
         $("#dirRMenu").hide();
         $("#fileRMenu").hide();
         $("#dialogRemoveConfirm").dialog("open");
@@ -123,15 +140,22 @@ var tree = {
                                     wide.curNode = treeNode;
                                     tree.fileTree.selectNode(treeNode);
 
-                                    if ("ico-ztree-dir " !== treeNode.iconSkin) { // 如果右击了文件
-                                        $("#fileRMenu ul").show();
+                                    if (!tree.isDir()) { // 如果右击了文件
+                                        $("#fileRMenu").show();
+
                                         fileRMenu.css({
                                             "top": event.clientY - 10 + "px",
                                             "left": event.clientX + "px",
                                             "display": "block"
                                         });
                                     } else { // 右击了目录
-                                        $("#dirRMenu ul").show();
+                                        if (wide.curNode.iconSkin === "ico-ztree-dir-workspace ") {
+                                            $("#dirRMenu .remove").addClass("disabled");
+                                        } else {
+                                            $("#dirRMenu .remove").removeClass("disabled");
+                                        }
+
+                                        $("#dirRMenu").show();
                                         dirRMenu.css({
                                             "top": event.clientY - 10 + "px",
                                             "left": event.clientX + "px",
@@ -171,7 +195,7 @@ var tree = {
             }
         }
 
-        if ("ico-ztree-dir " !== treeNode.iconSkin) { // 如果单击了文件
+        if (!tree.isDir()) { // 如果单击了文件
             var request = newWideRequest();
             request.path = treeNode.path;
 

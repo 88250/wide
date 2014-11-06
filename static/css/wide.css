@@ -83,6 +83,7 @@
 
 .frame li.disabled {
     color: #999;
+    text-shadow: 0 0 0 !important;
 }
 
 .frame li:hover,
@@ -303,7 +304,7 @@
 .bottom-window-group .output .test-error,
 .bottom-window-group .output .install-error, 
 .bottom-window-group .output .get-error {
-    color: #eb0000;
+    color: #9d0000;
 }
 
 .bottom-window-group table {
@@ -364,7 +365,7 @@
     float: right;
     display: none;
     cursor: pointer;
-    background-color: #eb0000;
+    background-color: #9d0000;
     color: #FFF;
     margin: 1px 5px;
     padding: 0 2px;
