@@ -88,7 +88,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		data["succ"] = false
 	}
 
-	outReader := bufio.NewReader(stdout)
+	//outReader := bufio.NewReader(stdout)
+	outReader := util.NewReader(stdout)
 	errReader := bufio.NewReader(stderr)
 
 	if err := cmd.Start(); nil != err {
@@ -143,7 +144,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 		go func() {
 			for {
-				buf, err := outReader.ReadString('\n')
+				buf, err := outReader.ReadData()
+				//buf, err := outReader.ReadString('\n')
 				buf = strings.Replace(buf, "<", "&lt;", -1)
 				buf = strings.Replace(buf, ">", "&gt;", -1)
 
