@@ -92,6 +92,7 @@ var wide = {
             "afterOpen": function () {
                 var index = wide.curNode.name.lastIndexOf(".");
                 $("#dialogRenamePrompt > input").val(wide.curNode.name.substring(0, index)).focus();
+                // TODO: 全选
                 $("#dialogRenamePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
             },
             "ok": function () {
