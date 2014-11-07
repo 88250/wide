@@ -117,7 +117,7 @@ func (b *Reader) ReadData() (line string, err error) {
 		line = string(b.buf[b.r : b.r+index])
 		b.r += index
 	} else {
-		panic("known error")
+		panic("no utf8 char found")
 	}
 	return
 }
