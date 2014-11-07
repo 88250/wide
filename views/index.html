@@ -134,6 +134,7 @@
                                 <li class="create" onclick="tree.newFile(this);">{{.i18n.create_file}}</li>
                                 <li class="create" onclick="tree.newDir(this);">{{.i18n.create_dir}}</li>
                                 <li class="remove" onclick="tree.removeIt(this);">{{.i18n.delete}}</li>
+                                <li class="rename" onclick="tree.rename(this);">{{.i18n.rename}}</li>
                             </ul>
                         </div>
 
@@ -141,6 +142,7 @@
                         <div id="fileRMenu" class="frame">
                             <ul>
                                 <li class="remove" onclick="tree.removeIt(this);">{{.i18n.delete}}</li>
+                                <li class="rename" onclick="tree.rename(this);">{{.i18n.rename}}</li>
                             </ul>
                         </div>
                     </div>
@@ -233,6 +235,9 @@
         <div id="dialogNewFilePrompt" class="dialog-prompt fn-none">
             <input/>
         </div>
+        <div id="dialogRenamePrompt" class="dialog-prompt fn-none">
+            <input/>
+        </div>
         <div id="dialogNewDirPrompt" class="dialog-prompt fn-none">
             <input/>
         </div>
@@ -259,6 +264,7 @@
                             "restore_editor": "{{.i18n.restore_editor}}",
                                     "max_editor": "{{.i18n.max_editor}}",
                                     "delete": "{{.i18n.delete}}",
+                                    "rename": "{{.i18n.rename}}",
                                     "cancel": "{{.i18n.cancel}}",
                                     "goto_line": "{{.i18n.goto_line}}",
                                     "go": "{{.i18n.go}}",

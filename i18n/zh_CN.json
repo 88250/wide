@@ -22,6 +22,7 @@
     "create": "创建",
     "create_dir": "创建目录",
     "delete": "删除",
+    "rename": "重命名",
     "save": "保存",
     "exit": "退出",
     "close_all_files": "关闭所有文件",

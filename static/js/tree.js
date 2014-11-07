@@ -111,6 +111,17 @@ var tree = {
         $("#fileRMenu").hide();
         $("#dialogRemoveConfirm").dialog("open");
     },
+    rename: function (it) {
+        if (it) {
+            if ($(it).hasClass("disabled")) {
+                return false;
+            }
+        }
+
+        $("#dirRMenu").hide();
+        $("#fileRMenu").hide();
+        $("#dialogRenamePrompt").dialog("open");
+    },
     init: function () {
         $("#file").click(function () {
             $(this).focus();
@@ -130,7 +141,7 @@ var tree = {
                     var setting = {
                         data: {
                             key: {
-                                title: "title"
+                                title: "path"
                             }
                         },
                         view: {
@@ -154,7 +165,7 @@ var tree = {
                                         } else {
                                             $("#fileRMenu .remove").addClass("disabled");
                                         }
-                                        
+
                                         $("#fileRMenu").show();
 
                                         fileRMenu.css({
@@ -164,9 +175,9 @@ var tree = {
                                         });
                                     } else { // 右击了目录
                                         if (wide.curNode.removable) {
-                                            $("#dirRMenu .remove").removeClass("disabled");
+                                            $("#dirRMenu .remove, #dirRMenu .rename").removeClass("disabled");
                                         } else {
-                                            $("#dirRMenu .remove").addClass("disabled");
+                                            $("#dirRMenu .remove, #dirRMenu .rename").addClass("disabled");
                                         }
 
                                         if (wide.curNode.creatable) {

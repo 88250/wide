@@ -22,6 +22,7 @@
     "create": "作成",
     "create_dir": "新規ディレクトリ",
     "delete": "削除",
+    "rename": "名前の変更",
     "save": "保存",
     "exit": "終了",
     "close_all_files": "全てのファイルを閉じる",

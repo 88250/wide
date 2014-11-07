@@ -21,7 +21,6 @@ import (
 // File node, used to construct the file tree.
 type FileNode struct {
 	Name      string      `json:"name"`
-	Title     string      `json:"title"`
 	Path      string      `json:"path"`
 	IconSkin  string      `json:"iconSkin"`  // Value should be end with a space
 	Type      string      `json:"type"`      // "f": file, "d": directory
@@ -60,7 +59,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 		workspacePath := workspace + conf.PathSeparator + "src"
 
 		workspaceNode := FileNode{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
-			Title: workspace, Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d",
+			Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d",
 			Creatable: true, Removable: false, FileNodes: []*FileNode{}}
 
 		walk(workspacePath, &workspaceNode, true, true)
@@ -71,7 +70,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	// construct Go API node
 	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
-	apiNode := FileNode{Name: "Go API", Title: apiPath, Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
+	apiNode := FileNode{Name: "Go API", Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
 		Creatable: false, Removable: false, FileNodes: []*FileNode{}}
 
 	goapiBuildOKSignal := make(chan bool)
@@ -262,7 +261,7 @@ func RenameFile(w http.ResponseWriter, r *http.Request) {
 		data["succ"] = false
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
-			Data: "can't rename file " + path}
+			Data: "can't rename file " + oldPath}
 	}
 }
 
@@ -298,7 +297,7 @@ func walk(path string, node *FileNode, creatable, removable bool) {
 
 		fio, _ := os.Lstat(fpath)
 
-		child := FileNode{Name: filename, Title: fpath, Path: fpath, Removable: removable, FileNodes: []*FileNode{}}
+		child := FileNode{Name: filename, Path: fpath, Removable: removable, FileNodes: []*FileNode{}}
 		node.FileNodes = append(node.FileNodes, &child)
 
 		if nil == fio {
@@ -473,7 +472,7 @@ func removeFile(path string) bool {
 // renameFile renames (moves) a file from the specified old path to the specified new path.
 func renameFile(oldPath, newPath string) bool {
 	if err := os.Rename(oldPath, newPath); nil != err {
-		glog.Errorf("Renames [%s] failed: [%s]", path, err.Error())
+		glog.Errorf("Renames [%s] failed: [%s]", oldPath, err.Error())
 
 		return false
 	}

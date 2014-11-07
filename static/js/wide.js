@@ -50,6 +50,10 @@ var wide = {
                     dataType: "json",
                     success: function (data) {
                         if (!data.succ) {
+                            $("#dialogRemoveConfirm").dialog("close");
+                            bottomGroup.tabs.setCurrent("notification");
+                            windows.flowBottom();
+                            $(".bottom-window-group .notification").focus();
                             return false;
                         }
 
@@ -73,6 +77,61 @@ var wide = {
                                 }
                             }
                         }
+                    }
+                });
+            }
+        });
+
+        $("#dialogRenamePrompt").dialog({
+            "modal": true,
+            "height": 52,
+            "width": 260,
+            "title": config.label.rename,
+            "okText": config.label.rename,
+            "cancelText": config.label.cancel,
+            "afterOpen": function () {
+                var index = wide.curNode.name.lastIndexOf(".");
+                $("#dialogRenamePrompt > input").val(wide.curNode.name.substring(0, index)).focus();
+                $("#dialogRenamePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
+            },
+            "ok": function () {
+                var name = $("#dialogRenamePrompt > input").val(),
+                        request = newWideRequest();
+
+                request.oldPath = wide.curNode.path;
+
+                var pathIndex = wide.curNode.path.lastIndexOf(config.pathSeparator),
+                        nameIndex = wide.curNode.name.lastIndexOf("."),
+                        ext = wide.curNode.name.substring(nameIndex, wide.curNode.name.length);
+                request.newPath = wide.curNode.path.substring(0, pathIndex) + config.pathSeparator
+                        + name + ext;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/file/rename',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function (data) {
+                        if (!data.succ) {
+                            $("#dialogRenamePrompt").dialog("close");
+                            bottomGroup.tabs.setCurrent("notification");
+                            windows.flowBottom();
+                            $(".bottom-window-group .notification").focus();
+                            return false;
+                        }
+
+                        $("#dialogRenamePrompt").dialog("close");
+
+                        // update tree node
+                        wide.curNode.name = name + ext;
+                        wide.curNode.title = request.newPath;
+                        wide.curNode.path = request.newPath;
+                        tree.fileTree.updateNode(wide.curNode);
+
+                        // update open editor tab name
+                        var $currentSpan = $(".edit-panel .tabs > div[data-index=" + wide.curNode.tId + "] > span:eq(0)");
+                        $currentSpan.attr("title", request.newPath);
+                        $currentSpan.html($currentSpan.find("span").html() + wide.curNode.name);
                     }
                 });
             }
@@ -103,8 +162,13 @@ var wide = {
                     dataType: "json",
                     success: function (data) {
                         if (!data.succ) {
+                            $("#dialogNewFilePrompt").dialog("close");
+                            bottomGroup.tabs.setCurrent("notification");
+                            windows.flowBottom();
+                            $(".bottom-window-group .notification").focus();
                             return false;
                         }
+
                         $("#dialogNewFilePrompt").dialog("close");
                         var suffix = name.split(".")[1],
                                 iconSkin = "ico-ztree-other ";
@@ -179,6 +243,10 @@ var wide = {
                     dataType: "json",
                     success: function (data) {
                         if (!data.succ) {
+                            $("#dialogNewDirPrompt").dialog("close");
+                            bottomGroup.tabs.setCurrent("notification");
+                            windows.flowBottom();
+                            $(".bottom-window-group .notification").focus();
                             return false;
                         }
 
@@ -210,7 +278,7 @@ var wide = {
             "ok": function () {
                 var line = parseInt($("#dialogGoLinePrompt > input").val()) - 1;
                 $("#dialogGoLinePrompt").dialog("close");
-                
+
                 var editor = wide.curEditor;
                 var cursor = editor.getCursor();
 
