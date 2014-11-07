@@ -449,6 +449,16 @@ var wide = {
         this._initDialog();
 
         this._initLayout();
+
+        $(window).resize(function () {
+            wide._initLayout();
+            var editorDatas = editors.data,
+                    height = $(".edit-panel").height() - $(".edit-panel .tabs").height();
+            for (var i = 0, ii = editorDatas.length; i < ii; i++) {
+                editorDatas[i].editor.setSize("100%", height);
+            }
+
+        });
     },
     _save: function (path, editor) {
         if (!path) {
