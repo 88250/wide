@@ -208,28 +208,17 @@ var wide = {
                 $("#dialogGoLinePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
             },
             "ok": function () {
-                var line = parseInt($("#dialogGoLinePrompt > input").val());
+                var line = parseInt($("#dialogGoLinePrompt > input").val()) - 1;
                 $("#dialogGoLinePrompt").dialog("close");
+                
                 var editor = wide.curEditor;
-                var oldLine = editor.getCursor().line + 1;
+                var cursor = editor.getCursor();
 
-                if (oldLine === line) {
-                    editor.focus();
-
-                    return;
-                }
-
-                editor.setCursor(CodeMirror.Pos(line - 1, 0));
+                editor.setCursor(CodeMirror.Pos(line, cursor.ch));
 
                 var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
-                if (oldLine > line) {
-                    var offset = line - half;
-                    if (offset > 0) {
-                        editor.scrollIntoView(CodeMirror.Pos(offset, 0));
-                    }
-                } else if (oldLine < line) {
-                    editor.scrollIntoView(CodeMirror.Pos(line + half, 0));
-                }
+                var cursorCoords = editor.cursorCoords({line: line - half, ch: cursor.ch}, "local");
+                editor.scrollTo(0, cursorCoords.top);
 
                 editor.focus();
             }

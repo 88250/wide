@@ -512,21 +512,16 @@ var editors = {
                 tree.openFile(tree.fileTree.getNodeByTId(tId));
                 tree.fileTree.selectNode(wide.curNode);
 
-                var oldLine = wide.curEditor.getCursor().line;
                 var line = $it.find(".position").data("line") - 1;
                 var cursor = CodeMirror.Pos(line, $it.find(".position").data("ch") - 1);
 
-                wide.curEditor.setCursor(cursor);
 
-                var half = Math.floor(wide.curEditor.getScrollInfo().clientHeight / wide.curEditor.defaultTextHeight() / 2);
-                if (oldLine > line) {
-                    var offset = line - half;
-                    if (offset > 0) {
-                        wide.curEditor.scrollIntoView(CodeMirror.Pos(offset, 0));
-                    }
-                } else if (oldLine < line) {
-                    wide.curEditor.scrollIntoView(CodeMirror.Pos(line + half, 0));
-                }
+                var editor = wide.curEditor;
+                editor.setCursor(cursor);
+
+                var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
+                var cursorCoords = editor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
+                editor.scrollTo(0, cursorCoords.top);
 
                 wide.curEditor.focus();
             });
@@ -563,25 +558,12 @@ var editors = {
                 editors.tabs.setCurrent(id);
                 wide.curEditor = editors.data[i].editor;
                 var editor = wide.curEditor;
-                var oldLine = editor.getCursor().line + 1;
-
-                if (oldLine === data.cursorLine) {
-                    editor.focus();
-
-                    return false;
-                }
 
                 editor.setCursor(cursor);
 
                 var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
-                if (oldLine > data.cursorLine) {
-                    var offset = data.cursorLine - half;
-                    if (offset > 0) {
-                        editor.scrollIntoView(CodeMirror.Pos(offset, 0));
-                    }
-                } else if (oldLine < data.cursorLine) {
-                    editor.scrollIntoView(CodeMirror.Pos(data.cursorLine + half, 0));
-                }
+                var cursorCoords = editor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
+                editor.scrollTo(0, cursorCoords.top);
 
                 editor.focus();
 
@@ -721,7 +703,8 @@ var editors = {
         editor.setCursor(cursor);
 
         var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
-        editor.scrollIntoView(CodeMirror.Pos(cursor.line + half, 0));
+        var cursorCoords = editor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
+        editor.scrollTo(0, cursorCoords.top);
 
         wide.curEditor = editor;
         editors.data.push({
