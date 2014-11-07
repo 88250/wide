@@ -238,6 +238,34 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// RenameFile handles request of renaming file or directory.
+func RenameFile(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	var args map[string]interface{}
+
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	oldPath := args["oldPath"].(string)
+	newPath := args["newPath"].(string)
+	sid := args["sid"].(string)
+
+	wSession := session.WideSessions.Get(sid)
+
+	if !renameFile(oldPath, newPath) {
+		data["succ"] = false
+
+		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
+			Data: "can't rename file " + path}
+	}
+}
+
 // SearchText handles request of searching files under the specified directory with the specified keyword.
 func SearchText(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
@@ -438,6 +466,19 @@ func removeFile(path string) bool {
 	}
 
 	glog.Infof("Removed [%s]", path)
+
+	return true
+}
+
+// renameFile renames (moves) a file from the specified old path to the specified new path.
+func renameFile(oldPath, newPath string) bool {
+	if err := os.Rename(oldPath, newPath); nil != err {
+		glog.Errorf("Renames [%s] failed: [%s]", path, err.Error())
+
+		return false
+	}
+
+	glog.Infof("Renamed [%s] to [%s]", oldPath, newPath)
 
 	return true
 }

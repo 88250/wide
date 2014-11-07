@@ -238,6 +238,7 @@ func main() {
 	http.HandleFunc("/file/save", handlerWrapper(file.SaveFile))
 	http.HandleFunc("/file/new", handlerWrapper(file.NewFile))
 	http.HandleFunc("/file/remove", handlerWrapper(file.RemoveFile))
+	http.HandleFunc("/file/rename", handlerWrapper(file.RenameFile))
 	http.HandleFunc("/file/search/text", handlerWrapper(file.SearchText))
 
 	// editor
