@@ -628,26 +628,42 @@ var editors = {
                     }
                 },
                 "Shift-Ctrl-Up": function (cm) {
-                    var cursor = cm.getCursor();
-                    var line = cursor.line;
-                    var content = cm.getLine(line);
+                    var content = '',
+                            selectoion = cm.listSelections()[0],
+                            cursor = cm.getCursor();
 
-                    if (0 === line) {
-                        cm.replaceRange("", CodeMirror.Pos(0));
-                        line++;
+                    var from = selectoion.anchor.line,
+                            to = selectoion.head.line;
+                    if (from > to) {
+                        from = selectoion.head.line;
+                        to = selectoion.anchor.line;
                     }
 
-                    cm.replaceRange("\n" + content, CodeMirror.Pos(line - 1));
+                    for (var i = from, max = to; i <= max; i++) {
+                        content += '\n' + cm.getLine(i);
+                    }
+
+                    cm.replaceRange(content, CodeMirror.Pos(to));
                     cm.setCursor(cursor);
                 },
                 "Shift-Ctrl-Down": function (cm) {
-                    var cursor = cm.getCursor();
-                    var line = cursor.line;
-                    var content = cm.getLine(line);
+                    var content = '',
+                            selectoion = cm.listSelections()[0],
+                            cursor = cm.getCursor();
 
-                    cm.replaceRange("\n", CodeMirror.Pos(line));
-                    cm.replaceRange(content, CodeMirror.Pos(line + 1));
-                    cm.setCursor(CodeMirror.Pos(line + 1, cursor.ch));
+                    var from = selectoion.anchor.line,
+                            to = selectoion.head.line;
+                    if (from > to) {
+                        from = selectoion.head.line;
+                        to = selectoion.anchor.line;
+                    }
+
+                    for (var i = from, max = to; i <= max; i++) {
+                        content += '\n' + cm.getLine(i);
+                    }
+
+                    cm.replaceRange(content, CodeMirror.Pos(to));
+                    cm.setCursor(CodeMirror.Pos(to + (to - from) + 1, cursor.ch));
                 }
             }
         });
