@@ -629,41 +629,44 @@ var editors = {
                 },
                 "Shift-Ctrl-Up": function (cm) {
                     var content = '',
-                            selectoion = cm.listSelections()[0],
-                            cursor = cm.getCursor();
+                            selectoion = cm.listSelections()[0];
 
-                    var from = selectoion.anchor.line,
-                            to = selectoion.head.line;
+                    var from = selectoion.anchor,
+                            to = selectoion.head;
                     if (from > to) {
-                        from = selectoion.head.line;
-                        to = selectoion.anchor.line;
+                        from = selectoion.head;
+                        to = selectoion.anchor;
                     }
 
-                    for (var i = from, max = to; i <= max; i++) {
+                    for (var i = from.line, max = to.line; i <= max; i++) {
                         content += '\n' + cm.getLine(i);
                     }
 
-                    cm.replaceRange(content, CodeMirror.Pos(to));
-                    cm.setCursor(cursor);
+                    cm.replaceRange(content, CodeMirror.Pos(to.line));
+
+                    cm.setSelection(CodeMirror.Pos(to.line, to.ch),
+                            CodeMirror.Pos(from.line, from.ch));
                 },
                 "Shift-Ctrl-Down": function (cm) {
                     var content = '',
-                            selectoion = cm.listSelections()[0],
-                            cursor = cm.getCursor();
+                            selectoion = cm.listSelections()[0];
 
-                    var from = selectoion.anchor.line,
-                            to = selectoion.head.line;
+                    var from = selectoion.anchor,
+                            to = selectoion.head;
                     if (from > to) {
-                        from = selectoion.head.line;
-                        to = selectoion.anchor.line;
+                        from = selectoion.head;
+                        to = selectoion.anchor;
                     }
 
-                    for (var i = from, max = to; i <= max; i++) {
+                    for (var i = from.line, max = to.line; i <= max; i++) {
                         content += '\n' + cm.getLine(i);
                     }
 
-                    cm.replaceRange(content, CodeMirror.Pos(to));
-                    cm.setCursor(CodeMirror.Pos(to + (to - from) + 1, cursor.ch));
+                    cm.replaceRange(content, CodeMirror.Pos(to.line));
+                    var offset = to.line - from.line + 1;
+
+                    cm.setSelection(CodeMirror.Pos(to.line + offset, to.ch),
+                            CodeMirror.Pos(from.line + offset, from.ch));
                 }
             }
         });
