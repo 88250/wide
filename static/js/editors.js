@@ -633,7 +633,7 @@ var editors = {
 
                     var from = selectoion.anchor,
                             to = selectoion.head;
-                    if (from > to) {
+                    if (from.line > to.line) {
                         from = selectoion.head;
                         to = selectoion.anchor;
                     }
@@ -653,7 +653,7 @@ var editors = {
 
                     var from = selectoion.anchor,
                             to = selectoion.head;
-                    if (from > to) {
+                    if (from.line > to.line) {
                         from = selectoion.head;
                         to = selectoion.anchor;
                     }
@@ -665,6 +665,54 @@ var editors = {
                     cm.replaceRange(content, CodeMirror.Pos(to.line));
                     var offset = to.line - from.line + 1;
 
+                    cm.setSelection(CodeMirror.Pos(to.line + offset, to.ch),
+                            CodeMirror.Pos(from.line + offset, from.ch));
+                },
+                "Shift-Alt-Up": function (cm) {
+                    var selectoion = cm.listSelections()[0];
+
+                    var from = selectoion.anchor,
+                            to = selectoion.head;
+                    if (from.line > to.line) {
+                        from = selectoion.head;
+                        to = selectoion.anchor;
+                    }
+
+                    if (from.line === 0) {
+                        return false;
+                    }
+
+                    cm.replaceRange('\n' + cm.getLine(from.line - 1), CodeMirror.Pos(to.line));
+                    if (from.line === 1) {
+                        cm.replaceRange('', CodeMirror.Pos(0, 0),
+                                CodeMirror.Pos(1, 0));
+                    } else {
+                        cm.replaceRange('', CodeMirror.Pos(from.line - 2, cm.getLine(from.line - 2).length),
+                                CodeMirror.Pos(from.line - 1, cm.getLine(from.line - 1).length));
+                    }
+
+                    cm.setSelection(CodeMirror.Pos(from.line - 1, from.ch),
+                            CodeMirror.Pos(to.line - 1, to.ch));
+                },
+                "Shift-Alt-Down": function (cm) {
+                    var selectoion = cm.listSelections()[0];
+
+                    var from = selectoion.anchor,
+                            to = selectoion.head;
+                    if (from.line > to.line) {
+                        from = selectoion.head;
+                        to = selectoion.anchor;
+                    }
+
+                    if (to.line === cm.lastLine()) {
+                        return false;
+                    }
+
+                    cm.replaceRange('\n' + cm.getLine(to.line + 1), CodeMirror.Pos(from.line - 1));
+                    cm.replaceRange('', CodeMirror.Pos(to.line + 1, cm.getLine(to.line + 1).length),
+                            CodeMirror.Pos(to.line + 2, cm.getLine(to.line + 2).length));
+
+                    var offset = to.line - from.line + 1;
                     cm.setSelection(CodeMirror.Pos(to.line + offset, to.ch),
                             CodeMirror.Pos(from.line + offset, from.ch));
                 }
