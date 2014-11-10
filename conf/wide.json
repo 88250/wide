@@ -27,14 +27,9 @@
                 "FontSize": "inherit"
             },
             "LatestSessionContent": {
-                "FileTree": [
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src",
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\time"
-                ],
-                "Files": [
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\time\\main.go"
-                ],
-                "CurrentFile": "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\time\\main.go"
+                "FileTree": [],
+                "Files": [],
+                "CurrentFile": ""
             }
         }
     ]
