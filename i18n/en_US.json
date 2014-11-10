@@ -76,6 +76,8 @@
     "delete_line": "Delete Line",
     "copy_lines_up": "Copy Lines Up",
     "copy_lines_down": "Copy Lines Down",
+    "move_lines_up": "Move Lines Up",
+    "move_lines_down": "Move Lines Down",
     "save_editor_file": "Save File",
     "save_all_editors_files": "Save All",
     "close_editor": "Close File",

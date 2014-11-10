@@ -76,6 +76,8 @@
     "delete_line": "删除当前行",
     "copy_lines_up": "复制到上方",
     "copy_lines_down": "复制到下方",
+    "move_lines_up": "移动到上方",
+    "move_lines_down": "移动到下方",
     "save_editor_file": "保存当前编辑器文件",
     "save_all_editors_files": "保存所有编辑器文件",
     "close_editor": "关闭当前编辑器",

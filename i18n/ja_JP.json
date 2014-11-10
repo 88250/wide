@@ -76,6 +76,8 @@
     "delete_line": "行を削除",
     "copy_lines_up": "フロントへのコピー",
     "copy_lines_down": "一番下にコピー",
+    "move_lines_up": "前面に移動します",
+    "move_lines_down": "以下に移動",
     "save_editor_file": "保存",
     "save_all_editors_files": "全てを保存",
     "close_editor": "エディタを閉じる",
