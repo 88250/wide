@@ -651,8 +651,8 @@ var editors = {
                     }
                     cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
 
-                    cm.setSelection(CodeMirror.Pos(to.line, to.ch),
-                            CodeMirror.Pos(from.line, from.ch));
+                    cm.setSelection(CodeMirror.Pos(from.line, from.ch),
+                            CodeMirror.Pos(to.line, to.ch));
                 },
                 "Shift-Ctrl-Down": function (cm) {
                     var content = '',
@@ -694,9 +694,14 @@ var editors = {
                     if (from.line === 0) {
                         return false;
                     }
-
-                    cm.replaceRange('\n' + cm.getLine(from.line - 1), CodeMirror.Pos(to.line));
+                    // 下一行选中为0时，应添加到上一行末
+                    var replaceToLine = to.line;
+                    if (to.ch === 0) {
+                        replaceToLine = to.line - 1;
+                    }
+                    cm.replaceRange('\n' + cm.getLine(from.line - 1), CodeMirror.Pos(replaceToLine));
                     if (from.line === 1) {
+                        // 移除第一行的换行
                         cm.replaceRange('', CodeMirror.Pos(0, 0),
                                 CodeMirror.Pos(1, 0));
                     } else {
@@ -721,13 +726,23 @@ var editors = {
                         return false;
                     }
 
-                    cm.replaceRange('\n' + cm.getLine(to.line + 1), CodeMirror.Pos(from.line - 1));
-                    cm.replaceRange('', CodeMirror.Pos(to.line + 1, cm.getLine(to.line + 1).length),
-                            CodeMirror.Pos(to.line + 2, cm.getLine(to.line + 2).length));
+                    // 下一行选中为0时，应添加到上一行末
+                    var replaceToLine = to.line;
+                    if (to.ch === 0) {
+                        replaceToLine = to.line - 1;
+                    }
+                    // 把选中的下一行添加到选中区域的上一行
+                    if (from.line === 0) {
+                        cm.replaceRange(cm.getLine(replaceToLine + 1) + '\n', CodeMirror.Pos(0, 0));
+                    } else {
+                        cm.replaceRange('\n' + cm.getLine(replaceToLine + 1), CodeMirror.Pos(from.line - 1));
+                    }
+                    // 删除选中的下一行
+                    cm.replaceRange('', CodeMirror.Pos(replaceToLine + 1, cm.getLine(replaceToLine + 1).length),
+                            CodeMirror.Pos(replaceToLine + 2, cm.getLine(replaceToLine + 2).length));
 
-                    var offset = to.line - from.line + 1;
-                    cm.setSelection(CodeMirror.Pos(to.line + offset, to.ch),
-                            CodeMirror.Pos(from.line + offset, from.ch));
+                    cm.setSelection(CodeMirror.Pos(from.line + 1, from.ch),
+                            CodeMirror.Pos(to.line + 1, to.ch));
                 }
             }
         });
