@@ -639,10 +639,17 @@ var editors = {
                     }
 
                     for (var i = from.line, max = to.line; i <= max; i++) {
-                        content += '\n' + cm.getLine(i);
+                        if (to.ch !== 0 || i !== max) { // 下一行选中为0时，不应添加内容
+                            content += '\n' + cm.getLine(i);
+                        }
                     }
 
-                    cm.replaceRange(content, CodeMirror.Pos(to.line));
+                    // 下一行选中为0时，应添加到上一行末
+                    var replaceToLine = to.line;
+                    if (to.ch === 0) {
+                        replaceToLine = to.line - 1;
+                    }
+                    cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
 
                     cm.setSelection(CodeMirror.Pos(to.line, to.ch),
                             CodeMirror.Pos(from.line, from.ch));
@@ -659,14 +666,20 @@ var editors = {
                     }
 
                     for (var i = from.line, max = to.line; i <= max; i++) {
-                        content += '\n' + cm.getLine(i);
+                        if (to.ch !== 0 || i !== max) { // 下一行选中为0时，不应添加内容
+                            content += '\n' + cm.getLine(i);
+                        }
                     }
+                    // 下一行选中为0时，应添加到上一行末
+                    var replaceToLine = to.line;
+                    if (to.ch === 0) {
+                        replaceToLine = to.line - 1;
+                    }
+                    cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
 
-                    cm.replaceRange(content, CodeMirror.Pos(to.line));
-                    var offset = to.line - from.line + 1;
-
-                    cm.setSelection(CodeMirror.Pos(to.line + offset, to.ch),
-                            CodeMirror.Pos(from.line + offset, from.ch));
+                    var offset = replaceToLine - from.line + 1;
+                    cm.setSelection(CodeMirror.Pos(from.line + offset, from.ch),
+                            CodeMirror.Pos(to.line + offset, to.ch));
                 },
                 "Shift-Alt-Up": function (cm) {
                     var selectoion = cm.listSelections()[0];
