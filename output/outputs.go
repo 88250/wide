@@ -159,7 +159,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					if nil != wsChannel {
 						channelRet["cmd"] = "run-done"
-						channelRet["output"] = "<pre>" + buf + "</pre>"
+						channelRet["output"] = buf
 						err := wsChannel.Conn.WriteJSON(&channelRet)
 						if nil != err {
 							glog.Error(err)
@@ -173,7 +173,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				} else {
 					if nil != wsChannel {
 						channelRet["cmd"] = "run"
-						channelRet["output"] = "<pre>" + buf + "</pre>"
+						channelRet["output"] = buf
 						err := wsChannel.Conn.WriteJSON(&channelRet)
 						if nil != err {
 							glog.Error(err)
@@ -201,7 +201,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run-done"
-					channelRet["output"] = "<pre>" + buf + "</pre>"
+					channelRet["output"] = buf
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
@@ -217,7 +217,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					wsChannel := session.OutputWS[sid]
 
 					channelRet["cmd"] = "run"
-					channelRet["output"] = "<pre>" + buf + "</pre>"
+					channelRet["output"] = buf
 					err := wsChannel.Conn.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
