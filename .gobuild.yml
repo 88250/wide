@@ -1,11 +1,10 @@
 author: DL88250@gmail.com
-description: A Web IDE for Teams using Golang.
+description: A Web-based IDE for Teams using Golang.
 
 filesets:
     depth: 10
     includes:
         - conf
-        - data
         - doc
         - i18n
         - static
