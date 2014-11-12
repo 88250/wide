@@ -345,7 +345,14 @@ func listFiles(dirname string) []string {
 
 	// sort: directories in front of files
 	for _, name := range names {
-		fio, _ := os.Lstat(filepath.Join(dirname, name))
+		path := filepath.Join(dirname, name)
+		fio, err := os.Lstat(path)
+
+		if nil != err {
+			glog.Warningf("Can't read file info [%s]", path)
+
+			continue
+		}
 
 		if fio.IsDir() {
 			// exclude the .git direcitory

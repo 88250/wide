@@ -67,7 +67,6 @@ type conf struct {
 	MaxProcs              int     // Go max procs
 	RuntimeMode           string  // runtime mode (dev/prod)
 	WD                    string  // current working direcitory, ${pwd}
-	Workspace             string  // path of master workspace
 	Locale                string  // default locale
 	Users                 []*User // configurations of users
 }
@@ -146,19 +145,6 @@ func (c *conf) GetUserWorkspace(username string) string {
 	}
 
 	return ""
-}
-
-// GetWorkspace gets the master workspace path.
-//
-// Compared to the use of Wide.Workspace, this function will be processed as follows:
-//  1. Replace {WD} variable with the actual directory path
-//  2. Replace ${GOPATH} with enviorment variable GOPATH
-//  3. Replace "/" with "\\" (Windows)
-func (c *conf) GetWorkspace() string {
-	w := strings.Replace(c.Workspace, "{WD}", c.WD, 1)
-	w = strings.Replace(w, "${GOPATH}", os.Getenv("GOPATH"), 1)
-
-	return filepath.FromSlash(w)
 }
 
 // GetGoFmt gets the path of Go format tool, returns "gofmt" if not found.
@@ -359,11 +345,11 @@ func UpdateCustomizedConf(username string) {
 	}
 }
 
-// initWorkspaceDirs initializes the directories of master workspace, users' workspaces.
+// initWorkspaceDirs initializes the directories of users' workspaces.
 //
 // Creates directories if not found on path of workspace.
 func initWorkspaceDirs() {
-	paths := filepath.SplitList(Wide.GetWorkspace())
+	paths := []string{}
 
 	for _, user := range Wide.Users {
 		paths = append(paths, filepath.SplitList(user.GetWorkspace())...)

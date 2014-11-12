@@ -11,7 +11,6 @@
     "MaxProcs": 4,
     "RuntimeMode": "dev",
     "WD": "${pwd}",
-    "Workspace": "${GOPATH}",
     "Locale": "en_US",
     "Users": [
         {
@@ -31,6 +30,6 @@
                 "Files": [],
                 "CurrentFile": ""
             }
-        }        
+        }
     ]
 }

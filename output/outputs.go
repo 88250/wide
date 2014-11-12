@@ -846,10 +846,9 @@ func StopHandler(w http.ResponseWriter, r *http.Request) {
 
 func setCmdEnv(cmd *exec.Cmd, username string) {
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
-	masterWorkspace := conf.Wide.GetWorkspace()
 
 	cmd.Env = append(cmd.Env,
-		"GOPATH="+userWorkspace+conf.PathListSeparator+masterWorkspace,
+		"GOPATH="+userWorkspace,
 		"GOOS="+runtime.GOOS,
 		"GOARCH="+runtime.GOARCH,
 		"GOROOT="+runtime.GOROOT(),
