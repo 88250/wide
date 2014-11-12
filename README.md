@@ -127,6 +127,7 @@ Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/maste
 * [LiteIDE](https://github.com/visualfc/liteide)
 * [gocode](https://github.com/nsf/gocode)
 * [Gorilla](https://github.com/gorilla)
+* [GoBuild](http://gobuild.io)
 
 ----
 
