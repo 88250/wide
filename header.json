@@ -1,0 +1,18 @@
+{
+    "Dir": ".",
+    "Template": ".header.txt",
+    "Includes": [
+        "*.go",
+        "*.css",
+        "*.js"
+    ],
+    "Excludes": [
+        "static/js/lib/*",
+        "static/user/*"
+    ],
+    "UseDefaultExcludes": true,
+    "Properties": {
+        "Year": "2014",
+        "Owner": "B3log"
+    }
+}
