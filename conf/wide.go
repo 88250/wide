@@ -331,7 +331,7 @@ func UpdateCustomizedConf(username string) {
 
 	wd := util.OS.Pwd()
 	dir := filepath.Clean(wd + "/static/user/" + u.Name)
-	if err := os.MkdirAll(dir, 0664); nil != err {
+	if err := os.MkdirAll(dir, 0755); nil != err {
 		glog.Error(err)
 
 		os.Exit(-1)
