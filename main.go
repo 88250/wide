@@ -217,7 +217,10 @@ func main() {
 	serveSingle("/favicon.ico", "./static/favicon.ico")
 
 	// workspaces
-	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
+	for _, user := range conf.Wide.Users {
+		http.Handle("/workspace/"+user.Name+"/",
+			http.StripPrefix("/workspace/"+user.Name+"/", http.FileServer(http.Dir(user.GetWorkspace()))))
+	}
 
 	// session
 	http.HandleFunc("/session/ws", handlerWrapper(session.WSHandler))

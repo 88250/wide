@@ -11,13 +11,13 @@
     "MaxProcs": 4,
     "RuntimeMode": "dev",
     "WD": "${pwd}",
-    "Workspace": "{WD}/data/workspace",
+    "Workspace": "${GOPATH}",
     "Locale": "en_US",
     "Users": [
         {
             "Name": "admin",
             "Password": "admin",
-            "Workspace": "{WD}/data/user_workspaces/admin",
+            "Workspace": "${GOPATH}",
             "Locale": "en_US",
             "GoFormat": "gofmt",
             "FontFamily": "Helvetica",
@@ -31,6 +31,20 @@
                 "Files": [],
                 "CurrentFile": ""
             }
+        },
+        {
+            "Name": "test1",
+            "Password": "1",
+            "Workspace": "D:\\test1",
+            "Locale": "en_US",
+            "GoFormat": "gofmt",
+            "FontFamily": "Helvetica",
+            "FontSize": "13px",
+            "Editor": {
+                "FontFamily": "Consolas, 'Courier New', monospace",
+                "FontSize": "inherit"
+            },
+            "LatestSessionContent": null
         }
     ]
 }

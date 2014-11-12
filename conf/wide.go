@@ -141,9 +141,7 @@ func FixedTimeSave() {
 func (c *conf) GetUserWorkspace(username string) string {
 	for _, user := range c.Users {
 		if user.Name == username {
-			ret := strings.Replace(user.Workspace, "{WD}", c.WD, 1)
-
-			return filepath.FromSlash(ret)
+			return user.GetWorkspace()
 		}
 	}
 
@@ -154,9 +152,13 @@ func (c *conf) GetUserWorkspace(username string) string {
 //
 // Compared to the use of Wide.Workspace, this function will be processed as follows:
 //  1. Replace {WD} variable with the actual directory path
-//  2. Replace "/" with "\\" (Windows)
+//  2. Replace ${GOPATH} with enviorment variable GOPATH
+//  3. Replace "/" with "\\" (Windows)
 func (c *conf) GetWorkspace() string {
-	return filepath.FromSlash(strings.Replace(c.Workspace, "{WD}", c.WD, 1))
+	w := strings.Replace(c.Workspace, "{WD}", c.WD, 1)
+	w = strings.Replace(w, "${GOPATH}", os.Getenv("GOPATH"), 1)
+
+	return filepath.FromSlash(w)
 }
 
 // GetGoFmt gets the path of Go format tool, returns "gofmt" if not found.
@@ -182,9 +184,13 @@ func (c *conf) GetGoFmt(username string) string {
 //
 // Compared to the use of Wide.Workspace, this function will be processed as follows:
 //  1. Replace {WD} variable with the actual directory path
-//  2. Replace "/" with "\\" (Windows)
+//  2. Replace ${GOPATH} with enviorment variable GOPATH
+//  3. Replace "/" with "\\" (Windows)
 func (u *User) GetWorkspace() string {
-	return filepath.FromSlash(strings.Replace(u.Workspace, "{WD}", Wide.WD, 1))
+	w := strings.Replace(u.Workspace, "{WD}", Wide.WD, 1)
+	w = strings.Replace(w, "${GOPATH}", os.Getenv("GOPATH"), 1)
+
+	return filepath.FromSlash(w)
 }
 
 // GetUser gets configuration of the user specified by the given username, returns nil if not found.

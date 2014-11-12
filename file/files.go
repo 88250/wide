@@ -114,9 +114,15 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 		data["mode"] = "img"
 
-		path2 := strings.Replace(path, "\\", "/", -1)
-		idx := strings.Index(path2, "/data/user_workspaces")
-		data["path"] = path2[idx:]
+		user := GetUsre(path)
+		if nil == user {
+			glog.Warningf("The path [%s] has no owner")
+			data["path"] = ""
+
+			return
+		}
+
+		data["path"] = "/workspace/" + user.Name + "/" + strings.Replace(path, user.GetWorkspace(), "", 1)
 
 		return
 	}
@@ -567,4 +573,15 @@ func isImg(extension string) bool {
 	default:
 		return false
 	}
+}
+
+// GetUsre gets the user the specified path belongs to. Returns nil if not found.
+func GetUsre(path string) *conf.User {
+	for _, user := range conf.Wide.Users {
+		if strings.HasPrefix(path, user.GetWorkspace()) {
+			return user
+		}
+	}
+
+	return nil
 }

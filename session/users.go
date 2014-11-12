@@ -143,8 +143,6 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func addUser(username, password string) string {
-	// XXX: validate
-
 	for _, user := range conf.Wide.Users {
 		if user.Name == username {
 			return UserExists
@@ -155,10 +153,10 @@ func addUser(username, password string) string {
 	dir := filepath.Dir(firstUserWorkspace)
 	workspace := filepath.Join(dir, username)
 
-	conf.Wide.Users = append(conf.Wide.Users,
-		&conf.User{Name: username, Password: password, Workspace: workspace,
-			Locale: conf.Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "inherit",
-			Editor: &conf.Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit"}})
+	newUser := &conf.User{Name: username, Password: password, Workspace: workspace,
+		Locale: conf.Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px",
+		Editor: &conf.Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit"}}
+	conf.Wide.Users = append(conf.Wide.Users, newUser)
 
 	if !conf.Save() {
 		return UserCreateError
@@ -166,6 +164,9 @@ func addUser(username, password string) string {
 
 	conf.CreateWorkspaceDir(workspace)
 	conf.UpdateCustomizedConf(username)
+
+	http.Handle("/workspace/"+username+"/",
+		http.StripPrefix("/workspace/"+username+"/", http.FileServer(http.Dir(newUser.GetWorkspace()))))
 
 	glog.Infof("Created a user [%s]", username)
 
