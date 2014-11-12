@@ -14,6 +14,7 @@
  * limitations under the License.
  */ 
 
+(function ($) {
     $.fn.extend({
         dialog: {
             version: "0.0.1.7",
