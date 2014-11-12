@@ -31,20 +31,6 @@
                 "Files": [],
                 "CurrentFile": ""
             }
-        },
-        {
-            "Name": "test1",
-            "Password": "1",
-            "Workspace": "D:\\test1",
-            "Locale": "en_US",
-            "GoFormat": "gofmt",
-            "FontFamily": "Helvetica",
-            "FontSize": "13px",
-            "Editor": {
-                "FontFamily": "Consolas, 'Courier New', monospace",
-                "FontSize": "inherit"
-            },
-            "LatestSessionContent": null
-        }
+        }        
     ]
 }
