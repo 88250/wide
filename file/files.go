@@ -425,7 +425,7 @@ func getEditorMode(filenameExtension string) string {
 func createFile(path, fileType string) bool {
 	switch fileType {
 	case "f":
-		file, err := os.OpenFile(path, os.O_CREATE, 0664)
+		file, err := os.OpenFile(path, os.O_CREATE, 0775)
 		if nil != err {
 			glog.Error(err)
 
