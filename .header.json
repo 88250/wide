@@ -3,8 +3,10 @@
     "Template": ".header.txt",
     "Includes": [
         "*.go",
-        "*.css",
-        "*.js"
+        "*/*.go",
+        "static/css/*.css",
+        "static/js/*.js",
+        "static/js/overwrite/*.js"
     ],
     "Excludes": [
         "static/js/lib/*",

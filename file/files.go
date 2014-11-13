@@ -1,11 +1,11 @@
 // Copyright (c) 2014, B3log
-//  
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//  
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -285,6 +285,27 @@ func RenameFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Find handles request of find files under the specified directory with the specified filename pattern.
+func Find(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	var args map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	dir := args["dir"].(string)
+	name := args["name"].(string)
+
+	founds := find(dir, name, []*string{})
+
+	data["founds"] = founds
+}
+
 // SearchText handles request of searching files under the specified directory with the specified keyword.
 func SearchText(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
@@ -509,7 +530,51 @@ func renameFile(oldPath, newPath string) bool {
 	return true
 }
 
-// search finds file under the specified dir and its sub-directories with the specified text, likes the command grep/findstr.
+// find finds file under the specified dir and its sub-directoryies with the specified name,
+// likes the command 'find dir -name name'.
+func find(dir, name string, results []*string) []*string {
+	if !strings.HasSuffix(dir, conf.PathSeparator) {
+		dir += conf.PathSeparator
+	}
+
+	f, _ := os.Open(dir)
+	fileInfos, err := f.Readdir(-1)
+	f.Close()
+
+	if nil != err {
+		glog.Errorf("Read dir [%s] failed: [%s]", dir, err.Error())
+
+		return results
+	}
+
+	for _, fileInfo := range fileInfos {
+		path := dir + fileInfo.Name()
+
+		if fileInfo.IsDir() {
+			// enter the directory recursively
+			results = find(path, name, results)
+		} else {
+			// match filename
+			pattern := filepath.Dir(path) + conf.PathSeparator + name
+			match, err := filepath.Match(pattern, path)
+
+			if nil != err {
+				glog.Errorf("Find match filename failed: [%s]", err.Error)
+
+				continue
+			}
+
+			if match {
+				results = append(results, &path)
+			}
+		}
+	}
+
+	return results
+}
+
+// search finds file under the specified dir and its sub-directories with the specified text, likes the command 'grep'
+// or 'findstr'.
 func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
 	if !strings.HasSuffix(dir, conf.PathSeparator) {
 		dir += conf.PathSeparator
