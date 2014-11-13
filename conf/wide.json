@@ -7,7 +7,7 @@
     "ShellChannel": "ws://{IP}:7070",
     "SessionChannel": "ws://{IP}:7070",
     "HTTPSessionMaxAge": 86400,
-    "StaticResourceVersion": "201411122300",
+    "StaticResourceVersion": "201411132300",
     "MaxProcs": 4,
     "RuntimeMode": "dev",
     "WD": "${pwd}",
