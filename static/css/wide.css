@@ -259,6 +259,10 @@
     background: #08f;
     color: white;
 }
+
+.CodeMirror div.CodeMirror-cursor {
+    border-left: 2px solid #333;
+}
 /* end editor */
 
 /* start bottom-window-group */
