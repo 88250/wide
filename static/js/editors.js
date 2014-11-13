@@ -124,7 +124,8 @@ var editors = {
                         break;
                     }
                 }
-
+                
+                wide.curEditor.setCursor(wide.curEditor.getCursor());
                 wide.curEditor.focus();
             },
             removeBefore: function (id) {
