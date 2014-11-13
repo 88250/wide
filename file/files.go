@@ -325,7 +325,7 @@ func Find(w http.ResponseWriter, r *http.Request) {
 	founds := foundPaths{}
 
 	for _, workspace := range workspaces {
-		rs := find(workspace, name, []*string{})
+		rs := find(workspace+conf.PathSeparator+"src", name, []*string{})
 
 		for _, r := range rs {
 			substr := util.Str.LCS(path, *r)
