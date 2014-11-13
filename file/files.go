@@ -285,6 +285,18 @@ func RenameFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// Use to find results sorting.
+type foundPath struct {
+	Path  string `json:"path"`
+	score int
+}
+
+type foundPaths []*foundPath
+
+func (f foundPaths) Len() int           { return len(f) }
+func (f foundPaths) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
+func (f foundPaths) Less(i, j int) bool { return f[i].score > f[j].score }
+
 // Find handles request of find files under the specified directory with the specified filename pattern.
 func Find(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
@@ -298,10 +310,31 @@ func Find(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	dir := args["dir"].(string)
+	path := args["path"].(string) // path of selected file in file tree
 	name := args["name"].(string)
 
-	founds := find(dir, name, []*string{})
+	session, _ := session.HTTPSession.Get(r, "wide-session")
+	username := session.Values["username"].(string)
+	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	workspaces := filepath.SplitList(userWorkspace)
+
+	if "" != path && !isDir(path) {
+		path = filepath.Dir(path)
+	}
+
+	founds := foundPaths{}
+
+	for _, workspace := range workspaces {
+		rs := find(workspace, name, []*string{})
+
+		for _, r := range rs {
+			substr := util.Str.LCS(path, *r)
+
+			founds = append(founds, &foundPath{Path: *r, score: len(substr)})
+		}
+	}
+
+	sort.Sort(founds)
 
 	data["founds"] = founds
 }
@@ -659,6 +692,18 @@ func isImg(extension string) bool {
 	default:
 		return false
 	}
+}
+
+// isDir determines whether the specified path is a directory.
+func isDir(path string) bool {
+	fio, err := os.Lstat(path)
+	if nil != err {
+		glog.Warningf("Determines whether [%s] is a directory failed: [%v]", path, err)
+
+		return false
+	}
+
+	return fio.IsDir()
 }
 
 // GetUsre gets the user the specified path belongs to. Returns nil if not found.
