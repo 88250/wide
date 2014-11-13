@@ -530,7 +530,7 @@ func renameFile(oldPath, newPath string) bool {
 	return true
 }
 
-// find finds file under the specified dir and its sub-directoryies with the specified name,
+// find finds files under the specified dir and its sub-directoryies with the specified name,
 // likes the command 'find dir -name name'.
 func find(dir, name string, results []*string) []*string {
 	if !strings.HasSuffix(dir, conf.PathSeparator) {
