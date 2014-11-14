@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 var wide = {
     curNode: undefined,
@@ -276,6 +276,40 @@ var wide = {
                                 "removable": true,
                                 "creatable": true
                             }]);
+                    }
+                });
+            }
+        });
+
+        $("#dialogGoFilePrompt").dialog({
+            "modal": true,
+            "height": 300,
+            "width": 660,
+            "title": config.label.goto_file,
+            "okText": config.label.go,
+            "cancelText": config.label.cancel,
+            "afterOpen": function () {
+                $("#dialogGoFilePrompt > input").val('').focus();
+                $("#dialogGoFilePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
+            },
+            "ok": function () {
+                var name = $("#dialogGoFilePrompt > input").val();
+
+                var request = newWideRequest();
+                request.path = wide.curNode.path;
+                request.name = '*' + name + '*';
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/file/find/name',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function (data) {
+                        if (!data.succ) {
+                            return;
+                        }
+                        
+                        console.log(data);
                     }
                 });
             }

@@ -40,6 +40,7 @@
     "notification_3": "[ide_stub] が見つかりません。[Jump to Decl]、[Find Usages] は動作しません。",
     "notification_4": "内部サーバーエラー",
     "goto_line": "指定行にジャンプ",
+    "goto_file": "ファイルをオープンする",
     "go": "Go",
     "tip": "ヒント",
     "confirm": "確認",

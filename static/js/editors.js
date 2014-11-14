@@ -760,6 +760,9 @@ var editors = {
 
                     cm.setSelection(CodeMirror.Pos(from.line + 1, from.ch),
                             CodeMirror.Pos(to.line + 1, to.ch));
+                },
+                "Shift-Alt-O": function () {
+                    $("#dialogGoFilePrompt").dialog("open");
                 }
             }
         });

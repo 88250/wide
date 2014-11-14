@@ -40,6 +40,7 @@
     "notification_3": "没有检查到 ide_stub，这将会导致 [跳转到声明]、[查找使用] 失效",
     "notification_4": "服务器内部错误",
     "goto_line": "跳转到行",
+    "goto_file": "打开文件",
     "go": "跳转",
     "tip": "提示",
     "confirm": "确定",
