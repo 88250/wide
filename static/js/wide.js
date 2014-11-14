@@ -299,8 +299,11 @@ var wide = {
                     var name = $("#dialogGoFilePrompt > input").val();
 
                     var request = newWideRequest();
-                    request.path = wide.curNode.path;
+                    request.path = '';
                     request.name = '*' + name + '*';
+                    if (wide.curNode) {
+                        request.path = wide.curNode.path;
+                    }
 
                     $.ajax({
                         type: 'POST',
@@ -445,6 +448,20 @@ var wide = {
                         }
                     });
                 }
+            });
+        });
+    },
+    openPreference:function () {
+       $("#dialogPreference").dialog("open");  
+    },
+    _initPreference: function () {
+        $("#dialogPreference").load('/preference', function () {
+            $("#dialogPreference").dialog({
+                "modal": true,
+                "height": 460,
+                "width": 800,
+                "title": config.label.perference,
+                "hideFooter": true
             });
         });
     },
