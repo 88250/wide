@@ -255,7 +255,7 @@ func main() {
 	http.HandleFunc("/", handlerWrapper(indexHandler))
 	http.HandleFunc("/start", handlerWrapper(startHandler))
 	http.HandleFunc("/about", handlerWrapper(aboutHandler))
-	http.HandleFunc("/preferenceHandler", handlerWrapper(preferenceHandler))
+	http.HandleFunc("/preference", handlerWrapper(preferenceHandler))
 	http.HandleFunc("/keyboard_shortcuts", handlerWrapper(keyboardShortcutsHandler))
 
 	// static resources
