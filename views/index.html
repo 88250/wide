@@ -37,6 +37,9 @@
                             <li class="close-all" onclick="wide.closeAllFiles()">
                                 <span>{{.i18n.close_all_files}}</span>
                             </li>
+                            <li class="close-all" onclick="wide.openPreference()">
+                                <span>{{.i18n.perference}}</span>
+                            </li>
                             <li class="hr"></li>
                             <li onclick="wide.exit()">
                                 <span>{{.i18n.exit}}</span>
@@ -232,6 +235,7 @@
         </div>
         <div id="dialogAlert" class="fn-none"></div>
         <div id="dialogAbout" class="fn-none"></div>
+        <div id="dialogPreference" class="fn-none"></div>
         <div id="dialogNewFilePrompt" class="dialog-prompt fn-none">
             <input/>
         </div>
@@ -290,7 +294,8 @@
                                     "new_version_available": "{{.i18n.new_version_available}}",
                                     "colon": "{{.i18n.colon}}",
                                     "file": "{{.i18n.file}}",
-                                    "uptodate": "{{.i18n.uptodate}}"
+                                    "uptodate": "{{.i18n.uptodate}}",
+                                    "perference": "{{.i18n.perference}}"
                             },
                             "channel": {
                             "editor": '{{.conf.EditorChannel}}',
