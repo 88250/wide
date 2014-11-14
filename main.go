@@ -212,6 +212,37 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	t.Execute(w, model)
 }
 
+// preferenceHandle handles request of preference page.
+func preferenceHandler(w http.ResponseWriter, r *http.Request) {
+	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+
+	if httpSession.IsNew {
+		http.Redirect(w, r, "/preference", http.StatusFound)
+
+		return
+	}
+
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	httpSession.Save(r, w)
+
+	username := httpSession.Values["username"].(string)
+	locale := conf.Wide.GetUser(username).Locale
+
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
+		"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
+
+	t, err := template.ParseFiles("views/preference.html")
+
+	if nil != err {
+		glog.Error(err)
+		http.Error(w, err.Error(), 500)
+
+		return
+	}
+
+	t.Execute(w, model)
+}
+
 // Main.
 func main() {
 	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
@@ -224,6 +255,7 @@ func main() {
 	http.HandleFunc("/", handlerWrapper(indexHandler))
 	http.HandleFunc("/start", handlerWrapper(startHandler))
 	http.HandleFunc("/about", handlerWrapper(aboutHandler))
+	http.HandleFunc("/preferenceHandler", handlerWrapper(preferenceHandler))
 	http.HandleFunc("/keyboard_shortcuts", handlerWrapper(keyboardShortcutsHandler))
 
 	// static resources
