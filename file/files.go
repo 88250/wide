@@ -563,6 +563,9 @@ func renameFile(oldPath, newPath string) bool {
 	return true
 }
 
+// Default exclude file name patterns when find.
+var defaultExcludesFind = []string{".git", ".svn", ".repository", "CVS", "RCS", "SCCS", ".bzr", ".metadata", ".hg"}
+
 // find finds files under the specified dir and its sub-directoryies with the specified name,
 // likes the command 'find dir -name name'.
 func find(dir, name string, results []*string) []*string {
@@ -581,9 +584,14 @@ func find(dir, name string, results []*string) []*string {
 	}
 
 	for _, fileInfo := range fileInfos {
-		path := dir + fileInfo.Name()
+		fname := fileInfo.Name()
+		path := dir + fname
 
 		if fileInfo.IsDir() {
+			if util.Str.Contains(fname, defaultExcludesFind) {
+				continue
+			}
+
 			// enter the directory recursively
 			results = find(path, name, results)
 		} else {
