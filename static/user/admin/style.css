@@ -9,5 +9,6 @@ button {
 .CodeMirror,
 .CodeMirror-hints {
     font-family: Consolas, 'Courier New', monospace;
-    font-size: inherit;
+    font-size: 13px;
+    line-height: 19px;
 }

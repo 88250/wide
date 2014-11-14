@@ -614,6 +614,7 @@ var editors = {
             theme: 'wide',
             indentUnit: 4,
             foldGutter: true,
+            cursorHeight: 1,
             path: data.path,
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",

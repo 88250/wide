@@ -23,7 +23,8 @@
             "FontSize": "13px",
             "Editor": {
                 "FontFamily": "Consolas, 'Courier New', monospace",
-                "FontSize": "inherit"
+                "FontSize": "13px",
+                "LineHeight": "19px"
             },
             "LatestSessionContent": {
                 "FileTree": [],
