@@ -94,6 +94,55 @@ var hotkeys = {
             which: 117
         }
     },
+    bindList: function ($source, $list, enterFun) {
+        $list.data("index", 0);
+        $source.keydown(function (event) {
+            var index = $list.data("index"),
+                    count = $list.find("li").length;
+
+            if (count === 0) {
+                return true;
+            }
+
+            if (event.which === 38) {   // up
+                index--;
+                if (index < 0) {
+                    index = count - 1;
+                }
+            }
+
+            if (event.which === 40) {   // down
+                index++;
+                if (index > count - 1) {
+                    index = 0;
+                }
+            }
+
+            var $selected = $list.find("li:eq(" + index + ")");
+
+            if (event.which === 13) {   // enter
+                enterFun($selected);
+            }
+
+            $list.find("li").removeClass("selected");
+            $list.data("index", index);
+            $selected.addClass("selected");
+
+            if (index === 0) {
+                $list.scrollTop(0);
+            } else {
+                if ($selected[0].offsetTop + $list.scrollTop() > $list.height()) {
+                    if (event.which === 40) {
+                        $list.scrollTop($list.scrollTop() + $selected.height());
+                    } else {
+                        $list.scrollTop($selected[0].offsetTop);
+                    }
+                } else {
+                    $list.scrollTop(0);
+                }
+            }
+        });
+    },
     _bindOutput: function () {
         $(".bottom-window-group .output").keydown(function (event) {
             event.preventDefault();

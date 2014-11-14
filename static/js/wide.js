@@ -288,35 +288,53 @@ var wide = {
             "title": config.label.goto_file,
             "okText": config.label.go,
             "cancelText": config.label.cancel,
+            "afterInit": function () {
+                hotkeys.bindList($("#dialogGoFilePrompt > input"), $("#dialogGoFilePrompt > .list"), function ($selected) {
+                    var tId = tree.getTIdByPath($selected.text());
+                    tree.openFile(tree.fileTree.getNodeByTId(tId));
+                    $("#dialogGoFilePrompt").dialog("close");
+                });
+
+                $("#dialogGoFilePrompt > input").keydown(function () {
+                    var name = $("#dialogGoFilePrompt > input").val();
+
+                    var request = newWideRequest();
+                    request.path = wide.curNode.path;
+                    request.name = '*' + name + '*';
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/file/find/name',
+                        data: JSON.stringify(request),
+                        dataType: "json",
+                        success: function (data) {
+                            if (!data.succ) {
+                                return;
+                            }
+
+                            var goFileHTML = '';
+                            for (var i = 0, max = data.founds.length; i < max; i++) {
+                                if (i === 0) {
+                                    goFileHTML += '<li class="selected">' + data.founds[i].path + '</li>';
+                                } else {
+                                    goFileHTML += '<li>' + data.founds[i].path + '</li>';
+                                }
+                            }
+
+                            $("#dialogGoFilePrompt > ul").html(goFileHTML);
+                        }
+                    });
+                });
+            },
             "afterOpen": function () {
                 $("#dialogGoFilePrompt > input").val('').focus();
                 $("#dialogGoFilePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
+                $("#dialogGoFilePrompt .list").html('').data("index", 0);
             },
             "ok": function () {
-                var name = $("#dialogGoFilePrompt > input").val();
-
-                var request = newWideRequest();
-                request.path = wide.curNode.path;
-                request.name = '*' + name + '*';
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/file/find/name',
-                    data: JSON.stringify(request),
-                    dataType: "json",
-                    success: function (data) {
-                        if (!data.succ) {
-                            return;
-                        }
-
-                        var goFileHTML = '';
-                        for (var i = 0, max = data.founds.length; i < max; i++) {
-                            goFileHTML += '<li>' + data.founds[i].path + '</li>';
-                        }
-
-                        $("#dialogGoFilePrompt > ul").html(goFileHTML);
-                    }
-                });
+                var tId = tree.getTIdByPath($("#dialogGoFilePrompt .selected").text());
+                tree.openFile(tree.fileTree.getNodeByTId(tId));
+                $("#dialogGoFilePrompt").dialog("close");
             }
         });
 

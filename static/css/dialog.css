@@ -99,16 +99,10 @@
 }
 
 #dialogGoFilePrompt > ul {
+    position: relative;
     height: 260px;
     overflow: auto;
     margin-top: 5px;
-}
-
-#dialogGoFilePrompt li {
-    
-}
-
-#dialogGoFilePrompt li.selected,
-#dialogGoFilePrompt li:hover {
-    
+    background-color: #FFF;
+    border: 1px solid #9B9B9B;
 }

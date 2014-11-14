@@ -60,3 +60,22 @@ button {
     display: none;
 }
 /* end reset & function */
+
+/* start common */
+.list li {
+    cursor: pointer;
+    line-height: 20px;
+    padding: 0 3px;
+    word-wrap: normal;
+    word-break: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list li.selected,
+.list li:hover{
+    background-color: #3875d7;
+    color: #FFF;
+}
+/* end common */

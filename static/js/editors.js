@@ -486,7 +486,7 @@ var editors = {
         };
     },
     appendSearch: function (data, type, key) {
-        var searcHTML = '<ul>';
+        var searcHTML = '<ul class="list">';
 
         for (var i = 0, ii = data.length; i < ii; i++) {
             var contents = data[i].contents[0],
