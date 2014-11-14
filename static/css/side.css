@@ -45,6 +45,7 @@
     border-width: 0;
     color: #fff;
     height: 18px;
+    opacity: 1;
 }
 
 .ztree li a:hover {

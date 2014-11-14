@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 var hotkeys = {
     defaultKeyMap: {
@@ -78,6 +78,13 @@ var hotkeys = {
             altKey: false,
             shiftKey: false,
             which: 81
+        },
+        // Shift+Alt+O 跳转到文件
+        goFile: {
+            ctrlKey: false,
+            altKey: true,
+            shiftKey: true,
+            which: 79
         },
         // F6 构建并运行
         buildRun: {
@@ -267,7 +274,7 @@ var hotkeys = {
 
                 return;
             }
-            
+
             if (event.ctrlKey === hotKeys.goSearch.ctrlKey
                     && event.which === hotKeys.goSearch.which) { // Ctrl+5 焦点切换到搜索窗口  
                 bottomGroup.tabs.setCurrent("search");
@@ -361,7 +368,14 @@ var hotkeys = {
 
                 return;
             }
-        });  
+
+            if (event.ctrlKey === hotKeys.goFile.ctrlKey
+                    && event.altKey === hotKeys.goFile.altKey
+                    && event.shiftKey === hotKeys.goFile.shiftKey
+                    && event.which === hotKeys.goFile.which) { // Shift+Alt+O 跳转到文件
+                $("#dialogGoFilePrompt").dialog("open");
+            }
+        });
     },
     init: function () {
         this._bindFileTree();

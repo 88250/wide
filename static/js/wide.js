@@ -308,8 +308,13 @@ var wide = {
                         if (!data.succ) {
                             return;
                         }
-                        
-                        console.log(data);
+
+                        var goFileHTML = '';
+                        for (var i = 0, max = data.founds.length; i < max; i++) {
+                            goFileHTML += '<li>' + data.founds[i].path + '</li>';
+                        }
+
+                        $("#dialogGoFilePrompt > ul").html(goFileHTML);
                     }
                 });
             }

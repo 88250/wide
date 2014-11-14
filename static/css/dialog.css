@@ -97,3 +97,18 @@
     width: 100%;
     margin: 2px auto;
 }
+
+#dialogGoFilePrompt > ul {
+    height: 260px;
+    overflow: auto;
+    margin-top: 5px;
+}
+
+#dialogGoFilePrompt li {
+    
+}
+
+#dialogGoFilePrompt li.selected,
+#dialogGoFilePrompt li:hover {
+    
+}
