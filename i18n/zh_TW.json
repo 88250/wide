@@ -123,5 +123,13 @@
     "close": "關閉",
     "close_other": "關閉其它",
     "clear": "清空",
-    "perference": "偏好設定"
+    "perference": "偏好設定",
+    "appearence": "外觀",
+    "gotool": "Go 工具",
+    "user": "用戶",
+    "font": "字形",
+    "font_size": "字體大小",
+    "line_height": "行高",
+    "go_format": "Go 格式化",
+    "locale": "語言環境"
 }

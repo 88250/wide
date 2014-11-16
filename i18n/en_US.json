@@ -123,5 +123,13 @@
     "close": "Close",
     "close_other": "Close Other",
     "clear": "Clear",
-    "perference": "Perference"
+    "perference": "Perference",
+    "appearence": "Appearence",
+    "gotool": "Go Tool",
+    "user": "User",
+    "font": "Font",
+    "font_size": "Font Size",
+    "line_height": "Line Height",
+    "go_format": "Go Format",
+    "locale": "Locale"
 }

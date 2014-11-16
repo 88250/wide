@@ -86,10 +86,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	locale := user.Locale
 
 	wideSessions := session.WideSessions.GetByUsername(username)
-	userConf := conf.Wide.GetUser(username)
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"session": wideSession, "latestSessionContent": userConf.LatestSessionContent,
+		"session": wideSession, "latestSessionContent": user.LatestSessionContent,
 		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer}
 
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
@@ -226,9 +225,9 @@ func preferenceHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	user := conf.Wide.GetUser(username)
 
-	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
 		"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
 
 	t, err := template.ParseFiles("views/preference.html")

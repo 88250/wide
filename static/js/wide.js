@@ -451,8 +451,8 @@ var wide = {
             });
         });
     },
-    openPreference:function () {
-       $("#dialogPreference").dialog("open");  
+    openPreference: function () {
+        $("#dialogPreference").dialog("open");
     },
     _initPreference: function () {
         $("#dialogPreference").load('/preference', function () {
@@ -461,7 +461,23 @@ var wide = {
                 "height": 460,
                 "width": 800,
                 "title": config.label.perference,
-                "hideFooter": true
+                "ok": function () {
+                    var request = newWideRequest();
+                    request.executable = data.executable;
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/preference',
+                        data: JSON.stringify(request),
+                        success: function (data, textStatus, jqXHR) {
+                            
+                        }
+                    });
+                }
+            });
+
+            new Tabs({
+                id: ".preference"
             });
         });
     },
@@ -597,6 +613,8 @@ var wide = {
         this._initDialog();
 
         this._initLayout();
+
+        this._initPreference();
 
         $(window).resize(function () {
             wide._initLayout();

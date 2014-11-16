@@ -37,9 +37,6 @@
                             <li class="close-all" onclick="wide.closeAllFiles()">
                                 <span>{{.i18n.close_all_files}}</span>
                             </li>
-                            <li class="close-all" onclick="wide.openPreference()">
-                                <span>{{.i18n.perference}}</span>
-                            </li>
                             <li class="hr"></li>
                             <li onclick="wide.exit()">
                                 <span>{{.i18n.exit}}</span>
@@ -92,6 +89,9 @@
                             </li>
                         </ul>
                     </div>
+                </li>
+                <li onclick="wide.openPreference()">
+                    <span>{{.i18n.perference}}</span>
                 </li>
                 <li>
                     <span>{{.i18n.help}}</span>

@@ -1,1 +1,66 @@
-perference
+<div class="preference">
+    <div class="tabs">
+        <div class="current" data-index="appearence">
+            <span title="{{.i18n.appearence}}">{{.i18n.appearence}}</span>
+        </div>
+        <div data-index="editor">
+            <span title="{{.i18n.editor}}">{{.i18n.editor}}</span>
+        </div>
+        <div data-index="gotool">
+            <span title="{{.i18n.gotool}}">{{.i18n.gotool}}</span>
+        </div>
+        <div data-index="user">
+            <span title="{{.i18n.user}}">{{.i18n.user}}</span>
+        </div>
+    </div>
+    <div class="tabs-panel">
+        <div data-index="appearence">
+            <label>
+                {{.i18n.font}}{{.i18n.colon}}
+                <input value="{{.user.FontFamily}}" name="fontFamily"/>
+            </label>
+            <label>
+                {{.i18n.font_size}}{{.i18n.colon}}
+                <input value="{{.user.FontSize}}" name="fontSize"/>
+            </label>
+            <label>
+                {{.i18n.line_height}}{{.i18n.colon}}
+                <input value="{{.user.Editor.LineHeight}}" name="lineHeight"/>
+            </label>
+        </div>
+        <div class="fn-none" data-index="editor">
+            <label>
+                {{.i18n.font}}{{.i18n.colon}}
+                <input value="{{.user.Editor.FontFamily}}" name="editorFontFamily"/>
+            </label>
+            <label>
+                {{.i18n.font_size}}{{.i18n.colon}}
+                <input value="{{.user.Editor.FontSize}}" name="editorFontSize"/>
+            </label>
+        </div>
+        <div class="fn-none" data-index="gotool">
+            <label>
+                {{.i18n.go_format}}{{.i18n.colon}}
+                <input value="{{.user.GoFormat}}" name="goFormat"/>
+            </label>
+        </div>
+        <div class="fn-none" data-index="user">
+            <label>
+                {{.i18n.locale}}{{.i18n.colon}}
+                <input value="{{.user.Locale}}" name="locale"/>
+            </label>
+            <label>
+                {{.i18n.workspace}}{{.i18n.colon}}
+                <input value="{{.user.Workspace}}" name="workspace"/>
+            </label>
+            <label>
+                {{.i18n.username}}{{.i18n.colon}}
+                <input value="{{.user.Name}}" name="username"/>
+            </label>
+            <label>
+                {{.i18n.password}}{{.i18n.colon}}
+                <input value="{{.user.Password}}" name="password"/>
+            </label>
+        </div>
+    </div>
+</div>

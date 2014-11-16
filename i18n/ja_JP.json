@@ -123,5 +123,13 @@
     "close": "クローズ",
     "close_other": "閉じるその他",
     "clear": "空の",
-    "perference": "偏好设定"
+    "perference": "偏好设定",
+    "appearence": "エクステリア",
+    "gotool": "Go ツール",
+    "user": "ユーザー",
+    "font": "フォント",
+    "font_size": "フォント·サイズ",
+    "line_height": "行の高さ",
+    "go_format": "Go フォーマット",
+    "locale": "ロケール"
 }
