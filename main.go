@@ -40,6 +40,8 @@ import (
 // The only one init function in Wide.
 func init() {
 	// TODO: args
+	confPath := flag.String("conf", "conf/wide.json", "path of wide.json")
+
 	flag.Set("logtostderr", "true")
 	flag.Set("v", "3")
 	flag.Parse()
@@ -48,7 +50,8 @@ func init() {
 
 	event.Load()
 
-	conf.Load()
+	conf.Load(*confPath)
+
 	conf.FixedTimeCheckEnv()
 	conf.FixedTimeSave()
 

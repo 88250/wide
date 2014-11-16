@@ -265,12 +265,12 @@ func Save() bool {
 }
 
 // Load loads the configurations from wide.json.
-func Load() {
-	bytes, _ := ioutil.ReadFile("conf/wide.json")
+func Load(confPath string) {
+	bytes, _ := ioutil.ReadFile(confPath)
 
 	err := json.Unmarshal(bytes, &Wide)
 	if err != nil {
-		glog.Error(err)
+		glog.Error("Parses wide.json error: ", err)
 
 		os.Exit(-1)
 	}
