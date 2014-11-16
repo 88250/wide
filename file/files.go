@@ -54,8 +54,8 @@ type Snippet struct {
 
 // GetFiles handles request of constructing user workspace file tree.
 //
-// The Go API source code package ($GOROOT/src/pkg) also as a child node,
-// so that users can easily view the Go API source code.
+// The Go API source code package also as a child node,
+// so that users can easily view the Go API source code in filre tree.
 func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -84,6 +84,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	// construct Go API node
 	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
+
 	apiNode := FileNode{Name: "Go API", Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
 		Creatable: false, Removable: false, FileNodes: []*FileNode{}}
 
@@ -123,7 +124,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	extension := filepath.Ext(path)
 
-	if isImg(extension) {
+	if util.File.IsImg(extension) {
 		// image file will be open in a browser tab
 
 		data["mode"] = "img"
@@ -143,7 +144,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 	content := string(buf)
 
-	if isBinary(content) {
+	if util.File.IsBinary(content) {
 		data["succ"] = false
 		data["msg"] = "Can't open a binary file :("
 	} else {
@@ -318,7 +319,7 @@ func Find(w http.ResponseWriter, r *http.Request) {
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 
-	if "" != path && !isDir(path) {
+	if "" != path && !util.File.IsDir(path) {
 		path = filepath.Dir(path)
 	}
 
@@ -441,7 +442,7 @@ func listFiles(dirname string) []string {
 //
 // Refers to the zTree document for CSS class names.
 func getIconSkin(filenameExtension string) string {
-	if isImg(filenameExtension) {
+	if util.File.IsImg(filenameExtension) {
 		return "ico-ztree-img "
 	}
 
@@ -660,7 +661,7 @@ func searchInFile(path string, text string) []*Snippet {
 	}
 
 	content := string(bytes)
-	if isBinary(content) {
+	if util.File.IsBinary(content) {
 		return ret
 	}
 
@@ -677,41 +678,6 @@ func searchInFile(path string, text string) []*Snippet {
 	}
 
 	return ret
-}
-
-// isBinary determines whether the specified content is a binary file content.
-func isBinary(content string) bool {
-	for _, b := range content {
-		if 0 == b {
-			return true
-		}
-	}
-
-	return false
-}
-
-// isImg determines whether the specified extension is a image.
-func isImg(extension string) bool {
-	ext := strings.ToLower(extension)
-
-	switch ext {
-	case ".jpg", ".jpeg", ".bmp", ".gif", ".png", ".svg", ".ico":
-		return true
-	default:
-		return false
-	}
-}
-
-// isDir determines whether the specified path is a directory.
-func isDir(path string) bool {
-	fio, err := os.Lstat(path)
-	if nil != err {
-		glog.Warningf("Determines whether [%s] is a directory failed: [%v]", path, err)
-
-		return false
-	}
-
-	return fio.IsDir()
 }
 
 // GetUsre gets the user the specified path belongs to. Returns nil if not found.

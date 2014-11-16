@@ -219,20 +219,20 @@ func (*conf) GetExecutableInGOBIN(executable string) string {
 		// $GOPATH/bin/$GOOS_$GOARCH/executable
 		ret := gopath + PathSeparator + "bin" + PathSeparator +
 			os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + PathSeparator + executable
-		if isExist(ret) {
+		if util.File.IsExist(ret) {
 			return ret
 		}
 
 		// $GOPATH/bin/{runtime.GOOS}_{runtime.GOARCH}/executable
 		ret = gopath + PathSeparator + "bin" + PathSeparator +
 			runtime.GOOS + "_" + runtime.GOARCH + PathSeparator + executable
-		if isExist(ret) {
+		if util.File.IsExist(ret) {
 			return ret
 		}
 
 		// $GOPATH/bin/executable
 		ret = gopath + PathSeparator + "bin" + PathSeparator + executable
-		if isExist(ret) {
+		if util.File.IsExist(ret) {
 			return ret
 		}
 	}
@@ -390,7 +390,7 @@ func CreateWorkspaceDir(path string) {
 
 // createDir creates a directory on the path if it not exists.
 func createDir(path string) {
-	if !isExist(path) {
+	if !util.File.IsExist(path) {
 		if err := os.MkdirAll(path, 0775); nil != err {
 			glog.Error(err)
 
@@ -399,11 +399,4 @@ func createDir(path string) {
 
 		glog.V(7).Infof("Created a directory [%s]", path)
 	}
-}
-
-// isExist determines whether the file spcified by the given filename is exists.
-func isExist(filename string) bool {
-	_, err := os.Stat(filename)
-
-	return err == nil || os.IsExist(err)
 }
