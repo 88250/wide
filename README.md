@@ -98,11 +98,11 @@ We have provided OS-specific executable binary as follows:
 * windows-amd64/386
 * darwin-amd64/386
 
-Download [here](http://pan.baidu.com/s/1dD3XwOT)!
+Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 ### Build Wide for yourself
 
-1. Download source or by `git clone`
+1. [Download](https://github.com/b3log/wide/archive/master.zip) source or by `git clone`
 2. Get dependencies with 
    * `go get -u`
    * `go get -u github.com/88250/ide_stub`
