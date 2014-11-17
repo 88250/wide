@@ -527,6 +527,9 @@ var wide = {
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
                             $locale.data("value", $locale.val());
+                            
+                            var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+                            $okBtn.prop("disabled", true);
                         }
                     });
                 }
