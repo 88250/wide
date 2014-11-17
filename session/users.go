@@ -19,6 +19,7 @@ import (
 	"math/rand"
 	"net/http"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"text/template"
 
@@ -33,6 +34,45 @@ const (
 	UserCreated     = "user created"
 	UserCreateError = "user create error"
 )
+
+// PreferenceHandle handles request of preference page.
+func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
+	httpSession, _ := HTTPSession.Get(r, "wide-session")
+
+	if httpSession.IsNew {
+		http.Redirect(w, r, "/preference", http.StatusFound)
+
+		return
+	}
+
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	httpSession.Save(r, w)
+
+	username := httpSession.Values["username"].(string)
+	user := conf.Wide.GetUser(username)
+
+	if "GET" == r.Method {
+		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
+			"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
+ 
+		t, err := template.ParseFiles("views/preference.html")
+
+		if nil != err {
+			glog.Error(err)
+			http.Error(w, err.Error(), 500)
+
+			return
+		}
+
+		t.Execute(w, model)
+		
+		return
+	}
+	
+	// non-GET request as save request
+	
+	
+}
 
 // LoginHandler handles request of user login.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
