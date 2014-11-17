@@ -85,6 +85,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		Workspace        string
 		Username         string
 		Password         string
+		Locale           string
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -102,6 +103,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.GoFormat = args.GoFmt
 	user.Workspace = args.Workspace
 	user.Password = args.Password
+	user.Locale = args.Locale
 
 	succ = conf.Save()
 }
