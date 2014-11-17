@@ -131,5 +131,6 @@
     "font_size": "フォント·サイズ",
     "line_height": "行の高さ",
     "go_format": "Go フォーマット",
-    "locale": "ロケール"
+    "locale": "ロケール",
+    "apply": "適用する"
 }
