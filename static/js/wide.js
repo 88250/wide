@@ -106,10 +106,13 @@ var wide = {
             "okText": config.label.rename,
             "cancelText": config.label.cancel,
             "afterOpen": function () {
-                var index = wide.curNode.name.lastIndexOf(".");
-                $("#dialogRenamePrompt > input").val(wide.curNode.name.substring(0, index)).focus();
-                // TODO: 全选
+                var index = wide.curNode.name.lastIndexOf("."),
+                        name = wide.curNode.name.substring(0, index);
+                if (index === -1) {
+                    name = wide.curNode.name;
+                }
                 $("#dialogRenamePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
+                $("#dialogRenamePrompt > input").val(name).select().focus();
             },
             "ok": function () {
                 var name = $("#dialogRenamePrompt > input").val(),
@@ -517,7 +520,7 @@ var wide = {
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
                             $locale.data("value", $locale.val());
-                            
+
                             var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
                             $okBtn.prop("disabled", true);
                         }

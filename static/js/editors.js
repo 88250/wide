@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 var editors = {
     data: [],
@@ -110,6 +110,7 @@ var editors = {
             id: ".edit-panel",
             clickAfter: function (id) {
                 if (id === 'startPage') {
+                    $(".footer .cursor").text('');
                     return false;
                 }
 
@@ -124,9 +125,12 @@ var editors = {
                         break;
                     }
                 }
-                
-                wide.curEditor.setCursor(wide.curEditor.getCursor());
+
+                var cursor = wide.curEditor.getCursor();
+                wide.curEditor.setCursor(cursor);
                 wide.curEditor.focus();
+
+                $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             },
             removeBefore: function (id) {
                 if (id === 'startPage') { // 当前关闭的 tab 是起始页
@@ -134,7 +138,6 @@ var editors = {
                     return true;
                 }
 
-                // 移除编辑器
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
                         if (editors.data[i].editor.doc.isClean()) {
@@ -180,6 +183,7 @@ var editors = {
                     tree.fileTree.cancelSelectedNode();
                     wide.curNode = undefined;
                     wide.curEditor = undefined;
+                    $(".footer .cursor").text('');
                     return false;
                 }
 
@@ -199,6 +203,9 @@ var editors = {
                         break;
                     }
                 }
+
+                var cursor = wide.curEditor.getCursor();
+                $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             }
         });
 
@@ -570,6 +577,8 @@ var editors = {
             cursor = CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1);
         }
 
+        $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
+
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             if (editors.data[i].id === id) {
                 editors.tabs.setCurrent(id);
@@ -583,7 +592,6 @@ var editors = {
                 editor.scrollTo(0, cursorCoords.top);
 
                 editor.focus();
-
                 return false;
             }
         }
@@ -770,7 +778,6 @@ var editors = {
             var cursor = cm.getCursor();
 
             $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
-            // TODO: 关闭 tab 的时候要重置
         });
 
         editor.on('focus', function (cm) {

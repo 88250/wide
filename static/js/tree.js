@@ -250,6 +250,9 @@ var tree = {
                 wide.curNode = treeNode;
                 wide.curEditor = editors.data[i].editor;
                 wide.curEditor.focus();
+
+                var cursor = wide.curEditor.getCursor();
+                $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
                 return false;
             }
         }
