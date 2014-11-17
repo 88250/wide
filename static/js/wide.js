@@ -86,7 +86,7 @@ var wide = {
                             }
                         } else {
                             for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                                if (tree._isParents(editors.data[i].id, wide.curNode.tId)) {
+                                if (tree.isParents(editors.data[i].id, wide.curNode.tId)) {
                                     $(".edit-panel .tabs > div[data-index=" + editors.data[i].id + "]").find(".ico-close").click();
                                     i--;
                                     ii--;

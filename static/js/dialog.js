@@ -175,6 +175,10 @@
                     $.dialog._close(id, settings);
                 }
             });
+            
+            $(window).resize(function () {
+                $(".dialog-background").height($("body").height());
+            });
 
             if (typeof settings.afterInit === "function") {
                 settings.afterInit();
@@ -232,7 +236,7 @@
                     _document.ondragstart = null;
                     _document.onselectstart = null;
                     _document.onselect = null;
-                }
+                };
             });
         },
         _close: function (id, settings) {

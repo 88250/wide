@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 var tree = {
     fileTree: undefined,
@@ -77,7 +77,19 @@ var tree = {
 
         return paths;
     },
-    _isParents: function (tId, parentTId) {
+    getAllParents: function (node, parents) {
+        if (!parents) {
+            parents = [];
+        }
+
+        if (!node || !node.parentTId) {
+            return parents;
+        } else {
+            parents.push(node.getParentNode());
+            return tree.getAllParents(node.getParentNode(), parents);
+        }
+    },
+    isParents: function (tId, parentTId) {
         var node = tree.fileTree.getNodeByTId(tId);
         if (!node || !node.parentTId) {
             return false;
@@ -85,7 +97,7 @@ var tree = {
             if (node.parentTId === parentTId) {
                 return true;
             } else {
-                return tree._isParents(node.parentTId, parentTId);
+                return tree.isParents(node.parentTId, parentTId);
             }
         }
     },
