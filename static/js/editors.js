@@ -496,7 +496,7 @@ var editors = {
                     + contents.substring(index + key.length);
 
             searcHTML += '<li title="' + data[i].path + '">'
-                    + contents + "&nbsp;&nbsp;&nbsp;&nbsp;<span class='path'>" + data[i].path
+                    + contents + "&nbsp;&nbsp;&nbsp;&nbsp;<span class='ft-small'>" + data[i].path
                     + '<i class="position" data-line="'
                     + data[i].line + '" data-ch="' + data[i].ch + '"> (' + data[i].line + ':'
                     + data[i].ch + ')</i></span></li>';

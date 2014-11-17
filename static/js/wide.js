@@ -187,40 +187,7 @@ var wide = {
                         }
 
                         $("#dialogNewFilePrompt").dialog("close");
-                        var suffix = name.split(".")[1],
-                                iconSkin = "ico-ztree-other ";
-                        switch (suffix) {
-                            case "html", "htm":
-                                iconSkin = "ico-ztree-html ";
-                                break;
-                            case "go":
-                                iconSkin = "ico-ztree-go ";
-                                break;
-                            case "css":
-                                iconSkin = "ico-ztree-css ";
-                                break;
-                            case "txt":
-                                iconSkin = "ico-ztree-text ";
-                                break;
-                            case "sql":
-                                iconSkin = "ico-ztree-sql ";
-                                break;
-                            case "properties":
-                                iconSkin = "ico-ztree-pro ";
-                                break;
-                            case "md":
-                                iconSkin = "ico-ztree-md ";
-                                break;
-                            case "js", "json":
-                                iconSkin = "ico-ztree-js ";
-                                break;
-                            case "xml":
-                                iconSkin = "ico-ztree-xml ";
-                                break;
-                            case "jpg", "jpeg", "bmp", "gif", "png", "svg", "ico":
-                                iconSkin = "ico-ztree-img ";
-                                break;
-                        }
+                        var iconSkin = wide.getClassBySuffix(name.split(".")[1]);
 
                         tree.fileTree.addNodes(wide.curNode, [{
                                 "name": name,
@@ -289,13 +256,26 @@ var wide = {
             "okText": config.label.go,
             "cancelText": config.label.cancel,
             "afterInit": function () {
-                hotkeys.bindList($("#dialogGoFilePrompt > input"), $("#dialogGoFilePrompt > .list"), function ($selected) {
-                    var tId = tree.getTIdByPath($selected.text());
+                $("#dialogGoFilePrompt").on("dblclick", "li", function () {
+                    var tId = tree.getTIdByPath($(this).find(".ft-small").text());
                     tree.openFile(tree.fileTree.getNodeByTId(tId));
                     $("#dialogGoFilePrompt").dialog("close");
                 });
 
-                $("#dialogGoFilePrompt > input").keydown(function () {
+                $("#dialogGoFilePrompt").on("click", "li", function () {
+                    var $list = $("#dialogGoFilePrompt > .list")
+                    $list.find("li").removeClass("selected");
+                    $list.data("index", $(this).data("index"));
+                    $(this).addClass("selected");
+                });
+
+                hotkeys.bindList($("#dialogGoFilePrompt > input"), $("#dialogGoFilePrompt > .list"), function ($selected) {
+                    var tId = tree.getTIdByPath($selected.find(".ft-small").text());
+                    tree.openFile(tree.fileTree.getNodeByTId(tId));
+                    $("#dialogGoFilePrompt").dialog("close");
+                });
+
+                $("#dialogGoFilePrompt > input").bind("input", function () {
                     var name = $("#dialogGoFilePrompt > input").val();
 
                     var request = newWideRequest();
@@ -317,10 +297,20 @@ var wide = {
 
                             var goFileHTML = '';
                             for (var i = 0, max = data.founds.length; i < max; i++) {
+                                var path = data.founds[i].path,
+                                        name = path.substr(path.lastIndexOf(config.pathSeparator) + 1),
+                                        icoSkin = wide.getClassBySuffix(name.split(".")[1]);
                                 if (i === 0) {
-                                    goFileHTML += '<li class="selected">' + data.founds[i].path + '</li>';
+                                    goFileHTML += '<li data-index="' + i + '" class="selected" title="'
+                                            + path + '"><span class="'
+                                            + icoSkin + 'ico"></span>'
+                                            + name + '&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-small">'
+                                            + path + '</span></li>';
                                 } else {
-                                    goFileHTML += '<li>' + data.founds[i].path + '</li>';
+                                    goFileHTML += '<li data-index="' + i + '" title="'
+                                            + path + '"><span class="' + icoSkin + 'ico"></span>'
+                                            + name + '&nbsp;&nbsp;&nbsp;&nbsp;<span class="ft-small">'
+                                            + path + '</span></li>';
                                 }
                             }
 
@@ -335,7 +325,7 @@ var wide = {
                 $("#dialogGoFilePrompt .list").html('').data("index", 0);
             },
             "ok": function () {
-                var tId = tree.getTIdByPath($("#dialogGoFilePrompt .selected").text());
+                var tId = tree.getTIdByPath($("#dialogGoFilePrompt .selected .ft-small").text());
                 tree.openFile(tree.fileTree.getNodeByTId(tId));
                 $("#dialogGoFilePrompt").dialog("close");
             }
@@ -517,7 +507,7 @@ var wide = {
                             if (!data.succ) {
                                 return false;
                             }
-                            
+
                             $fontFamily.data("value", $fontFamily.val());
                             $fontSize.data("value", $fontSize.val());
                             $editorFontFamily.data("value", $editorFontFamily.val());
@@ -1031,6 +1021,43 @@ var wide = {
     },
     openAbout: function () {
         $("#dialogAbout").dialog("open");
+    },
+    getClassBySuffix: function (suffix) {
+        var iconSkin = "ico-ztree-other ";
+        switch (suffix) {
+            case "html", "htm":
+                iconSkin = "ico-ztree-html ";
+                break;
+            case "go":
+                iconSkin = "ico-ztree-go ";
+                break;
+            case "css":
+                iconSkin = "ico-ztree-css ";
+                break;
+            case "txt":
+                iconSkin = "ico-ztree-text ";
+                break;
+            case "sql":
+                iconSkin = "ico-ztree-sql ";
+                break;
+            case "properties":
+                iconSkin = "ico-ztree-pro ";
+                break;
+            case "md":
+                iconSkin = "ico-ztree-md ";
+                break;
+            case "js", "json":
+                iconSkin = "ico-ztree-js ";
+                break;
+            case "xml":
+                iconSkin = "ico-ztree-xml ";
+                break;
+            case "jpg", "jpeg", "bmp", "gif", "png", "svg", "ico":
+                iconSkin = "ico-ztree-img ";
+                break;
+        }
+
+        return iconSkin;
     }
 };
 

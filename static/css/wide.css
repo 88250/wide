@@ -209,7 +209,8 @@
     top: 1px;
 }
 
-.edit-panel .tabs .ico {
+.edit-panel .tabs .ico,
+#dialogGoFilePrompt .ico {
     background-image: url("../images/ico-file.png");
     float: left;
     height: 16px;
@@ -334,16 +335,6 @@
 .bottom-window-group .notification .severity {
     width: 50px;
     padding: 0 5px;
-}
-
-.bottom-window-group .search .path {
-    color: #999;
-    font-size: 12px;
-}
-
-.bottom-window-group .search li.selected .path,
-.bottom-window-group .search li:hover .path {
-    color: #FFF;
 }
 /* end bottom-window-group */
 

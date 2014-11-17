@@ -62,6 +62,11 @@ button {
 /* end reset & function */
 
 /* start common */
+.ft-small {
+    color: #999;
+    font-size: 12px;
+}
+
 .list li {
     cursor: pointer;
     line-height: 20px;
@@ -76,6 +81,11 @@ button {
 .list li.selected,
 .list li:hover{
     background-color: #3875d7;
+    color: #FFF;
+}
+
+.list li.selected .ft-small,
+.list li:hover .ft-small {
     color: #FFF;
 }
 /* end common */

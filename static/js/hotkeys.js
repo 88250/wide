@@ -141,6 +141,11 @@ var hotkeys = {
                     $list.scrollTop(0);
                 }
             }
+
+            // 阻止上下键改变光标位置
+            if (event.which === 38 || event.which === 40 || event.which === 13) {
+                return false;
+            }
         });
     },
     _bindOutput: function () {
