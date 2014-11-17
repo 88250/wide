@@ -527,8 +527,6 @@ var wide = {
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
                             $locale.data("value", $locale.val());
-
-                            $("#dialogPreference").dialog("close");
                         }
                     });
                 }
