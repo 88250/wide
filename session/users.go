@@ -1,11 +1,11 @@
 // Copyright (c) 2014, B3log
-//  
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//  
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@ import (
 	"math/rand"
 	"net/http"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"text/template"
 
@@ -33,6 +34,77 @@ const (
 	UserCreated     = "user created"
 	UserCreateError = "user create error"
 )
+
+// PreferenceHandle handles request of preference page.
+func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
+	httpSession, _ := HTTPSession.Get(r, "wide-session")
+
+	if httpSession.IsNew {
+		http.Redirect(w, r, "/preference", http.StatusFound)
+
+		return
+	}
+
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	httpSession.Save(r, w)
+
+	username := httpSession.Values["username"].(string)
+	user := conf.Wide.GetUser(username)
+
+	if "GET" == r.Method {
+		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
+			"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
+
+		t, err := template.ParseFiles("views/preference.html")
+
+		if nil != err {
+			glog.Error(err)
+			http.Error(w, err.Error(), 500)
+
+			return
+		}
+
+		t.Execute(w, model)
+
+		return
+	}
+
+	// non-GET request as save request
+
+	succ := true
+	data := map[string]interface{}{"succ": &succ}
+	defer util.RetJSON(w, r, data)
+
+	args := struct {
+		FontFamily       string
+		FontSize         string
+		EditorFontFamily string
+		EditorFontSize   string
+		EditorLineHeight string
+		GoFmt            string
+		Workspace        string
+		Username         string
+		Password         string
+	}{}
+
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		succ = false
+
+		return
+	}
+
+	user.FontFamily = args.FontFamily
+	user.FontSize = args.FontSize
+	user.Editor.FontFamily = args.EditorFontFamily
+	user.Editor.FontSize = args.EditorFontSize
+	user.Editor.LineHeight = args.EditorLineHeight
+	user.GoFormat = args.GoFmt
+	user.Workspace = args.Workspace
+	user.Password = args.Password
+
+	succ = conf.Save()
+}
 
 // LoginHandler handles request of user login.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
@@ -58,7 +130,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	// non-GET request as login request
 
-	succ := false
+	succ := true
 	data := map[string]interface{}{"succ": &succ}
 	defer util.RetJSON(w, r, data)
 
@@ -69,14 +141,17 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		glog.Error(err)
-		succ = true
+		succ = false
 
 		return
 	}
 
+	succ = false
 	for _, user := range conf.Wide.Users {
 		if user.Name == args.Username && user.Password == args.Password {
 			succ = true
+
+			break
 		}
 	}
 
