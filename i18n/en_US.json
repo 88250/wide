@@ -131,5 +131,6 @@
     "font_size": "Font Size",
     "line_height": "Line Height",
     "go_format": "Go Format",
-    "locale": "Locale"
+    "locale": "Locale",
+    "apply": "Apply"
 }

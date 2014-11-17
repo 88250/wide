@@ -144,6 +144,9 @@
             } else {
                 // 20(footer) + 23(header)
                 top = parseInt((windowH - dialogH - 43) / 2);
+                if (top < 0) {
+                    top = 0;
+                }
                 left = parseInt((windowW - dialogW) / 2);
             }
             $dialog.css({
@@ -215,11 +218,11 @@
                     if (positionX > $(window).width() - $(dialog).width()) {
                         positionX = $(window).width() - $(dialog).width();
                     }
-                    if (positionY < 0) {
-                        positionY = 0;
-                    }
                     if (positionY > $(window).height() - $(dialog).height()) {
                         positionY = $(window).height() - $(dialog).height();
+                    }
+                    if (positionY < 0) {
+                        positionY = 0;
                     }
                     dialog.style.left = positionX + "px";
                     dialog.style.top = positionY + "px";

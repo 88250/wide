@@ -18,18 +18,29 @@
             "Password": "admin",
             "Workspace": "${GOPATH}",
             "Locale": "en_US",
-            "GoFormat": "gofmt",
+            "GoFormat": "",
             "FontFamily": "Helvetica",
             "FontSize": "13px",
             "Editor": {
                 "FontFamily": "Consolas, 'Courier New', monospace",
                 "FontSize": "13px",
-                "LineHeight": "17px"
+                "LineHeight": ""
             },
             "LatestSessionContent": {
-                "FileTree": [],
-                "Files": [],
-                "CurrentFile": ""
+                "FileTree": [
+                    "E:\\Work\\go\\src",
+                    "E:\\Work\\go\\src\\code.google.com\\p",
+                    "E:\\Work\\go\\src\\code.google.com\\p\\go.net",
+                    "E:\\Work\\go\\src\\code.google.com\\p\\go.net\\.hg",
+                    "E:\\Work\\go\\src\\code.google.com\\p\\go.net\\.hg\\cache",
+                    "E:\\Work\\go\\src\\github.com",
+                    "E:\\Work\\go\\src\\github.com\\88250",
+                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml"
+                ],
+                "Files": [
+                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\doc.go"
+                ],
+                "CurrentFile": "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\doc.go"
             }
         }
     ]

@@ -456,21 +456,79 @@ var wide = {
     },
     _initPreference: function () {
         $("#dialogPreference").load('/preference', function () {
+
+            $("#dialogPreference input").keyup(function () {
+                var isChange = false;
+                $("#dialogPreference input").each(function () {
+                    if ($(this).val() !== $(this).data("value")) {
+                        isChange = true;
+                    }
+                });
+
+                var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+                if (isChange) {
+                    $okBtn.prop("disabled", false);
+                } else {
+                    $okBtn.prop("disabled", true);
+                }
+            });
+
             $("#dialogPreference").dialog({
                 "modal": true,
                 "height": 460,
                 "width": 800,
                 "title": config.label.perference,
+                "okText": config.label.apply,
+                "cancelText": config.label.cancel,
+                "afterOpen": function () {
+                    var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+                    $okBtn.prop("disabled", true);
+                },
                 "ok": function () {
-                    var request = newWideRequest();
-                    request.executable = data.executable;
+                    var request = newWideRequest(),
+                            $dialogPreference = $("#dialogPreference"),
+                            $fontFamily = $dialogPreference.find("input[name=fontFamily]"),
+                            $fontSize = $dialogPreference.find("input[name=fontSize]"),
+                            $editorFontFamily = $dialogPreference.find("input[name=editorFontFamily]"),
+                            $editorFontSize = $dialogPreference.find("input[name=editorFontSize]"),
+                            $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
+                            $goFmt = $dialogPreference.find("input[name=goFmt]"),
+                            $workspace = $dialogPreference.find("input[name=workspace]"),
+                            $password = $dialogPreference.find("input[name=password]"),
+                            $locale = $dialogPreference.find("input[name=locale]");
+
+                    $.extend(request, {
+                        "fontFamily": $fontFamily.val(),
+                        "fontSize": $fontSize.val(),
+                        "editorFontFamily": $editorFontFamily.val(),
+                        "editorFontSize": $editorFontSize.val(),
+                        "editorLineHeight": $editorLineHeight.val(),
+                        "goFmt": $goFmt.val(),
+                        "workspace": $workspace.val(),
+                        "password": $password.val(),
+                        "locale": $locale.val()
+                    });
 
                     $.ajax({
                         type: 'POST',
                         url: '/preference',
                         data: JSON.stringify(request),
                         success: function (data, textStatus, jqXHR) {
+                            if (!data.succ) {
+                                return false;
+                            }
                             
+                            $fontFamily.data("value", $fontFamily.val());
+                            $fontSize.data("value", $fontSize.val());
+                            $editorFontFamily.data("value", $editorFontFamily.val());
+                            $editorFontSize.data("value", $editorFontSize.val());
+                            $editorLineHeight.data("value", $editorLineHeight.val());
+                            $goFmt.data("value", $goFmt.val());
+                            $workspace.data("value", $workspace.val());
+                            $password.data("value", $password.val());
+                            $locale.data("value", $locale.val());
+
+                            $("#dialogPreference").dialog("close");
                         }
                     });
                 }
