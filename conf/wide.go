@@ -280,9 +280,11 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 	// keep the raw content
 	json.Unmarshal(bytes, &rawWide)
 
+	// Working Driectory
 	Wide.WD = util.OS.Pwd()
 	glog.V(5).Infof("${pwd} [%s]", Wide.WD)
 
+	// IP
 	ip, err := util.Net.LocalIP()
 	if err != nil {
 		glog.Error(err)
@@ -291,18 +293,6 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 	}
 
 	glog.V(5).Infof("${ip} [%s]", ip)
-
-	if confDocker {
-		h, err := net.LookupHost("wide")
-
-		if nil != err {
-			glog.Error(err)
-
-			os.Exit(-1)
-		}
-
-		ip = h[0]
-	}
 
 	if "" != confIP {
 		ip = confIP
@@ -314,12 +304,16 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 		Wide.Port = confPort
 	}
 
+	// Server
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
 	if "" != confServer {
 		Wide.Server = confServer
 	}
 
+	// Static Server
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
+
+	// Channels
 	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{IP}", Wide.IP, 1)
 	if "" != confChannel {
 		Wide.EditorChannel = confChannel
@@ -335,6 +329,23 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", Wide.IP, 1)
 	if "" != confChannel {
 		Wide.SessionChannel = confChannel
+	}
+
+	// Docker
+	if confDocker {
+		h, err := net.LookupHost("wide")
+		if nil != err {
+			glog.Error(err)
+
+			os.Exit(-1)
+		}
+
+		// XXX: secure protocol wss enchance
+		channel := "ws://" + h[0] + Wide.Port
+		Wide.EditorChannel = channel
+		Wide.OutputChannel = channel
+		Wide.ShellChannel = channel
+		Wide.SessionChannel = channel
 	}
 
 	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
