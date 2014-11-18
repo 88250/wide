@@ -71,12 +71,13 @@ type Editor struct {
 // Configuration.
 type conf struct {
 	IP                    string  // server ip, ${ip}
-	Server                string  // server host and port ({IP}:7070)
-	StaticServer          string  // static resources server scheme, host and port (http://{IP}:7070)
-	EditorChannel         string  // editor channel (ws://{IP}:7070)
-	OutputChannel         string  // output channel (ws://{IP}:7070)
-	ShellChannel          string  // shell channel(ws://{IP}:7070)
-	SessionChannel        string  // wide session channel (ws://{IP}:7070)
+	Port                  string  // server port
+	Server                string  // server host and port ({IP}:{Port})
+	StaticServer          string  // static resources server scheme, host and port (http://{IP}:{Port})
+	EditorChannel         string  // editor channel (ws://{IP}:{Port})
+	OutputChannel         string  // output channel (ws://{IP}:{Port})
+	ShellChannel          string  // shell channel(ws://{IP}:{Port})
+	SessionChannel        string  // wide session channel (ws://{IP}:{Port})
 	HTTPSessionMaxAge     int     // HTTP session max age (in seciond)
 	StaticResourceVersion string  // version of static resources
 	MaxProcs              int     // Go max procs
@@ -265,7 +266,7 @@ func Save() bool {
 }
 
 // Load loads the configurations from wide.json.
-func Load(confPath string) {
+func Load(confPath, confIP, confPort string) {
 	bytes, _ := ioutil.ReadFile(confPath)
 
 	err := json.Unmarshal(bytes, &Wide)
@@ -278,6 +279,9 @@ func Load(confPath string) {
 	// keep the raw content
 	json.Unmarshal(bytes, &rawWide)
 
+	Wide.WD = util.OS.Pwd()
+	glog.V(5).Infof("${pwd} [%s]", Wide.WD)
+
 	ip, err := util.Net.LocalIP()
 	if err != nil {
 		glog.Error(err)
@@ -287,10 +291,15 @@ func Load(confPath string) {
 
 	glog.V(5).Infof("${ip} [%s]", ip)
 
-	Wide.WD = util.OS.Pwd()
-	glog.V(5).Infof("${pwd} [%s]", Wide.WD)
+	if "" != confIP {
+		ip = confIP
+	}
 
 	Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
+
+	if "" != confPort {
+		Wide.Port = confPort
+	}
 
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
@@ -298,6 +307,13 @@ func Load(confPath string) {
 	Wide.OutputChannel = strings.Replace(Wide.OutputChannel, "{IP}", Wide.IP, 1)
 	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{IP}", Wide.IP, 1)
 	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", Wide.IP, 1)
+
+	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
+	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
+	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{Port}", Wide.Port, 1)
+	Wide.OutputChannel = strings.Replace(Wide.OutputChannel, "{Port}", Wide.Port, 1)
+	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{Port}", Wide.Port, 1)
+	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{Port}", Wide.Port, 1)
 
 	glog.V(5).Info("Conf: \n" + string(bytes))
 

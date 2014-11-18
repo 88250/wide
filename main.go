@@ -41,6 +41,8 @@ import (
 func init() {
 	// TODO: args
 	confPath := flag.String("conf", "conf/wide.json", "path of wide.json")
+	confIP := flag.String("ip", "", "ip to visit")
+	confPort := flag.String("port", "", "port to visit")
 
 	flag.Set("logtostderr", "true")
 	flag.Set("v", "3")
@@ -50,7 +52,7 @@ func init() {
 
 	event.Load()
 
-	conf.Load(*confPath)
+	conf.Load(*confPath, *confIP, *confPort)
 
 	conf.FixedTimeCheckEnv()
 	conf.FixedTimeSave()

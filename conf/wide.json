@@ -1,11 +1,12 @@
 {
     "IP": "${ip}",
-    "Server": "{IP}:7070",
+    "Port": "7070",
+    "Server": "{IP}:{Port}",
     "StaticServer": "",
-    "EditorChannel": "ws://{IP}:7070",
-    "OutputChannel": "ws://{IP}:7070",
-    "ShellChannel": "ws://{IP}:7070",
-    "SessionChannel": "ws://{IP}:7070",
+    "EditorChannel": "ws://{IP}:{Port}",
+    "OutputChannel": "ws://{IP}:{Port}",
+    "ShellChannel": "ws://{IP}:{Port}",
+    "SessionChannel": "ws://{IP}:{Port}",
     "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "201411171800",
     "MaxProcs": 4,
@@ -27,20 +28,9 @@
                 "LineHeight": "17px"
             },
             "LatestSessionContent": {
-                "FileTree": [
-                    "E:\\Work\\go\\src",
-                    "E:\\Work\\go\\src\\code.google.com\\p",
-                    "E:\\Work\\go\\src\\code.google.com\\p\\go.net",
-                    "E:\\Work\\go\\src\\github.com",
-                    "E:\\Work\\go\\src\\github.com\\88250",
-                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml"
-                ],
-                "Files": [
-                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\consts.go",
-                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\doc.go",
-                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\formatter.go"
-                ],
-                "CurrentFile": "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\formatter.go"
+                "FileTree": [],
+                "Files": [],
+                "CurrentFile": ""
             }
         }
     ]
