@@ -1,7 +1,7 @@
 {
     "IP": "${ip}",
     "Server": "{IP}:7070",
-    "StaticServer": "http://{IP}:7070",
+    "StaticServer": "",
     "EditorChannel": "ws://{IP}:7070",
     "OutputChannel": "ws://{IP}:7070",
     "ShellChannel": "ws://{IP}:7070",
