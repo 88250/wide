@@ -43,6 +43,8 @@ func init() {
 	confPath := flag.String("conf", "conf/wide.json", "path of wide.json")
 	confIP := flag.String("ip", "", "ip to visit")
 	confPort := flag.String("port", "", "port to visit")
+	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
+	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
 
 	flag.Set("logtostderr", "true")
 	flag.Set("v", "3")
@@ -52,7 +54,7 @@ func init() {
 
 	event.Load()
 
-	conf.Load(*confPath, *confIP, *confPort)
+	conf.Load(*confPath, *confIP, *confPort, *confServer, *confChannel)
 
 	conf.FixedTimeCheckEnv()
 	conf.FixedTimeSave()

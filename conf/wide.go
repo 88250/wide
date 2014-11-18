@@ -266,7 +266,7 @@ func Save() bool {
 }
 
 // Load loads the configurations from wide.json.
-func Load(confPath, confIP, confPort string) {
+func Load(confPath, confIP, confPort, confServer, confChannel string) {
 	bytes, _ := ioutil.ReadFile(confPath)
 
 	err := json.Unmarshal(bytes, &Wide)
@@ -302,11 +302,27 @@ func Load(confPath, confIP, confPort string) {
 	}
 
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
+	if "" != confServer {
+		Wide.Server = confServer
+	}
+
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
 	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{IP}", Wide.IP, 1)
+	if "" != confChannel {
+		Wide.EditorChannel = confChannel
+	}
 	Wide.OutputChannel = strings.Replace(Wide.OutputChannel, "{IP}", Wide.IP, 1)
+	if "" != confChannel {
+		Wide.OutputChannel = confChannel
+	}
 	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{IP}", Wide.IP, 1)
+	if "" != confChannel {
+		Wide.ShellChannel = confChannel
+	}
 	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", Wide.IP, 1)
+	if "" != confChannel {
+		Wide.SessionChannel = confChannel
+	}
 
 	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
