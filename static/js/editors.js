@@ -371,11 +371,11 @@ var editors = {
         });
 
         CodeMirror.commands.autocompleteAfterDot = function (cm) {
-           var token = cm.getTokenAt(cm.getCursor());
-           if ("comment" === token.type) {
-               return;
-           }
-            
+            var token = cm.getTokenAt(cm.getCursor());
+            if ("comment" === token.type) {
+                return;
+            }
+
             setTimeout(function () {
                 if (!cm.state.completionActive) {
                     cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
@@ -448,6 +448,7 @@ var editors = {
                     var request = newWideRequest();
                     request.path = data.path;
 
+                    // TODO: refactor
                     $.ajax({
                         type: 'POST',
                         url: '/file',
@@ -466,7 +467,7 @@ var editors = {
 
                             data.cursorLine = cursorLine;
                             data.cursorCh = cursorCh;
-                            editors.newEditor(data);
+                            tree.openFile(wide.curNode);
                         }
                     });
                 }
@@ -577,30 +578,6 @@ var editors = {
         $(".toolbars").show();
         var id = wide.curNode.tId;
 
-        var cursor = CodeMirror.Pos(0, 0);
-        if (data.cursorLine && data.cursorCh) {
-            cursor = CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1);
-        }
-
-        $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
-
-        for (var i = 0, ii = editors.data.length; i < ii; i++) {
-            if (editors.data[i].id === id) {
-                editors.tabs.setCurrent(id);
-                wide.curEditor = editors.data[i].editor;
-                var editor = wide.curEditor;
-
-                editor.setCursor(cursor);
-
-                var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
-                var cursorCoords = editor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
-                editor.scrollTo(0, cursorCoords.top);
-
-                editor.focus();
-                return false;
-            }
-        }
-
         editors.tabs.add({
             id: id,
             title: '<span title="' + wide.curNode.path + '"><span class="'
@@ -609,9 +586,6 @@ var editors = {
         });
 
         menu.undisabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install']);
-
-        var rulers = [];
-        rulers.push({color: "#ccc", column: 120, lineStyle: "dashed"});
 
         var textArea = document.getElementById("editor" + id);
         textArea.value = data.content;
@@ -622,7 +596,7 @@ var editors = {
             autoCloseBrackets: true,
             matchBrackets: true,
             highlightSelectionMatches: {showToken: /\w/},
-            rulers: rulers,
+            rulers: [{color: "#ccc", column: 120, lineStyle: "dashed"}],
             styleActiveLine: true,
             theme: 'wide',
             indentUnit: 4,
@@ -825,16 +799,18 @@ var editors = {
             editor.setOption("autoCloseTags", true);
         }
 
-        editor.setCursor(cursor);
-
-        var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
-        var cursorCoords = editor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
-        editor.scrollTo(0, cursorCoords.top);
-
         wide.curEditor = editor;
         editors.data.push({
             "editor": editor,
             "id": id
         });
+
+        var cursor = CodeMirror.Pos(0, 0);
+        if (data.cursorLine && data.cursorCh) {
+            cursor = CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1);
+        }
+        $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
+        editor.setCursor(cursor);
+        editor.focus();
     }
 };

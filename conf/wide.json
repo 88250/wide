@@ -27,9 +27,20 @@
                 "LineHeight": "17px"
             },
             "LatestSessionContent": {
-                "FileTree": [],
-                "Files": [],
-                "CurrentFile": ""
+                "FileTree": [
+                    "E:\\Work\\go\\src",
+                    "E:\\Work\\go\\src\\code.google.com\\p",
+                    "E:\\Work\\go\\src\\code.google.com\\p\\go.net",
+                    "E:\\Work\\go\\src\\github.com",
+                    "E:\\Work\\go\\src\\github.com\\88250",
+                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml"
+                ],
+                "Files": [
+                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\consts.go",
+                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\doc.go",
+                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\formatter.go"
+                ],
+                "CurrentFile": "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\formatter.go"
             }
         }
     ]

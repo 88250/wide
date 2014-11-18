@@ -262,6 +262,7 @@ var wide = {
                 $("#dialogGoFilePrompt").on("dblclick", "li", function () {
                     var tId = tree.getTIdByPath($(this).find(".ft-small").text());
                     tree.openFile(tree.fileTree.getNodeByTId(tId));
+                    tree.fileTree.selectNode(wide.curNode);
                     $("#dialogGoFilePrompt").dialog("close");
                 });
 
@@ -275,6 +276,7 @@ var wide = {
                 hotkeys.bindList($("#dialogGoFilePrompt > input"), $("#dialogGoFilePrompt > .list"), function ($selected) {
                     var tId = tree.getTIdByPath($selected.find(".ft-small").text());
                     tree.openFile(tree.fileTree.getNodeByTId(tId));
+                    tree.fileTree.selectNode(wide.curNode);
                     $("#dialogGoFilePrompt").dialog("close");
                 });
 
@@ -330,6 +332,7 @@ var wide = {
             "ok": function () {
                 var tId = tree.getTIdByPath($("#dialogGoFilePrompt .selected .ft-small").text());
                 tree.openFile(tree.fileTree.getNodeByTId(tId));
+                tree.fileTree.selectNode(wide.curNode);
                 $("#dialogGoFilePrompt").dialog("close");
             }
         });

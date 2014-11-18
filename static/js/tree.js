@@ -239,7 +239,7 @@ var tree = {
                 }
             }
         });
-        
+
         this._initSearch();
     },
     openFile: function (treeNode) {
@@ -249,12 +249,17 @@ var tree = {
             // 该节点文件已经打开
             if (editors.data[i].id === treeNode.tId) {
                 editors.tabs.setCurrent(treeNode.tId);
-                wide.curNode = treeNode;
                 wide.curEditor = editors.data[i].editor;
-                wide.curEditor.focus();
-
+                
                 var cursor = wide.curEditor.getCursor();
                 $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
+  
+                wide.curEditor.setCursor(cursor);
+                var half = Math.floor(wide.curEditor.getScrollInfo().clientHeight / wide.curEditor.defaultTextHeight() / 2);
+                var cursorCoords = wide.curEditor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
+                wide.curEditor.scrollTo(0, cursorCoords.top);
+                wide.curEditor.focus();
+
                 return false;
             }
         }
@@ -288,7 +293,7 @@ var tree = {
         }
     },
     _initSearch: function () {
-         $("#dialogSearchForm > input:eq(0)").keyup(function (event) {
+        $("#dialogSearchForm > input:eq(0)").keyup(function (event) {
             var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
             if (event.which === 13 && !$okBtn.prop("disabled")) {
                 $okBtn.click();
