@@ -239,6 +239,8 @@ var tree = {
                 }
             }
         });
+        
+        this._initSearch();
     },
     openFile: function (treeNode) {
         wide.curNode = treeNode;
@@ -284,5 +286,61 @@ var tree = {
                 }
             });
         }
+    },
+    _initSearch: function () {
+         $("#dialogSearchForm > input:eq(0)").keyup(function (event) {
+            var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+            if (event.which === 13 && !$okBtn.prop("disabled")) {
+                $okBtn.click();
+            }
+
+            if ($.trim($(this).val()) === "") {
+                $okBtn.prop("disabled", true);
+            } else {
+                $okBtn.prop("disabled", false);
+            }
+        });
+
+        $("#dialogSearchForm > input:eq(1)").keyup(function (event) {
+            var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+            if (event.which === 13 && !$okBtn.prop("disabled")) {
+                $okBtn.click();
+            }
+        });
+
+        $("#dialogSearchForm").dialog({
+            "modal": true,
+            "height": 62,
+            "width": 260,
+            "title": config.label.search,
+            "okText": config.label.search,
+            "cancelText": config.label.cancel,
+            "afterOpen": function () {
+                $("#dialogSearchForm > input:eq(0)").val('').focus();
+                $("#dialogSearchForm > input:eq(1)").val('');
+                $("#dialogSearchForm").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
+            },
+            "ok": function () {
+                var request = newWideRequest();
+                request.dir = wide.curNode.path;
+                request.text = $("#dialogSearchForm > input:eq(0)").val();
+                request.extension = $("#dialogSearchForm > input:eq(1)").val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/file/search/text',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function (data) {
+                        if (!data.succ) {
+                            return;
+                        }
+
+                        $("#dialogSearchForm").dialog("close");
+                        editors.appendSearch(data.founds, 'founds', request.text);
+                    }
+                });
+            }
+        });
     }
 };

@@ -417,7 +417,7 @@ var hotkeys = {
             }
 
             if (event.which === hotKeys.buildRun.which) { // F6 构建并运行
-                wide.run();
+                menu.run();
                 event.preventDefault();
 
                 return;

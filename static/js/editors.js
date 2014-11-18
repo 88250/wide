@@ -641,7 +641,7 @@ var editors = {
                     wide.saveFile();
                 },
                 "Shift-Ctrl-S": function () {
-                    wide.saveAllFiles();
+                    menu.saveAllFiles();
                 },
                 "Shift-Alt-F": function () {
                     var currentPath = editors.getCurrentPath();

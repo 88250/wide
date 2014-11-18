@@ -31,14 +31,14 @@
                     <span>{{.i18n.file}}</span>
                     <div class="frame">
                         <ul>     
-                            <li class="save-all disabled" onclick="wide.saveAllFiles()">
+                            <li class="save-all disabled" onclick="menu.saveAllFiles()">
                                 <span>{{.i18n.save_all_files}}</span>
                             </li>
-                            <li class="close-all" onclick="wide.closeAllFiles()">
+                            <li class="close-all" onclick="menu.closeAllFiles()">
                                 <span>{{.i18n.close_all_files}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li onclick="wide.exit()">
+                            <li onclick="menu.exit()">
                                 <span>{{.i18n.exit}}</span>
                             </li>
                         </ul>
@@ -48,21 +48,21 @@
                     <span>{{.i18n.run}}</span>
                     <div class="frame">
                         <ul>
-                            <li class="build disabled" onclick="wide.build()">
+                            <li class="build disabled" onclick="menu.build()">
                                 <span>{{.i18n.build}}</span>
                             </li>
-                            <li class="run disabled" onclick="wide.run()">
+                            <li class="run disabled" onclick="menu.run()">
                                 <span>{{.i18n.build_n_run}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="go-test disabled" onclick="wide.test()">
+                            <li class="go-test disabled" onclick="menu.test()">
                                 <span>{{.i18n.test}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="go-get disabled" onclick="wide.goget()">
+                            <li class="go-get disabled" onclick="menu.goget()">
                                 <span>{{.i18n.goget}}</span>
                             </li>
-                            <li class="go-install disabled" onclick="wide.goinstall()">
+                            <li class="go-install disabled" onclick="menu.goinstall()">
                                 <span>{{.i18n.goinstall}}</span>
                             </li>      
                         </ul>
@@ -90,7 +90,7 @@
                         </ul>
                     </div>
                 </li>
-                <li onclick="wide.openPreference()">
+                <li onclick="meun.openPreference()">
                     <span>{{.i18n.perference}}</span>
                 </li>
                 <li>
@@ -111,7 +111,7 @@
                             <li onclick="editors.openStartPage()">
                                 <span>{{.i18n.start_page}}</span>
                             </li>
-                            <li onclick="wide.openAbout()">
+                            <li onclick="menu.openAbout()">
                                 <span>{{.i18n.about}}</span>
                             </li>
                         </ul>
@@ -154,7 +154,7 @@
 
             <div class="edit-panel">
                 <div class="toolbars fn-none">
-                    <span onclick="wide.run()" class="font-ico ico-buildrun" title="{{.i18n.build_n_run}}"></span>
+                    <span onclick="menu.run()" class="font-ico ico-buildrun" title="{{.i18n.build_n_run}}"></span>
                     <span onclick="wide.saveFile()" title="{{.i18n.save}}" class="font-ico ico-save"></span>
                     <span onclick="wide.fmt(editors.getCurrentPath(), wide.curEditor)" class="ico-format font-ico" title="{{.i18n.format}}"></span>
                     <span class="font-ico ico-max" onclick="windows.maxEditor()" title="{{.i18n.max_editor}}"></span>
@@ -164,7 +164,7 @@
                         <li onclick="editors.close()" title="{{.i18n.close}}">
                             <span>{{.i18n.close}}</span>
                         </li>    
-                        <li onclick="wide.closeAllFiles()" title="{{.i18n.close_all_files}}">
+                        <li onclick="menu.closeAllFiles()" title="{{.i18n.close_all_files}}">
                             <span>{{.i18n.close_all_files}}</span>
                         </li>    
                         <li onclick="editors.closeOther()" title="{{.i18n.close_other}}">
