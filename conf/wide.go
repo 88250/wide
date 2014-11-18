@@ -18,7 +18,6 @@ package conf
 import (
 	"encoding/json"
 	"io/ioutil"
-	"net"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -294,6 +293,11 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 
 	glog.V(5).Infof("${ip} [%s]", ip)
 
+	// Docker
+	if confDocker {
+		confChannel = os.Getenv("channel") // overwrite channel specified
+	}
+
 	if "" != confIP {
 		ip = confIP
 	}
@@ -329,23 +333,6 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", Wide.IP, 1)
 	if "" != confChannel {
 		Wide.SessionChannel = confChannel
-	}
-
-	// Docker
-	if confDocker {
-		h, err := net.LookupHost("wide")
-		if nil != err {
-			glog.Error(err)
-
-			os.Exit(-1)
-		}
-
-		// XXX: secure protocol wss enchance
-		channel := "ws://" + h[0] + ":" + Wide.Port
-		Wide.EditorChannel = channel
-		Wide.OutputChannel = channel
-		Wide.ShellChannel = channel
-		Wide.SessionChannel = channel
 	}
 
 	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
