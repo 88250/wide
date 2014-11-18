@@ -1,5 +1,8 @@
 FROM golang:latest
 
+RUN go get github.com/88250/ide_stub
+RUN go get github.com/nsf/gocode
+
 ADD . /go/src/github.com/b3log/wide
 
 WORKDIR /go/src/github.com/b3log/wide
