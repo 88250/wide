@@ -371,6 +371,11 @@ var editors = {
         });
 
         CodeMirror.commands.autocompleteAfterDot = function (cm) {
+           var token = cm.getTokenAt(cm.getCursor());
+           if ("comment" === token.type) {
+               return;
+           }
+            
             setTimeout(function () {
                 if (!cm.state.completionActive) {
                     cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
