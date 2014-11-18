@@ -1,4 +1,5 @@
 FROM golang:latest
+MAINTAINER Liang Ding <dl88250@gmail.com>
 
 RUN go get github.com/88250/ide_stub
 RUN go get github.com/nsf/gocode
