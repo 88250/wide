@@ -341,7 +341,7 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 		}
 
 		// XXX: secure protocol wss enchance
-		channel := "ws://" + h[0] + Wide.Port
+		channel := "ws://" + h[0] + ":" + Wide.Port
 		Wide.EditorChannel = channel
 		Wide.OutputChannel = channel
 		Wide.ShellChannel = channel
