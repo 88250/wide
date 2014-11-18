@@ -442,34 +442,11 @@ var editors = {
                         return;
                     }
 
-                    var cursorLine = data.cursorLine;
-                    var cursorCh = data.cursorCh;
+                    var tId = tree.getTIdByPath(data.path);
+                    wide.curNode = tree.fileTree.getNodeByTId(tId);
+                    tree.fileTree.selectNode(wide.curNode);
 
-                    var request = newWideRequest();
-                    request.path = data.path;
-
-                    // TODO: refactor
-                    $.ajax({
-                        type: 'POST',
-                        url: '/file',
-                        data: JSON.stringify(request),
-                        dataType: "json",
-                        success: function (data) {
-                            if (!data.succ) {
-                                $("#dialogAlert").dialog("open", data.msg);
-
-                                return false;
-                            }
-
-                            var tId = tree.getTIdByPath(data.path);
-                            wide.curNode = tree.fileTree.getNodeByTId(tId);
-                            tree.fileTree.selectNode(wide.curNode);
-
-                            data.cursorLine = cursorLine;
-                            data.cursorCh = cursorCh;
-                            tree.openFile(wide.curNode);
-                        }
-                    });
+                    tree.openFile(wide.curNode, CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1));
                 }
             });
         };
@@ -574,7 +551,7 @@ var editors = {
         $(".bottom-window-group .search").focus();
     },
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
-    newEditor: function (data) {
+    newEditor: function (data, cursor) {
         $(".toolbars").show();
         var id = wide.curNode.tId;
 
@@ -805,11 +782,12 @@ var editors = {
             "id": id
         });
 
-        var cursor = CodeMirror.Pos(0, 0);
-        if (data.cursorLine && data.cursorCh) {
-            cursor = CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1);
-        }
         $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
+
+        var half = Math.floor(wide.curEditor.getScrollInfo().clientHeight / wide.curEditor.defaultTextHeight() / 2);
+        var cursorCoords = wide.curEditor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
+        wide.curEditor.scrollTo(0, cursorCoords.top);
+
         editor.setCursor(cursor);
         editor.focus();
     }

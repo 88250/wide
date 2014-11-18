@@ -242,21 +242,24 @@ var tree = {
 
         this._initSearch();
     },
-    openFile: function (treeNode) {
+    openFile: function (treeNode, cursor) {
         wide.curNode = treeNode;
+        var tempCursor = cursor;
 
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             // 该节点文件已经打开
             if (editors.data[i].id === treeNode.tId) {
                 editors.tabs.setCurrent(treeNode.tId);
                 wide.curEditor = editors.data[i].editor;
-                
-                var cursor = wide.curEditor.getCursor();
-                $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
-  
-                wide.curEditor.setCursor(cursor);
+
+                if (!tempCursor) {
+                    tempCursor = wide.curEditor.getCursor();
+                }
+                $(".footer .cursor").text('|   ' + (tempCursor.line + 1) + ':' + (tempCursor.ch + 1) + '   |');
+
+                wide.curEditor.setCursor(tempCursor);
                 var half = Math.floor(wide.curEditor.getScrollInfo().clientHeight / wide.curEditor.defaultTextHeight() / 2);
-                var cursorCoords = wide.curEditor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
+                var cursorCoords = wide.curEditor.cursorCoords({line: tempCursor.line - half, ch: 0}, "local");
                 wide.curEditor.scrollTo(0, cursorCoords.top);
                 wide.curEditor.focus();
 
@@ -286,8 +289,11 @@ var tree = {
                         var w = window.open(data.path);
                         return false;
                     }
-
-                    editors.newEditor(data);
+                    
+                    if (!tempCursor) {
+                        tempCursor = CodeMirror.Pos(0, 0);
+                    }
+                    editors.newEditor(data, tempCursor);
                 }
             });
         }
