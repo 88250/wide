@@ -109,6 +109,11 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
    * `go get -u github.com/nsf/gocode`
 3. Compile wide with `go build` 
 
+### Docker
+
+1. Get image: `sudo docker pull 88250/wide:latest`
+2. Run: `sudo docker run --publish {port}:7070 -e channel=ws://{ip}:{port} 88250/wide:latest /go/src/github.com/b3log/wide/wide -docker=true`
+
 ## Known Issues
 
 * [Shell is not available on Windows](https://github.com/b3log/wide/issues/32)
@@ -128,6 +133,7 @@ Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/maste
 * [gocode](https://github.com/nsf/gocode)
 * [Gorilla](https://github.com/gorilla)
 * [GoBuild](http://gobuild.io)
+* [Docker](https://docker.com)
 
 ----
 
