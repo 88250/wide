@@ -45,7 +45,6 @@ func init() {
 	confPort := flag.String("port", "", "port to visit")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
 	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
-	confDocker := flag.Bool("docker", false, "whether run in a docker container")
 
 	flag.Set("logtostderr", "true")
 	flag.Set("v", "3")
@@ -55,7 +54,7 @@ func init() {
 
 	event.Load()
 
-	conf.Load(*confPath, *confIP, *confPort, *confServer, *confChannel, *confDocker)
+	conf.Load(*confPath, *confIP, *confPort, *confServer, *confChannel)
 
 	conf.FixedTimeCheckEnv()
 	conf.FixedTimeSave()
