@@ -6,11 +6,14 @@ RUN go get github.com/nsf/gocode
 RUN go get github.com/bradfitz/goimports
 
 ADD . /go/src/github.com/b3log/wide
-
 WORKDIR /go/src/github.com/b3log/wide
-
 RUN go get
 RUN go build
+
+RUN mv . /wide
+WORKDIR /wide
+RUN rm -rf /go/bin /go/pkg /go/src
+RUN mv ./hello /go/src/
 
 ENV GOROOT /usr/src/go
 
