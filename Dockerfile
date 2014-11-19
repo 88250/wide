@@ -12,8 +12,8 @@ RUN go build
 
 RUN cp -r . /root/wide
 WORKDIR /root/wide
-RUN rm -rf /go/bin /go/pkg /go/src
-RUN mv ./hello /go/src/
+RUN rm -rf /go/pkg /go/src
+RUN mv ./hello /go/src/hello
 
 ENV GOROOT /usr/src/go
 
