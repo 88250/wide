@@ -18,6 +18,7 @@ import (
 	"encoding/json"
 	"math/rand"
 	"net/http"
+	"os"
 	"path/filepath"
 	"runtime"
 	"strconv"
@@ -233,6 +234,12 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// addUser add a user with the specified username and password.
+//
+//  1. create the user's workspace
+//  2. generate 'Hello, 世界' demo code in the workspace
+//  3. update the user customized configurations, such as style.css
+//  4. serve files of the user's workspace via HTTP
 func addUser(username, password string) string {
 	for _, user := range conf.Wide.Users {
 		if user.Name == username {
@@ -254,6 +261,7 @@ func addUser(username, password string) string {
 	}
 
 	conf.CreateWorkspaceDir(workspace)
+	helloWorld(workspace)
 	conf.UpdateCustomizedConf(username)
 
 	http.Handle("/workspace/"+username+"/",
@@ -262,4 +270,32 @@ func addUser(username, password string) string {
 	glog.Infof("Created a user [%s]", username)
 
 	return UserCreated
+}
+
+// helloWorld generates the 'Hello, 世界' source code in workspace/src/hello/main.go.
+func helloWorld(workspace string) {
+	dir := workspace + conf.PathSeparator + "src" + conf.PathSeparator + "hello"
+	if err := os.MkdirAll(dir, 0755); nil != err {
+		glog.Error(err)
+
+		return
+	}
+
+	fout, err := os.Create(dir + conf.PathSeparator + "main.go")
+	if nil != err {
+		glog.Error(err)
+
+		os.Exit(-1)
+	}
+
+	fout.WriteString(`package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello, 世界")
+}
+`)
+
+	fout.Close()
 }
