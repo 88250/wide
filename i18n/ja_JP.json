@@ -132,5 +132,6 @@
     "line_height": "行の高さ",
     "go_format": "Go フォーマット",
     "locale": "ロケール",
-    "apply": "適用する"
+    "apply": "適用する",
+    "clearOutput": "空の出力"
 }

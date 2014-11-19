@@ -132,5 +132,6 @@
     "line_height": "行高",
     "go_format": "Go 格式化",
     "locale": "语言环境",
-    "apply": "应用"
+    "apply": "应用",
+    "clearOutput": "清空输出"
 }

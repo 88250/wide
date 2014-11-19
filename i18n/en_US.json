@@ -132,5 +132,6 @@
     "line_height": "Line Height",
     "go_format": "Go Format",
     "locale": "Locale",
-    "apply": "Apply"
+    "apply": "Apply",
+    "clearOutput": "Clear Output"
 }
