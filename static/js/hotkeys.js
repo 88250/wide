@@ -86,7 +86,14 @@ var hotkeys = {
             shiftKey: true,
             which: 79
         },
-        // F6 构建并运行
+        // F5 Build
+        build: {
+            ctrlKey: false,
+            altKey: false,
+            shiftKey: false,
+            which: 116
+        },
+        // F6 Build & Run
         buildRun: {
             ctrlKey: false,
             altKey: false,
@@ -416,7 +423,14 @@ var hotkeys = {
                 return false;
             }
 
-            if (event.which === hotKeys.buildRun.which) { // F6 构建并运行
+            if (event.which === hotKeys.build.which) { // F5 Build
+                menu.build();
+                event.preventDefault();
+
+                return;
+            }
+
+            if (event.which === hotKeys.buildRun.which) { // F6 Build & Run
                 menu.run();
                 event.preventDefault();
 

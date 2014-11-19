@@ -216,7 +216,7 @@ var menu = {
             }
         });
     },
-    // 构建并运行.
+    // Build & Run.
     run: function () {
         menu.saveAllFiles();
 
@@ -253,7 +253,7 @@ var menu = {
             }
         });
     },
-    // 构建
+    // Build.
     build: function () {
         menu.saveAllFiles();
 
