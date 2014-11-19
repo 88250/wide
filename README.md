@@ -112,7 +112,7 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 ### Docker
 
 1. Get image: `sudo docker pull 88250/wide:latest`
-2. Run: `sudo docker run --publish {port}:7070 -e channel=ws://{ip}:{port} 88250/wide:latest /root/wide/wide -docker=true`
+2. Run: `sudo docker run -p {port}:7070 -e channel=ws://{ip}:{port} 88250/wide:latest /root/wide/wide -docker=true`
 
 ## Known Issues
 
