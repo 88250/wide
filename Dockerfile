@@ -10,7 +10,7 @@ WORKDIR /go/src/github.com/b3log/wide
 RUN go get
 RUN go build
 
-RUN mv . /root/wide
+RUN cp -r . /root/wide
 WORKDIR /root/wide
 RUN rm -rf /go/bin /go/pkg /go/src
 RUN mv ./hello /go/src/
