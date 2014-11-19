@@ -52,6 +52,21 @@ type Snippet struct {
 	Contents []string `json:"contents"` // lines nearby
 }
 
+var apiNode *FileNode
+
+// initAPINode builds the Go API file node.
+func initAPINode() {
+	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg" // before Go 1.4
+	if !util.File.IsExist(apiPath) {
+		apiPath = runtime.GOROOT() + conf.PathSeparator + "src" // Go 1.4 and after
+	}
+
+	apiNode = &FileNode{Name: "Go API", Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
+		Creatable: false, Removable: false, FileNodes: []*FileNode{}}
+
+	walk(apiPath, apiNode, false, false)
+}
+
 // GetFiles handles request of constructing user workspace file tree.
 //
 // The Go API source code package also as a child node,
@@ -68,6 +83,10 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 	root := FileNode{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
 
+	if nil == apiNode { // lazy init
+		initAPINode()
+	}
+
 	// workspace node process
 	for _, workspace := range workspaces {
 		workspacePath := workspace + conf.PathSeparator + "src"
@@ -82,28 +101,8 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 		root.FileNodes = append(root.FileNodes, &workspaceNode)
 	}
 
-	// construct Go API node
-	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg" // before Go 1.4
-	if !util.File.IsExist(apiPath) {
-		apiPath = runtime.GOROOT() + conf.PathSeparator + "src" // Go 1.4 and after
-	}
-
-	apiNode := FileNode{Name: "Go API", Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
-		Creatable: false, Removable: false, FileNodes: []*FileNode{}}
-
-	goapiBuildOKSignal := make(chan bool)
-	go func() {
-		walk(apiPath, &apiNode, false, false)
-
-		// go-ahead
-		close(goapiBuildOKSignal)
-	}()
-
-	// waiting
-	<-goapiBuildOKSignal
-
 	// add Go API node
-	root.FileNodes = append(root.FileNodes, &apiNode)
+	root.FileNodes = append(root.FileNodes, apiNode)
 
 	data["root"] = root
 }
