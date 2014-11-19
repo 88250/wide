@@ -31,7 +31,7 @@ var hotkeys = {
             which: 49
         },
         // Ctrl+4 焦点切换到输出窗口   
-        goOutPut: {
+        goOutput: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
@@ -318,8 +318,8 @@ var hotkeys = {
                 return;
             }
 
-            if (event.ctrlKey === hotKeys.goOutPut.ctrlKey
-                    && event.which === hotKeys.goOutPut.which) { // Ctrl+4 焦点切换到输出窗口   
+            if (event.ctrlKey === hotKeys.goOutput.ctrlKey
+                    && event.which === hotKeys.goOutput.which) { // Ctrl+4 焦点切换到输出窗口   
                 bottomGroup.tabs.setCurrent("output");
 
                 windows.flowBottom();
