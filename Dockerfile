@@ -1,7 +1,7 @@
 FROM golang:latest
 MAINTAINER Liang Ding <dl88250@gmail.com>
 
-RUN useradd wide && mkdir -p /wide/gogogo/
+RUN useradd wide && mkdir -p /wide/gogogo/ && chown -R wide:wide /wide
 USER wide
 
 ENV GOROOT /usr/src/go
