@@ -79,7 +79,7 @@ func event2Notification(e *event.Event) {
 		return
 	}
 
-	wsChannel.Conn.WriteJSON(notification)
+	wsChannel.WriteJSON(notification)
 
 	wsChannel.Refresh()
 }
@@ -98,7 +98,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
 	ret := map[string]interface{}{"notification": "Notification initialized", "cmd": "init-notification"}
-	err := wsChan.Conn.WriteJSON(&ret)
+	err := wsChan.WriteJSON(&ret)
 	if nil != err {
 		return
 	}

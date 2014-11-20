@@ -59,7 +59,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
 	ret := map[string]interface{}{"output": "Ouput initialized", "cmd": "init-output"}
-	err := wsChan.Conn.WriteJSON(&ret)
+	err := wsChan.WriteJSON(&ret)
 	if nil != err {
 		return
 	}
@@ -123,7 +123,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			channelRet["cmd"] = "run-done"
 			channelRet["output"] = ""
 
-			err := wsChannel.Conn.WriteJSON(&channelRet)
+			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				glog.Error(err)
 				return
@@ -150,7 +150,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		if nil != wsChannel {
 			channelRet["cmd"] = "run"
 			channelRet["output"] = ""
-			err := wsChannel.Conn.WriteJSON(&channelRet)
+			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				glog.Error(err)
 				return
@@ -177,7 +177,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					if nil != wsChannel {
 						channelRet["cmd"] = "run-done"
 						channelRet["output"] = buf
-						err := wsChannel.Conn.WriteJSON(&channelRet)
+						err := wsChannel.WriteJSON(&channelRet)
 						if nil != err {
 							glog.Error(err)
 							break
@@ -191,7 +191,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					if nil != wsChannel {
 						channelRet["cmd"] = "run"
 						channelRet["output"] = buf
-						err := wsChannel.Conn.WriteJSON(&channelRet)
+						err := wsChannel.WriteJSON(&channelRet)
 						if nil != err {
 							glog.Error(err)
 							break
@@ -219,7 +219,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					channelRet["cmd"] = "run-done"
 					channelRet["output"] = buf
-					err := wsChannel.Conn.WriteJSON(&channelRet)
+					err := wsChannel.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
 						break
@@ -235,7 +235,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					channelRet["cmd"] = "run"
 					channelRet["output"] = buf
-					err := wsChannel.Conn.WriteJSON(&channelRet)
+					err := wsChannel.WriteJSON(&channelRet)
 					if nil != err {
 						glog.Error(err)
 						break
@@ -336,7 +336,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 		wsChannel := session.OutputWS[sid]
 
-		err := wsChannel.Conn.WriteJSON(&channelRet)
+		err := wsChannel.WriteJSON(&channelRet)
 		if nil != err {
 			glog.Error(err)
 			return
@@ -439,7 +439,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			glog.V(3).Infof("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
 
 			wsChannel := session.OutputWS[sid]
-			err := wsChannel.Conn.WriteJSON(&channelRet)
+			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				glog.Error(err)
 			}
@@ -508,7 +508,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 
 		wsChannel := session.OutputWS[sid]
 
-		err := wsChannel.Conn.WriteJSON(&channelRet)
+		err := wsChannel.WriteJSON(&channelRet)
 		if nil != err {
 			glog.Error(err)
 			return
@@ -553,7 +553,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 		if nil != session.OutputWS[sid] {
 			wsChannel := session.OutputWS[sid]
 
-			err := wsChannel.Conn.WriteJSON(&channelRet)
+			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				glog.Error(err)
 			}
@@ -623,7 +623,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 		wsChannel := session.OutputWS[sid]
 
-		err := wsChannel.Conn.WriteJSON(&channelRet)
+		err := wsChannel.WriteJSON(&channelRet)
 		if nil != err {
 			glog.Error(err)
 			return
@@ -712,7 +712,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 			glog.V(3).Infof("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
 
 			wsChannel := session.OutputWS[sid]
-			err := wsChannel.Conn.WriteJSON(&channelRet)
+			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				glog.Error(err)
 			}
@@ -781,7 +781,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 
 		wsChannel := session.OutputWS[sid]
 
-		err := wsChannel.Conn.WriteJSON(&channelRet)
+		err := wsChannel.WriteJSON(&channelRet)
 		if nil != err {
 			glog.Error(err)
 			return
@@ -825,7 +825,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		if nil != session.OutputWS[sid] {
 			wsChannel := session.OutputWS[sid]
 
-			err := wsChannel.Conn.WriteJSON(&channelRet)
+			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				glog.Error(err)
 			}

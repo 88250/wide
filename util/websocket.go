@@ -15,6 +15,7 @@
 package util
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -27,6 +28,21 @@ type WSChannel struct {
 	Conn    *websocket.Conn // websocket connection
 	Request *http.Request   // HTTP request related
 	Time    time.Time       // the latest use time
+}
+
+// WriteJSON writes the JSON encoding of v to the channel.
+func (c *WSChannel) WriteJSON(v interface{}) (ret error) {
+	if nil == c.Conn {
+		return errors.New("connection is nil, channel has been closed")
+	}
+
+	defer func() {
+		if r := recover(); nil != r {
+			ret = errors.New("channel has been closed")
+		}
+	}()
+
+	return c.Conn.WriteJSON(v)
 }
 
 // Close closed the channel.

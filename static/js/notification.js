@@ -37,6 +37,8 @@ var notification = {
                     notificationHTML = '';
             
             if (data.cmd && "init-notification" === data.cmd) {
+                console.log('[notification onmessage]' + e.data);
+                
                 return;
             }
 

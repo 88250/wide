@@ -90,7 +90,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
 	ret := map[string]interface{}{"output": "Shell initialized", "cmd": "init-shell"}
-	err := wsChan.Conn.WriteJSON(&ret)
+	err := wsChan.WriteJSON(&ret)
 	if nil != err {
 		return
 	}
@@ -138,7 +138,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		ret = map[string]interface{}{"output": output, "cmd": "shell-output"}
 
-		if err := wsChan.Conn.WriteJSON(&ret); err != nil {
+		if err := wsChan.WriteJSON(&ret); err != nil {
 			glog.Error("Shell WS ERROR: " + err.Error())
 			return
 		}

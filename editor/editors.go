@@ -44,7 +44,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	editorChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
 	ret := map[string]interface{}{"output": "Editor initialized", "cmd": "init-editor"}
-	err := editorChan.Conn.WriteJSON(&ret)
+	err := editorChan.WriteJSON(&ret)
 	if nil != err {
 		return
 	}
@@ -92,7 +92,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		ret = map[string]interface{}{"output": string(output.Bytes()), "cmd": "autocomplete"}
 
-		if err := session.EditorWS[sid].Conn.WriteJSON(&ret); err != nil {
+		if err := session.EditorWS[sid].WriteJSON(&ret); err != nil {
 			glog.Error("Editor WS ERROR: " + err.Error())
 			return
 		}
