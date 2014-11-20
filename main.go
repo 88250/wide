@@ -47,7 +47,8 @@ func init() {
 	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
 	confDocker := flag.Bool("docker", false, "whether run in a docker container")
 
-	flag.Set("logtostderr", "true")
+	flag.Set("alsologtostderr", "true")
+	flag.Set("stderrthreshold", "INFO")
 	flag.Set("v", "3")
 	flag.Parse()
 
