@@ -118,7 +118,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 		httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 		httpSession.Save(r, w)
 
-		WideSessions.New(httpSession, sid)
+		wSession = WideSessions.New(httpSession, sid)
 
 		glog.Infof("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
 	}
