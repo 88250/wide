@@ -1,11 +1,11 @@
 // Copyright (c) 2014, B3log
-//  
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//  
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -43,10 +43,13 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	editorChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
-	session.EditorWS[sid] = &editorChan
-
 	ret := map[string]interface{}{"output": "Editor initialized", "cmd": "init-editor"}
-	editorChan.Conn.WriteJSON(&ret)
+	err := editorChan.Conn.WriteJSON(&ret)
+	if nil != err {
+		return
+	}
+
+	session.EditorWS[sid] = &editorChan
 
 	glog.Infof("Open a new [Editor] with session [%s], %d", sid, len(session.EditorWS))
 

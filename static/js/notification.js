@@ -35,6 +35,10 @@ var notification = {
             var data = JSON.parse(e.data),
                     $notification = $('.bottom-window-group .notification > table'),
                     notificationHTML = '';
+            
+            if (data.cmd && "init-notification" === data.cmd) {
+                return;
+            }
 
             notificationHTML += '<tr><td class="severity">' + data.severity
                     + '</td><td class="message">' + data.message
