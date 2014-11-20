@@ -23,6 +23,7 @@ import (
 	"runtime"
 	"strconv"
 	"text/template"
+	"sync"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
@@ -35,6 +36,9 @@ const (
 	UserCreated     = "user created"
 	UserCreateError = "user create error"
 )
+
+// Exclusive lock for adding user.
+var addUserMutex sync.Mutex
 
 // PreferenceHandle handles request of preference page.
 func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
@@ -106,6 +110,8 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.Password = args.Password
 	user.Locale = args.Locale
 
+	conf.UpdateCustomizedConf(username)
+	
 	succ = conf.Save()
 }
 
@@ -241,6 +247,9 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 //  3. update the user customized configurations, such as style.css
 //  4. serve files of the user's workspace via HTTP
 func addUser(username, password string) string {
+	addUserMutex.Lock()
+	defer addUserMutex.Unlock()
+	
 	for _, user := range conf.Wide.Users {
 		if user.Name == username {
 			return UserExists
