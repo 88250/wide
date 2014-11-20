@@ -1,20 +1,16 @@
 FROM golang:latest
 MAINTAINER Liang Ding <dl88250@gmail.com>
 
-RUN go get github.com/88250/ide_stub
-RUN go get github.com/nsf/gocode
-RUN go get github.com/bradfitz/goimports
-
-ADD . /go/src/github.com/b3log/wide
-WORKDIR /go/src/github.com/b3log/wide
-RUN go get
-RUN go build
-
-RUN cp -r . /root/wide
-WORKDIR /root/wide
-RUN rm -rf /go/pkg /go/src/*
-RUN mv ./hello /go/src/hello
+RUN useradd wide && mkdir -p /wide/gogogo/
+USER wide
 
 ENV GOROOT /usr/src/go
+ENV GOPATH /wide/gogogo
+
+RUN go get github.com/88250/ide_stub github.com/nsf/gocode github.com/bradfitz/goimports
+
+ADD . /wide/gogogo/src/github.com/b3log/wide
+WORKDIR /wide/gogogo/src/github.com/b3log/wide
+RUN go get && go build
 
 EXPOSE 7070
