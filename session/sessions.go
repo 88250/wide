@@ -120,7 +120,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		WideSessions.New(httpSession, sid)
 
-		glog.Infof("Created a wide session [%s] for websocket reconnecting", sid)
+		glog.Infof("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
 	}
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
