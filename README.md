@@ -104,9 +104,9 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 1. [Download](https://github.com/b3log/wide/archive/master.zip) source or by `git clone`
 2. Get dependencies with 
-   * `go get -u`
-   * `go get -u github.com/88250/ide_stub`
-   * `go get -u github.com/nsf/gocode`
+   * `go get`
+   * `go get github.com/88250/ide_stub`
+   * `go get github.com/nsf/gocode`
 3. Compile wide with `go build` 
 
 ### Docker
