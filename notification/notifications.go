@@ -114,16 +114,6 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		if err := wsChan.ReadJSON(&input); err != nil {
-			if err.Error() == "EOF" {
-				return
-			}
-
-			if err.Error() == "unexpected EOF" {
-				return
-			}
-
-			glog.Error("Notification WS ERROR: " + err.Error())
-
 			return
 		}
 	}

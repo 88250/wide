@@ -140,7 +140,8 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		if err := wsChan.ReadJSON(&input); err != nil {
-			glog.V(3).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it", sid)
+			glog.V(3).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]",
+				sid, wSession.Username)
 
 			WideSessions.Remove(sid)
 
@@ -151,6 +152,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		if err := wsChan.WriteJSON(&ret); err != nil {
 			glog.Error("Session WS ERROR: " + err.Error())
+
 			return
 		}
 

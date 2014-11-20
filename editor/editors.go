@@ -56,16 +56,6 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	args := map[string]interface{}{}
 	for {
 		if err := session.EditorWS[sid].ReadJSON(&args); err != nil {
-			if err.Error() == "EOF" {
-				return
-			}
-
-			if err.Error() == "unexpected EOF" {
-				return
-			}
-
-			glog.Error("Editor WS ERROR: " + err.Error())
-
 			return
 		}
 
