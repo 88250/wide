@@ -93,7 +93,7 @@ func FixedTimeRelease() {
 
 			for _, s := range WideSessions {
 				if s.Updated.Before(threshold) {
-					glog.V(3).Infof("Removes a invalid session [%s]", s.Id)
+					glog.V(3).Infof("Removes a invalid session [%s], user [%s]", s.Id, s.Username)
 
 					WideSessions.Remove(s.Id)
 				}
@@ -270,9 +270,9 @@ func (sessions *Sessions) Remove(sid string) {
 			// kill processes
 			for _, p := range s.Processes {
 				if err := p.Kill(); nil != err {
-					glog.Errorf("Can't kill process [%d] of session [%s]", p.Pid, sid)
+					glog.Errorf("Can't kill process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
 				} else {
-					glog.V(3).Infof("Killed a process [%d] of session [%s]", p.Pid, sid)
+					glog.V(3).Infof("Killed a process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
 				}
 			}
 
@@ -292,8 +292,6 @@ func (sessions *Sessions) Remove(sid string) {
 				delete(SessionWS, sid)
 			}
 
-			glog.V(3).Infof("Removed a session [%s]", s.Id)
-
 			cnt := 0 // count wide sessions associated with HTTP session
 			for _, s := range *sessions {
 				if s.HTTPSession.ID == s.HTTPSession.ID {
@@ -301,7 +299,7 @@ func (sessions *Sessions) Remove(sid string) {
 				}
 			}
 
-			glog.V(3).Infof("User [%s] has [%d] sessions", s.Username, cnt)
+			glog.V(3).Infof("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
 
 			return
 		}
