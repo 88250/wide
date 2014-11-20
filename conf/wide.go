@@ -294,9 +294,8 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 
 	glog.V(5).Infof("${ip} [%s]", ip)
 
-	// Docker
 	if confDocker {
-		confChannel = os.Getenv("channel") // overwrite channel specified
+		// TODO: may be we need to do something here
 	}
 
 	if "" != confIP {
