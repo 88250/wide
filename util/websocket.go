@@ -45,6 +45,21 @@ func (c *WSChannel) WriteJSON(v interface{}) (ret error) {
 	return c.Conn.WriteJSON(v)
 }
 
+// ReadJSON reads the next JSON-encoded message from the channel and stores it in the value pointed to by v.
+func (c *WSChannel) ReadJSON(v interface{}) (ret error) {
+	if nil == c.Conn {
+		return errors.New("connection is nil, channel has been closed")
+	}
+
+	defer func() {
+		if r := recover(); nil != r {
+			ret = errors.New("channel has been closed")
+		}
+	}()
+
+	return c.Conn.ReadJSON(v)
+}
+
 // Close closed the channel.
 func (c *WSChannel) Close() {
 	if nil != c.Conn {

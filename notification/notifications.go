@@ -113,7 +113,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	input := map[string]interface{}{}
 
 	for {
-		if err := wsChan.Conn.ReadJSON(&input); err != nil {
+		if err := wsChan.ReadJSON(&input); err != nil {
 			if err.Error() == "EOF" {
 				return
 			}
