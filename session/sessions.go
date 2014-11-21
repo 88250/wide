@@ -113,7 +113,7 @@ type userReport struct {
 
 // report returns a online user statistics in pretty format.
 func (u *userReport) report() string {
-	return "[" + u.username + "] has [" + strconv.Itoa(u.sessionCnt) + "] wide sessions, latest activity time [" +
+	return "[" + u.username + "] has [" + strconv.Itoa(u.sessionCnt) + "] sessions, latest activity [" +
 		u.updated.Format("2006-01-02 15:04:05") + "]"
 }
 
@@ -137,7 +137,7 @@ func FixedTimeReport() {
 
 			var buf bytes.Buffer
 			buf.WriteString("\n  [" + strconv.Itoa(len(users)) + "] users are online and [" + strconv.Itoa(len(WideSessions)) +
-				"] wide sessions currently\n")
+				"] sessions currently\n")
 
 			for _, t := range users {
 				buf.WriteString("    " + t.report() + "\n")
