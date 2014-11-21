@@ -39,17 +39,18 @@ import (
 
 // The only one init function in Wide.
 func init() {
-	// TODO: args
 	confPath := flag.String("conf", "conf/wide.json", "path of wide.json")
 	confIP := flag.String("ip", "", "ip to visit")
 	confPort := flag.String("port", "", "port to visit")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
 	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
+	confStat := flag.Bool("stat", false, "whether report statistics periodically")
 	confDocker := flag.Bool("docker", false, "whether run in a docker container")
 
 	flag.Set("alsologtostderr", "true")
 	flag.Set("stderrthreshold", "INFO")
 	flag.Set("v", "3")
+
 	flag.Parse()
 
 	i18n.Load()
@@ -62,6 +63,10 @@ func init() {
 	conf.FixedTimeSave()
 
 	session.FixedTimeRelease()
+
+	if *confStat {
+		session.FixedTimeReport()
+	}
 }
 
 // indexHandler handles request of Wide index.
@@ -288,7 +293,7 @@ func main() {
 	http.HandleFunc("/signup", handlerWrapper(session.SignUpUser))
 	http.HandleFunc("/preference", handlerWrapper(session.PreferenceHandler))
 
-	glog.V(0).Infof("Wide is running [%s]", conf.Wide.Server)
+	glog.Infof("Wide is running [%s]", conf.Wide.Server)
 
 	err := http.ListenAndServe(conf.Wide.Server, nil)
 	if err != nil {
