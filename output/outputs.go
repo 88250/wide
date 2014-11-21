@@ -144,7 +144,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		glog.V(3).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
+		glog.V(5).Infof("Session [%s] is running [id=%d, file=%s]", sid, runningId, filePath)
 
 		// push once for front-end to get the 'run' state and pid
 		if nil != wsChannel {
@@ -172,7 +172,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					// remove the exited process from user process set
 					processes.remove(wSession, cmd.Process)
 
-					glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done [stdout err]", sid, runningId, filePath)
+					glog.V(5).Infof("Session [%s] 's running [id=%d, file=%s] has done [stdout err]", sid, runningId, filePath)
 
 					if nil != wsChannel {
 						channelRet["cmd"] = "run-done"
@@ -212,7 +212,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				// remove the exited process from user process set
 				processes.remove(wSession, cmd.Process)
 
-				glog.V(3).Infof("Session [%s] 's running [id=%d, file=%s] has done [stderr err]", sid, runningId, filePath)
+				glog.V(5).Infof("Session [%s] 's running [id=%d, file=%s] has done [stderr err]", sid, runningId, filePath)
 
 				if nil != session.OutputWS[sid] {
 					wsChannel := session.OutputWS[sid]
@@ -358,7 +358,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		glog.V(3).Infof("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
+		glog.V(5).Infof("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
@@ -436,7 +436,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if nil != session.OutputWS[sid] {
-			glog.V(3).Infof("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
+			glog.V(5).Infof("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
 
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)
@@ -529,7 +529,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	go func(runningId int) {
 		defer util.Recover()
 
-		glog.V(3).Infof("Session [%s] is running [go test] [runningId=%d]", sid, runningId)
+		glog.V(5).Infof("Session [%s] is running [go test] [runningId=%d]", sid, runningId)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go test"
@@ -541,11 +541,11 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 		cmd.Wait()
 
 		if !cmd.ProcessState.Success() {
-			glog.V(3).Infof("Session [%s] 's running [go test] [runningId=%d] has done (with error)", sid, runningId)
+			glog.V(5).Infof("Session [%s] 's running [go test] [runningId=%d] has done (with error)", sid, runningId)
 
 			channelRet["output"] = "<span class='test-error'>" + i18n.Get(locale, "test-error").(string) + "</span>\n" + string(buf)
 		} else {
-			glog.V(3).Infof("Session [%s] 's running [go test] [runningId=%d] has done", sid, runningId)
+			glog.V(5).Infof("Session [%s] 's running [go test] [runningId=%d] has done", sid, runningId)
 
 			channelRet["output"] = "<span class='test-succ'>" + i18n.Get(locale, "test-succ").(string) + "</span>\n" + string(buf)
 		}
@@ -645,7 +645,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		glog.V(3).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
+		glog.V(5).Infof("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
@@ -709,7 +709,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if nil != session.OutputWS[sid] {
-			glog.V(3).Infof("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
+			glog.V(5).Infof("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
 
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)
@@ -803,7 +803,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		glog.V(3).Infof("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
+		glog.V(5).Infof("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go get"
@@ -812,11 +812,11 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		buf, _ := ioutil.ReadAll(reader)
 
 		if 0 != len(buf) {
-			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
+			glog.V(5).Infof("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
 
 			channelRet["output"] = "<span class='get-error'>" + i18n.Get(locale, "get-error").(string) + "</span>\n" + string(buf)
 		} else {
-			glog.V(3).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
+			glog.V(5).Infof("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
 
 			channelRet["output"] = "<span class='get-succ'>" + i18n.Get(locale, "get-succ").(string) + "</span>\n"
 
