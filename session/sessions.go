@@ -23,6 +23,7 @@
 package session
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"os"
@@ -134,11 +135,15 @@ func FixedTimeReport() {
 				}
 			}
 
-			glog.Infof("[%d] users are online and [%d] wide sessions currently", len(users), len(WideSessions))
+			var buf bytes.Buffer
+			buf.WriteString("\n  [" + strconv.Itoa(len(users)) + "] users are online and [" + strconv.Itoa(len(WideSessions)) +
+				"] wide sessions currently\n")
 
 			for _, t := range users {
-				glog.Infof(t.report())
+				buf.WriteString("    " + t.report() + "\n")
 			}
+
+			glog.Info(buf.String())
 		}
 	}()
 }
