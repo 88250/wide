@@ -21,7 +21,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
 	"sort"
 	"strings"
 
@@ -56,10 +55,7 @@ var apiNode *FileNode
 
 // initAPINode builds the Go API file node.
 func initAPINode() {
-	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg" // before Go 1.4
-	if !util.File.IsExist(apiPath) {
-		apiPath = runtime.GOROOT() + conf.PathSeparator + "src" // Go 1.4 and after
-	}
+	apiPath := util.Go.GetAPIPath()
 
 	apiNode = &FileNode{Name: "Go API", Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
 		Creatable: false, Removable: false, FileNodes: []*FileNode{}}

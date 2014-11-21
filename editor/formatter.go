@@ -19,8 +19,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"runtime"
-	"strings"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
@@ -51,8 +49,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["file"].(string)
 
-	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
-	if strings.HasPrefix(filePath, apiPath) { // if it is Go API source code
+	if util.Go.IsAPI(filePath) {
 		// ignore it
 		return
 	}
