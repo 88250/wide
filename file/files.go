@@ -118,6 +118,15 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string)
+
+	size := util.File.GetFileSize(path)
+	if size > 5242880 { // 5M
+		data["succ"] = false
+		data["msg"] = "This file is too large to open :("
+
+		return
+	}
+
 	buf, _ := ioutil.ReadFile(path)
 
 	extension := filepath.Ext(path)

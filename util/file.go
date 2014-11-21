@@ -12,6 +12,21 @@ type myfile struct{}
 // File utilities.
 var File = myfile{}
 
+// GetFileSize get the length in bytes of file of the specified path.
+func (*myfile) GetFileSize(path string) int64 {
+	f, err := os.Open(path)
+	if nil != err {
+		return -1
+	}
+
+	fi, err := f.Stat()
+	if nil != err {
+		return -1
+	}
+
+	return fi.Size()
+}
+
 // IsExist determines whether the file spcified by the given path is exists.
 func (*myfile) IsExist(path string) bool {
 	_, err := os.Stat(path)
