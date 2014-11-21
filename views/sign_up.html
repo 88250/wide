@@ -36,6 +36,7 @@
                     <input id="username" placeholder="Username"/><br/>
                     <input id="password" type="password" placeholder="Password"/><br/>
                     <input id="confirmPassword" type="password" placeholder="Confirm your password"/>
+                    <button id="signUpBtn" class="button">{{.i18n.sign_up}}</button>
                 </div>
             </div>
         </div>
@@ -133,6 +134,10 @@
         } else {
             $("#msg").hide();
         }
+    });
+
+    $("#signUpBtn").click(function () {
+        signUp();
     });
 })();
         </script>
