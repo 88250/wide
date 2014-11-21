@@ -548,7 +548,7 @@ func removeFile(path string) bool {
 		return false
 	}
 
-	glog.Infof("Removed [%s]", path)
+	glog.V(5).Infof("Removed [%s]", path)
 
 	return true
 }
@@ -561,7 +561,7 @@ func renameFile(oldPath, newPath string) bool {
 		return false
 	}
 
-	glog.Infof("Renamed [%s] to [%s]", oldPath, newPath)
+	glog.V(5).Infof("Renamed [%s] to [%s]", oldPath, newPath)
 
 	return true
 }
