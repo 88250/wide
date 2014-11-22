@@ -1,6 +1,6 @@
 # Wide [![Build Status](https://drone.io/github.com/b3log/wide/status.png)](https://drone.io/github.com/b3log/wide/latest) 
 
-Have a [**try**](http://121.41.106.121:7070/signup) first!
+> Have a [**try**](http://121.41.106.121:7070/signup) first!
 
 ## Intro
 
