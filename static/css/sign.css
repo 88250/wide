@@ -93,12 +93,25 @@
     font-size: 16px;
     text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
     background-color: #60b044;
-    background-image: -webkit-linear-gradient(#8add6d, #60b044);
     background-image: linear-gradient(#8add6d, #60b044);
-    background-repeat: repeat-x;
-    border-color: #5ca941;
+    border: 1px solid #5ca941;
     padding: 10px;
-    margin-top: 20px;
+}
+
+.button:hover {
+    background-color: #569e3d;
+    background-image: linear-gradient(#79d858, #569e3d);
+    border-color: #4a993e;
+}
+
+.header .button {
+    color: #fff;
+    padding: 0 8px;
+    font-size: 13px;
+}
+
+.header .button:hover {
+    color: #FFF;
 }
 
 #msg {
@@ -143,5 +156,9 @@
 
 .form.sign-up {
     margin-top: -71px;
+}
+
+#signUpBtn {
+    margin-top: 20px;
 }
 /* end sign up */
