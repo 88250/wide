@@ -20,8 +20,10 @@ import (
 	"math/rand"
 	"mime"
 	"net/http"
+	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -52,6 +54,13 @@ func init() {
 	flag.Set("v", "3")
 
 	flag.Parse()
+
+	wd := util.OS.Pwd()
+	if strings.HasPrefix(wd, os.TempDir()) {
+		glog.Error("Wide can't run in the OS' temp directory and it can't run with `go run`")
+
+		os.Exit(-1)
+	}
 
 	i18n.Load()
 
