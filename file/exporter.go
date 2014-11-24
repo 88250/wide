@@ -9,6 +9,27 @@ import (
 	"github.com/golang/glog"
 )
 
+// GetZip handles request of retrieving zip file.
+func GetZip(w http.ResponseWriter, r *http.Request) {
+	q := r.URL.Query()
+	path := q["path"][0]
+
+	if ".zip" != filepath.Ext(path) {
+		http.Error(w, "Bad Request", 400)
+
+		return
+	}
+
+	if !util.File.IsExist(path) {
+		http.Error(w, "Not Found", 404)
+
+		return
+	}
+
+	w.Header().Set("Content-type", "application/zip")
+	http.ServeFile(w, r, path)
+}
+
 // CreateZip handles request of creating zip.
 func CreateZip(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}

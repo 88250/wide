@@ -282,7 +282,8 @@ func main() {
 	http.HandleFunc("/file/find/name", handlerWrapper(file.Find))
 
 	// file export/import
-	http.HandleFunc("/file/zip", handlerWrapper(file.CreateZip))
+	http.HandleFunc("/file/zip", handlerWrapper(file.GetZip))
+	http.HandleFunc("/file/zip/new", handlerWrapper(file.CreateZip))
 
 	// editor
 	http.HandleFunc("/editor/ws", handlerWrapper(editor.WSHandler))
