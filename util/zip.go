@@ -28,30 +28,50 @@ func (*myzip) Create(filename string) (*ZipFile, error) {
 }
 
 func (z *ZipFile) Close() error {
-	err := z.zipFile.Close() // close the underlying writer
+	err := z.writer.Close()
 	if nil != err {
 		return err
 	}
 
-	return z.writer.Close()
+	return z.zipFile.Close() // close the underlying writer
 }
 
-func (z *ZipFile) AddEntryN(dir string, names ...string) error {
+func (z *ZipFile) AddEntryN(path string, names ...string) error {
 	for _, name := range names {
-		zipPath := filepath.Join(dir, name)
+		zipPath := filepath.Join(path, name)
 		err := z.AddEntry(zipPath, name)
 		if err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
-func (z *ZipFile) AddEntry(dir, name string) error {
-	entry, err := z.writer.Create(dir)
+func (z *ZipFile) AddEntry(path, name string) error {
+	fi, err := os.Stat(name)
 	if err != nil {
 		return err
+	}
+
+	fh, err := zip.FileInfoHeader(fi)
+	if err != nil {
+		return err
+	}
+
+	fh.Name = filepath.ToSlash(filepath.Clean(path))
+	fh.Method = zip.Deflate // data compression algorithm
+
+	if fi.IsDir() {
+		fh.Name = fh.Name + "/" // be care the ending separator
+	}
+
+	entry, err := z.writer.CreateHeader(fh)
+	if err != nil {
+		return err
+	}
+
+	if fi.IsDir() {
+		return nil
 	}
 
 	file, err := os.Open(name)
@@ -65,18 +85,17 @@ func (z *ZipFile) AddEntry(dir, name string) error {
 	return err
 }
 
-func (z *ZipFile) AddDirectoryN(dir string, names ...string) error {
+func (z *ZipFile) AddDirectoryN(path string, names ...string) error {
 	for _, name := range names {
-		err := z.AddDirectory(dir, name)
+		err := z.AddDirectory(path, name)
 		if err != nil {
 			return err
 		}
 	}
-
 	return nil
 }
 
-func (z *ZipFile) AddDirectory(dir, dirName string) error {
+func (z *ZipFile) AddDirectory(path, dirName string) error {
 	files, err := ioutil.ReadDir(dirName)
 	if err != nil {
 		return err
@@ -84,17 +103,16 @@ func (z *ZipFile) AddDirectory(dir, dirName string) error {
 
 	for _, file := range files {
 		localPath := filepath.Join(dirName, file.Name())
-		zipPath := filepath.Join(dir, file.Name())
+		zipPath := filepath.Join(path, file.Name())
 
 		err = nil
 		if file.IsDir() {
-			z.AddEntry(dir, dirName)
+			z.AddEntry(path, dirName)
 
 			err = z.AddDirectory(zipPath, localPath)
 		} else {
 			err = z.AddEntry(zipPath, localPath)
 		}
-
 		if err != nil {
 			return err
 		}

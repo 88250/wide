@@ -133,5 +133,6 @@
     "go_format": "Go 格式化",
     "locale": "語言環境",
     "apply": "應用",
-    "clearOutput": "清空輸出"
+    "clearOutput": "清空輸出",
+    "export": "導出"
 }

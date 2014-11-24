@@ -133,5 +133,6 @@
     "go_format": "Go Format",
     "locale": "Locale",
     "apply": "Apply",
-    "clearOutput": "Clear Output"
+    "clearOutput": "Clear Output",
+    "export": "Export"
 }

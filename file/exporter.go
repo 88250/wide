@@ -3,6 +3,7 @@ package file
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 	"path/filepath"
 
 	"github.com/b3log/wide/util"
@@ -26,8 +27,13 @@ func GetZip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	filename := filepath.Base(path)
+
+	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
 	w.Header().Set("Content-type", "application/zip")
 	http.ServeFile(w, r, path)
+
+	os.Remove(path)
 }
 
 // CreateZip handles request of creating zip.

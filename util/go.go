@@ -1,6 +1,7 @@
 package util
 
 import (
+	"path/filepath"
 	"path"
 	"runtime"
 	"strings"
@@ -21,7 +22,7 @@ func (*mygo) GetAPIPath() string {
 		ret = runtime.GOROOT() + "/src" // Go 1.4 and after
 	}
 
-	return path.Clean(ret)
+	return filepath.FromSlash(path.Clean(ret))
 }
 
 // IsAPI determines whether the specified path belongs to Go API.

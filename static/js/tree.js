@@ -150,6 +150,35 @@ var tree = {
         $("#fileRMenu").hide();
         $("#dialogRenamePrompt").dialog("open");
     },
+    export: function (it) {
+        if (it) {
+            if ($(it).hasClass("disabled")) {
+                return false;
+            }
+        }
+
+        var request = newWideRequest();
+        request.path = wide.curNode.path;
+
+        $.ajax({
+            type: 'POST',
+            url: '/file/zip/new',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                if (!data.succ) {
+                    $("#dialogAlert").dialog("open", data.msg);
+
+                    return false;
+                }
+
+                window.open('/file/zip?path=' + wide.curNode.path + '.zip');
+            }
+        });
+
+        $("#dirRMenu").hide();
+        $("#fileRMenu").hide();
+    },
     init: function () {
         $("#file").click(function () {
             $(this).focus();
@@ -289,7 +318,7 @@ var tree = {
                         var w = window.open(data.path);
                         return false;
                     }
-                    
+
                     if (!tempCursor) {
                         tempCursor = CodeMirror.Pos(0, 0);
                     }
