@@ -139,6 +139,4 @@ Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/maste
 
 ----
 
-<center>
 <img src="https://cloud.githubusercontent.com/assets/873584/4606328/4e848b96-5219-11e4-8db1-fa12774b57b4.png" width="256px" />
-</center>
