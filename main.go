@@ -273,6 +273,7 @@ func main() {
 
 	// file tree
 	http.HandleFunc("/files", handlerWrapper(file.GetFiles))
+	http.HandleFunc("/file/refresh", handlerWrapper(file.RefreshDirectory))
 	http.HandleFunc("/file", handlerWrapper(file.GetFile))
 	http.HandleFunc("/file/save", handlerWrapper(file.SaveFile))
 	http.HandleFunc("/file/new", handlerWrapper(file.NewFile))

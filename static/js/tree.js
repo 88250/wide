@@ -179,6 +179,18 @@ var tree = {
         $("#dirRMenu").hide();
         $("#fileRMenu").hide();
     },
+    refresh: function (it) {
+        if (it) {
+            if ($(it).hasClass("disabled")) {
+                return false;
+            }
+        }
+
+        tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
+
+        $("#dirRMenu").hide();
+        $("#fileRMenu").hide();
+    },
     init: function () {
         $("#file").click(function () {
             $(this).focus();
@@ -204,6 +216,11 @@ var tree = {
                         view: {
                             showTitle: true,
                             selectedMulti: false
+                        },
+                        async: {
+                            enable: true,
+                            url: "/file/refresh",
+                            autoParam: ["path"]
                         },
                         callback: {
                             onDblClick: function (event, treeId, treeNode) {

@@ -66,7 +66,7 @@ func initAPINode() {
 // GetFiles handles request of constructing user workspace file tree.
 //
 // The Go API source code package also as a child node,
-// so that users can easily view the Go API source code in filre tree.
+// so that users can easily view the Go API source code in file tree.
 func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -101,6 +101,25 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	root.FileNodes = append(root.FileNodes, apiNode)
 
 	data["root"] = root
+}
+
+// RefreshDirectory handles request of refresh a directory of file tree.
+func RefreshDirectory(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	path := r.FormValue("path")
+
+	node := FileNode{Name: "root", Path: path, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
+
+	walk(path, &node, true, true)
+
+	w.Header().Set("Content-Type", "application/json")
+	data, err := json.Marshal(node.FileNodes)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+
+	w.Write(data)
 }
 
 // GetFile handles request of opening file by editor.

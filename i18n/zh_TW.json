@@ -134,5 +134,6 @@
     "locale": "語言環境",
     "apply": "應用",
     "clearOutput": "清空輸出",
-    "export": "導出"
+    "export": "導出",
+    "refresh": "刷新"
 }

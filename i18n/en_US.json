@@ -134,5 +134,6 @@
     "locale": "Locale",
     "apply": "Apply",
     "clearOutput": "Clear Output",
-    "export": "Export"
+    "export": "Export",
+    "refresh": "Refresh"
 }
