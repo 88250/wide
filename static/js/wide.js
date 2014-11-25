@@ -402,7 +402,7 @@ var wide = {
 
             switch (data.cmd) {
                 case 'run': // 正在运行
-                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + '<pre>' + data.output + '</pre>');
                     wide.curProcessId = data.pid;
 
                     break;
@@ -417,17 +417,17 @@ var wide = {
                 case 'start-test':
                 case 'start-install':
                 case 'start-get':
-                    bottomGroup.fillOutput(data.output);
+                    bottomGroup.fillOutput('<pre>' + data.output + '</pre>');
 
                     break;
                 case 'go test':
                 case 'go install':
                 case 'go get':
-                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + '<pre>' + data.output + '</pre>');
 
                     break;
                 case 'build':
-                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + '<pre>' + data.output + '</pre>');
 
                     if (data.lints) { // 说明编译有错误输出            
                         for (var i = 0; i < data.lints.length; i++) {
