@@ -1,3 +1,17 @@
+// Copyright (c) 2014, B3log
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 // Editor manipulations.
 package editor
 
@@ -24,30 +38,30 @@ import (
 // WSHandler handles request of creating editor channel.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
+
 	sid := httpSession.Values["id"].(string)
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	editorChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
-	session.EditorWS[sid] = &editorChan
-
 	ret := map[string]interface{}{"output": "Editor initialized", "cmd": "init-editor"}
-	editorChan.Conn.WriteJSON(&ret)
+	err := editorChan.WriteJSON(&ret)
+	if nil != err {
+		return
+	}
+
+	session.EditorWS[sid] = &editorChan
 
 	glog.Infof("Open a new [Editor] with session [%s], %d", sid, len(session.EditorWS))
 
 	args := map[string]interface{}{}
 	for {
-		if err := session.EditorWS[sid].Conn.ReadJSON(&args); err != nil {
-			if err.Error() == "EOF" {
-				return
-			}
-
-			if err.Error() == "unexpected EOF" {
-				return
-			}
-
-			glog.Error("Editor WS ERROR: " + err.Error())
+		if err := session.EditorWS[sid].ReadJSON(&args); err != nil {
 			return
 		}
 
@@ -59,7 +73,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		// glog.Infof("offset: %d", offset)
 
-		gocode := conf.Wide.GetExecutableInGOBIN("gocode")
+		gocode := util.Go.GetExecutableInGOBIN("gocode")
 		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
 
 		var output bytes.Buffer
@@ -75,7 +89,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		ret = map[string]interface{}{"output": string(output.Bytes()), "cmd": "autocomplete"}
 
-		if err := session.EditorWS[sid].Conn.WriteJSON(&ret); err != nil {
+		if err := session.EditorWS[sid].WriteJSON(&ret); err != nil {
 			glog.Error("Editor WS ERROR: " + err.Error())
 			return
 		}
@@ -94,6 +108,11 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := session.Values["username"].(string)
 
 	path := args["path"].(string)
@@ -136,7 +155,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	glog.V(5).Infof("gocode set lib-path %s", libPath)
 
 	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
-	gocode := conf.Wide.GetExecutableInGOBIN("gocode")
+	gocode := util.Go.GetExecutableInGOBIN("gocode")
 	argv := []string{"set", "lib-path", libPath}
 	exec.Command(gocode, argv...).Run()
 
@@ -205,7 +224,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
+	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-info", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
@@ -236,6 +255,11 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := session.Values["username"].(string)
 
 	var args map[string]interface{}
@@ -276,7 +300,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
+	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
@@ -315,6 +339,11 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := session.Values["username"].(string)
 
 	var args map[string]interface{}
@@ -355,7 +384,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
+	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir

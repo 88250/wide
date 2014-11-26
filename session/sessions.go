@@ -1,3 +1,17 @@
+// Copyright (c) 2014, B3log
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 // Session manipulations.
 //
 // Wide server side needs maintain two kinds of sessions:
@@ -9,9 +23,11 @@
 package session
 
 import (
+	"bytes"
 	"encoding/json"
 	"net/http"
 	"os"
+	"strconv"
 	"sync"
 	"time"
 
@@ -79,11 +95,55 @@ func FixedTimeRelease() {
 
 			for _, s := range WideSessions {
 				if s.Updated.Before(threshold) {
-					glog.V(3).Infof("Removes a invalid session [%s]", s.Id)
+					glog.V(3).Infof("Removes a invalid session [%s], user [%s]", s.Id, s.Username)
 
 					WideSessions.Remove(s.Id)
 				}
 			}
+		}
+	}()
+}
+
+// Online user statistic report.
+type userReport struct {
+	username   string
+	sessionCnt int
+	updated    time.Time
+}
+
+// report returns a online user statistics in pretty format.
+func (u *userReport) report() string {
+	return "[" + u.username + "] has [" + strconv.Itoa(u.sessionCnt) + "] sessions, latest activity [" +
+		u.updated.Format("2006-01-02 15:04:05") + "]"
+}
+
+// FixedTimeReport reports the Wide sessions status periodically (10 minutes).
+func FixedTimeReport() {
+	go func() {
+		for _ = range time.Tick(10 * time.Minute) {
+			users := map[string]*userReport{} // <username, *userReport>
+
+			for _, s := range WideSessions {
+				if report, exists := users[s.Username]; exists {
+					if s.Updated.After(report.updated) {
+						users[s.Username].updated = s.Updated
+					}
+
+					report.sessionCnt++
+				} else {
+					users[s.Username] = &userReport{username: s.Username, sessionCnt: 1, updated: s.Updated}
+				}
+			}
+
+			var buf bytes.Buffer
+			buf.WriteString("\n  [" + strconv.Itoa(len(users)) + "] users are online and [" + strconv.Itoa(len(WideSessions)) +
+				"] sessions currently\n")
+
+			for _, t := range users {
+				buf.WriteString("    " + t.report() + "\n")
+			}
+
+			glog.Info(buf.String())
 		}
 	}()
 }
@@ -104,26 +164,30 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 		httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 		httpSession.Save(r, w)
 
-		WideSessions.New(httpSession, sid)
+		wSession = WideSessions.New(httpSession, sid)
 
-		glog.Infof("Created a wide session [%s] for websocket reconnecting", sid)
+		glog.Infof("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
 	}
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
-	SessionWS[sid] = &wsChan
-
 	ret := map[string]interface{}{"output": "Session initialized", "cmd": "init-session"}
-	wsChan.Conn.WriteJSON(&ret)
+	err := wsChan.WriteJSON(&ret)
+	if nil != err {
+		return
+	}
+
+	SessionWS[sid] = &wsChan
 
 	glog.V(4).Infof("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
 
 	input := map[string]interface{}{}
 
 	for {
-		if err := wsChan.Conn.ReadJSON(&input); err != nil {
-			glog.V(3).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it", sid)
+		if err := wsChan.ReadJSON(&input); err != nil {
+			glog.V(5).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]",
+				sid, wSession.Username)
 
 			WideSessions.Remove(sid)
 
@@ -132,8 +196,9 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		ret = map[string]interface{}{"output": "", "cmd": "session-output"}
 
-		if err := wsChan.Conn.WriteJSON(&ret); err != nil {
+		if err := wsChan.WriteJSON(&ret); err != nil {
 			glog.Error("Session WS ERROR: " + err.Error())
+
 			return
 		}
 
@@ -253,9 +318,9 @@ func (sessions *Sessions) Remove(sid string) {
 			// kill processes
 			for _, p := range s.Processes {
 				if err := p.Kill(); nil != err {
-					glog.Errorf("Can't kill process [%d] of session [%s]", p.Pid, sid)
+					glog.Errorf("Can't kill process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
 				} else {
-					glog.V(3).Infof("Killed a process [%d] of session [%s]", p.Pid, sid)
+					glog.V(3).Infof("Killed a process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
 				}
 			}
 
@@ -275,8 +340,6 @@ func (sessions *Sessions) Remove(sid string) {
 				delete(SessionWS, sid)
 			}
 
-			glog.V(3).Infof("Removed a session [%s]", s.Id)
-
 			cnt := 0 // count wide sessions associated with HTTP session
 			for _, s := range *sessions {
 				if s.HTTPSession.ID == s.HTTPSession.ID {
@@ -284,7 +347,7 @@ func (sessions *Sessions) Remove(sid string) {
 				}
 			}
 
-			glog.V(3).Infof("User [%s] has [%d] sessions", s.Username, cnt)
+			glog.V(5).Infof("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
 
 			return
 		}

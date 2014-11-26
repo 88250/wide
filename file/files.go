@@ -1,3 +1,17 @@
+// Copyright (c) 2014, B3log
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 // File tree manipulations.
 package file
 
@@ -7,7 +21,6 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
-	"runtime"
 	"sort"
 	"strings"
 
@@ -21,7 +34,6 @@ import (
 // File node, used to construct the file tree.
 type FileNode struct {
 	Name      string      `json:"name"`
-	Title     string      `json:"title"`
 	Path      string      `json:"path"`
 	IconSkin  string      `json:"iconSkin"`  // Value should be end with a space
 	Type      string      `json:"type"`      // "f": file, "d": directory
@@ -39,28 +51,49 @@ type Snippet struct {
 	Contents []string `json:"contents"` // lines nearby
 }
 
+var apiNode *FileNode
+
+// initAPINode builds the Go API file node.
+func initAPINode() {
+	apiPath := util.Go.GetAPIPath()
+
+	apiNode = &FileNode{Name: "Go API", Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
+		Creatable: false, Removable: false, FileNodes: []*FileNode{}}
+
+	walk(apiPath, apiNode, false, false)
+}
+
 // GetFiles handles request of constructing user workspace file tree.
 //
-// The Go API source code package ($GOROOT/src/pkg) also as a child node,
-// so that users can easily view the Go API source code.
+// The Go API source code package also as a child node,
+// so that users can easily view the Go API source code in file tree.
 func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
 
+		return
+	}
 	username := session.Values["username"].(string)
+
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 
 	root := FileNode{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
+
+	if nil == apiNode { // lazy init
+		initAPINode()
+	}
 
 	// workspace node process
 	for _, workspace := range workspaces {
 		workspacePath := workspace + conf.PathSeparator + "src"
 
 		workspaceNode := FileNode{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
-			Title: workspace, Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d",
+			Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d",
 			Creatable: true, Removable: false, FileNodes: []*FileNode{}}
 
 		walk(workspacePath, &workspaceNode, true, true)
@@ -69,26 +102,29 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 		root.FileNodes = append(root.FileNodes, &workspaceNode)
 	}
 
-	// construct Go API node
-	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
-	apiNode := FileNode{Name: "Go API", Title: apiPath, Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
-		Creatable: false, Removable: false, FileNodes: []*FileNode{}}
-
-	goapiBuildOKSignal := make(chan bool)
-	go func() {
-		walk(apiPath, &apiNode, false, false)
-
-		// go-ahead
-		close(goapiBuildOKSignal)
-	}()
-
-	// waiting
-	<-goapiBuildOKSignal
-
 	// add Go API node
-	root.FileNodes = append(root.FileNodes, &apiNode)
+	root.FileNodes = append(root.FileNodes, apiNode)
 
 	data["root"] = root
+}
+
+// RefreshDirectory handles request of refresh a directory of file tree.
+func RefreshDirectory(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	path := r.FormValue("path")
+
+	node := FileNode{Name: "root", Path: path, IconSkin: "ico-ztree-dir ", Type: "d", FileNodes: []*FileNode{}}
+
+	walk(path, &node, true, true)
+
+	w.Header().Set("Content-Type", "application/json")
+	data, err := json.Marshal(node.FileNodes)
+	if err != nil {
+		glog.Error(err)
+		return
+	}
+
+	w.Write(data)
 }
 
 // GetFile handles request of opening file by editor.
@@ -106,25 +142,40 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string)
+
+	size := util.File.GetFileSize(path)
+	if size > 5242880 { // 5M
+		data["succ"] = false
+		data["msg"] = "This file is too large to open :("
+
+		return
+	}
+
 	buf, _ := ioutil.ReadFile(path)
 
 	extension := filepath.Ext(path)
 
-	if isImg(extension) {
+	if util.File.IsImg(extension) {
 		// image file will be open in a browser tab
 
 		data["mode"] = "img"
 
-		path2 := strings.Replace(path, "\\", "/", -1)
-		idx := strings.Index(path2, "/data/user_workspaces")
-		data["path"] = path2[idx:]
+		user := GetUsre(path)
+		if nil == user {
+			glog.Warningf("The path [%s] has no owner")
+			data["path"] = ""
+
+			return
+		}
+
+		data["path"] = "/workspace/" + user.Name + "/" + strings.Replace(path, user.GetWorkspace(), "", 1)
 
 		return
 	}
 
 	content := string(buf)
 
-	if isBinary(content) {
+	if util.File.IsBinary(content) {
 		data["succ"] = false
 		data["msg"] = "Can't open a binary file :("
 	} else {
@@ -262,8 +313,68 @@ func RenameFile(w http.ResponseWriter, r *http.Request) {
 		data["succ"] = false
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
-			Data: "can't rename file " + path}
+			Data: "can't rename file " + oldPath}
 	}
+}
+
+// Use to find results sorting.
+type foundPath struct {
+	Path  string `json:"path"`
+	score int
+}
+
+type foundPaths []*foundPath
+
+func (f foundPaths) Len() int           { return len(f) }
+func (f foundPaths) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
+func (f foundPaths) Less(i, j int) bool { return f[i].score > f[j].score }
+
+// Find handles request of find files under the specified directory with the specified filename pattern.
+func Find(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	var args map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		glog.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	path := args["path"].(string) // path of selected file in file tree
+	name := args["name"].(string)
+
+	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
+	username := session.Values["username"].(string)
+
+	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	workspaces := filepath.SplitList(userWorkspace)
+
+	if "" != path && !util.File.IsDir(path) {
+		path = filepath.Dir(path)
+	}
+
+	founds := foundPaths{}
+
+	for _, workspace := range workspaces {
+		rs := find(workspace+conf.PathSeparator+"src", name, []*string{})
+
+		for _, r := range rs {
+			substr := util.Str.LCS(path, *r)
+
+			founds = append(founds, &foundPath{Path: *r, score: len(substr)})
+		}
+	}
+
+	sort.Sort(founds)
+
+	data["founds"] = founds
 }
 
 // SearchText handles request of searching files under the specified directory with the specified keyword.
@@ -298,7 +409,7 @@ func walk(path string, node *FileNode, creatable, removable bool) {
 
 		fio, _ := os.Lstat(fpath)
 
-		child := FileNode{Name: filename, Title: fpath, Path: fpath, Removable: removable, FileNodes: []*FileNode{}}
+		child := FileNode{Name: filename, Path: fpath, Removable: removable, FileNodes: []*FileNode{}}
 		node.FileNodes = append(node.FileNodes, &child)
 
 		if nil == fio {
@@ -340,7 +451,14 @@ func listFiles(dirname string) []string {
 
 	// sort: directories in front of files
 	for _, name := range names {
-		fio, _ := os.Lstat(filepath.Join(dirname, name))
+		path := filepath.Join(dirname, name)
+		fio, err := os.Lstat(path)
+
+		if nil != err {
+			glog.Warningf("Can't read file info [%s]", path)
+
+			continue
+		}
 
 		if fio.IsDir() {
 			// exclude the .git direcitory
@@ -361,7 +479,7 @@ func listFiles(dirname string) []string {
 //
 // Refers to the zTree document for CSS class names.
 func getIconSkin(filenameExtension string) string {
-	if isImg(filenameExtension) {
+	if util.File.IsImg(filenameExtension) {
 		return "ico-ztree-img "
 	}
 
@@ -426,7 +544,7 @@ func getEditorMode(filenameExtension string) string {
 func createFile(path, fileType string) bool {
 	switch fileType {
 	case "f":
-		file, err := os.OpenFile(path, os.O_CREATE, 0664)
+		file, err := os.OpenFile(path, os.O_CREATE, 0775)
 		if nil != err {
 			glog.Error(err)
 
@@ -465,7 +583,7 @@ func removeFile(path string) bool {
 		return false
 	}
 
-	glog.Infof("Removed [%s]", path)
+	glog.V(5).Infof("Removed [%s]", path)
 
 	return true
 }
@@ -473,17 +591,69 @@ func removeFile(path string) bool {
 // renameFile renames (moves) a file from the specified old path to the specified new path.
 func renameFile(oldPath, newPath string) bool {
 	if err := os.Rename(oldPath, newPath); nil != err {
-		glog.Errorf("Renames [%s] failed: [%s]", path, err.Error())
+		glog.Errorf("Renames [%s] failed: [%s]", oldPath, err.Error())
 
 		return false
 	}
 
-	glog.Infof("Renamed [%s] to [%s]", oldPath, newPath)
+	glog.V(5).Infof("Renamed [%s] to [%s]", oldPath, newPath)
 
 	return true
 }
 
-// search finds file under the specified dir and its sub-directories with the specified text, likes the command grep/findstr.
+// Default exclude file name patterns when find.
+var defaultExcludesFind = []string{".git", ".svn", ".repository", "CVS", "RCS", "SCCS", ".bzr", ".metadata", ".hg"}
+
+// find finds files under the specified dir and its sub-directoryies with the specified name,
+// likes the command 'find dir -name name'.
+func find(dir, name string, results []*string) []*string {
+	if !strings.HasSuffix(dir, conf.PathSeparator) {
+		dir += conf.PathSeparator
+	}
+
+	f, _ := os.Open(dir)
+	fileInfos, err := f.Readdir(-1)
+	f.Close()
+
+	if nil != err {
+		glog.Errorf("Read dir [%s] failed: [%s]", dir, err.Error())
+
+		return results
+	}
+
+	for _, fileInfo := range fileInfos {
+		fname := fileInfo.Name()
+		path := dir + fname
+
+		if fileInfo.IsDir() {
+			if util.Str.Contains(fname, defaultExcludesFind) {
+				continue
+			}
+
+			// enter the directory recursively
+			results = find(path, name, results)
+		} else {
+			// match filename
+			pattern := filepath.Dir(path) + conf.PathSeparator + name
+			match, err := filepath.Match(pattern, path)
+
+			if nil != err {
+				glog.Errorf("Find match filename failed: [%s]", err.Error)
+
+				continue
+			}
+
+			if match {
+				results = append(results, &path)
+			}
+		}
+	}
+
+	return results
+}
+
+// search finds file under the specified dir and its sub-directories with the specified text, likes the command 'grep'
+// or 'findstr'.
 func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
 	if !strings.HasSuffix(dir, conf.PathSeparator) {
 		dir += conf.PathSeparator
@@ -528,7 +698,7 @@ func searchInFile(path string, text string) []*Snippet {
 	}
 
 	content := string(bytes)
-	if isBinary(content) {
+	if util.File.IsBinary(content) {
 		return ret
 	}
 
@@ -547,25 +717,13 @@ func searchInFile(path string, text string) []*Snippet {
 	return ret
 }
 
-// isBinary determines whether the specified content is a binary file content.
-func isBinary(content string) bool {
-	for _, b := range content {
-		if 0 == b {
-			return true
+// GetUsre gets the user the specified path belongs to. Returns nil if not found.
+func GetUsre(path string) *conf.User {
+	for _, user := range conf.Wide.Users {
+		if strings.HasPrefix(path, user.GetWorkspace()) {
+			return user
 		}
 	}
 
-	return false
-}
-
-// isImg determines whether the specified extension is a image.
-func isImg(extension string) bool {
-	ext := strings.ToLower(extension)
-
-	switch ext {
-	case ".jpg", ".jpeg", ".bmp", ".gif", ".png", ".svg", ".ico":
-		return true
-	default:
-		return false
-	}
+	return nil
 }

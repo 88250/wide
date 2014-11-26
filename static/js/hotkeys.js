@@ -1,3 +1,19 @@
+/* 
+ * Copyright (c) 2014, B3log
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 var hotkeys = {
     defaultKeyMap: {
         // Ctrl+0 焦点切换到当前编辑器   
@@ -15,7 +31,7 @@ var hotkeys = {
             which: 49
         },
         // Ctrl+4 焦点切换到输出窗口   
-        goOutPut: {
+        goOutput: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
@@ -63,13 +79,81 @@ var hotkeys = {
             shiftKey: false,
             which: 81
         },
-        // F6 构建并运行
+        // Shift+Alt+O 跳转到文件
+        goFile: {
+            ctrlKey: false,
+            altKey: true,
+            shiftKey: true,
+            which: 79
+        },
+        // F5 Build
+        build: {
+            ctrlKey: false,
+            altKey: false,
+            shiftKey: false,
+            which: 116
+        },
+        // F6 Build & Run
         buildRun: {
             ctrlKey: false,
             altKey: false,
             shiftKey: false,
             which: 117
         }
+    },
+    bindList: function ($source, $list, enterFun) {
+        $list.data("index", 0);
+        $source.keydown(function (event) {
+            var index = $list.data("index"),
+                    count = $list.find("li").length;
+
+            if (count === 0) {
+                return true;
+            }
+
+            if (event.which === 38) {   // up
+                index--;
+                if (index < 0) {
+                    index = count - 1;
+                }
+            }
+
+            if (event.which === 40) {   // down
+                index++;
+                if (index > count - 1) {
+                    index = 0;
+                }
+            }
+
+            var $selected = $list.find("li:eq(" + index + ")");
+
+            if (event.which === 13) {   // enter
+                enterFun($selected);
+            }
+
+            $list.find("li").removeClass("selected");
+            $list.data("index", index);
+            $selected.addClass("selected");
+
+            if (index === 0) {
+                $list.scrollTop(0);
+            } else {
+                if ($selected[0].offsetTop + $list.scrollTop() > $list.height()) {
+                    if (event.which === 40) {
+                        $list.scrollTop($list.scrollTop() + $selected.height());
+                    } else {
+                        $list.scrollTop($selected[0].offsetTop);
+                    }
+                } else {
+                    $list.scrollTop(0);
+                }
+            }
+
+            // 阻止上下键改变光标位置
+            if (event.which === 38 || event.which === 40 || event.which === 13) {
+                return false;
+            }
+        });
     },
     _bindOutput: function () {
         $(".bottom-window-group .output").keydown(function (event) {
@@ -241,8 +325,8 @@ var hotkeys = {
                 return;
             }
 
-            if (event.ctrlKey === hotKeys.goOutPut.ctrlKey
-                    && event.which === hotKeys.goOutPut.which) { // Ctrl+4 焦点切换到输出窗口   
+            if (event.ctrlKey === hotKeys.goOutput.ctrlKey
+                    && event.which === hotKeys.goOutput.which) { // Ctrl+4 焦点切换到输出窗口   
                 bottomGroup.tabs.setCurrent("output");
 
                 windows.flowBottom();
@@ -251,7 +335,7 @@ var hotkeys = {
 
                 return;
             }
-            
+
             if (event.ctrlKey === hotKeys.goSearch.ctrlKey
                     && event.which === hotKeys.goSearch.which) { // Ctrl+5 焦点切换到搜索窗口  
                 bottomGroup.tabs.setCurrent("search");
@@ -339,13 +423,27 @@ var hotkeys = {
                 return false;
             }
 
-            if (event.which === hotKeys.buildRun.which) { // F6 构建并运行
-                wide.run();
+            if (event.which === hotKeys.build.which) { // F5 Build
+                menu.build();
                 event.preventDefault();
 
                 return;
             }
-        });  
+
+            if (event.which === hotKeys.buildRun.which) { // F6 Build & Run
+                menu.run();
+                event.preventDefault();
+
+                return;
+            }
+
+            if (event.ctrlKey === hotKeys.goFile.ctrlKey
+                    && event.altKey === hotKeys.goFile.altKey
+                    && event.shiftKey === hotKeys.goFile.shiftKey
+                    && event.which === hotKeys.goFile.which) { // Shift+Alt+O 跳转到文件
+                $("#dialogGoFilePrompt").dialog("open");
+            }
+        });
     },
     init: function () {
         this._bindFileTree();

@@ -1,3 +1,17 @@
+// Copyright (c) 2014, B3log
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 // Shell.
 package shell
 
@@ -28,7 +42,6 @@ var ShellWS = map[string]*util.WSChannel{}
 // IndexHandler handles request of Shell index.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -68,6 +81,11 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 // WSHandler handles request of creating Shell channel.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := httpSession.Values["username"].(string)
 
 	sid := r.URL.Query()["sid"][0]
@@ -75,26 +93,22 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
 
-	ShellWS[sid] = &wsChan
-
 	ret := map[string]interface{}{"output": "Shell initialized", "cmd": "init-shell"}
-	wsChan.Conn.WriteJSON(&ret)
+	err := wsChan.WriteJSON(&ret)
+	if nil != err {
+		return
+	}
+
+	ShellWS[sid] = &wsChan
 
 	glog.V(4).Infof("Open a new [Shell] with session [%s], %d", sid, len(ShellWS))
 
 	input := map[string]interface{}{}
 
 	for {
-		if err := wsChan.Conn.ReadJSON(&input); err != nil {
-			if err.Error() == "EOF" {
-				return
-			}
-
-			if err.Error() == "unexpected EOF" {
-				return
-			}
-
+		if err := wsChan.ReadJSON(&input); err != nil {
 			glog.Error("Shell WS ERROR: " + err.Error())
+
 			return
 		}
 
@@ -121,7 +135,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		ret = map[string]interface{}{"output": output, "cmd": "shell-output"}
 
-		if err := wsChan.Conn.WriteJSON(&ret); err != nil {
+		if err := wsChan.WriteJSON(&ret); err != nil {
 			glog.Error("Shell WS ERROR: " + err.Error())
 			return
 		}

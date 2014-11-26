@@ -15,8 +15,10 @@
             <li>Alt-Shift-F{{.i18n.colon}}{{.i18n.format}}</li>
             <li>Ctrl-L{{.i18n.colon}}{{.i18n.goto_line}}</li>
             <li>Ctrl-E{{.i18n.colon}}{{.i18n.delete_line}}</li>
-            <li>Shift-Ctrl-Up{{.i18n.colon}}{{.i18n.copy_line_up}}</li>
-            <li>Shift-Ctrl-Down{{.i18n.colon}}{{.i18n.copy_line_down}}</li>
+            <li>Shift-Ctrl-Up{{.i18n.colon}}{{.i18n.copy_lines_up}}</li>
+            <li>Shift-Ctrl-Down{{.i18n.colon}}{{.i18n.copy_lines_down}}</li>
+            <li>Shift-Alt-Up{{.i18n.colon}}{{.i18n.move_lines_up}}</li>
+            <li>Shift-Alt-Down{{.i18n.colon}}{{.i18n.move_lines_down}}</li>
             <li>Ctrl-S{{.i18n.colon}}{{.i18n.save_editor_file}}</li>
             <li>Shift-Ctrl-S{{.i18n.colon}}{{.i18n.save_all_editors_files}}</li>
             <li>Ctrl-Q{{.i18n.colon}}{{.i18n.close_editor}}</li>
@@ -27,6 +29,7 @@
         </ul>
         <h2>{{.i18n.search}}</h2>
         <ul>
+            <li>Shift-Alt-O{{.i18n.colon}}{{.i18n.goto_file}}</li>
             <li>Ctrl-F{{.i18n.colon}}{{.i18n.search}}/{{.i18n.find}}</li>
             <li>Ctrl-G{{.i18n.colon}}{{.i18n.find_next}}</li>
             <li>Shift-Ctrl-G{{.i18n.colon}}{{.i18n.find_previous}}</li>
@@ -44,7 +47,9 @@
         </ul>
         <h2>{{.i18n.run}}</h2>
         <ul>
+            <li>F5{{.i18n.colon}}{{.i18n.build}}</li>
             <li>F6{{.i18n.colon}}{{.i18n.build_n_run}}</li>
+            <li>Ctrl-C{{.i18n.colon}}{{.i18n.clearOutput}}</li>
         </ul>
     </body>
 </html>

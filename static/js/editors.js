@@ -1,3 +1,19 @@
+/* 
+ * Copyright (c) 2014, B3log
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 var editors = {
     data: [],
     tabs: {},
@@ -94,6 +110,7 @@ var editors = {
             id: ".edit-panel",
             clickAfter: function (id) {
                 if (id === 'startPage') {
+                    $(".footer .cursor").text('');
                     return false;
                 }
 
@@ -109,7 +126,11 @@ var editors = {
                     }
                 }
 
+                var cursor = wide.curEditor.getCursor();
+                wide.curEditor.setCursor(cursor);
                 wide.curEditor.focus();
+
+                $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             },
             removeBefore: function (id) {
                 if (id === 'startPage') { // 当前关闭的 tab 是起始页
@@ -117,7 +138,6 @@ var editors = {
                     return true;
                 }
 
-                // 移除编辑器
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
                         if (editors.data[i].editor.doc.isClean()) {
@@ -163,6 +183,7 @@ var editors = {
                     tree.fileTree.cancelSelectedNode();
                     wide.curNode = undefined;
                     wide.curEditor = undefined;
+                    $(".footer .cursor").text('');
                     return false;
                 }
 
@@ -182,6 +203,9 @@ var editors = {
                         break;
                     }
                 }
+
+                var cursor = wide.curEditor.getCursor();
+                $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             }
         });
 
@@ -347,6 +371,11 @@ var editors = {
         });
 
         CodeMirror.commands.autocompleteAfterDot = function (cm) {
+            var token = cm.getTokenAt(cm.getCursor());
+            if ("comment" === token.type) {
+                return CodeMirror.Pass;
+            }
+
             setTimeout(function () {
                 if (!cm.state.completionActive) {
                     cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
@@ -413,33 +442,11 @@ var editors = {
                         return;
                     }
 
-                    var cursorLine = data.cursorLine;
-                    var cursorCh = data.cursorCh;
+                    var tId = tree.getTIdByPath(data.path);
+                    wide.curNode = tree.fileTree.getNodeByTId(tId);
+                    tree.fileTree.selectNode(wide.curNode);
 
-                    var request = newWideRequest();
-                    request.path = data.path;
-
-                    $.ajax({
-                        type: 'POST',
-                        url: '/file',
-                        data: JSON.stringify(request),
-                        dataType: "json",
-                        success: function (data) {
-                            if (!data.succ) {
-                                $("#dialogAlert").dialog("open", data.msg);
-
-                                return false;
-                            }
-
-                            var tId = tree.getTIdByPath(data.path);
-                            wide.curNode = tree.fileTree.getNodeByTId(tId);
-                            tree.fileTree.selectNode(wide.curNode);
-
-                            data.cursorLine = cursorLine;
-                            data.cursorCh = cursorCh;
-                            editors.newEditor(data);
-                        }
-                    });
+                    tree.openFile(wide.curNode, CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1));
                 }
             });
         };
@@ -469,7 +476,7 @@ var editors = {
         };
     },
     appendSearch: function (data, type, key) {
-        var searcHTML = '<ul>';
+        var searcHTML = '<ul class="list">';
 
         for (var i = 0, ii = data.length; i < ii; i++) {
             var contents = data[i].contents[0],
@@ -479,7 +486,7 @@ var editors = {
                     + contents.substring(index + key.length);
 
             searcHTML += '<li title="' + data[i].path + '">'
-                    + contents + "&nbsp;&nbsp;&nbsp;&nbsp;<span class='path'>" + data[i].path
+                    + contents + "&nbsp;&nbsp;&nbsp;&nbsp;<span class='ft-small'>" + data[i].path
                     + '<i class="position" data-line="'
                     + data[i].line + '" data-ch="' + data[i].ch + '"> (' + data[i].line + ':'
                     + data[i].ch + ')</i></span></li>';
@@ -544,32 +551,9 @@ var editors = {
         $(".bottom-window-group .search").focus();
     },
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
-    newEditor: function (data) {
+    newEditor: function (data, cursor) {
         $(".toolbars").show();
         var id = wide.curNode.tId;
-
-        var cursor = CodeMirror.Pos(0, 0);
-        if (data.cursorLine && data.cursorCh) {
-            cursor = CodeMirror.Pos(data.cursorLine - 1, data.cursorCh - 1);
-        }
-
-        for (var i = 0, ii = editors.data.length; i < ii; i++) {
-            if (editors.data[i].id === id) {
-                editors.tabs.setCurrent(id);
-                wide.curEditor = editors.data[i].editor;
-                var editor = wide.curEditor;
-
-                editor.setCursor(cursor);
-
-                var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
-                var cursorCoords = editor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
-                editor.scrollTo(0, cursorCoords.top);
-
-                editor.focus();
-
-                return false;
-            }
-        }
 
         editors.tabs.add({
             id: id,
@@ -580,9 +564,6 @@ var editors = {
 
         menu.undisabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install']);
 
-        var rulers = [];
-        rulers.push({color: "#ccc", column: 120, lineStyle: "dashed"});
-
         var textArea = document.getElementById("editor" + id);
         textArea.value = data.content;
 
@@ -592,11 +573,12 @@ var editors = {
             autoCloseBrackets: true,
             matchBrackets: true,
             highlightSelectionMatches: {showToken: /\w/},
-            rulers: rulers,
+            rulers: [{color: "#ccc", column: 120, lineStyle: "dashed"}],
             styleActiveLine: true,
             theme: 'wide',
             indentUnit: 4,
             foldGutter: true,
+            cursorHeight: 1,
             path: data.path,
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
@@ -610,7 +592,7 @@ var editors = {
                     wide.saveFile();
                 },
                 "Shift-Ctrl-S": function () {
-                    wide.saveAllFiles();
+                    menu.saveAllFiles();
                 },
                 "Shift-Alt-F": function () {
                     var currentPath = editors.getCurrentPath();
@@ -628,26 +610,121 @@ var editors = {
                     }
                 },
                 "Shift-Ctrl-Up": function (cm) {
-                    var cursor = cm.getCursor();
-                    var line = cursor.line;
-                    var content = cm.getLine(line);
+                    var content = '',
+                            selectoion = cm.listSelections()[0];
 
-                    if (0 === line) {
-                        cm.replaceRange("", CodeMirror.Pos(0));
-                        line++;
+                    var from = selectoion.anchor,
+                            to = selectoion.head;
+                    if (from.line > to.line) {
+                        from = selectoion.head;
+                        to = selectoion.anchor;
                     }
 
-                    cm.replaceRange("\n" + content, CodeMirror.Pos(line - 1));
-                    cm.setCursor(cursor);
+                    for (var i = from.line, max = to.line; i <= max; i++) {
+                        if (to.ch !== 0 || i !== max) { // 下一行选中为0时，不应添加内容
+                            content += '\n' + cm.getLine(i);
+                        }
+                    }
+
+                    // 下一行选中为0时，应添加到上一行末
+                    var replaceToLine = to.line;
+                    if (to.ch === 0) {
+                        replaceToLine = to.line - 1;
+                    }
+                    cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
+
+                    cm.setSelection(CodeMirror.Pos(from.line, from.ch),
+                            CodeMirror.Pos(to.line, to.ch));
                 },
                 "Shift-Ctrl-Down": function (cm) {
-                    var cursor = cm.getCursor();
-                    var line = cursor.line;
-                    var content = cm.getLine(line);
+                    var content = '',
+                            selectoion = cm.listSelections()[0];
 
-                    cm.replaceRange("\n", CodeMirror.Pos(line));
-                    cm.replaceRange(content, CodeMirror.Pos(line + 1));
-                    cm.setCursor(CodeMirror.Pos(line + 1, cursor.ch));
+                    var from = selectoion.anchor,
+                            to = selectoion.head;
+                    if (from.line > to.line) {
+                        from = selectoion.head;
+                        to = selectoion.anchor;
+                    }
+
+                    for (var i = from.line, max = to.line; i <= max; i++) {
+                        if (to.ch !== 0 || i !== max) { // 下一行选中为0时，不应添加内容
+                            content += '\n' + cm.getLine(i);
+                        }
+                    }
+                    // 下一行选中为0时，应添加到上一行末
+                    var replaceToLine = to.line;
+                    if (to.ch === 0) {
+                        replaceToLine = to.line - 1;
+                    }
+                    cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
+
+                    var offset = replaceToLine - from.line + 1;
+                    cm.setSelection(CodeMirror.Pos(from.line + offset, from.ch),
+                            CodeMirror.Pos(to.line + offset, to.ch));
+                },
+                "Shift-Alt-Up": function (cm) {
+                    var selectoion = cm.listSelections()[0];
+
+                    var from = selectoion.anchor,
+                            to = selectoion.head;
+                    if (from.line > to.line) {
+                        from = selectoion.head;
+                        to = selectoion.anchor;
+                    }
+
+                    if (from.line === 0) {
+                        return false;
+                    }
+                    // 下一行选中为0时，应添加到上一行末
+                    var replaceToLine = to.line;
+                    if (to.ch === 0) {
+                        replaceToLine = to.line - 1;
+                    }
+                    cm.replaceRange('\n' + cm.getLine(from.line - 1), CodeMirror.Pos(replaceToLine));
+                    if (from.line === 1) {
+                        // 移除第一行的换行
+                        cm.replaceRange('', CodeMirror.Pos(0, 0),
+                                CodeMirror.Pos(1, 0));
+                    } else {
+                        cm.replaceRange('', CodeMirror.Pos(from.line - 2, cm.getLine(from.line - 2).length),
+                                CodeMirror.Pos(from.line - 1, cm.getLine(from.line - 1).length));
+                    }
+
+                    cm.setSelection(CodeMirror.Pos(from.line - 1, from.ch),
+                            CodeMirror.Pos(to.line - 1, to.ch));
+                },
+                "Shift-Alt-Down": function (cm) {
+                    var selectoion = cm.listSelections()[0];
+
+                    var from = selectoion.anchor,
+                            to = selectoion.head;
+                    if (from.line > to.line) {
+                        from = selectoion.head;
+                        to = selectoion.anchor;
+                    }
+
+                    if (to.line === cm.lastLine()) {
+                        return false;
+                    }
+
+                    // 下一行选中为0时，应添加到上一行末
+                    var replaceToLine = to.line;
+                    if (to.ch === 0) {
+                        replaceToLine = to.line - 1;
+                    }
+                    // 把选中的下一行添加到选中区域的上一行
+                    if (from.line === 0) {
+                        cm.replaceRange(cm.getLine(replaceToLine + 1) + '\n', CodeMirror.Pos(0, 0));
+                    } else {
+                        cm.replaceRange('\n' + cm.getLine(replaceToLine + 1), CodeMirror.Pos(from.line - 1));
+                    }
+                    // 删除选中的下一行
+                    cm.replaceRange('', CodeMirror.Pos(replaceToLine + 1, cm.getLine(replaceToLine + 1).length),
+                            CodeMirror.Pos(replaceToLine + 2, cm.getLine(replaceToLine + 2).length));
+
+                    cm.setSelection(CodeMirror.Pos(from.line + 1, from.ch),
+                            CodeMirror.Pos(to.line + 1, to.ch));
                 }
             }
         });
@@ -657,7 +734,6 @@ var editors = {
             var cursor = cm.getCursor();
 
             $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
-            // TODO: 关闭 tab 的时候要重置
         });
 
         editor.on('focus', function (cm) {
@@ -700,16 +776,19 @@ var editors = {
             editor.setOption("autoCloseTags", true);
         }
 
-        editor.setCursor(cursor);
-
-        var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
-        var cursorCoords = editor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
-        editor.scrollTo(0, cursorCoords.top);
-
         wide.curEditor = editor;
         editors.data.push({
             "editor": editor,
             "id": id
         });
+
+        $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
+
+        var half = Math.floor(wide.curEditor.getScrollInfo().clientHeight / wide.curEditor.defaultTextHeight() / 2);
+        var cursorCoords = wide.curEditor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
+        wide.curEditor.scrollTo(0, cursorCoords.top);
+
+        editor.setCursor(cursor);
+        editor.focus();
     }
 };

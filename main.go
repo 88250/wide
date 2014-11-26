@@ -1,3 +1,17 @@
+// Copyright (c) 2014, B3log
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package main
 
 import (
@@ -6,8 +20,10 @@ import (
 	"math/rand"
 	"mime"
 	"net/http"
+	"os"
 	"runtime"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -25,26 +41,46 @@ import (
 
 // The only one init function in Wide.
 func init() {
-	// TODO: args
-	flag.Set("logtostderr", "true")
+	confPath := flag.String("conf", "conf/wide.json", "path of wide.json")
+	confIP := flag.String("ip", "", "ip to visit")
+	confPort := flag.String("port", "", "port to visit")
+	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
+	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
+	confStat := flag.Bool("stat", false, "whether report statistics periodically")
+	confDocker := flag.Bool("docker", false, "whether run in a docker container")
+
+	flag.Set("alsologtostderr", "true")
+	flag.Set("stderrthreshold", "INFO")
 	flag.Set("v", "3")
+
 	flag.Parse()
+
+	wd := util.OS.Pwd()
+	if strings.HasPrefix(wd, os.TempDir()) {
+		glog.Error("Don't run wide in OS' temp directory or with `go run`")
+
+		os.Exit(-1)
+	}
 
 	i18n.Load()
 
 	event.Load()
 
-	conf.Load()
+	conf.Load(*confPath, *confIP, *confPort, *confServer, *confChannel, *confDocker)
+
 	conf.FixedTimeCheckEnv()
 	conf.FixedTimeSave()
 
 	session.FixedTimeRelease()
+
+	if *confStat {
+		session.FixedTimeReport()
+	}
 }
 
 // indexHandler handles request of Wide index.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -72,10 +108,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	locale := user.Locale
 
 	wideSessions := session.WideSessions.GetByUsername(username)
-	userConf := conf.Wide.GetUser(username)
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"session": wideSession, "latestSessionContent": userConf.LatestSessionContent,
+		"session": wideSession, "latestSessionContent": user.LatestSessionContent,
 		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer}
 
 	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
@@ -102,7 +137,6 @@ func serveSingle(pattern string, filename string) {
 // startHandler handles request of start page.
 func startHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -140,7 +174,6 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 // keyboardShortcutsHandler handles request of keyboard shortcuts page.
 func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -170,7 +203,6 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 // aboutHandle handles request of about page.
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -217,7 +249,10 @@ func main() {
 	serveSingle("/favicon.ico", "./static/favicon.ico")
 
 	// workspaces
-	http.Handle("/data/", http.StripPrefix("/data/", http.FileServer(http.Dir("data"))))
+	for _, user := range conf.Wide.Users {
+		http.Handle("/workspace/"+user.Name+"/",
+			http.StripPrefix("/workspace/"+user.Name+"/", http.FileServer(http.Dir(user.GetWorkspace()))))
+	}
 
 	// session
 	http.HandleFunc("/session/ws", handlerWrapper(session.WSHandler))
@@ -234,12 +269,18 @@ func main() {
 
 	// file tree
 	http.HandleFunc("/files", handlerWrapper(file.GetFiles))
+	http.HandleFunc("/file/refresh", handlerWrapper(file.RefreshDirectory))
 	http.HandleFunc("/file", handlerWrapper(file.GetFile))
 	http.HandleFunc("/file/save", handlerWrapper(file.SaveFile))
 	http.HandleFunc("/file/new", handlerWrapper(file.NewFile))
 	http.HandleFunc("/file/remove", handlerWrapper(file.RemoveFile))
 	http.HandleFunc("/file/rename", handlerWrapper(file.RenameFile))
 	http.HandleFunc("/file/search/text", handlerWrapper(file.SearchText))
+	http.HandleFunc("/file/find/name", handlerWrapper(file.Find))
+
+	// file export/import
+	http.HandleFunc("/file/zip", handlerWrapper(file.GetZip))
+	http.HandleFunc("/file/zip/new", handlerWrapper(file.CreateZip))
 
 	// editor
 	http.HandleFunc("/editor/ws", handlerWrapper(editor.WSHandler))
@@ -260,8 +301,9 @@ func main() {
 	http.HandleFunc("/login", handlerWrapper(session.LoginHandler))
 	http.HandleFunc("/logout", handlerWrapper(session.LogoutHandler))
 	http.HandleFunc("/signup", handlerWrapper(session.SignUpUser))
+	http.HandleFunc("/preference", handlerWrapper(session.PreferenceHandler))
 
-	glog.V(0).Infof("Wide is running [%s]", conf.Wide.Server)
+	glog.Infof("Wide is running [%s]", conf.Wide.Server)
 
 	err := http.ListenAndServe(conf.Wide.Server, nil)
 	if err != nil {

@@ -1,40 +1,36 @@
 {
     "IP": "${ip}",
-    "Server": "{IP}:7070",
-    "StaticServer": "http://{IP}:7070",
-    "EditorChannel": "ws://{IP}:7070",
-    "OutputChannel": "ws://{IP}:7070",
-    "ShellChannel": "ws://{IP}:7070",
-    "SessionChannel": "ws://{IP}:7070",
+    "Port": "7070",
+    "Server": "{IP}:{Port}",
+    "StaticServer": "",
+    "EditorChannel": "ws://{IP}:{Port}",
+    "OutputChannel": "ws://{IP}:{Port}",
+    "ShellChannel": "ws://{IP}:{Port}",
+    "SessionChannel": "ws://{IP}:{Port}",
     "HTTPSessionMaxAge": 86400,
-    "StaticResourceVersion": "201411062300",
+    "StaticResourceVersion": "${time}",
     "MaxProcs": 4,
     "RuntimeMode": "dev",
     "WD": "${pwd}",
-    "Workspace": "{WD}/data/workspace",
     "Locale": "en_US",
     "Users": [
         {
             "Name": "admin",
             "Password": "admin",
-            "Workspace": "{WD}/data/user_workspaces/admin",
+            "Workspace": "${GOPATH}",
             "Locale": "en_US",
             "GoFormat": "gofmt",
             "FontFamily": "Helvetica",
             "FontSize": "13px",
             "Editor": {
                 "FontFamily": "Consolas, 'Courier New', monospace",
-                "FontSize": "inherit"
+                "FontSize": "13px",
+                "LineHeight": "17px"
             },
             "LatestSessionContent": {
-                "FileTree": [
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src",
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\time"
-                ],
-                "Files": [
-                    "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\time\\main.go"
-                ],
-                "CurrentFile": "D:\\GoGoGo\\src\\github.com\\b3log\\wide\\data\\user_workspaces\\admin\\src\\time\\main.go"
+                "FileTree": [],
+                "Files": [],
+                "CurrentFile": ""
             }
         }
     ]

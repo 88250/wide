@@ -1,0 +1,76 @@
+<div class="preference">
+    <div class="tabs">
+        <div class="current" data-index="appearence">
+            <span title="{{.i18n.appearence}}">{{.i18n.appearence}}</span>
+        </div>
+        <div data-index="editor">
+            <span title="{{.i18n.editor}}">{{.i18n.editor}}</span>
+        </div>
+        <div data-index="gotool">
+            <span title="{{.i18n.gotool}}">{{.i18n.gotool}}</span>
+        </div>
+        <div data-index="user">
+            <span title="{{.i18n.user}}">{{.i18n.user}}</span>
+        </div>
+    </div>
+    <div class="tabs-panel">
+        <div data-index="appearence">
+            <label>
+                {{.i18n.font}}{{.i18n.colon}}
+                <input data-value="{{.user.FontFamily}}" value="{{.user.FontFamily}}" name="fontFamily"/>
+            </label>
+            <label>
+                {{.i18n.font_size}}{{.i18n.colon}}
+                <input data-value="{{.user.FontSize}}" value="{{.user.FontSize}}" name="fontSize"/>
+            </label>
+        </div>
+        <div class="fn-none" data-index="editor">
+            <label>
+                {{.i18n.font}}{{.i18n.colon}}
+                <input data-value="{{.user.Editor.FontFamily}}" value="{{.user.Editor.FontFamily}}" name="editorFontFamily"/>
+            </label>
+            <label>
+                {{.i18n.font_size}}{{.i18n.colon}}
+                <input data-value="{{.user.Editor.FontSize}}" value="{{.user.Editor.FontSize}}" name="editorFontSize"/>
+            </label>
+            <label>
+                {{.i18n.line_height}}{{.i18n.colon}}
+                <input data-value="{{.user.Editor.LineHeight}}" value="{{.user.Editor.LineHeight}}" name="editorLineHeight"/>
+            </label>
+        </div>
+        <div class="fn-none" data-index="gotool">
+            <label>
+                {{.i18n.go_format}}{{.i18n.colon}}
+                <br/>
+                <select class="select" id="goFmtSelect">
+                    {{range $index, $gofmt := .gofmts }}
+                    <option name="{{$gofmt}}" value="{{$gofmt}}" {{if eq $.user.GoFormat $gofmt}}selected="selected"{{end}}>{{$gofmt}}</option>
+                    {{end}}
+                </select>
+                <br/>
+            </label>
+            <input data-value="{{.user.GoFormat}}" value="{{.user.GoFormat}}" name="goFmt" hidden="hidden" />
+        </div>
+        <div class="fn-none" data-index="user">
+            <label>
+                {{.i18n.locale}}{{.i18n.colon}}
+                <br/>
+                <select class="select" id="localeSelect">
+                    {{range $index, $localeName := .locales }}
+                    <option name="{{$localeName}}" value="{{$localeName}}" {{if eq $.user.Locale $localeName}}selected="selected"{{end}}>{{$localeName}}</option>
+                    {{end}}
+                </select>
+                <br/>
+            </label>
+            <input data-value="{{.user.Locale}}" value="{{.user.Locale}}" name="locale" hidden="hidden" />
+            <label>
+                {{.i18n.workspace}}{{.i18n.colon}}
+                <input data-value="{{.user.Workspace}}" value="{{.user.Workspace}}" name="workspace"/>
+            </label>
+            <label>
+                {{.i18n.password}}{{.i18n.colon}}
+                <input data-value="{{.user.Password}}" value="{{.user.Password}}" name="password" type="password"/>
+            </label>
+        </div>
+    </div>
+</div>

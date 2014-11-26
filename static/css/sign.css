@@ -1,3 +1,19 @@
+/* 
+ * Copyright (c) 2014, B3log
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
+
 .wrapper {
     margin: 0 auto;
     width: 980px;
@@ -71,6 +87,33 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset, 0 0 12px rgba(255, 255, 255, 0.75);
 }
 
+.button {
+    width: 100%;
+    color: #fff;
+    font-size: 16px;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+    background-color: #60b044;
+    background-image: linear-gradient(#8add6d, #60b044);
+    border: 1px solid #5ca941;
+    padding: 10px;
+}
+
+.button:hover {
+    background-color: #569e3d;
+    background-image: linear-gradient(#79d858, #569e3d);
+    border-color: #4a993e;
+}
+
+.header .button {
+    color: #fff;
+    padding: 0 8px;
+    font-size: 13px;
+}
+
+.header .button:hover {
+    color: #FFF;
+}
+
 #msg {
     background-color: #fcdede;
     border: 1px solid #d2b2b2;
@@ -112,6 +155,10 @@
 }
 
 .form.sign-up {
-    margin-top: -20px;
+    margin-top: -71px;
+}
+
+#signUpBtn {
+    margin-top: 20px;
 }
 /* end sign up */

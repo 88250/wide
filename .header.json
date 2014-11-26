@@ -1,0 +1,20 @@
+{
+    "Dir": ".",
+    "Template": ".header.txt",
+    "Includes": [
+        "*.go",
+        "*/*.go",
+        "static/css/*.css",
+        "static/js/*.js",
+        "static/js/overwrite/*.js"
+    ],
+    "Excludes": [
+        "static/js/lib/*",
+        "static/user/*"
+    ],
+    "UseDefaultExcludes": true,
+    "Properties": {
+        "Year": "2014",
+        "Owner": "B3log"
+    }
+}

@@ -1,3 +1,17 @@
+// Copyright (c) 2014, B3log
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package editor
 
 import (
@@ -5,8 +19,6 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"runtime"
-	"strings"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
@@ -24,6 +36,11 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := session.Values["username"].(string)
 
 	var args map[string]interface{}
@@ -37,8 +54,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["file"].(string)
 
-	apiPath := runtime.GOROOT() + conf.PathSeparator + "src" + conf.PathSeparator + "pkg"
-	if strings.HasPrefix(filePath, apiPath) { // if it is Go API source code
+	if util.Go.IsAPI(filePath) {
 		// ignore it
 		return
 	}
@@ -70,7 +86,9 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	bytes, _ := cmd.Output()
 	output := string(bytes)
 	if "" == output {
-		data["succ"] = false
+		// format error, returns the original content
+		data["succ"] = true
+		data["code"] = code
 
 		return
 	}

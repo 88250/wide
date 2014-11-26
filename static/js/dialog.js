@@ -1,18 +1,19 @@
-/*
- * Copyright (C) 2011, Liyuan Li
- *
+/* 
+ * Copyright (c) 2014, B3log
+ *  
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ *  
  *     http://www.apache.org/licenses/LICENSE-2.0
- *
+ *  
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */
+ */ 
+
 (function ($) {
     $.fn.extend({
         dialog: {
@@ -143,6 +144,9 @@
             } else {
                 // 20(footer) + 23(header)
                 top = parseInt((windowH - dialogH - 43) / 2);
+                if (top < 0) {
+                    top = 0;
+                }
                 left = parseInt((windowW - dialogW) / 2);
             }
             $dialog.css({
@@ -173,6 +177,10 @@
                 if (event.keyCode === 27) {
                     $.dialog._close(id, settings);
                 }
+            });
+            
+            $(window).resize(function () {
+                $(".dialog-background").height($("body").height());
             });
 
             if (typeof settings.afterInit === "function") {
@@ -210,11 +218,11 @@
                     if (positionX > $(window).width() - $(dialog).width()) {
                         positionX = $(window).width() - $(dialog).width();
                     }
-                    if (positionY < 0) {
-                        positionY = 0;
-                    }
                     if (positionY > $(window).height() - $(dialog).height()) {
                         positionY = $(window).height() - $(dialog).height();
+                    }
+                    if (positionY < 0) {
+                        positionY = 0;
                     }
                     dialog.style.left = positionX + "px";
                     dialog.style.top = positionY + "px";
@@ -231,7 +239,7 @@
                     _document.ondragstart = null;
                     _document.onselectstart = null;
                     _document.onselect = null;
-                }
+                };
             });
         },
         _close: function (id, settings) {

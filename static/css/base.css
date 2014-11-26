@@ -1,3 +1,19 @@
+/* 
+ * Copyright (c) 2014, B3log
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
+
 /* start reset & function */
 body {
     font-size: 13px;
@@ -44,3 +60,32 @@ button {
     display: none;
 }
 /* end reset & function */
+
+/* start common */
+.ft-small {
+    color: #999;
+    font-size: 12px;
+}
+
+.list li {
+    cursor: pointer;
+    line-height: 20px;
+    padding: 0 3px;
+    word-wrap: normal;
+    word-break: normal;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.list li.selected,
+.list li:hover{
+    background-color: #3875d7;
+    color: #FFF;
+}
+
+.list li.selected .ft-small,
+.list li:hover .ft-small {
+    color: #FFF;
+}
+/* end common */

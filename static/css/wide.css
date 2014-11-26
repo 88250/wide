@@ -1,3 +1,19 @@
+/* 
+ * Copyright (c) 2014, B3log
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */ 
+
 /* start icon */
 @font-face {
     font-family: 'icomoon';
@@ -193,7 +209,8 @@
     top: 1px;
 }
 
-.edit-panel .tabs .ico {
+.edit-panel .tabs .ico,
+#dialogGoFilePrompt .ico {
     background-image: url("../images/ico-file.png");
     float: left;
     height: 16px;
@@ -242,6 +259,10 @@
 .CodeMirror-hint:hover {
     background: #08f;
     color: white;
+}
+
+.CodeMirror div.CodeMirror-cursor {
+    border-left: 2px solid #333;
 }
 /* end editor */
 
@@ -314,31 +335,6 @@
 .bottom-window-group .notification .severity {
     width: 50px;
     padding: 0 5px;
-}
-
-.bottom-window-group .search li {
-    cursor: pointer;
-    line-height: 20px;
-    padding: 0 3px;
-    word-wrap: normal;
-    word-break: normal;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.bottom-window-group .search li.selected {
-    background-color: #3875d7;
-    color: #FFF;
-}
-
-.bottom-window-group .search .path {
-    color: #999;
-    font-size: 12px;
-}
-
-.bottom-window-group .search li.selected .path {
-    color: #FFF;
 }
 /* end bottom-window-group */
 

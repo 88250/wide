@@ -1,3 +1,17 @@
+// Copyright (c) 2014, B3log
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 package output
 
 import (
@@ -33,7 +47,7 @@ func (procs *procs) add(wSession *session.WideSession, proc *os.Process) {
 	// bind process with wide session
 	wSession.SetProcesses(userProcesses)
 
-	glog.V(3).Infof("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
+	glog.V(5).Infof("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
 }
 
 // remove removes the specified process from the user process set.
@@ -54,7 +68,7 @@ func (procs *procs) remove(wSession *session.WideSession, proc *os.Process) {
 			// bind process with wide session
 			wSession.SetProcesses(newProcesses)
 
-			glog.V(3).Infof("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
+			glog.V(5).Infof("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
 
 			return
 		}
@@ -83,7 +97,7 @@ func (procs *procs) kill(wSession *session.WideSession, pid int) {
 				// bind process with wide session
 				wSession.SetProcesses(newProcesses)
 
-				glog.V(3).Infof("Killed a process [pid=%d] of session [%s]", pid, sid)
+				glog.V(5).Infof("Killed a process [pid=%d] of session [%s]", pid, sid)
 			}
 
 			return

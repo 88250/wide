@@ -9,7 +9,7 @@
 
 ver=$1
 target=$2
-list="conf data doc i18n static views README.md LICENSE"
+list="conf doc i18n static views README.md LICENSE"
 
 mkdir -p ${target}
 

@@ -1,12 +1,7 @@
 /wide.exe
 /wide
-/main
-/packer
 
-/data/workspace/bin/
-/data/workspace/pkg/
-/data/workspace/src/
+/static/user/admin/style.css
 
-/data/user_workspaces/*/bin/
-/data/user_workspaces/*/pkg/
-/data/user_workspaces/*/src/**/*.exe
+/header
+/header.exe

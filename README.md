@@ -1,4 +1,6 @@
-# Wide [![Build Status](https://drone.io/github.com/b3log/wide/status.png)](https://drone.io/github.com/b3log/wide/latest)
+# Wide [![Build Status](https://drone.io/github.com/b3log/wide/status.png)](https://drone.io/github.com/b3log/wide/latest) 
+
+_Have a [**try**](http://121.41.106.121:7070/signup) first!_
 
 ## Intro
 
@@ -98,16 +100,21 @@ We have provided OS-specific executable binary as follows:
 * windows-amd64/386
 * darwin-amd64/386
 
-Download [here](http://pan.baidu.com/s/1dD3XwOT)!
+Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 ### Build Wide for yourself
 
-1. Download source or by `git clone`
+1. [Download](https://github.com/b3log/wide/archive/master.zip) source or by `git clone`
 2. Get dependencies with 
-   * `go get -u`
-   * `go get -u github.com/88250/ide_stub`
-   * `go get -u github.com/nsf/gocode`
+   * `go get`
+   * `go get github.com/88250/ide_stub`
+   * `go get github.com/nsf/gocode`
 3. Compile wide with `go build` 
+
+### Docker
+
+1. Get image: `sudo docker pull 88250/wide:latest`
+2. Run: `sudo docker run -u wide -p {ip}:{port}:7070 88250/wide:latest ./wide -docker=true -channel=ws://{ip}:{port}`
 
 ## Known Issues
 
@@ -127,8 +134,9 @@ Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/maste
 * [LiteIDE](https://github.com/visualfc/liteide)
 * [gocode](https://github.com/nsf/gocode)
 * [Gorilla](https://github.com/gorilla)
+* [GoBuild](http://gobuild.io)
+* [Docker](https://docker.com)
 
 ----
 
 <img src="https://cloud.githubusercontent.com/assets/873584/4606328/4e848b96-5219-11e4-8db1-fa12774b57b4.png" width="256px" />
-</center>
