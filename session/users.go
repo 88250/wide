@@ -58,7 +58,8 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	if "GET" == r.Method {
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
-			"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}
+			"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version(),
+			"locales": i18n.GetLocalesNames()}
 
 		t, err := template.ParseFiles("views/preference.html")
 

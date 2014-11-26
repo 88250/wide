@@ -113,6 +113,11 @@
     border-top-width: 0;
 }
 
+#dialogPreference .select {
+    width: 100%;
+    margin: 2px auto;
+}
+
 #dialogPreference .tabs-panel {
     padding: 10px;
 }

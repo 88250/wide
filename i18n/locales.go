@@ -1,11 +1,11 @@
 // Copyright (c) 2014, B3log
-//  
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//  
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -80,4 +80,15 @@ func Get(locale, key string) interface{} {
 // GetAll gets all messages with the specified locale.
 func GetAll(locale string) map[string]interface{} {
 	return Locales[locale].Langs
+}
+
+// GetLocalesNames gets names of all locales. Returns ["zh_CN", "en_US"] for example.
+func GetLocalesNames() []string {
+	ret := []string{}
+
+	for name, _ := range Locales {
+		ret = append(ret, name)
+	}
+
+	return ret
 }

@@ -285,8 +285,30 @@ var menu = {
     },
     _initPreference: function () {
         $("#dialogPreference").load('/preference', function () {
+            $("#localeSelect").on('change', function () {
+                var $dialogPreference = $("#dialogPreference"),
+                        $locale = $dialogPreference.find("input[name=locale]")
+
+                $locale.val(this.value);
+            });
 
             $("#dialogPreference input").keyup(function () {
+                var isChange = false;
+                $("#dialogPreference input").each(function () {
+                    if ($(this).val() !== $(this).data("value")) {
+                        isChange = true;
+                    }
+                });
+
+                var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
+                if (isChange) {
+                    $okBtn.prop("disabled", false);
+                } else {
+                    $okBtn.prop("disabled", true);
+                }
+            });
+
+            $("#dialogPreference select").on("change", function () {
                 var isChange = false;
                 $("#dialogPreference input").each(function () {
                     if ($(this).val() !== $(this).data("value")) {
