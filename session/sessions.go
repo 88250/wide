@@ -186,7 +186,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		if err := wsChan.ReadJSON(&input); err != nil {
-			glog.V(3).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]",
+			glog.V(5).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]",
 				sid, wSession.Username)
 
 			WideSessions.Remove(sid)
@@ -347,7 +347,7 @@ func (sessions *Sessions) Remove(sid string) {
 				}
 			}
 
-			glog.V(3).Infof("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
+			glog.V(5).Infof("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
 
 			return
 		}
