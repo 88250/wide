@@ -21,7 +21,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"runtime"
 	"strconv"
 	"strings"
 	"text/template"
@@ -126,7 +125,7 @@ func checkEnv() {
 		os.Exit(-1)
 	}
 
-	gocode := Wide.GetExecutableInGOBIN("gocode")
+	gocode := util.Go.GetExecutableInGOBIN("gocode")
 	cmd = exec.Command(gocode, "close")
 	_, err = cmd.Output()
 	if nil != err {
@@ -135,7 +134,7 @@ func checkEnv() {
 		glog.Warningf("Not found gocode [%s]", gocode)
 	}
 
-	ide_stub := Wide.GetExecutableInGOBIN("ide_stub")
+	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
 	cmd = exec.Command(ide_stub, "version")
 	_, err = cmd.Output()
 	if nil != err {
@@ -167,7 +166,7 @@ func (c *conf) GetUserWorkspace(username string) string {
 	return ""
 }
 
-// GetGoFmt gets the path of Go format tool, returns "gofmt" if not found.
+// GetGoFmt gets the path of Go format tool, returns "gofmt" if not found "goimports".
 func (c *conf) GetGoFmt(username string) string {
 	for _, user := range c.Users {
 		if user.Name == username {
@@ -175,7 +174,7 @@ func (c *conf) GetGoFmt(username string) string {
 			case "gofmt":
 				return "gofmt"
 			case "goimports":
-				return c.GetExecutableInGOBIN("goimports")
+				return util.Go.GetExecutableInGOBIN("goimports")
 			default:
 				glog.Errorf("Unsupported Go Format tool [%s]", user.GoFormat)
 				return "gofmt"
@@ -208,42 +207,6 @@ func (*conf) GetUser(username string) *User {
 	}
 
 	return nil
-}
-
-// GetExecutableInGOBIN gets executable file under GOBIN path.
-//
-// The specified executable should not with extension, this function will append .exe if on Windows.
-func (*conf) GetExecutableInGOBIN(executable string) string {
-	if util.OS.IsWindows() {
-		executable += ".exe"
-	}
-
-	gopaths := filepath.SplitList(os.Getenv("GOPATH"))
-
-	for _, gopath := range gopaths {
-		// $GOPATH/bin/$GOOS_$GOARCH/executable
-		ret := gopath + PathSeparator + "bin" + PathSeparator +
-			os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + PathSeparator + executable
-		if util.File.IsExist(ret) {
-			return ret
-		}
-
-		// $GOPATH/bin/{runtime.GOOS}_{runtime.GOARCH}/executable
-		ret = gopath + PathSeparator + "bin" + PathSeparator +
-			runtime.GOOS + "_" + runtime.GOARCH + PathSeparator + executable
-		if util.File.IsExist(ret) {
-			return ret
-		}
-
-		// $GOPATH/bin/executable
-		ret = gopath + PathSeparator + "bin" + PathSeparator + executable
-		if util.File.IsExist(ret) {
-			return ret
-		}
-	}
-
-	// $GOBIN/executable
-	return os.Getenv("GOBIN") + PathSeparator + executable
 }
 
 // Save saves Wide configurations.

@@ -287,9 +287,16 @@ var menu = {
         $("#dialogPreference").load('/preference', function () {
             $("#localeSelect").on('change', function () {
                 var $dialogPreference = $("#dialogPreference"),
-                        $locale = $dialogPreference.find("input[name=locale]")
+                        $input = $dialogPreference.find("input[name=locale]")
 
-                $locale.val(this.value);
+                $input.val(this.value);
+            });
+
+            $("#goFmtSelect").on('change', function () {
+                var $dialogPreference = $("#dialogPreference"),
+                        $input = $dialogPreference.find("input[name=goFmt]")
+
+                $input.val(this.value);
             });
 
             $("#dialogPreference input").keyup(function () {

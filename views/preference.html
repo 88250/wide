@@ -41,8 +41,15 @@
         <div class="fn-none" data-index="gotool">
             <label>
                 {{.i18n.go_format}}{{.i18n.colon}}
-                <input data-value="{{.user.GoFormat}}" value="{{.user.GoFormat}}" name="goFmt"/>
+                <br/>
+                <select class="select" id="goFmtSelect">
+                    {{range $index, $gofmt := .gofmts }}
+                    <option name="{{$gofmt}}" value="{{$gofmt}}" {{if eq $.user.GoFormat $gofmt}}selected="selected"{{end}}>{{$gofmt}}</option>
+                    {{end}}
+                </select>
+                <br/>
             </label>
+            <input data-value="{{.user.GoFormat}}" value="{{.user.GoFormat}}" name="goFmt" hidden="hidden" />
         </div>
         <div class="fn-none" data-index="user">
             <label>
@@ -50,7 +57,7 @@
                 <br/>
                 <select class="select" id="localeSelect">
                     {{range $index, $localeName := .locales }}
-                    <option name="locale" value="{{$localeName}}" {{if eq $.user.Locale $localeName}}selected="selected"{{end}}>{{$localeName}}</option>
+                    <option name="{{$localeName}}" value="{{$localeName}}" {{if eq $.user.Locale $localeName}}selected="selected"{{end}}>{{$localeName}}</option>
                     {{end}}
                 </select>
                 <br/>

@@ -67,7 +67,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		// glog.Infof("offset: %d", offset)
 
-		gocode := conf.Wide.GetExecutableInGOBIN("gocode")
+		gocode := util.Go.GetExecutableInGOBIN("gocode")
 		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
 
 		var output bytes.Buffer
@@ -144,7 +144,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	glog.V(5).Infof("gocode set lib-path %s", libPath)
 
 	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
-	gocode := conf.Wide.GetExecutableInGOBIN("gocode")
+	gocode := util.Go.GetExecutableInGOBIN("gocode")
 	argv := []string{"set", "lib-path", libPath}
 	exec.Command(gocode, argv...).Run()
 
@@ -213,7 +213,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
+	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-info", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
@@ -284,7 +284,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
+	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
@@ -363,7 +363,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := conf.Wide.GetExecutableInGOBIN("ide_stub")
+	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
 	cmd := exec.Command(ide_stub, argv...)
 	cmd.Dir = curDir
