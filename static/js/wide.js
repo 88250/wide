@@ -406,7 +406,7 @@ var wide = {
                     if(!wide.curProcessId){
                     	bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + '<pre>' + data.output + '</pre>');
                     }else{
-                        bottomGroup.fillOutput($('.bottom-window-group .output > div').html().replace(/<\/pre>$/g, data.output + '</pre>');
+                        bottomGroup.fillOutput($('.bottom-window-group .output > div').html().replace(/<\/pre>$/g, data.output + '</pre>'));
                     }
                     
                     wide.curProcessId = data.pid;
