@@ -81,7 +81,6 @@ func init() {
 // indexHandler handles request of Wide index.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -138,7 +137,6 @@ func serveSingle(pattern string, filename string) {
 // startHandler handles request of start page.
 func startHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -176,7 +174,6 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 // keyboardShortcutsHandler handles request of keyboard shortcuts page.
 func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -206,7 +203,6 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 // aboutHandle handles request of about page.
 func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 

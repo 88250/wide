@@ -254,6 +254,11 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
@@ -456,6 +461,11 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
@@ -569,6 +579,11 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 
@@ -729,6 +744,11 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := httpSession.Values["username"].(string)
 	locale := conf.Wide.GetUser(username).Locale
 

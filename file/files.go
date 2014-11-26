@@ -72,8 +72,13 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	defer util.RetJSON(w, r, data)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
 
+		return
+	}
 	username := session.Values["username"].(string)
+
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 
@@ -341,7 +346,13 @@ func Find(w http.ResponseWriter, r *http.Request) {
 	name := args["name"].(string)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := session.Values["username"].(string)
+
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 

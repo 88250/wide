@@ -42,7 +42,6 @@ var ShellWS = map[string]*util.WSChannel{}
 // IndexHandler handles request of Shell index.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-
 	if httpSession.IsNew {
 		http.Redirect(w, r, "/login", http.StatusFound)
 
@@ -82,6 +81,11 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 // WSHandler handles request of creating Shell channel.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	if httpSession.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
 	username := httpSession.Values["username"].(string)
 
 	sid := r.URL.Query()["sid"][0]
