@@ -111,21 +111,24 @@ func FixedTimeCheckEnv() {
 }
 
 func checkEnv() {
+	cmd := exec.Command("go", "version")
+	buf, err := cmd.CombinedOutput()
+	if nil != err {
+		glog.Fatal("Not found 'go' command, please make sure Go has been installed correctly")
+
+		os.Exit(-1)
+	}
+	glog.V(5).Info(string(buf))
+
 	if "" == os.Getenv("GOPATH") {
 		glog.Fatal("Not found $GOPATH, please configure it before running Wide")
 
 		os.Exit(-1)
 	}
 
-	if "" == os.Getenv("GOROOT") {
-		glog.Fatal("Not found $GOROOT, please configure it before running Wide")
-
-		os.Exit(-1)
-	}
-
 	gocode := Wide.GetExecutableInGOBIN("gocode")
-	cmd := exec.Command(gocode, "close")
-	_, err := cmd.Output()
+	cmd = exec.Command(gocode, "close")
+	_, err = cmd.Output()
 	if nil != err {
 		event.EventQueue <- &event.Event{Code: event.EvtCodeGocodeNotFound}
 
