@@ -635,7 +635,8 @@ func find(dir, name string, results []*string) []*string {
 		} else {
 			// match filename
 			pattern := filepath.Dir(path) + conf.PathSeparator + name
-			match, err := filepath.Match(pattern, path)
+
+			match, err := filepath.Match(strings.ToLower(pattern), strings.ToLower(path))
 
 			if nil != err {
 				glog.Errorf("Find match filename failed: [%s]", err.Error)
