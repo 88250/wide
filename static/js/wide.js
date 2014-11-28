@@ -421,17 +421,17 @@ var wide = {
                 case 'start-test':
                 case 'start-install':
                 case 'start-get':
-                    bottomGroup.fillOutput('<pre>' + data.output + '</pre>');
+                    bottomGroup.fillOutput(data.output);
 
                     break;
                 case 'go test':
                 case 'go install':
                 case 'go get':
-                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + '<pre>' + data.output + '</pre>');
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     break;
                 case 'build':
-                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + '<pre>' + data.output + '</pre>');
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     if (data.lints) { // has build error
                         for (var i = 0; i < data.lints.length; i++) {
