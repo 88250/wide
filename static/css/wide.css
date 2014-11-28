@@ -299,6 +299,7 @@
 
 .bottom-window-group .output pre {
     margin: 0;
+    font-family: Consolas, 'Courier New', monospace
 }
 
 .bottom-window-group .output .start-build,
@@ -325,7 +326,6 @@
 .bottom-window-group .output .stderr {
     color: gray;
     font-style: italic;
-    font-family: Consolas, 'Courier New', monospace
 }
 
 .bottom-window-group table {
