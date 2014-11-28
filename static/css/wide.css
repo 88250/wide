@@ -322,6 +322,11 @@
     color: #9d0000;
 }
 
+.bottom-window-group .output .stderr {
+    color: gray;
+    font-style: italic;    
+}
+
 .bottom-window-group table {
     width: 100%;
 }

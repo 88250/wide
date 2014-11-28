@@ -105,9 +105,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		data["succ"] = false
 	}
 
-	//outReader := bufio.NewReader(stdout)
 	outReader := util.NewReader(stdout)
-	errReader := bufio.NewReader(stderr)
+	errReader := util.NewReader(stderr)
 
 	if err := cmd.Start(); nil != err {
 		glog.Error(err)
@@ -162,7 +161,6 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		go func() {
 			for {
 				buf, err := outReader.ReadData()
-				//buf, err := outReader.ReadString('\n')
 				buf = strings.Replace(buf, "<", "&lt;", -1)
 				buf = strings.Replace(buf, ">", "&gt;", -1)
 
@@ -204,9 +202,15 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}()
 
 		for {
-			buf, err := errReader.ReadString('\n')
+			buf, err := errReader.ReadData()
 			buf = strings.Replace(buf, "<", "&lt;", -1)
 			buf = strings.Replace(buf, ">", "&gt;", -1)
+
+			if nil == session.OutputWS[sid] {
+				break
+			}
+
+			wsChannel := session.OutputWS[sid]
 
 			if nil != err {
 				// remove the exited process from user process set
@@ -214,35 +218,27 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 				glog.V(5).Infof("Session [%s] 's running [id=%d, file=%s] has done [stderr err]", sid, runningId, filePath)
 
-				if nil != session.OutputWS[sid] {
-					wsChannel := session.OutputWS[sid]
-
-					channelRet["cmd"] = "run-done"
-					channelRet["output"] = buf
-					err := wsChannel.WriteJSON(&channelRet)
-					if nil != err {
-						glog.Error(err)
-						break
-					}
-
-					wsChannel.Refresh()
+				channelRet["cmd"] = "run-done"
+				channelRet["output"] = "<span class='stderr'>" + buf + "</span>"
+				err := wsChannel.WriteJSON(&channelRet)
+				if nil != err {
+					glog.Error(err)
+					break
 				}
+
+				wsChannel.Refresh()
 
 				break
 			} else {
-				if nil != session.OutputWS[sid] {
-					wsChannel := session.OutputWS[sid]
-
-					channelRet["cmd"] = "run"
-					channelRet["output"] = buf
-					err := wsChannel.WriteJSON(&channelRet)
-					if nil != err {
-						glog.Error(err)
-						break
-					}
-
-					wsChannel.Refresh()
+				channelRet["cmd"] = "run"
+				channelRet["output"] = "<span class='stderr'>" + buf + "</span>"
+				err := wsChannel.WriteJSON(&channelRet)
+				if nil != err {
+					glog.Error(err)
+					break
 				}
+
+				wsChannel.Refresh()
 			}
 		}
 	}(rand.Int())
@@ -391,7 +387,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			// build gutter lint
 
 			errOut := string(buf)
-			channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n" + errOut
+			channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n" +
+				"<span class='stderr'>" + errOut + "</span>"
 
 			lines := strings.Split(errOut, "\n")
 
