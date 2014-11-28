@@ -135,5 +135,6 @@
     "apply": "应用",
     "clearOutput": "清空输出",
     "export": "导出",
-    "refresh": "刷新"
+    "refresh": "刷新",
+    "import": "导入"
 }

@@ -119,7 +119,9 @@
                 </li>
             </ul>
         </div>
-
+        
+        <input id="importFileupload" type="file" name="files[]" style="display: none;" onclick="tree.import();" multiple>
+        
         <div class="content">
             <div class="side">
                 <span title="{{.i18n.min}}" class="font-ico ico-min"></span>
@@ -140,10 +142,11 @@
                                 <li class="rename" onclick="tree.rename(this);">{{.i18n.rename}}</li>
                                 <li class="hr"></li>
                                 <li class="refresh" onclick="tree.refresh(this);">{{.i18n.refresh}}</li>
+                                <li class="import" onclick="$('#importFileupload').click();">{{.i18n.import}}</li>
                                 <li class="export" onclick="tree.export(this);">{{.i18n.export}}</li>
                             </ul>
                         </div>
-
+                        
                         <!-- 文件右键菜单 -->
                         <div id="fileRMenu" class="frame">
                             <ul>
@@ -370,5 +373,9 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/windows.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/hotkeys.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/bottomGroup.js?{{.conf.StaticResourceVersion}}"></script>
+
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/vendor/jquery.ui.widget.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.iframe-transport.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.fileupload.js?{{.conf.StaticResourceVersion}}"></script>
     </body>
 </html>

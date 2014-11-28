@@ -191,6 +191,28 @@ var tree = {
         $("#dirRMenu").hide();
         $("#fileRMenu").hide();
     },
+    import: function (it) {
+        if (it) {
+            if ($(it).hasClass("disabled")) {
+                return false;
+            }
+        }
+
+        var request = newWideRequest();
+        request.path = wide.curNode.path;
+
+        $('#importFileupload').fileupload({
+            url: "/file/upload?path=" + request.path,
+            dataType: 'json',
+            formData: request,
+            done: function (e, data) {
+                tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
+            }
+        });
+
+        $("#dirRMenu").hide();
+        $("#fileRMenu").hide();
+    },
     init: function () {
         $("#file").click(function () {
             $(this).focus();
