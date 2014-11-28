@@ -1,4 +1,5 @@
-# Wide [![Build Status](https://drone.io/github.com/b3log/wide/status.png)](https://drone.io/github.com/b3log/wide/latest) [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/b3log/wide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# Wide [![Build Status](https://drone.io/github.com/b3log/wide/status.png)](https://drone.io/github.com/b3log/wide/latest) [![GoDoc](https://godoc.org/github.com/b3log/wide?status.svg)](http://godoc.org/github.com/b3log/wide)
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/b3log/wide?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 _Have a [**try**](http://121.41.106.121:7070/signup) first!_
 
