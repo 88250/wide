@@ -1,0 +1,119 @@
+/* 
+ * Copyright (c) 2014, B3log
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *  
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+.side {
+    background-color: #FFF;
+    border-right: 1px solid #9B9B9B;
+}
+
+.footer {
+    border-top: 1px solid #919191;
+    background-color: #F0F0F0;
+    color: #919191;
+}
+
+.edit-panel {
+    background-color: #FFF;
+}
+
+.font-ico {
+    color: #666;
+}
+
+.font-ico:hover {
+    color: #333;
+}
+
+.menu {
+    background: #F0F0F0;
+    box-shadow: 0 1px 0 0 #E7E7E7 inset;
+    border-bottom: 1px solid #919191;
+}
+
+.menu > ul > li > span {
+    color: #000;
+    text-shadow: 0px 1px 0px #efefef;
+}
+
+.menu > ul > li > span:hover {
+    background-color: #cfcfcf;
+    box-shadow: 1px -1px 0 0 #b6b6b6, -1px 0 0 0 #b6b6b6, 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
+    color: #393939;
+}
+
+.menu > ul > li > span.selected {
+    background-color: #3875D7;
+    color: #FFF;
+    box-shadow: 1px 0 0 0 #b6b6b6 inset, 1px 0 0 0 #b6b6b6, 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.frame {
+    border: 1px solid #5F5F5F;
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    background-color: #F8F8F8;
+}
+
+.frame li:hover {
+    background-color: #3875D7;
+    color: #FFF;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.frame li.disabled:hover {
+    background-color: #F8F8F8;
+    color: #999;
+}
+
+.frame .hr {
+    font-size: 1px;
+    margin: 2px 3px;
+    border-top: 1px solid #e6e6e6;
+    border-bottom: 1px solid #F8F8F8;
+    height: 0;
+}
+
+.tabs {
+    box-shadow: 0 -1px 0 0 rgba(6, 6, 6, 0.1) inset, 0 1px 0 0 rgba(255, 255, 255, 0.44999999999999996) inset, 0 1px 0 transparent;
+    background-color: #E6E6E6;
+}
+
+.tabs > div {
+    background-color: #DDD;
+    color: #8B8B8B;
+    border-right: 1px solid #ADADAD;
+}
+
+.tabs > div:hover {
+    background-color: #E4E4E4;
+}
+
+.tabs > div.current {
+    background-color: #9F9F9F;
+    color: #FFF;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.4);
+}
+
+.dialog-header-bg {
+    border-bottom: 1px solid #8891A1;
+}
+
+.dialog-title {
+    color: #000;
+}
+
+.dialog-main {
+    background-color: #F0F0F0;
+}

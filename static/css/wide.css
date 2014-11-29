@@ -31,14 +31,9 @@
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    color: #666;
     cursor: pointer;
     font-size: 13px;
-    line-height: 18px;
-}
-
-.font-ico:hover {
-    color: #333;
+    line-height: 20px;
 }
 
 .ico-play:before {
@@ -83,12 +78,9 @@
 /* start frame */
 .frame {
     position: absolute;
-    border: 1px solid #5F5F5F;
-    background-color: #F8F8F8;
     width: 320px;
     z-index: 21;
     display: none;
-    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .frame li {
@@ -102,18 +94,6 @@
     text-shadow: 0 0 0 !important;
 }
 
-.frame li:hover,
-.menu > ul > li > span.selected {
-    background-color: #3875D7;
-    color: #FFF;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-}
-
-.frame li.disabled:hover {
-    background-color: #F8F8F8;
-    color: #999;
-}
-
 .frame a {
     color: #000;
     text-decoration: none;
@@ -123,58 +103,39 @@
 .frame a:hover {
     color: #FFF;
 }
-
-.frame .hr {
-    background-color: #bdbdbd;
-    height: 1px;
-    margin: 0 1px;
-}
 /* end frame */
 
 /* start tabs */
 .tabs {
-    height: 20px;
+    height: 21px;
     overflow: hidden;
     width: 100%;
-    background-color: #E6E6E6;
-    border-top: 1px solid #A4A4A4;
-    border-bottom: 1px solid #9D9D9D;
 }
 
 .tabs > div {
     float: left;
-    line-height: 18px;
-    height: 18px;
+    line-height: 20px;
+    height: 20px;
     padding: 0 5px;
     cursor: pointer;
-    background-color: #DDD;
-    color: #8B8B8B;
-    border-right: 1px solid #ADADAD;
+   
 }
 
-.tabs > div.current {
-    background-color: #9F9F9F;
-    color: #FFF;
+.tabs > div > span.changed {
+    font-weight: bold;
 }
 /* end tabs */
 
 /* start menu */
-.menu {
-    background-color: #F0F0F0;
-    height: 24px;
-}
-
 .menu > ul > li {
     float: left;
 }
 
 .menu > ul > li > span {
-    color: #000;
     font-size: 12px;
-    line-height: 24px;
-    padding: 5px;
-    text-decoration: none;
+    line-height: 21px;
     cursor: pointer;
+    padding: 4px 7px;
 }
 /* end menu */
 
@@ -186,21 +147,6 @@
     width: 80%;
     height: 70%;
     overflow: hidden;
-}
-
-.edit-panel .tabs > div {
-    background-color: #d1d1d1;
-    border-right-color: #9b9b9b;
-    color: #333;
-    cursor: auto;
-}
-
-.edit-panel .tabs > div.current {
-    background-color: #F7F7F7;
-}
-
-.edit-panel .tabs > div > span.changed {
-    font-weight: bold;
 }
 
 .toolbars {
@@ -346,8 +292,8 @@
 
 /* start footer */
 .footer {
-    border-top: 1px solid #919191;
-    background-color: #F0F0F0;
+    box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset;
+    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.57);
     padding-left: 5px;
     height: 19px;
     line-height: 18px;

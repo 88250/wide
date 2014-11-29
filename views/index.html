@@ -18,6 +18,7 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/start.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/user/{{.session.Username}}/style.css?{{.conf.StaticResourceVersion}}">
 
@@ -119,9 +120,7 @@
                 </li>
             </ul>
         </div>
-        
-        <input id="importFileupload" type="file" name="files[]" style="display: none;" onclick="tree.import();" multiple>
-        
+
         <div class="content">
             <div class="side">
                 <span title="{{.i18n.min}}" class="font-ico ico-min"></span>
@@ -133,6 +132,7 @@
                 <div class="tabs-panel">
                     <div data-index="filreTree">
                         <ul id="files" tabindex="-1" class="ztree"></ul>
+                        <input id="importFileupload" type="file" name="files[]" style="display: none;" onclick="tree.import();" multiple>
                         <!-- 目录右键菜单 -->
                         <div id="dirRMenu" class="frame">
                             <ul>
@@ -146,7 +146,7 @@
                                 <li class="export" onclick="tree.export(this);">{{.i18n.export}}</li>
                             </ul>
                         </div>
-                        
+
                         <!-- 文件右键菜单 -->
                         <div id="fileRMenu" class="frame">
                             <ul>

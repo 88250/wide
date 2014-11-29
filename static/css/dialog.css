@@ -40,13 +40,14 @@
     display: none;
     -moz-user-select: none;
     user-select: none;
+    box-shadow: 0 2px 10px 1px #000000;
 }
 
 .dialog-title {
     float: left;
     line-height: 22px;
     margin-left: 3px;
-    color: #000;
+    font-weight: bold;
 }
 
 .dialog-header-bg {
@@ -54,21 +55,12 @@
     background-color: #CCD5E5;
     cursor: move;
     width: 100%;
-    border: 1px solid #9B9B9B;
-    border-top-color: #8E97A7;
-    border-bottom-color: #8891A1;
 }
 
 .dialog-close-icon {
     float: right;
     margin: 3px;
     text-decoration: none;
-}
-
-.dialog-main {
-    border: 1px solid #9B9B9B;
-    border-top-width: 0px;
-    background-color: #F0F0F0;
 }
 
 .dialog-main > div {

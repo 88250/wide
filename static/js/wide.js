@@ -366,7 +366,7 @@ var wide = {
         });
     },
     _initLayout: function () {
-        var mainH = $(window).height() - $(".menu").height() - $(".footer").height(),
+        var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2,
                 bottomH = Math.floor(mainH * 0.3);
         // 减小初始化界面抖动
         $(".content").height(mainH).css("position", "relative");
