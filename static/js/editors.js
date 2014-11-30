@@ -565,7 +565,7 @@ var editors = {
         menu.undisabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install']);
 
         var textArea = document.getElementById("editor" + id);
-        textArea.value = data.content;
+        textArea.value = data.content;        
 
         var editor = CodeMirror.fromTextArea(textArea, {
             lineNumbers: true,
@@ -575,7 +575,7 @@ var editors = {
             highlightSelectionMatches: {showToken: /\w/},
             rulers: [{color: "#ccc", column: 120, lineStyle: "dashed"}],
             styleActiveLine: true,
-            theme: 'wide',
+            theme: config.editorTheme,
             indentUnit: 4,
             foldGutter: true,
             cursorHeight: 1,

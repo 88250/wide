@@ -22,8 +22,8 @@ import (
 	"path/filepath"
 	"runtime"
 	"strconv"
-	"text/template"
 	"sync"
+	"text/template"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
@@ -59,7 +59,8 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	if "GET" == r.Method {
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
 			"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version(),
-			"locales": i18n.GetLocalesNames(), "gofmts": util.Go.GetGoFormats()}
+			"locales": i18n.GetLocalesNames(), "gofmts": util.Go.GetGoFormats(),
+			"themes": conf.GetThemes(), "editorThemes": conf.GetEditorThemes()}
 
 		t, err := template.ParseFiles("views/preference.html")
 
@@ -84,14 +85,16 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	args := struct {
 		FontFamily       string
 		FontSize         string
-		EditorFontFamily string
-		EditorFontSize   string
-		EditorLineHeight string
 		GoFmt            string
 		Workspace        string
 		Username         string
 		Password         string
 		Locale           string
+		Theme            string
+		EditorFontFamily string
+		EditorFontSize   string
+		EditorLineHeight string
+		EditorTheme      string
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -103,16 +106,18 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	user.FontFamily = args.FontFamily
 	user.FontSize = args.FontSize
-	user.Editor.FontFamily = args.EditorFontFamily
-	user.Editor.FontSize = args.EditorFontSize
-	user.Editor.LineHeight = args.EditorLineHeight
 	user.GoFormat = args.GoFmt
 	user.Workspace = args.Workspace
 	user.Password = args.Password
 	user.Locale = args.Locale
+	user.Theme = args.Theme
+	user.Editor.FontFamily = args.EditorFontFamily
+	user.Editor.FontSize = args.EditorFontSize
+	user.Editor.LineHeight = args.EditorLineHeight
+	user.Editor.Theme = args.EditorTheme
 
 	conf.UpdateCustomizedConf(username)
-	
+
 	succ = conf.Save()
 }
 
@@ -250,7 +255,7 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 func addUser(username, password string) string {
 	addUserMutex.Lock()
 	defer addUserMutex.Unlock()
-	
+
 	for _, user := range conf.Wide.Users {
 		if user.Name == username {
 			return UserExists

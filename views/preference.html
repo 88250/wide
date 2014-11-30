@@ -23,6 +23,17 @@
                 {{.i18n.font_size}}{{.i18n.colon}}
                 <input data-value="{{.user.FontSize}}" value="{{.user.FontSize}}" name="fontSize"/>
             </label>
+            <label>
+                {{.i18n.theme}}{{.i18n.colon}}
+                <br/>
+                <select class="select" id="themeSelect">
+                    {{range $index, $theme := .themes }}
+                    <option name="{{$theme}}" value="{{$theme}}" {{if eq $.user.Theme $theme}}selected="selected"{{end}}>{{$theme}}</option>
+                    {{end}}
+                </select>
+                <br/>
+            </label>
+            <input data-value="{{.user.Theme}}" value="{{.user.Theme}}" name="theme" hidden="hidden"/>
         </div>
         <div class="fn-none" data-index="editor">
             <label>
@@ -37,6 +48,17 @@
                 {{.i18n.line_height}}{{.i18n.colon}}
                 <input data-value="{{.user.Editor.LineHeight}}" value="{{.user.Editor.LineHeight}}" name="editorLineHeight"/>
             </label>
+            <label>
+                {{.i18n.theme}}{{.i18n.colon}}
+                <br/>
+                <select class="select" id="editorThemeSelect">
+                    {{range $index, $theme := .editorThemes }}
+                    <option name="{{$theme}}" value="{{$theme}}" {{if eq $.user.Editor.Theme $theme}}selected="selected"{{end}}>{{$theme}}</option>
+                    {{end}}
+                </select>
+                <br/>
+            </label>
+            <input data-value="{{.user.Editor.Theme}}" value="{{.user.Editor.Theme}}" name="editorTheme" hidden="hidden"/>
         </div>
         <div class="fn-none" data-index="gotool">
             <label>

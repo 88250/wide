@@ -292,6 +292,20 @@ var menu = {
                 $input.val(this.value);
             });
 
+            $("#themeSelect").on('change', function () {
+                var $dialogPreference = $("#dialogPreference"),
+                        $input = $dialogPreference.find("input[name=theme]")
+
+                $input.val(this.value);
+            });
+
+            $("#editorThemeSelect").on('change', function () {
+                var $dialogPreference = $("#dialogPreference"),
+                        $input = $dialogPreference.find("input[name=editorTheme]")
+
+                $input.val(this.value);
+            });
+
             $("#goFmtSelect").on('change', function () {
                 var $dialogPreference = $("#dialogPreference"),
                         $input = $dialogPreference.find("input[name=goFmt]")
@@ -347,24 +361,28 @@ var menu = {
                             $dialogPreference = $("#dialogPreference"),
                             $fontFamily = $dialogPreference.find("input[name=fontFamily]"),
                             $fontSize = $dialogPreference.find("input[name=fontSize]"),
-                            $editorFontFamily = $dialogPreference.find("input[name=editorFontFamily]"),
-                            $editorFontSize = $dialogPreference.find("input[name=editorFontSize]"),
-                            $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
                             $goFmt = $dialogPreference.find("input[name=goFmt]"),
                             $workspace = $dialogPreference.find("input[name=workspace]"),
                             $password = $dialogPreference.find("input[name=password]"),
-                            $locale = $dialogPreference.find("input[name=locale]");
+                            $locale = $dialogPreference.find("input[name=locale]"),
+                            $theme = $dialogPreference.find("input[name=theme]"),
+                            $editorFontFamily = $dialogPreference.find("input[name=editorFontFamily]"),
+                            $editorFontSize = $dialogPreference.find("input[name=editorFontSize]"),
+                            $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
+                            $editorTheme = $dialogPreference.find("input[name=editorTheme]");
 
                     $.extend(request, {
                         "fontFamily": $fontFamily.val(),
                         "fontSize": $fontSize.val(),
-                        "editorFontFamily": $editorFontFamily.val(),
-                        "editorFontSize": $editorFontSize.val(),
-                        "editorLineHeight": $editorLineHeight.val(),
                         "goFmt": $goFmt.val(),
                         "workspace": $workspace.val(),
                         "password": $password.val(),
-                        "locale": $locale.val()
+                        "locale": $locale.val(),
+                        "theme": $theme.val(),
+                        "editorFontFamily": $editorFontFamily.val(),
+                        "editorFontSize": $editorFontSize.val(),
+                        "editorLineHeight": $editorLineHeight.val(),
+                        "editorTheme": $editorTheme.val()
                     });
 
                     $.ajax({
@@ -378,13 +396,15 @@ var menu = {
 
                             $fontFamily.data("value", $fontFamily.val());
                             $fontSize.data("value", $fontSize.val());
-                            $editorFontFamily.data("value", $editorFontFamily.val());
-                            $editorFontSize.data("value", $editorFontSize.val());
-                            $editorLineHeight.data("value", $editorLineHeight.val());
                             $goFmt.data("value", $goFmt.val());
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
                             $locale.data("value", $locale.val());
+                            $theme.data("value", $theme.val());
+                            $editorFontFamily.data("value", $editorFontFamily.val());
+                            $editorFontSize.data("value", $editorFontSize.val());
+                            $editorLineHeight.data("value", $editorLineHeight.val());
+                            $editorTheme.data("value", $editorTheme.val());
 
                             var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
                             $okBtn.prop("disabled", true);

@@ -57,6 +57,7 @@ type User struct {
 	GoFormat             string
 	FontFamily           string
 	FontSize             string
+	Theme                string
 	Editor               *Editor
 	LatestSessionContent *LatestSessionContent
 }
@@ -66,6 +67,7 @@ type Editor struct {
 	FontFamily string
 	FontSize   string
 	LineHeight string
+	Theme      string
 }
 
 // Configuration.
@@ -246,6 +248,9 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 	// keep the raw content
 	json.Unmarshal(bytes, &rawWide)
 
+	// upgrade if need
+	upgrade()
+
 	// Working Driectory
 	Wide.WD = util.OS.Pwd()
 	glog.V(5).Infof("${pwd} [%s]", Wide.WD)
@@ -313,6 +318,21 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 
 	initWorkspaceDirs()
 	initCustomizedConfs()
+}
+
+// upgrade upgrades the wide.json.
+func upgrade() {
+	for _, user := range Wide.Users {
+		if "" == user.Theme {
+			user.Theme = "default" // since 1.1.0
+		}
+
+		if "" == user.Editor.Theme {
+			user.Editor.Theme = "wide" // since 1.1.0
+		}
+	}
+
+	Save()
 }
 
 // initCustomizedConfs initializes the user customized configurations.
@@ -409,4 +429,34 @@ func createDir(path string) {
 
 		glog.V(7).Infof("Created a directory [%s]", path)
 	}
+}
+
+// GetEditorThemes gets the names of editor themes.
+func GetEditorThemes() []string {
+	ret := []string{}
+
+	f, _ := os.Open("static/js/overwrite/codemirror" + "/theme")
+	names, _ := f.Readdirnames(-1)
+	f.Close()
+
+	for _, name := range names {
+		ret = append(ret, name[:strings.LastIndex(name, ".")])
+	}
+
+	return ret
+}
+
+// GetThemes gets the names of themes.
+func GetThemes() []string {
+	ret := []string{}
+
+	f, _ := os.Open("static/css/themes")
+	names, _ := f.Readdirnames(-1)
+	f.Close()
+
+	for _, name := range names {
+		ret = append(ret, name[:strings.LastIndex(name, ".")])
+	}
+
+	return ret
 }
