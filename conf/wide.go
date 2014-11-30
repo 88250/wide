@@ -38,7 +38,7 @@ const (
 
 const (
 	WideVersion   = "1.0.1" // wide version
-	CodeMirrorVer = "4.7"   // editor version
+	CodeMirrorVer = "4.8"   // editor version
 )
 
 // The latest session content.
