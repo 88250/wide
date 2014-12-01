@@ -414,7 +414,7 @@ var menu = {
 
                             $("#themesLink").attr("href", config.staticServer + '/static/css/themes/' + $theme.val() + '.css');
 
-                            editor.setOption("theme", $editorTheme.val());
+                            wide.curEditor.setOption("theme", $editorTheme.val());
                         }
                     });
                 }
