@@ -370,7 +370,7 @@ var menu = {
                             $editorFontSize = $dialogPreference.find("input[name=editorFontSize]"),
                             $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
                             $editorTheme = $dialogPreference.find("input[name=editorTheme]");
-                            $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
+                    $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
 
                     $.extend(request, {
                         "fontFamily": $fontFamily.val(),
@@ -411,8 +411,10 @@ var menu = {
 
                             var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
                             $okBtn.prop("disabled", true);
-                            
-                            $("#themesLink").attr("href", config.staticServer + '/static/css/themes/' +  $theme.val() + '.css');
+
+                            $("#themesLink").attr("href", config.staticServer + '/static/css/themes/' + $theme.val() + '.css');
+
+                            editor.setOption("theme", $editorTheme.val());
                         }
                     });
                 }
@@ -422,5 +424,5 @@ var menu = {
                 id: ".preference"
             });
         });
-    },
+    }
 };
