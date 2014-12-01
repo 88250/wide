@@ -135,3 +135,11 @@
 .ztree li a {
     color: #e1e1e1;
 }
+
+.bottom-window-group {
+    border-top: 1px solid #000;
+}
+
+#dialogPreference {
+    border: 1px solid #000;
+}
