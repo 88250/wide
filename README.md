@@ -31,16 +31,17 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 
 ## Features
 
-* Code Highlight, Folding: Go/HTML/JavaScript/Markdown etc.
-* Autocomplete: Go/HTML etc.
-* Format: Go/HTML/JSON etc.
-* Run & Debug: run/debug multiple processes at the same time
-* Multiplayer: a real team development experience
-* Navigation, Jump to declaration, Find usages, File search etc.
-* Shell: run command on the server
-* Git integration: git command on the web
-* Web development: Frontend devlopment (HTML/JS/CSS) all in one
-* Go tool: go get/install/fmt etc.
+* [X] Code Highlight, Folding: Go/HTML/JavaScript/Markdown etc.
+* [X] Autocomplete: Go/HTML etc.
+* [X] Format: Go/HTML/JSON etc.
+* [X] Build & Run
+* [ ] Debug
+* [X] Multiplayer: a real team development experience
+* [X] Navigation, Jump to declaration, Find usages, File search etc.
+* [X] Shell: run command on the server
+* [ ] Git integration: git command on the web
+* [X] Web development: Frontend devlopment (HTML/JS/CSS) all in one
+* [X] Go tool: go get/install/fmt etc.
 
 ## Architecture 
 
