@@ -140,6 +140,11 @@
     border-top: 1px solid #000;
 }
 
+.bottom-window-group .tabs-panel > div{
+    background-color: #181818;
+    color: #ebebeb;
+}
+
 #dialogPreference {
     border: 1px solid #000;
 }

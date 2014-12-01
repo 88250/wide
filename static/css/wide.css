@@ -280,8 +280,9 @@
 }
 
 .bottom-window-group td {
-    border-bottom: 1px solid #DDD;
-    line-height: 20px;
+    border-bottom: 1px solid #919191;
+    font-size: 12px;
+    line-height: 19px;
 }
 
 .bottom-window-group .notification .type,

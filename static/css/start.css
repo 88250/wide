@@ -31,12 +31,14 @@
 }
 
 #startPage .title {
-    background-color: #f5f5f5;
+    background-color: #9F9F9F;
     border-bottom-width: 0 !important;
     border-radius: 3px 3px 0 0;
     font-size: 15px;
     margin-bottom: 10px;
     padding: 5px 10px;
+    color: #FFF;
+    text-shadow: 0 1px rgba(0, 0, 0, 0.4);
 }
 
 #startPage .details {
@@ -51,7 +53,7 @@
 #startPage .details li.border {
     padding-bottom: 5px;
     margin-bottom: 5px;
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid #919191;
 }
 
 #startPage .details li.border.workspace {
@@ -72,7 +74,7 @@
 }
 
 #startPage .news li {
-    border-bottom: 1px solid #f1f1f1;
+    border-bottom: 1px solid #919191;
 }
 
 #startPage .date {

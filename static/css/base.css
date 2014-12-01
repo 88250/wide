@@ -93,7 +93,7 @@ button {
 }
 
 .list li.selected,
-.list li:hover{
+.list li:hover {
     background-color: #3875d7;
     color: #FFF;
 }

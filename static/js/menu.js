@@ -347,7 +347,7 @@ var menu = {
 
             $("#dialogPreference").dialog({
                 "modal": true,
-                "height": 460,
+                "height": 280,
                 "width": 800,
                 "title": config.label.perference,
                 "okText": config.label.apply,
