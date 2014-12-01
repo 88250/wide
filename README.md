@@ -43,6 +43,7 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 * [X] Web development: Frontend devlopment (HTML/JS/CSS) all in one
 * [X] Go tool: go get/install/fmt etc.
 * [X] File Import & Export
+* [X] Themes
 
 ## Architecture 
 
