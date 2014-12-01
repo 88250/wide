@@ -68,6 +68,7 @@ type Editor struct {
 	FontSize   string
 	LineHeight string
 	Theme      string
+	TabSize    string
 }
 
 // Configuration.
@@ -329,6 +330,10 @@ func upgrade() {
 
 		if "" == user.Editor.Theme {
 			user.Editor.Theme = "wide" // since 1.1.0
+		}
+
+		if "" == user.Editor.TabSize {
+			user.Editor.TabSize = "4" // since 1.1.0
 		}
 	}
 

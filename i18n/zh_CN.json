@@ -137,5 +137,6 @@
     "export": "导出",
     "refresh": "刷新",
     "import": "导入",
-    "theme": "主题"
+    "theme": "主题",
+    "tab_size": "Tab 大小"
 }

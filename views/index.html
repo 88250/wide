@@ -317,7 +317,8 @@
                                     "session": '{{.conf.SessionChannel}}'
                             },
                             "wideSessionId": '{{.session.Id}}',
-                            "editorTheme": '{{.user.Editor.Theme}}'
+                            "editorTheme": '{{.user.Editor.Theme}}',
+                            "editorTabSize": '{{.user.Editor.TabSize}}'
                     };
                     // 发往 Wide 的所有 AJAX 请求需要使用该函数创建请求参数.
                             function newWideRequest() {

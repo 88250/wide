@@ -95,6 +95,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		EditorFontSize   string
 		EditorLineHeight string
 		EditorTheme      string
+		EditorTabSize    string
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -115,6 +116,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.Editor.FontSize = args.EditorFontSize
 	user.Editor.LineHeight = args.EditorLineHeight
 	user.Editor.Theme = args.EditorTheme
+	user.Editor.TabSize = args.EditorTabSize
 
 	conf.UpdateCustomizedConf(username)
 
