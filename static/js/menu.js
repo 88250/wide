@@ -370,6 +370,7 @@ var menu = {
                             $editorFontSize = $dialogPreference.find("input[name=editorFontSize]"),
                             $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
                             $editorTheme = $dialogPreference.find("input[name=editorTheme]");
+                            $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
 
                     $.extend(request, {
                         "fontFamily": $fontFamily.val(),
@@ -382,7 +383,8 @@ var menu = {
                         "editorFontFamily": $editorFontFamily.val(),
                         "editorFontSize": $editorFontSize.val(),
                         "editorLineHeight": $editorLineHeight.val(),
-                        "editorTheme": $editorTheme.val()
+                        "editorTheme": $editorTheme.val(),
+                        "editorTabSize": $editorTabSize.val()
                     });
 
                     $.ajax({
@@ -405,6 +407,7 @@ var menu = {
                             $editorFontSize.data("value", $editorFontSize.val());
                             $editorLineHeight.data("value", $editorLineHeight.val());
                             $editorTheme.data("value", $editorTheme.val());
+                            $editorTabSize.data("value", $editorTabSize.val());
 
                             var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
                             $okBtn.prop("disabled", true);

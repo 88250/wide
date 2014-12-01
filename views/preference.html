@@ -49,6 +49,10 @@
                 <input data-value="{{.user.Editor.LineHeight}}" value="{{.user.Editor.LineHeight}}" name="editorLineHeight"/>
             </label>
             <label>
+                {{.i18n.tab_size}}{{.i18n.colon}}
+                <input data-value="{{.user.Editor.TabSize}}" value="{{.user.Editor.TabSize}}" name="editorTabSize"/>
+            </label>
+            <label>
                 {{.i18n.theme}}{{.i18n.colon}}
                 <br/>
                 <select class="select" id="editorThemeSelect">

@@ -137,5 +137,6 @@
     "export": "輸出",
     "refresh": "リフレッシュ",
     "import": "インポート",
-    "theme": "テーマ"
+    "theme": "テーマ",
+    "tab_size": "Tab·サイズ"
 }
