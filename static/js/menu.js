@@ -408,6 +408,8 @@ var menu = {
 
                             var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
                             $okBtn.prop("disabled", true);
+                            
+                            $("#themesLink").attr("href", config.staticServer + '/static/css/themes/' +  $theme.val() + '.css?')
                         }
                     });
                 }

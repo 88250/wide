@@ -11,7 +11,7 @@
 
         {{range $index, $theme := .editorThemes}}
         <link rel="stylesheet" href="{{$.conf.StaticServer}}/static/js/overwrite/codemirror/theme/{{$theme}}.css">{{end}}
-        
+
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/ztree/zTreeStyle.css">
 
@@ -22,7 +22,7 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/start.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
 
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/{{.user.Theme}}.css?{{.conf.StaticResourceVersion}}">
+        <link id="themesLink" rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/{{.user.Theme}}.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/user/{{.session.Username}}/style.css?{{.conf.StaticResourceVersion}}">
 
@@ -278,8 +278,8 @@
         </div>
         <script>
                     var config = {
-                    "pathSeparator": '{{.pathSeparator}}',
-                            "latestSessionContent": {{.latestSessionContent}},
+                    "staticServer": "{{.conf.StaticServer}}",
+                            "pathSeparator": '{{.pathSeparator}}',
                             "label": {
                             "restore_editor": "{{.i18n.restore_editor}}",
                                     "max_editor": "{{.i18n.max_editor}}",
@@ -317,7 +317,8 @@
                                     "session": '{{.conf.SessionChannel}}'
                             },
                             "wideSessionId": '{{.session.Id}}',
-                            "editorTheme": '{{.user.Editor.Theme}}'
+                            "editorTheme": '{{.user.Editor.Theme}}',
+                            "latestSessionContent": {{.latestSessionContent}}
                     };
                     // 发往 Wide 的所有 AJAX 请求需要使用该函数创建请求参数.
                             function newWideRequest() {
