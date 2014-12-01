@@ -372,7 +372,12 @@ var wide = {
         $(".content").height(mainH).css("position", "relative");
         $(".side .tabs-panel").height(mainH - 20);
 
-        $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - 20);
+        var $bottomGroup = $(".bottom-window-group");
+        if ($bottomGroup.hasClass("bottom-window-group-max")) {
+            $(".bottom-window-group > .tabs-panel > div > div").height(mainH - $bottomGroup.children(".tabs").height());
+        } else {
+            $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - $bottomGroup.children(".tabs").height());
+        }
     },
     _initWS: function () {
         var outputWS = new ReconnectingWebSocket(config.channel.output + '/output/ws?sid=' + config.wideSessionId);
