@@ -369,8 +369,8 @@ var menu = {
                             $editorFontFamily = $dialogPreference.find("input[name=editorFontFamily]"),
                             $editorFontSize = $dialogPreference.find("input[name=editorFontSize]"),
                             $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
-                            $editorTheme = $dialogPreference.find("input[name=editorTheme]");
-                    $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
+                            $editorTheme = $dialogPreference.find("input[name=editorTheme]"),
+                            $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
 
                     $.extend(request, {
                         "fontFamily": $fontFamily.val(),
@@ -414,7 +414,10 @@ var menu = {
 
                             $("#themesLink").attr("href", config.staticServer + '/static/css/themes/' + $theme.val() + '.css');
 
-                            wide.curEditor.setOption("theme", $editorTheme.val());
+                            config.editorTheme = $editorTheme.val();
+                            for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                                editors.data[i].editor.setOption("theme", $editorTheme.val());
+                            }
                         }
                     });
                 }
