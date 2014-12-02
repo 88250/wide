@@ -22,12 +22,12 @@
             "GoFormat": "gofmt",
             "FontFamily": "Helvetica",
             "FontSize": "13px",
-            "Theme": "black",
+            "Theme": "default",
             "Editor": {
                 "FontFamily": "Consolas, 'Courier New', monospace",
                 "FontSize": "13px",
                 "LineHeight": "17px",
-                "Theme": "lesser-dark",
+                "Theme": "wide",
                 "TabSize": "4"
             },
             "LatestSessionContent": {
