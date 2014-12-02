@@ -138,5 +138,6 @@
     "refresh": "Refresh",
     "import": "Import",
     "theme": "Theme",
-    "tab_size": "Tab Size"
+    "tab_size": "Tab Size",
+    "copy_file_path": "Copy File Path"
 }

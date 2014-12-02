@@ -138,5 +138,6 @@
     "refresh": "刷新",
     "import": "导入",
     "theme": "主题",
-    "tab_size": "Tab 大小"
+    "tab_size": "Tab 大小",
+    "copy_file_path": "复制文件路径"
 }

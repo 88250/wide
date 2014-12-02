@@ -181,9 +181,10 @@
                         </li>    
                         <li onclick="editors.closeOther()" title="{{.i18n.close_other}}">
                             <span>{{.i18n.close_other}}</span>
-                        </li>    
+                        </li>
+                        <li class="hr"></li>
                         <li id="copyFilePath" title="Copy file path">
-                            <span>Copy file path</span>
+                            <span>{{.i18n.copy_file_path}}</span>
                         </li>    
                     </ul>
                 </div>
@@ -373,7 +374,7 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify-css.js?{{.conf.StaticResourceVersion}}"></script>
 
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/zeroclipboard/ZeroClipboard.min.js?{{.conf.StaticResourceVersion}}"></script>
-        
+
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/vendor/jquery.ui.widget.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.iframe-transport.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.fileupload.js?{{.conf.StaticResourceVersion}}"></script>
