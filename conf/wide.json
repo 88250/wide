@@ -22,18 +22,30 @@
             "GoFormat": "gofmt",
             "FontFamily": "Helvetica",
             "FontSize": "13px",
-            "Theme": "default",
+            "Theme": "black",
             "Editor": {
                 "FontFamily": "Consolas, 'Courier New', monospace",
                 "FontSize": "13px",
                 "LineHeight": "17px",
-                "Theme": "wide",
+                "Theme": "erlang-dark",
                 "TabSize": "4"
             },
             "LatestSessionContent": {
-                "FileTree": [],
-                "Files": [],
-                "CurrentFile": ""
+                "FileTree": [
+                    "E:\\Work\\go\\src",
+                    "E:\\Work\\go\\src\\code.google.com\\p",
+                    "E:\\Work\\go\\src\\code.google.com\\p\\go.net",
+                    "E:\\Work\\go\\src\\github.com",
+                    "E:\\Work\\go\\src\\github.com\\88250",
+                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml",
+                    "E:\\Work\\go\\src\\github.com\\b3log\\wide",
+                    "E:\\Work\\go\\src\\hello",
+                    "D:\\go\\src\\pkg"
+                ],
+                "Files": [
+                    "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\consts.go"
+                ],
+                "CurrentFile": "E:\\Work\\go\\src\\github.com\\88250\\gohtml\\consts.go"
             }
         }
     ]

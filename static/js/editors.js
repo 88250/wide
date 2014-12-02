@@ -91,14 +91,14 @@ var editors = {
                 });
 
                 $("#dialogCloseEditor button.discard").click(function () {
+                    var i = $("#dialogCloseEditor").data("index");
+                    editors.tabs.del(editors.data[i].id);
                     $("#dialogCloseEditor").dialog("close");
 
                     editors._removeAllMarker();
                 });
 
                 $("#dialogCloseEditor button.cancel").click(function () {
-                    var i = $("#dialogCloseEditor").data("index");
-                    editors.tabs.del(editors.data[i].id);
                     $("#dialogCloseEditor").dialog("close");
 
                     editors._removeAllMarker();
