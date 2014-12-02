@@ -6,7 +6,7 @@ _Have a [**try**](http://121.41.106.121:7070/signup) first, and then help us to 
 
 A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 
-<img src="https://cloud.githubusercontent.com/assets/873584/4606377/d0ca3c2a-521b-11e4-912c-d955ab05850b.png" width="100%" />
+![Hello, 世界](https://cloud.githubusercontent.com/assets/873584/4606377/d0ca3c2a-521b-11e4-912c-d955ab05850b.png)
 
 ## Motivation
 
