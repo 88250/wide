@@ -182,6 +182,9 @@
                         <li onclick="editors.closeOther()" title="{{.i18n.close_other}}">
                             <span>{{.i18n.close_other}}</span>
                         </li>    
+                        <li id="copyFilePath" title="Copy file path">
+                            <span>Copy file path</span>
+                        </li>    
                     </ul>
                 </div>
                 <div class="tabs"></div>
@@ -369,6 +372,12 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify-html.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify-css.js?{{.conf.StaticResourceVersion}}"></script>
 
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/zeroclipboard/ZeroClipboard.min.js?{{.conf.StaticResourceVersion}}"></script>
+        
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/vendor/jquery.ui.widget.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.iframe-transport.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.fileupload.js?{{.conf.StaticResourceVersion}}"></script>
+
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/tabs.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/dialog.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/editors.js?{{.conf.StaticResourceVersion}}"></script>
@@ -380,9 +389,5 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/windows.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/hotkeys.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/bottomGroup.js?{{.conf.StaticResourceVersion}}"></script>
-
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/vendor/jquery.ui.widget.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.iframe-transport.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.fileupload.js?{{.conf.StaticResourceVersion}}"></script>
     </body>
 </html>

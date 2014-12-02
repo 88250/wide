@@ -47,6 +47,8 @@ var editors = {
         }
     },
     _initClose: function () {
+       new ZeroClipboard($("#copyFilePath"));
+
         // 关闭、关闭其他、关闭所有
         $(".edit-panel").on("mousedown", '.tabs > div', function (event) {
             event.stopPropagation();
@@ -65,6 +67,8 @@ var editors = {
                 "left": left + "px",
                 "top": "21px"
             }).data('index', $(this).data("index"));
+
+            $("#copyFilePath").attr('data-clipboard-text', $(this).find("span:eq(0)").attr("title"));
             return false;
         });
     },
