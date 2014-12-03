@@ -387,10 +387,18 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			// build gutter lint
 
 			errOut := string(buf)
-			channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n" +
-				"<span class='stderr'>" + errOut + "</span>"
-
 			lines := strings.Split(errOut, "\n")
+
+			// path process
+			var errOutWithPath string
+			for _, line := range lines {
+				errOutWithPath += parsePath(curDir, line) + "\n"
+			}
+
+			channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n" +
+				"<span class='stderr'>" + errOutWithPath + "</span>"
+
+			// lint process
 
 			if lines[0][0] == '#' {
 				lines = lines[1:] // skip the first line
@@ -420,7 +428,12 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				lineNo := 0
 				msg := left
 				if index >= 0 {
-					lineNo, _ = strconv.Atoi(left[:index])
+					lineNo, err = strconv.Atoi(left[:index])
+
+					if nil != err {
+						continue
+					}
+
 					msg = left[index+2:]
 				}
 
@@ -450,6 +463,44 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 	}(rand.Int())
+}
+
+// parsePath parses file path in the specified outputLine, and returns new line with front-end friendly.
+func parsePath(curDir, outputLine string) string {
+	index := strings.Index(outputLine, " ")
+	if -1 == index || index >= len(outputLine) {
+		return outputLine
+	}
+
+	pathPart := outputLine[:index]
+	msgPart := outputLine[index:]
+
+	parts := strings.Split(pathPart, ":")
+	if len(parts) < 2 { // no file path info (line & column) found
+		return outputLine
+	}
+
+	file := parts[0]
+	line := parts[1]
+	if _, err := strconv.Atoi(line); nil != err {
+		return outputLine
+	}
+
+	column := "0"
+	hasColumn := 4 == len(parts)
+	if hasColumn {
+		column = parts[2]
+	}
+
+	tagStart := `<span class="path" data-path="` + filepath.Join(curDir, file) + `" "data-line="` + line +
+		`" data-column="` + column + `">`
+	text := file + ":" + line
+	if hasColumn {
+		text += ":" + column
+	}
+	tagEnd := "</span>:"
+
+	return tagStart + text + tagEnd + msgPart
 }
 
 // GoTestHandler handles request of go test.
