@@ -139,5 +139,9 @@
     "import": "導入",
     "theme": "主題",
     "tab_size": "Tab 大小",
-    "copy_file_path": "複製文件路徑"
+    "copy_file_path": "複製文件路徑",
+    "file_tree": "文件樹",
+    "select": "選擇",
+    "expand": "展開",
+    "collapse": "收起"
 }
