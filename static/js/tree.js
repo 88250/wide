@@ -112,7 +112,6 @@ var tree = {
             return false;
         }
 
-        $("#dirRMenu").hide();
         $("#dialogNewFilePrompt").dialog("open");
     },
     newDir: function (it) {
@@ -120,7 +119,6 @@ var tree = {
             return false;
         }
 
-        $("#dirRMenu").hide();
         $("#dialogNewDirPrompt").dialog("open");
     },
     removeIt: function (it) {
@@ -134,9 +132,6 @@ var tree = {
                 return false;
             }
         }
-
-        $("#dirRMenu").hide();
-        $("#fileRMenu").hide();
         $("#dialogRemoveConfirm").dialog("open");
     },
     rename: function (it) {
@@ -145,9 +140,6 @@ var tree = {
                 return false;
             }
         }
-
-        $("#dirRMenu").hide();
-        $("#fileRMenu").hide();
         $("#dialogRenamePrompt").dialog("open");
     },
     export: function (it) {
@@ -175,9 +167,6 @@ var tree = {
                 window.open('/file/zip?path=' + wide.curNode.path + '.zip');
             }
         });
-
-        $("#dirRMenu").hide();
-        $("#fileRMenu").hide();
     },
     refresh: function (it) {
         if (it) {
@@ -187,9 +176,6 @@ var tree = {
         }
 
         tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
-
-        $("#dirRMenu").hide();
-        $("#fileRMenu").hide();
     },
     import: function (it) {
         if (it) {
@@ -209,9 +195,6 @@ var tree = {
                 tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
             }
         });
-
-        $("#dirRMenu").hide();
-        $("#fileRMenu").hide();
     },
     init: function () {
         $("#file").click(function () {
@@ -227,8 +210,8 @@ var tree = {
             dataType: "json",
             success: function (data) {
                 if (data.succ) {
-                    var dirRMenu = $("#dirRMenu");
-                    var fileRMenu = $("#fileRMenu");
+                    var $dirRMenu = $("#dirRMenu");
+                    var $fileRMenu = $("#fileRMenu");
                     var setting = {
                         data: {
                             key: {
@@ -257,37 +240,34 @@ var tree = {
 
                                     if (!tree.isDir()) { // 如果右击了文件
                                         if (wide.curNode.removable) {
-                                            $("#fileRMenu .remove").removeClass("disabled");
+                                            $fileRMenu.find(".remove").removeClass("disabled");
                                         } else {
-                                            $("#fileRMenu .remove").addClass("disabled");
+                                            $fileRMenu.find(".remove").addClass("disabled");
                                         }
 
-                                        $("#fileRMenu").show();
-
-                                        fileRMenu.css({
+                                        $fileRMenu.css({
                                             "top": event.clientY - 10 + "px",
                                             "left": event.clientX + "px",
                                             "display": "block"
-                                        });
+                                        }).show();
                                     } else { // 右击了目录
                                         if (wide.curNode.removable) {
-                                            $("#dirRMenu .remove, #dirRMenu .rename").removeClass("disabled");
+                                            $dirRMenu.find(".remove, .rename").removeClass("disabled");
                                         } else {
-                                            $("#dirRMenu .remove, #dirRMenu .rename").addClass("disabled");
+                                            $dirRMenu.find(".remove, .rename").addClass("disabled");
                                         }
 
                                         if (wide.curNode.creatable) {
-                                            $("#dirRMenu .create").removeClass("disabled");
+                                            $dirRMenu.find(".create").removeClass("disabled");
                                         } else {
-                                            $("#dirRMenu .create").addClass("disabled");
+                                            $dirRMenu.find(".create").addClass("disabled");
                                         }
 
-                                        $("#dirRMenu").show();
-                                        dirRMenu.css({
+                                        $dirRMenu.css({
                                             "top": event.clientY - 10 + "px",
                                             "left": event.clientX + "px",
                                             "display": "block"
-                                        });
+                                        }).show();
                                     }
                                     $("#files").focus();
                                 }
@@ -476,7 +456,6 @@ var tree = {
                                 var info = CodeMirror.findModeByExtension(name.substr(suffixIndex + 1));
                                 if (info) {
                                     editors.data[i].editor.setOption("mode", info.mime);
-                                    //CodeMirror.autoLoadMode(editors.data[i].editor, info.mode);
                                 }
 
                                 var $currentSpan = $(".edit-panel .tabs > div[data-index=" + wide.curNode.tId + "] > span:eq(0)");

@@ -79,6 +79,13 @@ var hotkeys = {
             shiftKey: false,
             which: 81
         },
+        // Ctrl+R 重命名   
+        rename: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 82
+        },
         // Shift+Alt+O 跳转到文件
         goFile: {
             ctrlKey: false,
@@ -175,6 +182,14 @@ var hotkeys = {
             if (event.ctrlKey === hotKeys.search.ctrlKey
                     && event.which === hotKeys.search.which) {  // Ctrl+F 搜索
                 $("#dialogSearchForm").dialog("open");
+                return;
+            }
+
+            if (event.ctrlKey === hotKeys.rename.ctrlKey
+                    && event.which === hotKeys.rename.which) {  // Ctrl+R 重命名
+                if (wide.curNode.removable) {
+                    $("#dialogRenamePrompt").dialog("open");
+                }
                 return;
             }
 
