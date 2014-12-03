@@ -1,4 +1,4 @@
-# Wide [![Build Status](https://img.shields.io/travis/b3log/wide.svg)](https://travis-ci.org/b3log/wide) [![API Documentation](http://img.shields.io/badge/api-Godoc-blue.svg)](http://godoc.org/github.com/b3log/wide) [![Apache License](http://img.shields.io/badge/license-ALv2-orange.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+# Wide [![Build Status](https://img.shields.io/travis/b3log/wide.svg)](https://travis-ci.org/b3log/wide) [![Apache License](http://img.shields.io/badge/license-ALv2-orange.svg)](http://www.apache.org/licenses/LICENSE-2.0) [![API Documentation](http://img.shields.io/badge/api-Godoc-blue.svg)](http://godoc.org/github.com/b3log/wide) [![Download](http://img.shields.io/badge/download-1K-red.svg)]
 
 _Have a [**try**](http://121.41.106.121:7070/signup) first, and then help us to make it [happen](http://igg.me/at/widehub)!_
 
