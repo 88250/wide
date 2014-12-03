@@ -275,6 +275,11 @@
     font-style: italic;
 }
 
+.bottom-window-group .output .path {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
 .bottom-window-group table {
     width: 100%;
 }
