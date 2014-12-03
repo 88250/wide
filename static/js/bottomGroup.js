@@ -25,13 +25,11 @@ var bottomGroup = {
             $(this).focus();
         });
 
-        $('.bottom-window-group .output .path').click(function (e) {
-            var path = $(e.target);
-            console.log(path.data("path"));
-            console.log(path.data("line"));
-            console.log(path.data("column"));
-            
-            // TODO: open editor
+        $('.bottom-window-group .output').on('click', '.path', function (e) {
+            var $path = $(this),
+                    tId = tree.getTIdByPath($path.data("path"));
+            tree.openFile(tree.fileTree.getNodeByTId(tId),
+                    CodeMirror.Pos($path.data("line") - 1, $path.data("column") - 1));
         });
     },
     _initFrame: function () {
