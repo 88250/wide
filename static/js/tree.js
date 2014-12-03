@@ -309,6 +309,7 @@ var tree = {
         });
 
         this._initSearch();
+        this._initRename();
     },
     openFile: function (treeNode, cursor) {
         wide.curNode = treeNode;
@@ -417,6 +418,73 @@ var tree = {
 
                         $("#dialogSearchForm").dialog("close");
                         editors.appendSearch(data.founds, 'founds', request.text);
+                    }
+                });
+            }
+        });
+    },
+    _initRename: function () {
+        $("#dialogRenamePrompt").dialog({
+            "modal": true,
+            "height": 52,
+            "width": 260,
+            "title": config.label.rename,
+            "okText": config.label.rename,
+            "cancelText": config.label.cancel,
+            "afterOpen": function () {
+                $("#dialogRenamePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
+                $("#dialogRenamePrompt > input").val(wide.curNode.name).select().focus();
+            },
+            "ok": function () {
+                var name = $("#dialogRenamePrompt > input").val(),
+                        request = newWideRequest();
+
+                request.oldPath = wide.curNode.path;
+
+                request.newPath = wide.curNode.path.substring(0,
+                        wide.curNode.path.lastIndexOf(config.pathSeparator))
+                        + config.pathSeparator + name;
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/file/rename',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function (data) {
+                        if (!data.succ) {
+                            $("#dialogRenamePrompt").dialog("close");
+                            bottomGroup.tabs.setCurrent("notification");
+                            windows.flowBottom();
+                            $(".bottom-window-group .notification").focus();
+                            return false;
+                        }
+
+                        $("#dialogRenamePrompt").dialog("close");
+
+                        // update tree node
+                        var suffixIndex = name.lastIndexOf('.'),
+                                iconSkin = wide.getClassBySuffix(name.substr(suffixIndex + 1));
+                        wide.curNode.name = name;
+                        wide.curNode.title = request.newPath;
+                        wide.curNode.path = request.newPath;
+                        wide.curNode.iconSkin = iconSkin;
+                        tree.fileTree.updateNode(wide.curNode);
+
+                        // update open editor tab name
+                        for (var i = 0, ii = editors.data.length; i < ii; i++) {
+                            if (wide.curNode.tId === editors.data[i].id) {
+                                var info = CodeMirror.findModeByExtension(name.substr(suffixIndex + 1));
+                                if (info) {
+                                    editors.data[i].editor.setOption("mode", info.mime);
+                                    //CodeMirror.autoLoadMode(editors.data[i].editor, info.mode);
+                                }
+
+                                var $currentSpan = $(".edit-panel .tabs > div[data-index=" + wide.curNode.tId + "] > span:eq(0)");
+                                $currentSpan.attr("title", request.newPath);
+                                $currentSpan.html('<span class="' + iconSkin + 'ico"></span>' + wide.curNode.name);
+                                break;
+                            }
+                        }
                     }
                 });
             }

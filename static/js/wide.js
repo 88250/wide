@@ -32,7 +32,6 @@ var wide = {
             }
         });
 
-
         $("#dialogAlert").dialog({
             "modal": true,
             "height": 26,
@@ -93,65 +92,6 @@ var wide = {
                                 }
                             }
                         }
-                    }
-                });
-            }
-        });
-
-        $("#dialogRenamePrompt").dialog({
-            "modal": true,
-            "height": 52,
-            "width": 260,
-            "title": config.label.rename,
-            "okText": config.label.rename,
-            "cancelText": config.label.cancel,
-            "afterOpen": function () {
-                var index = wide.curNode.name.lastIndexOf("."),
-                        name = wide.curNode.name.substring(0, index);
-                if (index === -1) {
-                    name = wide.curNode.name;
-                }
-                $("#dialogRenamePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
-                $("#dialogRenamePrompt > input").val(name).select().focus();
-            },
-            "ok": function () {
-                var name = $("#dialogRenamePrompt > input").val(),
-                        request = newWideRequest();
-
-                request.oldPath = wide.curNode.path;
-
-                var pathIndex = wide.curNode.path.lastIndexOf(config.pathSeparator),
-                        nameIndex = wide.curNode.name.lastIndexOf("."),
-                        ext = wide.curNode.name.substring(nameIndex, wide.curNode.name.length);
-                request.newPath = wide.curNode.path.substring(0, pathIndex) + config.pathSeparator
-                        + name + ext;
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/file/rename',
-                    data: JSON.stringify(request),
-                    dataType: "json",
-                    success: function (data) {
-                        if (!data.succ) {
-                            $("#dialogRenamePrompt").dialog("close");
-                            bottomGroup.tabs.setCurrent("notification");
-                            windows.flowBottom();
-                            $(".bottom-window-group .notification").focus();
-                            return false;
-                        }
-
-                        $("#dialogRenamePrompt").dialog("close");
-
-                        // update tree node
-                        wide.curNode.name = name + ext;
-                        wide.curNode.title = request.newPath;
-                        wide.curNode.path = request.newPath;
-                        tree.fileTree.updateNode(wide.curNode);
-
-                        // update open editor tab name
-                        var $currentSpan = $(".edit-panel .tabs > div[data-index=" + wide.curNode.tId + "] > span:eq(0)");
-                        $currentSpan.attr("title", request.newPath);
-                        $currentSpan.html($currentSpan.find("span").html() + wide.curNode.name);
                     }
                 });
             }
@@ -669,7 +609,8 @@ var wide = {
     getClassBySuffix: function (suffix) {
         var iconSkin = "ico-ztree-other ";
         switch (suffix) {
-            case "html", "htm":
+            case "html":
+            case "htm":
                 iconSkin = "ico-ztree-html ";
                 break;
             case "go":
@@ -696,7 +637,13 @@ var wide = {
             case "xml":
                 iconSkin = "ico-ztree-xml ";
                 break;
-            case "jpg", "jpeg", "bmp", "gif", "png", "svg", "ico":
+            case "jpg":
+            case "jpeg":
+            case "bmp":
+            case "gif":
+            case "png":
+            case "svg":
+            case "ico":
                 iconSkin = "ico-ztree-img ";
                 break;
         }
