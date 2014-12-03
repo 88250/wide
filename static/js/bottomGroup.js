@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 var bottomGroup = {
     tabs: undefined,
@@ -20,9 +20,18 @@ var bottomGroup = {
     init: function () {
         this._initTabs();
         this._initFrame();
-        
+
         $('.bottom-window-group .output').click(function () {
-           $(this).focus(); 
+            $(this).focus();
+        });
+
+        $('.bottom-window-group .output .path').click(function (e) {
+            var path = $(e.target);
+            console.log(path.data("path"));
+            console.log(path.data("line"));
+            console.log(path.data("column"));
+            
+            // TODO: open editor
         });
     },
     _initFrame: function () {
