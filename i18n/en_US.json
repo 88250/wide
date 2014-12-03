@@ -139,5 +139,9 @@
     "import": "Import",
     "theme": "Theme",
     "tab_size": "Tab Size",
-    "copy_file_path": "Copy File Path"
+    "copy_file_path": "Copy File Path",
+    "file_tree": "File Tree",
+    "select": "Select",
+    "expand": "Expand",
+    "collapse": "Collapse"
 }

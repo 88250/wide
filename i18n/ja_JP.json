@@ -139,5 +139,9 @@
     "import": "インポート",
     "theme": "テーマ",
     "tab_size": "Tab·サイズ",
-    "copy_file_path": "ファイルパスをコピー"
+    "copy_file_path": "ファイルパスをコピー",
+    "file_tree": "ファイルツリー",
+    "select": "選択する",
+    "expand": "展開する",
+    "collapse": "シャットダウン"
 }
