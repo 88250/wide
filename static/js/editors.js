@@ -339,7 +339,8 @@ var editors = {
 
                     if (autocompleteArray) {
                         for (var i = 0; i < autocompleteArray.length; i++) {
-                            var displayText = '';
+                            var displayText = '',
+                                    text = autocompleteArray[i].name;
 
                             switch (autocompleteArray[i].class) {
                                 case "type":
@@ -349,23 +350,21 @@ var editors = {
                                     displayText = '<span class="fn-clear">'// + autocompleteArray[i].class 
                                             + '<b class="fn-left">' + autocompleteArray[i].name + '</b>    '
                                             + autocompleteArray[i].type + '</span>';
-
                                     break;
                                 case "func":
                                     displayText = '<span>'// + autocompleteArray[i].class 
                                             + '<b>' + autocompleteArray[i].name + '</b>'
                                             + autocompleteArray[i].type.substring(4) + '</span>';
-
+                                    text += '()';
                                     break;
                                 default:
                                     console.warn("Can't handle autocomplete [" + autocompleteArray[i].class + "]");
-
                                     break;
                             }
 
                             autocompleteHints[i] = {
                                 displayText: displayText,
-                                text: autocompleteArray[i].name
+                                text: text
                             };
                         }
                     }
