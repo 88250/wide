@@ -83,6 +83,13 @@
                                 completion.to || data.to, "complete");
       CodeMirror.signal(data, "pick", completion);
       this.close();
+      
+      // 对自动完成函数（例如 hello()）后光标的位置进行调整，调整到 () 中间
+      var cursor = this.cm.getCursor();
+      var token = this.cm.getTokenAt(cursor);
+      if (token && ")" === token.string) {
+          this.cm.setCursor(CodeMirror.Pos(cursor.line, cursor.ch - 1));
+      }
     },
 
     showHints: function(data) {
