@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 var Tabs = function (obj) {
     obj._$tabsPanel = $(obj.id + " > .tabs-panel");
@@ -139,5 +139,9 @@ $.extend(Tabs.prototype, {
 
         $tabs.children("div[data-index='" + id + "']").addClass("current");
         $tabsPanel.children("div[data-index='" + id + "']").show();
+
+        if (typeof this.obj.setAfter === 'function') {
+            this.obj.setAfter();
+        }
     }
 });

@@ -45,9 +45,12 @@ var editors = {
             $("#dialogCloseEditor").data("removeData", removeData);
             $(".edit-panel .tabs > div[data-index=" + removeIndex + "] .ico-close").click();
         }
+        if (wide.curEditor) {
+            wide.curEditor.focus();
+        }
     },
     _initClose: function () {
-       new ZeroClipboard($("#copyFilePath"));
+        new ZeroClipboard($("#copyFilePath"));
 
         // 关闭、关闭其他、关闭所有
         $(".edit-panel").on("mousedown", '.tabs > div', function (event) {
@@ -90,7 +93,6 @@ var editors = {
                     wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
                     editors.tabs.del(editors.data[i].id);
                     $("#dialogCloseEditor").dialog("close");
-
                     editors._removeAllMarker();
                 });
 
@@ -98,13 +100,11 @@ var editors = {
                     var i = $("#dialogCloseEditor").data("index");
                     editors.tabs.del(editors.data[i].id);
                     $("#dialogCloseEditor").dialog("close");
-
                     editors._removeAllMarker();
                 });
 
-                $("#dialogCloseEditor button.cancel").click(function () {
+                $("#dialogCloseEditor button.cancel").click(function (event) {
                     $("#dialogCloseEditor").dialog("close");
-
                     editors._removeAllMarker();
                 });
             }
@@ -112,6 +112,11 @@ var editors = {
 
         editors.tabs = new Tabs({
             id: ".edit-panel",
+            setAfter: function () {
+                if (wide.curEditor) {
+                    wide.curEditor.focus();
+                }
+            },
             clickAfter: function (id) {
                 if (id === 'startPage') {
                     $(".footer .cursor").text('');

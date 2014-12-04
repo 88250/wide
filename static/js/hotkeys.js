@@ -373,10 +373,7 @@ var hotkeys = {
 
             if (event.ctrlKey === hotKeys.closeCurEditor.ctrlKey
                     && event.which === hotKeys.closeCurEditor.which) {  // Ctrl+Q 关闭当前编辑器   
-                var currentId = editors.getCurrentId();
-                if (currentId) {
-                    editors.tabs.del(currentId);
-                }
+                $(".edit-panel .tabs > div.current").find(".ico-close").click();
                 event.preventDefault();
 
                 return;
