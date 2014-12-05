@@ -78,7 +78,7 @@ var editors = {
     init: function () {
         $("#dialogCloseEditor").dialog({
             "modal": true,
-            "height": 66,
+            "height": 90,
             "width": 260,
             "title": config.label.tip,
             "hideFooter": true,

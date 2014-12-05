@@ -21,35 +21,71 @@ var hotkeys = {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
-            which: 48
+            which: 48,
+            fun: function () {
+                if (wide.curEditor) {
+                    wide.curEditor.focus();
+                }
+            }
         },
         // Ctrl-1 焦点切换到文件树
         goFileTree: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
-            which: 49
+            which: 49,
+            fun: function () {
+                // 有些元素需设置 tabindex 为 -1 时才可以 focus
+                if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+                    // 当文件树最小化时
+                    $(".side").css({
+                        "left": "0"
+                    });
+
+                    if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
+                        // 当底部最小化时
+                        $(".bottom-window-group").css("top", "100%").hide();
+                    }
+                }
+
+                $("#files").focus();
+            }
         },
         // Ctrl-4 焦点切换到输出窗口   
         goOutput: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
-            which: 52
+            which: 52,
+            fun: function () {
+                bottomGroup.tabs.setCurrent("output");
+                windows.flowBottom();
+                $(".bottom-window-group .output").focus();
+            }
         },
         // Ctrl-5 焦点切换到搜索窗口   
         goSearch: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
-            which: 53
+            which: 53,
+            fun: function () {
+                bottomGroup.tabs.setCurrent("search");
+                windows.flowBottom();
+                $(".bottom-window-group .search").focus();
+            }
         },
         // Ctrl-6 焦点切换到通知窗口   
         goNotification: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
-            which: 54
+            which: 54,
+            fun: function () {
+                bottomGroup.tabs.setCurrent("notification");
+                windows.flowBottom();
+                $(".bottom-window-group .notification").focus();
+            }
         },
         // Ctrl-C 清空窗口内容   
         clearWindow: {
@@ -311,9 +347,7 @@ var hotkeys = {
         $(document).keydown(function (event) {
             if (event.ctrlKey === hotKeys.goEditor.ctrlKey
                     && event.which === hotKeys.goEditor.which) {  // Ctrl-0 焦点切换到当前编辑器
-                if (wide.curEditor) {
-                    wide.curEditor.focus();
-                }
+                hotKeys.goEditor.fun();
                 event.preventDefault();
 
                 return;
@@ -321,20 +355,7 @@ var hotkeys = {
 
             if (event.ctrlKey === hotKeys.goFileTree.ctrlKey
                     && event.which === hotKeys.goFileTree.which) { // Ctrl-1 焦点切换到文件树
-                // 有些元素需设置 tabindex 为 -1 时才可以 focus
-                if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
-                    // 当文件树最小化时
-                    $(".side").css({
-                        "left": "0"
-                    });
-
-                    if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
-                        // 当底部最小化时
-                        $(".bottom-window-group").css("top", "100%").hide();
-                    }
-                }
-
-                $("#files").focus();
+                hotKeys.goFileTree.fun();
                 event.preventDefault();
 
                 return;
@@ -342,10 +363,7 @@ var hotkeys = {
 
             if (event.ctrlKey === hotKeys.goOutput.ctrlKey
                     && event.which === hotKeys.goOutput.which) { // Ctrl-4 焦点切换到输出窗口   
-                bottomGroup.tabs.setCurrent("output");
-
-                windows.flowBottom();
-                $(".bottom-window-group .output").focus();
+                hotKeys.goOutput.fun();
                 event.preventDefault();
 
                 return;
@@ -353,19 +371,15 @@ var hotkeys = {
 
             if (event.ctrlKey === hotKeys.goSearch.ctrlKey
                     && event.which === hotKeys.goSearch.which) { // Ctrl-5 焦点切换到搜索窗口  
-                bottomGroup.tabs.setCurrent("search");
-                windows.flowBottom();
-                $(".bottom-window-group .search").focus();
+                hotKeys.goSearch.fun();
                 event.preventDefault();
 
                 return;
             }
 
             if (event.ctrlKey === hotKeys.goNotification.ctrlKey
-                    && event.which === hotKeys.goNotification.which) { // Ctrl-6 焦点切换到通知窗口          
-                bottomGroup.tabs.setCurrent("notification");
-                windows.flowBottom();
-                $(".bottom-window-group .notification").focus();
+                    && event.which === hotKeys.goNotification.which) { // Ctrl-6 焦点切换到通知窗口  
+                hotKeys.goNotification.fun();
                 event.preventDefault();
 
                 return;

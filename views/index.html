@@ -38,7 +38,7 @@
                         <ul>     
                             <li class="save-all disabled" onclick="menu.saveAllFiles()">
                                 <span>{{.i18n.save_all_files}}</span>
-                                <span class="fn-right">Shift-Ctrl-S</span>
+                                <span class="fn-right ft-small">Shift-Ctrl-S</span>
                             </li>
                             <li class="close-all" onclick="menu.closeAllFiles()">
                                 <span>{{.i18n.close_all_files}}</span>
@@ -133,12 +133,12 @@
                         <ul>     
                             <li onclick="$('#dialogGoFilePrompt').dialog('open')">
                                 <span>{{.i18n.goto_file}}</span>
-                                <span class="fn-right">Shift-Alt-O</span>
+                                <span class="fn-right ft-small">Shift-Alt-O</span>
                             </li>
                             <li class="hr"></li>
                             <li onclick="$('#dialogSearchForm').dialog('open')">
                                 <span>{{.i18n.find_in_files}}</span>
-                                <span class="fn-right">Ctrl-F</span>
+                                <span class="fn-right ft-small">Ctrl-F</span>
                             </li>
                             <li class="hr"></li>
                             <li onclick="alert('Dev In Progress')">
@@ -162,25 +162,26 @@
                 <li>
                     <span>{{.i18n.focus}}</span>
                     <div class="frame">
-                        <ul>     
-                            <li onclick="alert('Dev In Progress')">
-                                <span>{{.i18n.switch_tab}}</span>
-                            </li>
-                            <li class="hr"></li>
-                            <li onclick="alert('Dev In Progress')">
+                        <ul>    
+                            <li onclick="hotkeys.defaultKeyMap.goEditor.fun()">
                                 <span>{{.i18n.focus_editor}}</span>
+                                <span class="fn-right ft-small">Ctrl-0</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li onclick="hotkeys.defaultKeyMap.goFileTree.fun()">
                                 <span>{{.i18n.focus_file_tree}}</span>
+                                <span class="fn-right ft-small">Ctrl-1</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li onclick="hotkeys.defaultKeyMap.goOutput.fun()">
                                 <span>{{.i18n.focus_output}}</span>
+                                <span class="fn-right ft-small">Ctrl-4</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li onclick="hotkeys.defaultKeyMap.goSearch.fun()">
                                 <span>{{.i18n.focus_search}}</span>
+                                <span class="fn-right ft-small">Ctrl-5</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li onclick="hotkeys.defaultKeyMap.goNotification.fun()">
                                 <span>{{.i18n.focus_notification}}</span>
+                                <span class="fn-right ft-small">Ctrl-6</span>
                             </li>
                         </ul>
                     </div>
@@ -191,11 +192,11 @@
                         <ul>
                             <li class="build disabled" onclick="menu.build()">
                                 <span>{{.i18n.build}}</span>
-                                <span class="fn-right">F5</span>
+                                <span class="fn-right ft-small">F5</span>
                             </li>
                             <li class="run disabled" onclick="menu.run()">
                                 <span>{{.i18n.build_n_run}}</span>
-                                <span class="fn-right">F6</span>
+                                <span class="fn-right ft-small">F6</span>
                             </li>
                             <li class="hr"></li>
                             <li class="go-test disabled" onclick="menu.test()">

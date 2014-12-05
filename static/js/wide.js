@@ -193,7 +193,7 @@ var wide = {
 
         $("#dialogGoFilePrompt").dialog({
             "modal": true,
-            "height": 300,
+            "height": 320,
             "width": 660,
             "title": config.label.goto_file,
             "okText": config.label.go,

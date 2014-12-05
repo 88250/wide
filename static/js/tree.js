@@ -370,7 +370,7 @@ var tree = {
 
         $("#dialogSearchForm").dialog({
             "modal": true,
-            "height": 62,
+            "height": 80,
             "width": 260,
             "title": config.label.search,
             "okText": config.label.search,
