@@ -16,77 +16,77 @@
 
 var hotkeys = {
     defaultKeyMap: {
-        // Ctrl+0 焦点切换到当前编辑器   
+        // Ctrl-0 焦点切换到当前编辑器   
         goEditor: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 48
         },
-        // Ctrl+1 焦点切换到文件树
+        // Ctrl-1 焦点切换到文件树
         goFileTree: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 49
         },
-        // Ctrl+4 焦点切换到输出窗口   
+        // Ctrl-4 焦点切换到输出窗口   
         goOutput: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 52
         },
-        // Ctrl+5 焦点切换到搜索窗口   
+        // Ctrl-5 焦点切换到搜索窗口   
         goSearch: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 53
         },
-        // Ctrl+6 焦点切换到通知窗口   
+        // Ctrl-6 焦点切换到通知窗口   
         goNotification: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 54
         },
-        // Ctrl+C 清空窗口内容   
+        // Ctrl-C 清空窗口内容   
         clearWindow: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 67
         },
-        // Ctrl+D 窗口组切换   
+        // Ctrl-D 窗口组切换   
         changeEditor: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 68
         },
-        // Ctrl+F 搜索  
+        // Ctrl-F 搜索  
         search: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 70
         },
-        // Ctrl+Q 关闭当前编辑器   
+        // Ctrl-Q 关闭当前编辑器   
         closeCurEditor: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 81
         },
-        // Ctrl+R 重命名   
+        // Ctrl-R 重命名   
         rename: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 82
         },
-        // Shift+Alt+O 跳转到文件
+        // Shift-Alt-O 跳转到文件
         goFile: {
             ctrlKey: false,
             altKey: true,
@@ -168,7 +168,7 @@ var hotkeys = {
 
             var hotKeys = hotkeys.defaultKeyMap;
             if (event.ctrlKey === hotKeys.clearWindow.ctrlKey
-                    && event.which === hotKeys.clearWindow.which) {  // Ctrl+F 搜索
+                    && event.which === hotKeys.clearWindow.which) {  // Ctrl-F 搜索
                 bottomGroup.clear('output');
                 return;
             }
@@ -180,13 +180,13 @@ var hotkeys = {
 
             var hotKeys = hotkeys.defaultKeyMap;
             if (event.ctrlKey === hotKeys.search.ctrlKey
-                    && event.which === hotKeys.search.which) {  // Ctrl+F 搜索
+                    && event.which === hotKeys.search.which) {  // Ctrl-F 搜索
                 $("#dialogSearchForm").dialog("open");
                 return;
             }
 
             if (event.ctrlKey === hotKeys.rename.ctrlKey
-                    && event.which === hotKeys.rename.which) {  // Ctrl+R 重命名
+                    && event.which === hotKeys.rename.which) {  // Ctrl-R 重命名
                 if (wide.curNode.removable) {
                     $("#dialogRenamePrompt").dialog("open");
                 }
@@ -310,7 +310,7 @@ var hotkeys = {
         var hotKeys = this.defaultKeyMap;
         $(document).keydown(function (event) {
             if (event.ctrlKey === hotKeys.goEditor.ctrlKey
-                    && event.which === hotKeys.goEditor.which) {  // Ctrl+0 焦点切换到当前编辑器
+                    && event.which === hotKeys.goEditor.which) {  // Ctrl-0 焦点切换到当前编辑器
                 if (wide.curEditor) {
                     wide.curEditor.focus();
                 }
@@ -320,7 +320,7 @@ var hotkeys = {
             }
 
             if (event.ctrlKey === hotKeys.goFileTree.ctrlKey
-                    && event.which === hotKeys.goFileTree.which) { // Ctrl+1 焦点切换到文件树
+                    && event.which === hotKeys.goFileTree.which) { // Ctrl-1 焦点切换到文件树
                 // 有些元素需设置 tabindex 为 -1 时才可以 focus
                 if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
                     // 当文件树最小化时
@@ -341,7 +341,7 @@ var hotkeys = {
             }
 
             if (event.ctrlKey === hotKeys.goOutput.ctrlKey
-                    && event.which === hotKeys.goOutput.which) { // Ctrl+4 焦点切换到输出窗口   
+                    && event.which === hotKeys.goOutput.which) { // Ctrl-4 焦点切换到输出窗口   
                 bottomGroup.tabs.setCurrent("output");
 
                 windows.flowBottom();
@@ -352,7 +352,7 @@ var hotkeys = {
             }
 
             if (event.ctrlKey === hotKeys.goSearch.ctrlKey
-                    && event.which === hotKeys.goSearch.which) { // Ctrl+5 焦点切换到搜索窗口  
+                    && event.which === hotKeys.goSearch.which) { // Ctrl-5 焦点切换到搜索窗口  
                 bottomGroup.tabs.setCurrent("search");
                 windows.flowBottom();
                 $(".bottom-window-group .search").focus();
@@ -362,7 +362,7 @@ var hotkeys = {
             }
 
             if (event.ctrlKey === hotKeys.goNotification.ctrlKey
-                    && event.which === hotKeys.goNotification.which) { // Ctrl+6 焦点切换到通知窗口          
+                    && event.which === hotKeys.goNotification.which) { // Ctrl-6 焦点切换到通知窗口          
                 bottomGroup.tabs.setCurrent("notification");
                 windows.flowBottom();
                 $(".bottom-window-group .notification").focus();
@@ -372,7 +372,7 @@ var hotkeys = {
             }
 
             if (event.ctrlKey === hotKeys.closeCurEditor.ctrlKey
-                    && event.which === hotKeys.closeCurEditor.which) {  // Ctrl+Q 关闭当前编辑器   
+                    && event.which === hotKeys.closeCurEditor.which) {  // Ctrl-Q 关闭当前编辑器   
                 $(".edit-panel .tabs > div.current").find(".ico-close").click();
                 event.preventDefault();
 
@@ -380,7 +380,7 @@ var hotkeys = {
             }
 
             if (event.ctrlKey === hotKeys.changeEditor.ctrlKey
-                    && event.which === hotKeys.changeEditor.which) { // Ctrl+D 窗口组切换
+                    && event.which === hotKeys.changeEditor.which) { // Ctrl-D 窗口组切换
                 if (document.activeElement.className === "notification"
                         || document.activeElement.className === "output"
                         || document.activeElement.className === "search") {
@@ -452,7 +452,7 @@ var hotkeys = {
             if (event.ctrlKey === hotKeys.goFile.ctrlKey
                     && event.altKey === hotKeys.goFile.altKey
                     && event.shiftKey === hotKeys.goFile.shiftKey
-                    && event.which === hotKeys.goFile.which) { // Shift+Alt+O 跳转到文件
+                    && event.which === hotKeys.goFile.which) { // Shift-Alt-O 跳转到文件
                 $("#dialogGoFilePrompt").dialog("open");
             }
         });
