@@ -382,7 +382,13 @@ var tree = {
             },
             "ok": function () {
                 var request = newWideRequest();
-                request.dir = wide.curNode.path;
+
+                if (!wide.curNode) {
+                    request.dir = "";
+                } else {
+                    request.dir = wide.curNode.path;
+                }
+
                 request.text = $("#dialogSearchForm > input:eq(0)").val();
                 request.extension = $("#dialogSearchForm > input:eq(1)").val();
 

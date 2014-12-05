@@ -391,7 +391,23 @@ func SearchText(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	sid := args["sid"].(string)
+	wSession := session.WideSessions.Get(sid)
+	if nil == wSession {
+		data["succ"] = false
+
+		return
+	}
+
+	// XXX: just one directory
+
 	dir := args["dir"].(string)
+	if "" == dir {
+		userWorkspace := conf.Wide.GetUserWorkspace(wSession.Username)
+		workspaces := filepath.SplitList(userWorkspace)
+		dir = workspaces[0]
+	}
+
 	extension := args["extension"].(string)
 	text := args["text"].(string)
 
