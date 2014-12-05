@@ -143,5 +143,16 @@
     "file_tree": "文件树",
     "select": "选择",
     "expand": "展开",
-    "collapse": "收起"
+    "collapse": "收起",
+    "edit": "编辑",
+    "undo": "撤销",
+    "redo": "重做",
+    "cut": "剪切",
+    "copy": "复制",
+    "paste": "粘贴",
+    "select_all": "全选",
+    "select_identifier": "选择标识符",
+    "source": "源码",
+    "toggle_comment": "注释",
+    "find_in_files": "在文件中查找"
 }

@@ -143,5 +143,16 @@
     "file_tree": "文件樹",
     "select": "選擇",
     "expand": "展開",
-    "collapse": "收起"
+    "collapse": "收起",
+    "edit": "編輯",
+    "undo": "撤消",
+    "redo": "重做",
+    "cut": "剪切",
+    "copy": "複製",
+    "paste": "粘貼",
+    "select_all": "全選",
+    "select_identifier": "選擇標識符",
+    "source": "源代碼",
+    "toggle_comment": "註釋",
+    "find_in_files": "在文件中查找"
 }

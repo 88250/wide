@@ -143,5 +143,16 @@
     "file_tree": "ファイルツリー",
     "select": "選択する",
     "expand": "展開する",
-    "collapse": "シャットダウン"
+    "collapse": "シャットダウン",
+    "edit": "編集",
+    "undo": "元に戻す",
+    "redo": "やり直し",
+    "cut": "Cut",
+    "copy": "コピー",
+    "paste": "貼り付け",
+    "select_all": "すべて選択",
+    "select_identifier": "選択識別子",
+    "source": "ソース",
+    "toggle_comment": "トグルコメント",
+    "find_in_files": "ファイルから検索"
 }

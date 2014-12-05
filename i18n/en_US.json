@@ -143,5 +143,16 @@
     "file_tree": "File Tree",
     "select": "Select",
     "expand": "Expand",
-    "collapse": "Collapse"
+    "collapse": "Collapse",
+    "edit": "Edit",
+    "undo": "Undo",
+    "redo": "Redo",
+    "cut": "Cut",
+    "copy": "Copy",
+    "paste": "Paste",
+    "select_all": "Select All",
+    "select_identifier": "Select Identifier",
+    "source": "Source",
+    "toggle_comment": "Toggle Comment",
+    "find_in_files": "Find in Files"
 }
