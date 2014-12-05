@@ -108,13 +108,14 @@ func FixedTimeRelease() {
 type userReport struct {
 	username   string
 	sessionCnt int
+	processCnt int
 	updated    time.Time
 }
 
 // report returns a online user statistics in pretty format.
 func (u *userReport) report() string {
-	return "[" + u.username + "] has [" + strconv.Itoa(u.sessionCnt) + "] sessions, latest activity [" +
-		u.updated.Format("2006-01-02 15:04:05") + "]"
+	return "[" + u.username + "] has [" + strconv.Itoa(u.sessionCnt) + "] sessions and [" + strconv.Itoa(u.processCnt) +
+		"] running processes, latest activity [" + u.updated.Format("2006-01-02 15:04:05") + "]"
 }
 
 // FixedTimeReport reports the Wide sessions status periodically (10 minutes).
@@ -124,14 +125,17 @@ func FixedTimeReport() {
 			users := map[string]*userReport{} // <username, *userReport>
 
 			for _, s := range WideSessions {
+				processCnt := len(s.Processes)
+
 				if report, exists := users[s.Username]; exists {
 					if s.Updated.After(report.updated) {
 						users[s.Username].updated = s.Updated
 					}
 
 					report.sessionCnt++
+					report.processCnt += processCnt
 				} else {
-					users[s.Username] = &userReport{username: s.Username, sessionCnt: 1, updated: s.Updated}
+					users[s.Username] = &userReport{username: s.Username, sessionCnt: 1, processCnt: processCnt, updated: s.Updated}
 				}
 			}
 
