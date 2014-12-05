@@ -62,6 +62,15 @@ type User struct {
 	LatestSessionContent *LatestSessionContent
 }
 
+// NewUser creates a user with the specified username, password, workspace.
+func NewUser(username, password, workspace string) *User {
+	return &User{Name: username, Password: password, Workspace: workspace,
+		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px",
+		Theme: "default",
+		Editor: &Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", Theme: "wide",
+			TabSize: "4"}}
+}
+
 // Editor configuration of a user.
 type Editor struct {
 	FontFamily string
