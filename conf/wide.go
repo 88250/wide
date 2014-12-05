@@ -62,7 +62,7 @@ type User struct {
 	LatestSessionContent *LatestSessionContent
 }
 
-// NewUser creates a user with the specified username, password, workspace.
+// NewUser creates a user with the specified username, password and workspace.
 func NewUser(username, password, workspace string) *User {
 	return &User{Name: username, Password: password, Workspace: workspace,
 		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px",
