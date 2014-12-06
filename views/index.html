@@ -2,7 +2,12 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{{.i18n.wide}}</title>
+        <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
+
+        <meta name="keywords" content="Wide, Golang, IDE, Teaam, Cloud, B3log"/>
+        <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
+        <meta name="author" content="B3log">
+
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/lint.css">
@@ -386,7 +391,7 @@
         </div>
 
         <div id="dialogRemoveConfirm" class="fn-none">
-            {{.i18n.isDelete}} <b></b>?
+            {{.i18n.delete}} <b></b>?
         </div>
         <div id="dialogAlert" class="fn-none"></div>
         <div id="dialogAbout" class="fn-none"></div>
