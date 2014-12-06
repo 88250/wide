@@ -183,7 +183,8 @@ var editors = {
 
                 if (editors.data.length === 0) { // 起始页可能存在，所以用编辑器数据判断
                     menu.disabled(['save-all', 'build', 'run', 'go-test', 'go-get', 'go-install',
-                        'find', 'find-next', 'find-previous', 'replace', 'replace-all']);
+                        'find', 'find-next', 'find-previous', 'replace', 'replace-all',
+                    'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment']);
                     $(".toolbars").hide();
                 }
 
@@ -572,7 +573,8 @@ var editors = {
         });
 
         menu.undisabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install',
-            'find', 'find-next', 'find-previous', 'replace', 'replace-all']);
+            'find', 'find-next', 'find-previous', 'replace', 'replace-all',
+                    'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment']);
 
         var textArea = document.getElementById("editor" + id);
         textArea.value = data.content;
@@ -594,6 +596,7 @@ var editors = {
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
                 ".": "autocompleteAfterDot",
+                "Ctrl-/": 'toggleComment',
                 "Ctrl-I": "exprInfo",
                 "Ctrl-L": "gotoLine",
                 "Ctrl-E": "deleteLine",

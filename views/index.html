@@ -109,25 +109,37 @@
                     <span>{{.i18n.source}}</span>
                     <div class="frame">
                         <ul>     
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="format disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.fmt(editors.getCurrentPath(), wide.curEditor)}">
                                 <span>{{.i18n.format}}</span>
+                                <span class="fn-right ft-small">Ctrl-Shift-F</span>
                             </li>
                             <li class="hr"></li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="autocomplete disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('autocompleteAnyWord')}">
                                 <span>{{.i18n.autocomplete}}</span>
+                                <span class="fn-right ft-small">Ctrl-\</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="jump-to-decl disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('jumpToDecl')}">
                                 <span>{{.i18n.jump_to_decl}}</span>
+                                <span class="fn-right ft-small">Ctrl-B</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="expr-info disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('exprInfo')}">
                                 <span>{{.i18n.show_expr_info}}</span>
+                                <span class="fn-right ft-small">Ctrl-I</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="find-usages disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('findUsages')}">
                                 <span>{{.i18n.find_usages}}</span>
+                                <span class="fn-right ft-small">Alt-F7</span>
                             </li>
                             <li class="hr"></li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="toggle-comment disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('toggleComment')}">
                                 <span>{{.i18n.toggle_comment}}</span>
+                                <span class="fn-right ft-small">Ctrl-/</span>
                             </li>
                         </ul>
                     </div>
@@ -146,19 +158,19 @@
                                 <span class="fn-right ft-small">Ctrl-F</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="find" onclick="alert('Dev In Progress')">
+                            <li class="find disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.find}}</span>
                             </li>
-                            <li class="find-next" onclick="alert('Dev In Progress')">
+                            <li class="find-next disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.find_next}}</span>
                             </li>
-                            <li class="find-previous" onclick="alert('Dev In Progress')">
+                            <li class="find-previous disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.find_previous}}</span>
                             </li>
-                            <li class="replace" onclick="alert('Dev In Progress')">
+                            <li class="replace disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.replace}}</span>
                             </li>
-                            <li class="replace-all" onclick="alert('Dev In Progress')">
+                            <li class="replace-all disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.replace_all}}</span>
                             </li>
                         </ul>
@@ -503,6 +515,7 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/markdown-fold.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/comment-fold.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/mode/loadmode.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/comment/comment.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/meta.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/go/go.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/xml/xml.js"></script>
