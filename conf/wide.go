@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Configurations manipulations, all configurations (including user configurations) are stored in wide.json.
+// Package conf includes configurations related manipulations, all configurations (including user configurations) are
+// stored in wide.json.
 package conf
 
 import (
@@ -32,16 +33,20 @@ import (
 )
 
 const (
-	PathSeparator     = string(os.PathSeparator)     // OS-specific path separator
-	PathListSeparator = string(os.PathListSeparator) // OS-specific path list separator
+	// PathSeparator holds the OS-specific path separator.
+	PathSeparator = string(os.PathSeparator)
+	// PathListSeparator holds the OS-specific path list separator.
+	PathListSeparator = string(os.PathListSeparator)
 )
 
 const (
-	WideVersion   = "1.0.1" // wide version
-	CodeMirrorVer = "4.8"   // editor version
+	// WideVersion holds the current wide version.
+	WideVersion = "1.0.1"
+	// CodeMirrorVer holds the current editor version.
+	CodeMirrorVer = "4.8"
 )
 
-// The latest session content.
+// LatestSessionContent represents the latest session content.
 type LatestSessionContent struct {
 	FileTree    []string // paths of expanding nodes of file tree
 	Files       []string // paths of files of opening editor tabs
@@ -145,13 +150,13 @@ func checkEnv() {
 		glog.Warningf("Not found gocode [%s]", gocode)
 	}
 
-	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
-	cmd = exec.Command(ide_stub, "version")
+	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
+	cmd = exec.Command(ideStub, "version")
 	_, err = cmd.Output()
 	if nil != err {
 		event.EventQueue <- &event.Event{Code: event.EvtCodeIDEStubNotFound}
 
-		glog.Warningf("Not found ide_stub [%s]", ide_stub)
+		glog.Warningf("Not found ide_stub [%s]", ideStub)
 	}
 }
 
@@ -359,7 +364,7 @@ func initCustomizedConfs() {
 //
 //  1. /static/user/{username}/style.css
 func UpdateCustomizedConf(username string) {
-	var u *User = nil
+	var u *User
 	for _, user := range Wide.Users { // maybe it is a beauty of the trade-off of the another world between design and implementation
 		if user.Name == username {
 			u = user
