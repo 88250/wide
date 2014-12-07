@@ -175,7 +175,7 @@ var tree = {
             }
         }
 
-        tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
+        tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh", true);
     },
     import: function (it) {
         if (it) {
