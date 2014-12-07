@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Editor manipulations.
+// Package editor includes editor related manipulations.
 package editor
 
 import (
@@ -224,9 +224,9 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
+	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-info", "."}
-	cmd := exec.Command(ide_stub, argv...)
+	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)
@@ -300,9 +300,9 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
+	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
-	cmd := exec.Command(ide_stub, argv...)
+	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)
@@ -384,9 +384,9 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 	// glog.Infof("offset [%d]", offset)
 
-	ide_stub := util.Go.GetExecutableInGOBIN("ide_stub")
+	idestub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
-	cmd := exec.Command(ide_stub, argv...)
+	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)
