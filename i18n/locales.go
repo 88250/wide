@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Internationalization manipulations.
+// Package i18n includes internationalization related manipulations.
 package i18n
 
 import (
@@ -86,7 +86,7 @@ func GetAll(locale string) map[string]interface{} {
 func GetLocalesNames() []string {
 	ret := []string{}
 
-	for name, _ := range Locales {
+	for name := range Locales {
 		ret = append(ret, name)
 	}
 
