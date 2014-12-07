@@ -10,14 +10,14 @@ import (
 	"github.com/b3log/wide/util"
 )
 
-type FileInfo struct {
+type fileInfo struct {
 	Name  string `json:"name"`
 	Type  string `json:"type"`
 	Error string `json:"error,omitempty"`
 }
 
-func handleUpload(p *multipart.Part, dir string) (fi *FileInfo) {
-	fi = &FileInfo{
+func handleUpload(p *multipart.Part, dir string) (fi *fileInfo) {
+	fi = &fileInfo{
 		Name: p.FileName(),
 		Type: p.Header.Get("Content-Type"),
 	}
@@ -32,8 +32,8 @@ func handleUpload(p *multipart.Part, dir string) (fi *FileInfo) {
 	return
 }
 
-func handleUploads(r *http.Request, dir string) (fileInfos []*FileInfo) {
-	fileInfos = make([]*FileInfo, 0)
+func handleUploads(r *http.Request, dir string) (fileInfos []*fileInfo) {
+	fileInfos = make([]*fileInfo, 0)
 	mr, err := r.MultipartReader()
 
 	part, err := mr.NextPart()

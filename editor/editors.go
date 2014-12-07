@@ -384,7 +384,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 	// glog.Infof("offset [%d]", offset)
 
-	idestub := util.Go.GetExecutableInGOBIN("ide_stub")
+	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir

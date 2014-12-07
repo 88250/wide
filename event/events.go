@@ -127,10 +127,10 @@ type Handler interface {
 	Handle(event *Event)
 }
 
-// Type of handler function.
-type handleFunc func(event *Event)
+// HandleFunc represents a handler function.
+type HandleFunc func(event *Event)
 
 // Default implementation of event handling.
-func (fn handleFunc) Handle(event *Event) {
+func (fn HandleFunc) Handle(event *Event) {
 	fn(event)
 }
