@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Build, run and go tool manipulations.
+// Package output includes build, run and go tool related manipulations.
 package output
 
 import (
@@ -43,7 +43,7 @@ const (
 	lintSeverityWarn  = "warning" // lint severity: warning
 )
 
-// Code lint.
+// Lint represents a code lint.
 type Lint struct {
 	File     string `json:"file"`
 	LineNo   int    `json:"lineNo"`
