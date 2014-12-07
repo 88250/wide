@@ -144,7 +144,7 @@ func FixedTimeReport() {
 			}
 
 			var buf bytes.Buffer
-			buf.WriteString("\n  [" + strconv.Itoa(len(users)) + "] users are online, [" + strconv.Itoa(processSum) + "] running processes and [" +
+			buf.WriteString("\n  [" + strconv.Itoa(len(users)) + "] users, [" + strconv.Itoa(processSum) + "] running processes and [" +
 				strconv.Itoa(len(WideSessions)) + "] sessions currently\n")
 
 			for _, t := range users {
