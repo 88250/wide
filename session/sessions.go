@@ -125,9 +125,11 @@ func FixedTimeReport() {
 	go func() {
 		for _ = range time.Tick(10 * time.Minute) {
 			users := map[string]*userReport{} // <username, *userReport>
+			processSum := 0
 
 			for _, s := range WideSessions {
 				processCnt := len(s.Processes)
+				processSum += processCnt
 
 				if report, exists := users[s.Username]; exists {
 					if s.Updated.After(report.updated) {
@@ -142,8 +144,8 @@ func FixedTimeReport() {
 			}
 
 			var buf bytes.Buffer
-			buf.WriteString("\n  [" + strconv.Itoa(len(users)) + "] users are online and [" + strconv.Itoa(len(WideSessions)) +
-				"] sessions currently\n")
+			buf.WriteString("\n  [" + strconv.Itoa(len(users)) + "] users are online, [" + strconv.Itoa(processSum) + "] running processes and [" +
+				strconv.Itoa(len(WideSessions)) + "] sessions currently\n")
 
 			for _, t := range users {
 				buf.WriteString("    " + t.report() + "\n")
