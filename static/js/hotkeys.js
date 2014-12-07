@@ -230,44 +230,45 @@ var hotkeys = {
             }
 
             switch (event.which) {
-                case 46: // 删除
+                case 46: // delete
                     tree.removeIt();
                     break;
-                case 13: // 回车
+                case 13: // enter
                     if (!wide.curNode) {
                         return false;
                     }
 
-                    if (tree.isDir()) { // 选中节点是目录
-                        // 不做任何处理
-                        return false;
+                    if (tree.isDir()) {
+                        if (wide.curNode.open) {
+                            return false;
+                        }
+
+                        tree.fileTree.expandNode(wide.curNode, true, false, true);
+                        $("#files").focus();
+                        
+                        break;
                     }
 
-                    // 模拟点击：打开文件
                     tree.openFile(wide.curNode);
 
                     break;
-                case 38: // 上
+                case 38: // up
                     var node = {};
 
-                    if (!wide.curNode) { // 没有选中节点时，默认选中第一个
+                    if (!wide.curNode) { // select the first one if no node been selected
                         node = tree.fileTree.getNodeByTId("files_1");
                     } else {
                         if (wide.curNode && wide.curNode.isFirstNode && wide.curNode.level === 0) {
-                            // 当前节点为顶部第一个节点
                             return false;
                         }
 
                         node = wide.curNode.getPreNode();
                         if (wide.curNode.isFirstNode && wide.curNode.getParentNode()) {
-                            // 当前节点为第一个节点且有父亲
                             node = wide.curNode.getParentNode();
                         }
 
                         var preNode = wide.curNode.getPreNode();
-                        if (preNode && tree.isDir()
-                                && preNode.open) {
-                            // 当前节点的上一个节点是目录且打开时，获取打开节点中的最后一个节点
+                        if (preNode && tree.isDir() && preNode.open) {
                             node = tree.getCurrentNodeLastNode(preNode);
                         }
                     }
@@ -276,27 +277,23 @@ var hotkeys = {
                     tree.fileTree.selectNode(node);
                     $("#files").focus();
                     break;
-                case 40: // 下
+                case 40: // down
                     var node = {};
 
-                    if (!wide.curNode) { // 没有选中节点时，默认选中第一个
+                    if (!wide.curNode) { // select the first one if no node been selected
                         node = tree.fileTree.getNodeByTId("files_1");
                     } else {
                         if (wide.curNode && tree.isBottomNode(wide.curNode)) {
-                            // 当前节点为最底部的节点
                             return false;
                         }
 
                         node = wide.curNode.getNextNode();
                         if (tree.isDir() && wide.curNode.open) {
-                            // 当前节点是目录且打开时
                             node = wide.curNode.children[0];
                         }
 
                         var nextShowNode = tree.getNextShowNode(wide.curNode);
-                        if (wide.curNode.isLastNode && wide.curNode.level !== 0 && !wide.curNode.open
-                                && nextShowNode) {
-                            // 当前节点为最后一个叶子节点，但其父或祖先节点还有下一个节点
+                        if (wide.curNode.isLastNode && wide.curNode.level !== 0 && !wide.curNode.open && nextShowNode) {
                             node = nextShowNode;
                         }
                     }
@@ -308,7 +305,7 @@ var hotkeys = {
 
                     $("#files").focus();
                     break;
-                case 37: // 左
+                case 37: // left
                     if (!wide.curNode) {
                         wide.curNode = tree.fileTree.getNodeByTId("files_1");
                         tree.fileTree.selectNode(wide.curNode);
@@ -323,7 +320,7 @@ var hotkeys = {
                     tree.fileTree.expandNode(wide.curNode, false, false, true);
                     $("#files").focus();
                     break;
-                case 39: // 右
+                case 39: // right
                     if (!wide.curNode) {
                         wide.curNode = tree.fileTree.getNodeByTId("files_1");
                         tree.fileTree.selectNode(wide.curNode);
@@ -337,6 +334,14 @@ var hotkeys = {
 
                     tree.fileTree.expandNode(wide.curNode, true, false, true);
                     $("#files").focus();
+
+                    break;
+                case 116: // F5
+                    if (!wide.curNode || !tree.isDir()) {
+                        return false;
+                    }
+
+                    tree.refresh(wide.curNode);
 
                     break;
             }
