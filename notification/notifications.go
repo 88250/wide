@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Notification manipulations.
+// Package notification includes notification related manipulations.
 package notification
 
 import (
@@ -30,15 +30,15 @@ import (
 )
 
 const (
-	Error = "ERROR" // notification.severity: ERROR
-	Warn  = "WARN"  // notification.severity: WARN
-	Info  = "INFO"  // notification.severity: INFO
+	error = "ERROR" // notification.severity: ERROR
+	warn  = "WARN"  // notification.severity: WARN
+	info  = "INFO"  // notification.severity: INFO
 
-	Setup  = "Setup"  // notification.type: setup
-	Server = "Server" // notification.type: server
+	setup  = "Setup"  // notification.type: setup
+	server = "Server" // notification.type: server
 )
 
-// Notification.
+// Notification represents a notification.
 type Notification struct {
 	event    *event.Event
 	Type     string `json:"type"`
@@ -68,10 +68,10 @@ func event2Notification(e *event.Event) {
 	case event.EvtCodeGocodeNotFound:
 		fallthrough
 	case event.EvtCodeIDEStubNotFound:
-		notification = &Notification{event: e, Type: Setup, Severity: Error,
+		notification = &Notification{event: e, Type: setup, Severity: error,
 			Message: i18n.Get(locale, "notification_"+strconv.Itoa(e.Code)).(string)}
 	case event.EvtCodeServerInternalError:
-		notification = &Notification{event: e, Type: Server, Severity: Error,
+		notification = &Notification{event: e, Type: server, Severity: error,
 			Message: i18n.Get(locale, "notification_"+strconv.Itoa(e.Code)).(string) + " [" + e.Data.(string) + "]"}
 	default:
 		glog.Warningf("Can't handle event[code=%d]", e.Code)
