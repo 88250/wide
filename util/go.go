@@ -1,11 +1,11 @@
 // Copyright (c) 2014, B3log
-// 
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-// 
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-// 
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,16 +15,16 @@
 package util
 
 import (
-	"path/filepath"
+	"os"
 	"path"
+	"path/filepath"
 	"runtime"
 	"strings"
-	"os"
 )
 
 const (
-	PathSeparator     = string(os.PathSeparator)     // OS-specific path separator
-	PathListSeparator = string(os.PathListSeparator) // OS-specific path list separator
+	pathSeparator     = string(os.PathSeparator)     // OS-specific path separator
+	pathListSeparator = string(os.PathListSeparator) // OS-specific path list separator
 )
 
 type mygo struct{}
@@ -54,13 +54,13 @@ func (*mygo) IsAPI(path string) bool {
 
 // GetGoFormats gets Go format tools. It may return ["gofmt", "goimports"].
 func (*mygo) GetGoFormats() []string {
-	ret := []string {"gofmt"}
-	
+	ret := []string{"gofmt"}
+
 	p := Go.GetExecutableInGOBIN("goimports")
 	if File.IsExist(p) {
 		ret = append(ret, "goimports")
 	}
-	
+
 	return ret
 }
 
@@ -76,26 +76,26 @@ func (*mygo) GetExecutableInGOBIN(executable string) string {
 
 	for _, gopath := range gopaths {
 		// $GOPATH/bin/$GOOS_$GOARCH/executable
-		ret := gopath + PathSeparator + "bin" + PathSeparator +
-			os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + PathSeparator + executable
+		ret := gopath + pathSeparator + "bin" + pathSeparator +
+			os.Getenv("GOOS") + "_" + os.Getenv("GOARCH") + pathSeparator + executable
 		if File.IsExist(ret) {
 			return ret
 		}
 
 		// $GOPATH/bin/{runtime.GOOS}_{runtime.GOARCH}/executable
-		ret = gopath + PathSeparator + "bin" + PathSeparator +
-			runtime.GOOS + "_" + runtime.GOARCH + PathSeparator + executable
+		ret = gopath + pathSeparator + "bin" + pathSeparator +
+			runtime.GOOS + "_" + runtime.GOARCH + pathSeparator + executable
 		if File.IsExist(ret) {
 			return ret
 		}
 
 		// $GOPATH/bin/executable
-		ret = gopath + PathSeparator + "bin" + PathSeparator + executable
+		ret = gopath + pathSeparator + "bin" + pathSeparator + executable
 		if File.IsExist(ret) {
 			return ret
 		}
 	}
 
 	// $GOBIN/executable
-	return os.Getenv("GOBIN") + PathSeparator + executable
+	return os.Getenv("GOBIN") + pathSeparator + executable
 }

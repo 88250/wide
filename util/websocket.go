@@ -22,7 +22,7 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-// WebSocket channel.
+// WSChannel represents a WebSocket channel.
 type WSChannel struct {
 	Sid     string          // wide session id
 	Conn    *websocket.Conn // websocket connection

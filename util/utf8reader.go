@@ -24,6 +24,7 @@ const (
 	defaultBufSize = 4096
 )
 
+// Reader represents a reader.
 type Reader struct {
 	buf  []byte
 	rd   io.Reader
@@ -34,6 +35,7 @@ type Reader struct {
 const minReadBufferSize = 16
 const maxConsecutiveEmptyReads = 100
 
+// NewReaderSize creates a reader with the specified buffer size.
 func NewReaderSize(rd io.Reader, size int) *Reader {
 	b, ok := rd.(*Reader)
 	if ok && len(b.buf) >= size {
@@ -102,8 +104,10 @@ func (b *Reader) readErr() error {
 	return err
 }
 
+// Buffered returns the size of buffered.
 func (b *Reader) Buffered() int { return b.w - b.r }
 
+// ReadData reads a line.
 func (b *Reader) ReadData() (line string, err error) {
 	if n := b.Buffered(); n < len(b.buf) {
 		b.fill()

@@ -1,11 +1,11 @@
 // Copyright (c) 2014, B3log
-//  
+//
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
-//  
+//
 //     http://www.apache.org/licenses/LICENSE-2.0
-//  
+//
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -41,7 +41,7 @@ func (*str) LCS(s1 string, s2 string) string {
 	}
 
 	longest := 0
-	x_longest := 0
+	xLongest := 0
 
 	for x := 1; x < 1+len(s1); x++ {
 		for y := 1; y < 1+len(s2); y++ {
@@ -49,7 +49,7 @@ func (*str) LCS(s1 string, s2 string) string {
 				m[x][y] = m[x-1][y-1] + 1
 				if m[x][y] > longest {
 					longest = m[x][y]
-					x_longest = x
+					xLongest = x
 				}
 			} else {
 				m[x][y] = 0
@@ -57,5 +57,5 @@ func (*str) LCS(s1 string, s2 string) string {
 		}
 	}
 
-	return s1[x_longest-longest : x_longest]
+	return s1[xLongest-longest : xLongest]
 }
