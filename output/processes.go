@@ -38,7 +38,7 @@ func (procs *procs) add(wSession *session.WideSession, proc *os.Process) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	sid := wSession.Id
+	sid := wSession.ID
 	userProcesses := (*procs)[sid]
 
 	userProcesses = append(userProcesses, proc)
@@ -55,7 +55,7 @@ func (procs *procs) remove(wSession *session.WideSession, proc *os.Process) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	sid := wSession.Id
+	sid := wSession.ID
 
 	userProcesses := (*procs)[sid]
 
@@ -80,7 +80,7 @@ func (procs *procs) kill(wSession *session.WideSession, pid int) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	sid := wSession.Id
+	sid := wSession.ID
 
 	userProcesses := (*procs)[sid]
 

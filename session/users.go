@@ -32,15 +32,15 @@ import (
 )
 
 const (
-	UserExists      = "user exists"
-	UserCreated     = "user created"
-	UserCreateError = "user create error"
+	userExists      = "user exists"
+	userCreated     = "user created"
+	userCreateError = "user create error"
 )
 
 // Exclusive lock for adding user.
 var addUserMutex sync.Mutex
 
-// PreferenceHandle handles request of preference page.
+// PreferenceHandler handles request of preference page.
 func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := HTTPSession.Get(r, "wide-session")
 
@@ -242,7 +242,7 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 	password := args["password"].(string)
 
 	msg := addUser(username, password)
-	if UserCreated != msg {
+	if userCreated != msg {
 		succ = false
 		data["msg"] = msg
 	}
@@ -260,7 +260,7 @@ func addUser(username, password string) string {
 
 	for _, user := range conf.Wide.Users {
 		if user.Name == username {
-			return UserExists
+			return userExists
 		}
 	}
 
@@ -272,7 +272,7 @@ func addUser(username, password string) string {
 	conf.Wide.Users = append(conf.Wide.Users, newUser)
 
 	if !conf.Save() {
-		return UserCreateError
+		return userCreateError
 	}
 
 	conf.CreateWorkspaceDir(workspace)
@@ -284,7 +284,7 @@ func addUser(username, password string) string {
 
 	glog.Infof("Created a user [%s]", username)
 
-	return UserCreated
+	return userCreated
 }
 
 // helloWorld generates the 'Hello, 世界' source code in workspace/src/hello/main.go.

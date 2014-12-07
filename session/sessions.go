@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Session manipulations.
+// Package session includes session related manipulations.
 //
 // Wide server side needs maintain two kinds of sessions:
 //
@@ -40,30 +40,30 @@ import (
 )
 
 const (
-	SessionStateActive = iota // session state: active
-	SessionStateClosed        // session state: closed (not used so far)
+	sessionStateActive = iota
+	sessionStateClosed // (not used so far)
 )
 
 var (
-	// Session channels. <sid, *util.WSChannel>
+	// SessionWS holds all session channels. <sid, *util.WSChannel>
 	SessionWS = map[string]*util.WSChannel{}
 
-	// Editor channels. <sid, *util.WSChannel>
+	// EditorWS holds all editor channels. <sid, *util.WSChannel>
 	EditorWS = map[string]*util.WSChannel{}
 
-	// Output channels. <sid, *util.WSChannel>
+	// OutputWS holds all output channels. <sid, *util.WSChannel>
 	OutputWS = map[string]*util.WSChannel{}
 
-	// Notification channels. <sid, *util.WSChannel>
+	// NotificationWS holds all notification channels. <sid, *util.WSChannel>
 	NotificationWS = map[string]*util.WSChannel{}
 )
 
 // HTTP session store.
 var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
 
-// Wide session, associated with a browser tab.
+// WideSession represents a session associated with a browser tab.
 type WideSession struct {
-	Id          string                     // id
+	ID          string                     // id
 	Username    string                     // username
 	HTTPSession *sessions.Session          // HTTP session related
 	Processes   []*os.Process              // process set
@@ -75,14 +75,16 @@ type WideSession struct {
 }
 
 // Type of wide sessions.
-type Sessions []*WideSession
+type wSessions []*WideSession
 
 // Wide sessions.
-var WideSessions Sessions
+var WideSessions wSessions
 
 // Exclusive lock.
 var mutex sync.Mutex
 
+// FixedTimeRelease releases invalid sessions.
+//
 // In some special cases (such as a browser uninterrupted refresh / refresh in the source code view) will occur
 // some invalid sessions, the function checks and removes these invalid sessions periodically (1 hour).
 //
@@ -95,9 +97,9 @@ func FixedTimeRelease() {
 
 			for _, s := range WideSessions {
 				if s.Updated.Before(threshold) {
-					glog.V(3).Infof("Removes a invalid session [%s], user [%s]", s.Id, s.Username)
+					glog.V(3).Infof("Removes a invalid session [%s], user [%s]", s.ID, s.Username)
 
-					WideSessions.Remove(s.Id)
+					WideSessions.Remove(s.ID)
 				}
 			}
 		}
@@ -261,7 +263,7 @@ func (s *WideSession) Refresh() {
 }
 
 // New creates a wide session.
-func (sessions *Sessions) New(httpSession *sessions.Session, sid string) *WideSession {
+func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -271,11 +273,11 @@ func (sessions *Sessions) New(httpSession *sessions.Session, sid string) *WideSe
 	userEventQueue := event.UserEventQueues.New(sid)
 
 	ret := &WideSession{
-		Id:          sid,
+		ID:          sid,
 		Username:    httpSession.Values["username"].(string),
 		HTTPSession: httpSession,
 		EventQueue:  userEventQueue,
-		State:       SessionStateActive,
+		State:       sessionStateActive,
 		Content:     &conf.LatestSessionContent{},
 		Created:     now,
 		Updated:     now,
@@ -287,12 +289,12 @@ func (sessions *Sessions) New(httpSession *sessions.Session, sid string) *WideSe
 }
 
 // Get gets a wide session with the specified session id.
-func (sessions *Sessions) Get(sid string) *WideSession {
+func (sessions *wSessions) Get(sid string) *WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	for _, s := range *sessions {
-		if s.Id == sid {
+		if s.ID == sid {
 			return s
 		}
 	}
@@ -307,12 +309,12 @@ func (sessions *Sessions) Get(sid string) *WideSession {
 //  1. user event queue
 //  2. process set
 //  3. websocket channels
-func (sessions *Sessions) Remove(sid string) {
+func (sessions *wSessions) Remove(sid string) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	for i, s := range *sessions {
-		if s.Id == sid {
+		if s.ID == sid {
 			// remove from session set
 			*sessions = append((*sessions)[:i], (*sessions)[i+1:]...)
 
@@ -359,7 +361,7 @@ func (sessions *Sessions) Remove(sid string) {
 }
 
 // GetByUsername gets wide sessions.
-func (sessions *Sessions) GetByUsername(username string) []*WideSession {
+func (sessions *wSessions) GetByUsername(username string) []*WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
 
