@@ -118,6 +118,7 @@
     "team": "团队",
     "sing_up_error": "注册失败",
     "user_name_ruler": "用户名只能由 a-z, A-Z, 0-9, _ 组成，长度为16",
+    "invalid_email": "无效的电子邮件",
     "password_no_match": "密码输入不一致",
     "discard": "放弃",
     "close": "关闭",
@@ -154,5 +155,6 @@
     "select_identifier": "选择标识符",
     "source": "源码",
     "toggle_comment": "注释",
-    "find_in_files": "在文件中查找"
+    "find_in_files": "在文件中查找",
+    "email": "电子邮件"
 }

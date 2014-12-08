@@ -57,6 +57,7 @@ type LatestSessionContent struct {
 type User struct {
 	Name                 string
 	Password             string
+	Email                string
 	Workspace            string // the GOPATH of this user
 	Locale               string
 	GoFormat             string
@@ -67,9 +68,9 @@ type User struct {
 	LatestSessionContent *LatestSessionContent
 }
 
-// NewUser creates a user with the specified username, password and workspace.
-func NewUser(username, password, workspace string) *User {
-	return &User{Name: username, Password: password, Workspace: workspace,
+// NewUser creates a user with the specified username, password, email and workspace.
+func NewUser(username, password, email, workspace string) *User {
+	return &User{Name: username, Password: password, Email: email, Workspace: workspace,
 		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
 		Editor: &Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", Theme: "wide",
 			TabSize: "4"}}

@@ -118,6 +118,7 @@
     "team": "チーム",
     "sing_up_error": "登録に失敗しました",
     "user_name_ruler": "16の長さからなる_ AZ、AZ、0-9、によってユーザ名のみ",
+    "invalid_email": "無効な電子メール",
     "password_no_match": "一貫性のないパスワード入力",
     "discard": "あきらめる",
     "close": "クローズ",
@@ -154,5 +155,6 @@
     "select_identifier": "選択識別子",
     "source": "ソース",
     "toggle_comment": "トグルコメント",
-    "find_in_files": "ファイルから検索"
+    "find_in_files": "ファイルから検索",
+    "email": "Eメール"
 }

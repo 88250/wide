@@ -32,7 +32,10 @@ import (
 )
 
 const (
+	// TODO: i18n
+
 	userExists      = "user exists"
+	emailExists     = "email exists"
 	userCreated     = "user created"
 	userCreateError = "user create error"
 )
@@ -89,6 +92,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		Workspace        string
 		Username         string
 		Password         string
+		Email            string
 		Locale           string
 		Theme            string
 		EditorFontFamily string
@@ -110,6 +114,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.GoFormat = args.GoFmt
 	user.Workspace = args.Workspace
 	user.Password = args.Password
+	user.Email = args.Email
 	user.Locale = args.Locale
 	user.Theme = args.Theme
 	user.Editor.FontFamily = args.EditorFontFamily
@@ -240,21 +245,22 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 
 	username := args["username"].(string)
 	password := args["password"].(string)
+	email := args["email"].(string)
 
-	msg := addUser(username, password)
+	msg := addUser(username, password, email)
 	if userCreated != msg {
 		succ = false
 		data["msg"] = msg
 	}
 }
 
-// addUser add a user with the specified username and password.
+// addUser add a user with the specified username, password and email.
 //
 //  1. create the user's workspace
 //  2. generate 'Hello, 世界' demo code in the workspace
 //  3. update the user customized configurations, such as style.css
 //  4. serve files of the user's workspace via HTTP
-func addUser(username, password string) string {
+func addUser(username, password, email string) string {
 	addUserMutex.Lock()
 	defer addUserMutex.Unlock()
 
@@ -262,13 +268,17 @@ func addUser(username, password string) string {
 		if user.Name == username {
 			return userExists
 		}
+
+		if user.Email == email {
+			return emailExists
+		}
 	}
 
 	firstUserWorkspace := conf.Wide.GetUserWorkspace(conf.Wide.Users[0].Name)
 	dir := filepath.Dir(firstUserWorkspace)
 	workspace := filepath.Join(dir, username)
 
-	newUser := conf.NewUser(username, password, workspace)
+	newUser := conf.NewUser(username, password, email, workspace)
 	conf.Wide.Users = append(conf.Wide.Users, newUser)
 
 	if !conf.Save() {

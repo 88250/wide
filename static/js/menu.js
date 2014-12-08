@@ -364,6 +364,7 @@ var menu = {
                             $goFmt = $dialogPreference.find("input[name=goFmt]"),
                             $workspace = $dialogPreference.find("input[name=workspace]"),
                             $password = $dialogPreference.find("input[name=password]"),
+                            $email = $dialogPreference.find("input[name=email]"),
                             $locale = $dialogPreference.find("input[name=locale]"),
                             $theme = $dialogPreference.find("input[name=theme]"),
                             $editorFontFamily = $dialogPreference.find("input[name=editorFontFamily]"),
@@ -378,6 +379,7 @@ var menu = {
                         "goFmt": $goFmt.val(),
                         "workspace": $workspace.val(),
                         "password": $password.val(),
+                        "email": $email.val(),
                         "locale": $locale.val(),
                         "theme": $theme.val(),
                         "editorFontFamily": $editorFontFamily.val(),
@@ -401,6 +403,7 @@ var menu = {
                             $goFmt.data("value", $goFmt.val());
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
+                            $email.data("value", $email.val());
                             $locale.data("value", $locale.val());
                             $theme.data("value", $theme.val());
                             $editorFontFamily.data("value", $editorFontFamily.val());

@@ -88,6 +88,10 @@
                 </select>
                 <br/>
             </label>
+            <label>
+                {{.i18n.email}}{{.i18n.colon}}
+                <input data-value="{{.user.Email}}" value="{{.user.Email}}" name="email"/>
+            </label>
             <input data-value="{{.user.Locale}}" value="{{.user.Locale}}" name="locale" hidden="hidden" />
             <label>
                 {{.i18n.workspace}}{{.i18n.colon}}

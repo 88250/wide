@@ -118,6 +118,7 @@
     "team": "Team",
     "sing_up_error": "Sign Up Error",
     "user_name_ruler": "Username only by az, AZ, 0-9, _ consisting of a length of 16",
+    "invalid_email": "Invalid Email",
     "password_no_match": "Password doesn't match the confirmation",
     "discard": "Discard",
     "close": "Close",
@@ -154,5 +155,6 @@
     "select_identifier": "Select Identifier",
     "source": "Source",
     "toggle_comment": "Toggle Comment",
-    "find_in_files": "Find in Files"
+    "find_in_files": "Find in Files",
+    "email": "Email"
 }
