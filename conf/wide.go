@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"text/template"
@@ -462,6 +463,8 @@ func GetEditorThemes() []string {
 		ret = append(ret, name[:strings.LastIndex(name, ".")])
 	}
 
+	sort.Strings(ret)
+
 	return ret
 }
 
@@ -476,6 +479,8 @@ func GetThemes() []string {
 	for _, name := range names {
 		ret = append(ret, name[:strings.LastIndex(name, ".")])
 	}
+
+	sort.Strings(ret)
 
 	return ret
 }

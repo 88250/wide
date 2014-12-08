@@ -19,6 +19,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/golang/glog"
@@ -89,6 +90,8 @@ func GetLocalesNames() []string {
 	for name := range Locales {
 		ret = append(ret, name)
 	}
+
+	sort.Strings(ret)
 
 	return ret
 }

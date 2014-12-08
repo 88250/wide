@@ -19,6 +19,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"sort"
 	"strings"
 )
 
@@ -60,6 +61,8 @@ func (*mygo) GetGoFormats() []string {
 	if File.IsExist(p) {
 		ret = append(ret, "goimports")
 	}
+
+	sort.Strings(ret)
 
 	return ret
 }
