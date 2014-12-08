@@ -146,6 +146,6 @@
     color: #ebebeb;
 }
 
-#dialogPreference {
+#dialogPreference .preference {
     border: 1px solid #000;
 }

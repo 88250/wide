@@ -156,5 +156,6 @@
     "source": "Source",
     "toggle_comment": "Toggle Comment",
     "find_in_files": "Find in Files",
-    "email": "Email"
+    "email": "Email",
+    "no_empty": "Can not Empty!"
 }

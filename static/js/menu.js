@@ -285,39 +285,19 @@ var menu = {
     },
     _initPreference: function () {
         $("#dialogPreference").load('/preference', function () {
-            $("#localeSelect").on('change', function () {
-                var $dialogPreference = $("#dialogPreference"),
-                        $input = $dialogPreference.find("input[name=locale]")
-
-                $input.val(this.value);
-            });
-
-            $("#themeSelect").on('change', function () {
-                var $dialogPreference = $("#dialogPreference"),
-                        $input = $dialogPreference.find("input[name=theme]")
-
-                $input.val(this.value);
-            });
-
-            $("#editorThemeSelect").on('change', function () {
-                var $dialogPreference = $("#dialogPreference"),
-                        $input = $dialogPreference.find("input[name=editorTheme]")
-
-                $input.val(this.value);
-            });
-
-            $("#goFmtSelect").on('change', function () {
-                var $dialogPreference = $("#dialogPreference"),
-                        $input = $dialogPreference.find("input[name=goFmt]")
-
-                $input.val(this.value);
-            });
-
             $("#dialogPreference input").keyup(function () {
-                var isChange = false;
+                var isChange = false,
+                        emptys = [],
+                        emptysTip = '';
                 $("#dialogPreference input").each(function () {
-                    if ($(this).val() !== $(this).data("value")) {
+                    var $it = $(this);
+                    // data-value 如为数字，则不会和 value 一样转换为 String，再次不使用全等
+                    if ($it.val() != $it.data("value")) {
                         isChange = true;
+                    }
+
+                    if ($.trim($it.val()) === '') {
+                        emptys.push($it);
                     }
                 });
 
@@ -327,11 +307,21 @@ var menu = {
                 } else {
                     $okBtn.prop("disabled", true);
                 }
+
+                if (emptys.length === 0) {
+                    $("#dialogPreference").find(".tip").html("");
+                } else {
+                    for (var i = 0, max = emptys.length; i < max; i++) {
+                        emptysTip += emptys[i].closest('div').data("index") + ' -> ' + emptys[i].attr("name") 
+                                + ' ' + config.label.no_empty + "<br/>";
+                    }
+                    $("#dialogPreference").find(".tip").html(emptysTip);
+                }
             });
 
             $("#dialogPreference select").on("change", function () {
                 var isChange = false;
-                $("#dialogPreference input").each(function () {
+                $("#dialogPreference select").each(function () {
                     if ($(this).val() !== $(this).data("value")) {
                         isChange = true;
                     }
@@ -372,6 +362,11 @@ var menu = {
                             $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
                             $editorTheme = $dialogPreference.find("input[name=editorTheme]"),
                             $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
+
+                    if ($.trim($email.val()) === "") {
+                        $dialogPreference.find(".tip").html("user -> email " + config.label.no_empty);
+                        return false;
+                    }
 
                     $.extend(request, {
                         "fontFamily": $fontFamily.val(),

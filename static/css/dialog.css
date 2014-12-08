@@ -85,7 +85,8 @@
     overflow: hidden;
 }
 
-.dialog-main input {
+.dialog-main input,
+.dialog-main select {
     width: 100%;
     margin: 2px auto;
 }
@@ -103,11 +104,10 @@
     margin: 10px;
 }
 
-#dialogPreference .select {
-    width: 100%;
-    margin: 2px auto;
-}
-
 #dialogPreference .tabs-panel {
     padding: 10px;
+}
+
+#dialogPreference .preference {
+    margin-bottom: 10px;
 }

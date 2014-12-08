@@ -25,15 +25,12 @@
             </label>
             <label>
                 {{.i18n.theme}}{{.i18n.colon}}
-                <br/>
-                <select class="select" id="themeSelect">
+                <select class="select" name="theme" data-value="{{.user.Theme}}">
                     {{range $index, $theme := .themes }}
-                    <option name="{{$theme}}" value="{{$theme}}" {{if eq $.user.Theme $theme}}selected="selected"{{end}}>{{$theme}}</option>
+                    <option value="{{$theme}}" {{if eq $.user.Theme $theme}}selected="selected"{{end}}>{{$theme}}</option>
                     {{end}}
                 </select>
-                <br/>
             </label>
-            <input data-value="{{.user.Theme}}" value="{{.user.Theme}}" name="theme" hidden="hidden"/>
         </div>
         <div class="fn-none" data-index="editor">
             <label>
@@ -54,39 +51,31 @@
             </label>
             <label>
                 {{.i18n.theme}}{{.i18n.colon}}
-                <br/>
-                <select class="select" id="editorThemeSelect">
+                <select class="select" name="editorTheme" data-value="{{.user.Editor.Theme}}">
                     {{range $index, $theme := .editorThemes }}
-                    <option name="{{$theme}}" value="{{$theme}}" {{if eq $.user.Editor.Theme $theme}}selected="selected"{{end}}>{{$theme}}</option>
+                    <option value="{{$theme}}" {{if eq $.user.Editor.Theme $theme}}selected="selected"{{end}}>{{$theme}}</option>
                     {{end}}
                 </select>
-                <br/>
             </label>
-            <input data-value="{{.user.Editor.Theme}}" value="{{.user.Editor.Theme}}" name="editorTheme" hidden="hidden"/>
         </div>
         <div class="fn-none" data-index="gotool">
             <label>
                 {{.i18n.go_format}}{{.i18n.colon}}
-                <br/>
-                <select class="select" id="goFmtSelect">
+                <select class="select" data-value="{{.user.GoFormat}}" name="goFmt">
                     {{range $index, $gofmt := .gofmts }}
                     <option name="{{$gofmt}}" value="{{$gofmt}}" {{if eq $.user.GoFormat $gofmt}}selected="selected"{{end}}>{{$gofmt}}</option>
                     {{end}}
                 </select>
-                <br/>
             </label>
-            <input data-value="{{.user.GoFormat}}" value="{{.user.GoFormat}}" name="goFmt" hidden="hidden" />
         </div>
         <div class="fn-none" data-index="user">
             <label>
                 {{.i18n.locale}}{{.i18n.colon}}
-                <br/>
-                <select class="select" id="localeSelect">
+                <select class="select" name="locale" data-value="{{.user.Locale}}">
                     {{range $index, $localeName := .locales }}
                     <option name="{{$localeName}}" value="{{$localeName}}" {{if eq $.user.Locale $localeName}}selected="selected"{{end}}>{{$localeName}}</option>
                     {{end}}
                 </select>
-                <br/>
             </label>
             <label>
                 {{.i18n.email}}{{.i18n.colon}}
@@ -104,3 +93,4 @@
         </div>
     </div>
 </div>
+<div class="tip ft-red"></div>

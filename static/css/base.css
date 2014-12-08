@@ -91,6 +91,10 @@ button {
     font-size: 12px;
 }
 
+.ft-red {
+    color: #9d0000;
+}
+
 .list li {
     cursor: pointer;
     line-height: 20px;
