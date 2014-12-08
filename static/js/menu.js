@@ -312,8 +312,8 @@ var menu = {
                     $("#dialogPreference").find(".tip").html("");
                 } else {
                     for (var i = 0, max = emptys.length; i < max; i++) {
-                        emptysTip += emptys[i].closest('div').data("index") + ' -> ' + emptys[i].attr("name") 
-                                + ' ' + config.label.no_empty + "<br/>";
+                        emptysTip += '[' + emptys[i].closest('div').data("index") + '] -> [' + emptys[i].attr("name") 
+                                + ']: ' + config.label.no_empty + "<br/>";
                     }
                     $("#dialogPreference").find(".tip").html(emptysTip);
                 }
@@ -351,20 +351,20 @@ var menu = {
                             $dialogPreference = $("#dialogPreference"),
                             $fontFamily = $dialogPreference.find("input[name=fontFamily]"),
                             $fontSize = $dialogPreference.find("input[name=fontSize]"),
-                            $goFmt = $dialogPreference.find("input[name=goFmt]"),
+                            $goFmt = $dialogPreference.find("select[name=goFmt]"),
                             $workspace = $dialogPreference.find("input[name=workspace]"),
                             $password = $dialogPreference.find("input[name=password]"),
                             $email = $dialogPreference.find("input[name=email]"),
-                            $locale = $dialogPreference.find("input[name=locale]"),
-                            $theme = $dialogPreference.find("input[name=theme]"),
+                            $locale = $dialogPreference.find("select[name=locale]"),
+                            $theme = $dialogPreference.find("select[name=theme]"),
                             $editorFontFamily = $dialogPreference.find("input[name=editorFontFamily]"),
                             $editorFontSize = $dialogPreference.find("input[name=editorFontSize]"),
                             $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
-                            $editorTheme = $dialogPreference.find("input[name=editorTheme]"),
+                            $editorTheme = $dialogPreference.find("select[name=editorTheme]"),
                             $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
 
                     if ($.trim($email.val()) === "") {
-                        $dialogPreference.find(".tip").html("user -> email " + config.label.no_empty);
+                        $dialogPreference.find(".tip").html("[user] -> [email]: " + config.label.no_empty);
                         return false;
                     }
 

@@ -156,5 +156,6 @@
     "source": "源代碼",
     "toggle_comment": "註釋",
     "find_in_files": "在文件中查找",
-    "email": "電子郵件"
+    "email": "電子郵件",
+    "no_empty": "不能為空"
 }
