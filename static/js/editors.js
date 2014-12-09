@@ -184,7 +184,8 @@ var editors = {
                 if (editors.data.length === 0) { // 起始页可能存在，所以用编辑器数据判断
                     menu.disabled(['save-all', 'build', 'run', 'go-test', 'go-get', 'go-install',
                         'find', 'find-next', 'find-previous', 'replace', 'replace-all',
-                    'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment']);
+                        'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment',
+                        'edit']);
                     $(".toolbars").hide();
                 }
 
@@ -433,6 +434,127 @@ var editors = {
             });
         };
 
+        CodeMirror.commands.copyLinesDown = function (cm) {
+            var content = '',
+                    selectoion = cm.listSelections()[0];
+
+            var from = selectoion.anchor,
+                    to = selectoion.head;
+            if (from.line > to.line) {
+                from = selectoion.head;
+                to = selectoion.anchor;
+            }
+
+            for (var i = from.line, max = to.line; i <= max; i++) {
+                if (to.ch !== 0 || i !== max) { // 下一行选中为0时，不应添加内容
+                    content += '\n' + cm.getLine(i);
+                }
+            }
+            // 下一行选中为0时，应添加到上一行末
+            var replaceToLine = to.line;
+            if (to.ch === 0) {
+                replaceToLine = to.line - 1;
+            }
+            cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
+
+            var offset = replaceToLine - from.line + 1;
+            cm.setSelection(CodeMirror.Pos(from.line + offset, from.ch),
+                    CodeMirror.Pos(to.line + offset, to.ch));
+        };
+
+        CodeMirror.commands.copyLinesUp = function (cm) {
+            var content = '',
+                    selectoion = cm.listSelections()[0];
+
+            var from = selectoion.anchor,
+                    to = selectoion.head;
+            if (from.line > to.line) {
+                from = selectoion.head;
+                to = selectoion.anchor;
+            }
+
+            for (var i = from.line, max = to.line; i <= max; i++) {
+                if (to.ch !== 0 || i !== max) { // 下一行选中为0时，不应添加内容
+                    content += '\n' + cm.getLine(i);
+                }
+            }
+
+            // 下一行选中为0时，应添加到上一行末
+            var replaceToLine = to.line;
+            if (to.ch === 0) {
+                replaceToLine = to.line - 1;
+            }
+            cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
+
+            cm.setSelection(CodeMirror.Pos(from.line, from.ch),
+                    CodeMirror.Pos(to.line, to.ch));
+        };
+
+        CodeMirror.commands.moveLinesUp = function (cm) {
+            var selectoion = cm.listSelections()[0];
+
+            var from = selectoion.anchor,
+                    to = selectoion.head;
+            if (from.line > to.line) {
+                from = selectoion.head;
+                to = selectoion.anchor;
+            }
+
+            if (from.line === 0) {
+                return false;
+            }
+            // 下一行选中为0时，应添加到上一行末
+            var replaceToLine = to.line;
+            if (to.ch === 0) {
+                replaceToLine = to.line - 1;
+            }
+            cm.replaceRange('\n' + cm.getLine(from.line - 1), CodeMirror.Pos(replaceToLine));
+            if (from.line === 1) {
+                // 移除第一行的换行
+                cm.replaceRange('', CodeMirror.Pos(0, 0),
+                        CodeMirror.Pos(1, 0));
+            } else {
+                cm.replaceRange('', CodeMirror.Pos(from.line - 2, cm.getLine(from.line - 2).length),
+                        CodeMirror.Pos(from.line - 1, cm.getLine(from.line - 1).length));
+            }
+
+            cm.setSelection(CodeMirror.Pos(from.line - 1, from.ch),
+                    CodeMirror.Pos(to.line - 1, to.ch));
+        };
+
+        CodeMirror.commands.moveLinesDown = function (cm) {
+            var selectoion = cm.listSelections()[0];
+
+            var from = selectoion.anchor,
+                    to = selectoion.head;
+            if (from.line > to.line) {
+                from = selectoion.head;
+                to = selectoion.anchor;
+            }
+
+            if (to.line === cm.lastLine()) {
+                return false;
+            }
+
+            // 下一行选中为0时，应添加到上一行末
+            var replaceToLine = to.line;
+            if (to.ch === 0) {
+                replaceToLine = to.line - 1;
+            }
+            // 把选中的下一行添加到选中区域的上一行
+            if (from.line === 0) {
+                cm.replaceRange(cm.getLine(replaceToLine + 1) + '\n', CodeMirror.Pos(0, 0));
+            } else {
+                cm.replaceRange('\n' + cm.getLine(replaceToLine + 1), CodeMirror.Pos(from.line - 1));
+            }
+            // 删除选中的下一行
+            cm.replaceRange('', CodeMirror.Pos(replaceToLine + 1, cm.getLine(replaceToLine + 1).length),
+                    CodeMirror.Pos(replaceToLine + 2, cm.getLine(replaceToLine + 2).length));
+
+            cm.setSelection(CodeMirror.Pos(from.line + 1, from.ch),
+                    CodeMirror.Pos(to.line + 1, to.ch));
+        };
+
         CodeMirror.commands.jumpToDecl = function (cm) {
             var cur = wide.curEditor.getCursor();
 
@@ -574,7 +696,8 @@ var editors = {
 
         menu.undisabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-get', 'go-install',
             'find', 'find-next', 'find-previous', 'replace', 'replace-all',
-                    'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment']);
+            'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment',
+            'edit']);
 
         var textArea = document.getElementById("editor" + id);
         textArea.value = data.content;
@@ -623,123 +746,10 @@ var editors = {
                         windows.maxEditor();
                     }
                 },
-                "Shift-Ctrl-Up": function (cm) {
-                    var content = '',
-                            selectoion = cm.listSelections()[0];
-
-                    var from = selectoion.anchor,
-                            to = selectoion.head;
-                    if (from.line > to.line) {
-                        from = selectoion.head;
-                        to = selectoion.anchor;
-                    }
-
-                    for (var i = from.line, max = to.line; i <= max; i++) {
-                        if (to.ch !== 0 || i !== max) { // 下一行选中为0时，不应添加内容
-                            content += '\n' + cm.getLine(i);
-                        }
-                    }
-
-                    // 下一行选中为0时，应添加到上一行末
-                    var replaceToLine = to.line;
-                    if (to.ch === 0) {
-                        replaceToLine = to.line - 1;
-                    }
-                    cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
-
-                    cm.setSelection(CodeMirror.Pos(from.line, from.ch),
-                            CodeMirror.Pos(to.line, to.ch));
-                },
-                "Shift-Ctrl-Down": function (cm) {
-                    var content = '',
-                            selectoion = cm.listSelections()[0];
-
-                    var from = selectoion.anchor,
-                            to = selectoion.head;
-                    if (from.line > to.line) {
-                        from = selectoion.head;
-                        to = selectoion.anchor;
-                    }
-
-                    for (var i = from.line, max = to.line; i <= max; i++) {
-                        if (to.ch !== 0 || i !== max) { // 下一行选中为0时，不应添加内容
-                            content += '\n' + cm.getLine(i);
-                        }
-                    }
-                    // 下一行选中为0时，应添加到上一行末
-                    var replaceToLine = to.line;
-                    if (to.ch === 0) {
-                        replaceToLine = to.line - 1;
-                    }
-                    cm.replaceRange(content, CodeMirror.Pos(replaceToLine));
-
-                    var offset = replaceToLine - from.line + 1;
-                    cm.setSelection(CodeMirror.Pos(from.line + offset, from.ch),
-                            CodeMirror.Pos(to.line + offset, to.ch));
-                },
-                "Shift-Alt-Up": function (cm) {
-                    var selectoion = cm.listSelections()[0];
-
-                    var from = selectoion.anchor,
-                            to = selectoion.head;
-                    if (from.line > to.line) {
-                        from = selectoion.head;
-                        to = selectoion.anchor;
-                    }
-
-                    if (from.line === 0) {
-                        return false;
-                    }
-                    // 下一行选中为0时，应添加到上一行末
-                    var replaceToLine = to.line;
-                    if (to.ch === 0) {
-                        replaceToLine = to.line - 1;
-                    }
-                    cm.replaceRange('\n' + cm.getLine(from.line - 1), CodeMirror.Pos(replaceToLine));
-                    if (from.line === 1) {
-                        // 移除第一行的换行
-                        cm.replaceRange('', CodeMirror.Pos(0, 0),
-                                CodeMirror.Pos(1, 0));
-                    } else {
-                        cm.replaceRange('', CodeMirror.Pos(from.line - 2, cm.getLine(from.line - 2).length),
-                                CodeMirror.Pos(from.line - 1, cm.getLine(from.line - 1).length));
-                    }
-
-                    cm.setSelection(CodeMirror.Pos(from.line - 1, from.ch),
-                            CodeMirror.Pos(to.line - 1, to.ch));
-                },
-                "Shift-Alt-Down": function (cm) {
-                    var selectoion = cm.listSelections()[0];
-
-                    var from = selectoion.anchor,
-                            to = selectoion.head;
-                    if (from.line > to.line) {
-                        from = selectoion.head;
-                        to = selectoion.anchor;
-                    }
-
-                    if (to.line === cm.lastLine()) {
-                        return false;
-                    }
-
-                    // 下一行选中为0时，应添加到上一行末
-                    var replaceToLine = to.line;
-                    if (to.ch === 0) {
-                        replaceToLine = to.line - 1;
-                    }
-                    // 把选中的下一行添加到选中区域的上一行
-                    if (from.line === 0) {
-                        cm.replaceRange(cm.getLine(replaceToLine + 1) + '\n', CodeMirror.Pos(0, 0));
-                    } else {
-                        cm.replaceRange('\n' + cm.getLine(replaceToLine + 1), CodeMirror.Pos(from.line - 1));
-                    }
-                    // 删除选中的下一行
-                    cm.replaceRange('', CodeMirror.Pos(replaceToLine + 1, cm.getLine(replaceToLine + 1).length),
-                            CodeMirror.Pos(replaceToLine + 2, cm.getLine(replaceToLine + 2).length));
-
-                    cm.setSelection(CodeMirror.Pos(from.line + 1, from.ch),
-                            CodeMirror.Pos(to.line + 1, to.ch));
-                }
+                "Shift-Ctrl-Up": "copyLinesUp",
+                "Shift-Ctrl-Down": "copyLinesDown",
+                "Shift-Alt-Up": "moveLinesUp",
+                "Shift-Alt-Down": "moveLinesDown"
             }
         });
 

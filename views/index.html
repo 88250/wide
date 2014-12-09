@@ -59,48 +59,66 @@
                     <span>{{.i18n.edit}}</span>
                     <div class="frame">
                         <ul>     
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.undo();wide.curEditor.focus()}">
                                 <span>{{.i18n.undo}}</span>
+                                <span class="fn-right ft-small">Ctrl-Z</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.redo();wide.curEditor.focus()}">
                                 <span>{{.i18n.redo}}</span>
+                                <span class="fn-right ft-small">Ctrl-Y</span>
                             </li>
                             <li class="hr"></li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.cut}}</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.copy}}</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.paste}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('selectAll');wide.curEditor.focus()}">
                                 <span>{{.i18n.select_all}}</span>
+                                <span class="fn-right ft-small">Ctrl-A</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled" onclick="alert('Dev In Progress')">
                                 <span>{{.i18n.select_identifier}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('gotoLine')}">
                                 <span>{{.i18n.goto_line}}</span>
+                                <span class="fn-right ft-small">Ctrl-L</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('deleteLine');wide.curEditor.focus()}">
                                 <span>{{.i18n.delete_line}}</span>
+                                <span class="fn-right ft-small">Ctrl-E</span>
                             </li>
                             <li class="hr"></li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('copyLinesUp');wide.curEditor.focus()}">
                                 <span>{{.i18n.copy_lines_up}}</span>
+                                <span class="fn-right ft-small">Shift-Ctrl-Up</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('copyLinesDown');wide.curEditor.focus()}">
                                 <span>{{.i18n.copy_lines_down}}</span>
+                                <span class="fn-right ft-small">Shift-Ctrl-Down</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('moveLinesUp');wide.curEditor.focus()}">
                                 <span>{{.i18n.move_lines_up}}</span>
+                                <span class="fn-right ft-small">Shift-Alt-Up</span>
                             </li>
-                            <li onclick="alert('Dev In Progress')">
+                            <li class="edit disabled"
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('moveLinesDown');wide.curEditor.focus()}">
                                 <span>{{.i18n.move_lines_down}}</span>
+                                <span class="fn-right ft-small">Shift-Alt-Down</span>
                             </li>
                         </ul>
                     </div>
@@ -110,23 +128,23 @@
                     <div class="frame">
                         <ul>     
                             <li class="format disabled"
-                                onclick="if (!$(this).hasClass('disabled')){wide.fmt(editors.getCurrentPath(), wide.curEditor)}">
+                                onclick="if (!$(this).hasClass('disabled')){wide.fmt(editors.getCurrentPath(), wide.curEditor);wide.curEditor.focus()}">
                                 <span>{{.i18n.format}}</span>
                                 <span class="fn-right ft-small">Ctrl-Shift-F</span>
                             </li>
                             <li class="hr"></li>
                             <li class="autocomplete disabled" 
-                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('autocompleteAnyWord')}">
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('autocompleteAnyWord');wide.curEditor.focus()}">
                                 <span>{{.i18n.autocomplete}}</span>
                                 <span class="fn-right ft-small">Ctrl-\</span>
                             </li>
                             <li class="jump-to-decl disabled"
-                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('jumpToDecl')}">
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('jumpToDecl');wide.curEditor.focus()}">
                                 <span>{{.i18n.jump_to_decl}}</span>
                                 <span class="fn-right ft-small">Ctrl-B</span>
                             </li>
                             <li class="expr-info disabled" 
-                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('exprInfo')}">
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('exprInfo');wide.curEditor.focus()}">
                                 <span>{{.i18n.show_expr_info}}</span>
                                 <span class="fn-right ft-small">Ctrl-I</span>
                             </li>
@@ -137,7 +155,7 @@
                             </li>
                             <li class="hr"></li>
                             <li class="toggle-comment disabled" 
-                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('toggleComment')}">
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('toggleComment');wide.curEditor.focus()}">
                                 <span>{{.i18n.toggle_comment}}</span>
                                 <span class="fn-right ft-small">Ctrl-/</span>
                             </li>
