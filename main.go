@@ -15,8 +15,10 @@
 package main
 
 import (
+	"compress/gzip"
 	"flag"
 	"html/template"
+	"io"
 	"math/rand"
 	"mime"
 	"net/http"
@@ -240,7 +242,7 @@ func main() {
 	defer glog.Flush()
 
 	// IDE
-	http.HandleFunc("/", handlerWrapper(indexHandler))
+	http.HandleFunc("/", handlerGzWrapper(indexHandler))
 	http.HandleFunc("/start", handlerWrapper(startHandler))
 	http.HandleFunc("/about", handlerWrapper(aboutHandler))
 	http.HandleFunc("/keyboard_shortcuts", handlerWrapper(keyboardShortcutsHandler))
@@ -326,6 +328,39 @@ func handlerWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.
 	return handler
 }
 
+// handlerGzWrapper wraps the HTTP Handler for some common processes.
+//
+//  1. panic recover
+//  2. gzip response
+//  3. request stopwatch
+//  4. i18n
+func handlerGzWrapper(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	handler := panicRecover(f)
+	handler = gzipWrapper(handler)
+	handler = stopwatch(handler)
+	handler = i18nLoad(handler)
+
+	return handler
+}
+
+// gzipWrapper wraps the process with response gzip.
+func gzipWrapper(f func(http.ResponseWriter, *http.Request)) func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if !strings.Contains(r.Header.Get("Accept-Encoding"), "gzip") {
+			f(w, r)
+
+			return
+		}
+
+		w.Header().Set("Content-Encoding", "gzip")
+		gz := gzip.NewWriter(w)
+		defer gz.Close()
+		gzr := gzipResponseWriter{Writer: gz, ResponseWriter: w}
+
+		f(gzr, r)
+	}
+}
+
 // i18nLoad wraps the i18n process.
 func i18nLoad(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -364,4 +399,20 @@ func initMime() {
 	mime.AddExtensionType(".css", "text/css")
 	mime.AddExtensionType(".js", "application/x-javascript")
 	mime.AddExtensionType(".json", "application/json")
+}
+
+// gzipResponseWriter represents a gzip response writer.
+type gzipResponseWriter struct {
+	io.Writer
+	http.ResponseWriter
+}
+
+// Write writes response with appropriate 'Content-Type'.
+func (w gzipResponseWriter) Write(b []byte) (int, error) {
+	if "" == w.Header().Get("Content-Type") {
+		// If no content type, apply sniffing algorithm to un-gzipped body.
+		w.Header().Set("Content-Type", http.DetectContentType(b))
+	}
+
+	return w.Writer.Write(b)
 }
