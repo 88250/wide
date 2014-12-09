@@ -69,7 +69,7 @@ func initAPINode() {
 // so that users can easily view the Go API source code in file tree.
 func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	defer util.RetGzJSON(w, r, data)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	if session.IsNew {
