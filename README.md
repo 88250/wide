@@ -35,15 +35,22 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 * [X] Autocomplete: Go/HTML etc.
 * [X] Format: Go/HTML/JSON etc.
 * [X] Build & Run
-* [ ] Debug
 * [X] Multiplayer: a real team development experience
 * [X] Navigation, Jump to declaration, Find usages, File search etc.
 * [X] Shell: run command on the server
-* [ ] Git integration: git command on the web
 * [X] Web development: Frontend devlopment (HTML/JS/CSS) all in one
 * [X] Go tool: go get/install/fmt etc.
 * [X] File Import & Export
 * [X] Themes
+* [ ] Debug
+* [ ] Git integration: git command on the web
+
+## Demos
+
+* **Overview**
+  ![overview](https://cloud.githubusercontent.com/assets/873584/5354274/9cfe742e-7fc0-11e4-8474-04a16e9b52e1.gif)
+* **Theme**
+  ![theme](https://cloud.githubusercontent.com/assets/873584/5354273/9c5215f8-7fc0-11e4-9f07-49d3d32ecb7f.gif)
 
 ## Architecture 
 
@@ -69,7 +76,7 @@ Flow:
 ![Code Assist](https://cloud.githubusercontent.com/assets/873584/4399135/3b80c21c-4463-11e4-8e94-7f7e8d12a4df.png)
 
  * Autocompletion
- * Find Usages
+ * Find Usages/Jump To Declaration/etc.
 
 Flow: 
  1. Browser sends code assist request
@@ -82,16 +89,6 @@ Flow:
 
 * [用户指南](http://88250.gitbooks.io/wide-user-guide)
 * [开发指南](http://88250.gitbooks.io/wide-dev-guide)
-
-## Demos
-
-* 20141024-1.0.0, png ![](http://b3log.org/wide/demo/20141024.png)
-
-### Olds
-* [20140927, png](http://b3log.org/wide/demo/20140927.png)
-* [20140913, png](http://b3log.org/wide/demo/20140913.png)
-* [20140910, png](http://b3log.org/wide/demo/20140910.png)
-* [20140823, swf](http://b3log.org/wide/demo/20140823.html)
 
 ## Setup
 
