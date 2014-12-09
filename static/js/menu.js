@@ -310,12 +310,17 @@ var menu = {
 
                 if (emptys.length === 0) {
                     $("#dialogPreference").find(".tip").html("");
+                    $okBtn.prop("disabled", false);
                 } else {
                     for (var i = 0, max = emptys.length; i < max; i++) {
-                        emptysTip += '[' + emptys[i].closest('div').data("index") + '] -> [' + emptys[i].attr("name") 
+                        var tabIndex = emptys[i].closest('div').data("index"),
+                                text = $.trim(emptys[i].parent().text());
+                        emptysTip += '[' + $("#dialogPreference .tabs > div[data-index=" + tabIndex + "]").text()
+                                + '] -> [' + text.substr(0, text.length - 1)
                                 + ']: ' + config.label.no_empty + "<br/>";
                     }
                     $("#dialogPreference").find(".tip").html(emptysTip);
+                    $okBtn.prop("disabled", true);
                 }
             });
 
@@ -362,11 +367,6 @@ var menu = {
                             $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
                             $editorTheme = $dialogPreference.find("select[name=editorTheme]"),
                             $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
-
-                    if ($.trim($email.val()) === "") {
-                        $dialogPreference.find(".tip").html("[user] -> [email]: " + config.label.no_empty);
-                        return false;
-                    }
 
                     $.extend(request, {
                         "fontFamily": $fontFamily.val(),
