@@ -249,7 +249,7 @@ func Save() bool {
 }
 
 // Load loads the configurations from wide.json.
-func Load(confPath, confIP, confPort, confServer, confContext, confChannel string, confDocker bool) {
+func Load(confPath, confIP, confPort, confServer, confStaticServer, confContext, confChannel string, confDocker bool) {
 	bytes, _ := ioutil.ReadFile(confPath)
 
 	err := json.Unmarshal(bytes, &Wide)
@@ -262,8 +262,7 @@ func Load(confPath, confIP, confPort, confServer, confContext, confChannel strin
 	// keep the raw content
 	json.Unmarshal(bytes, &rawWide)
 
-	// upgrade if need
-	upgrade()
+	glog.V(5).Info("Conf: \n" + string(bytes))
 
 	// Working Driectory
 	Wide.WD = util.OS.Pwd()
@@ -299,13 +298,17 @@ func Load(confPath, confIP, confPort, confServer, confContext, confChannel strin
 		Wide.Server = confServer
 	}
 
+	// Static Server
+	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
+	if "" != confStaticServer {
+		Wide.StaticServer = confStaticServer
+	}
+
 	// Context
 	if "" != confContext {
 		Wide.Context = confContext
 	}
 
-	// Static Server
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
 	Wide.StaticResourceVersion = strings.Replace(Wide.StaticResourceVersion, "${time}", strconv.FormatInt(time.Now().UnixNano(), 10), 1)
 
 	// Channel
@@ -318,7 +321,8 @@ func Load(confPath, confIP, confPort, confServer, confContext, confChannel strin
 	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
 
-	glog.V(5).Info("Conf: \n" + string(bytes))
+	// upgrade if need
+	upgrade()
 
 	initWorkspaceDirs()
 	initCustomizedConfs()

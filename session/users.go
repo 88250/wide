@@ -54,6 +54,9 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	if "" != conf.Wide.Context {
+		httpSession.Options.Path = conf.Wide.Context
+	}
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
@@ -186,6 +189,9 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Values["username"] = args.Username
 	httpSession.Values["id"] = strconv.Itoa(rand.Int())
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	if "" != conf.Wide.Context {
+		httpSession.Options.Path = conf.Wide.Context
+	}
 	httpSession.Save(r, w)
 
 	glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)

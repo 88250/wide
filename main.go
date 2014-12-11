@@ -47,6 +47,7 @@ func init() {
 	confIP := flag.String("ip", "", "ip to visit")
 	confPort := flag.String("port", "", "port to visit")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
+	confStaticServer := flag.String("static_server", "", "this will overwrite Wide.StaticServer if specified")
 	confContext := flag.String("context", "", "this will overwrite Wide.Context if specified")
 	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
 	confStat := flag.Bool("stat", false, "whether report statistics periodically")
@@ -69,7 +70,7 @@ func init() {
 
 	event.Load()
 
-	conf.Load(*confPath, *confIP, *confPort, *confServer, *confContext, *confChannel, *confDocker)
+	conf.Load(*confPath, *confIP, *confPort, *confServer, *confStaticServer, *confContext, *confChannel, *confDocker)
 
 	conf.FixedTimeCheckEnv()
 	conf.FixedTimeSave()
@@ -91,6 +92,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	if "" != conf.Wide.Context {
+		httpSession.Options.Path = conf.Wide.Context
+	}
 	httpSession.Save(r, w)
 
 	// create a Wide session
@@ -148,6 +152,9 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	if "" != conf.Wide.Context {
+		httpSession.Options.Path = conf.Wide.Context
+	}
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
@@ -185,6 +192,9 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	if "" != conf.Wide.Context {
+		httpSession.Options.Path = conf.Wide.Context
+	}
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
@@ -214,6 +224,9 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	if "" != conf.Wide.Context {
+		httpSession.Options.Path = conf.Wide.Context
+	}
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
