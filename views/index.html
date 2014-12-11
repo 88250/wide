@@ -70,23 +70,15 @@
                                 <span class="fn-right ft-small">Ctrl-Y</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="edit disabled" onclick="alert('Dev In Progress')">
-                                <span>{{.i18n.cut}}</span>
-                            </li>
-                            <li class="edit disabled" onclick="alert('Dev In Progress')">
-                                <span>{{.i18n.copy}}</span>
-                            </li>
-                            <li class="edit disabled" onclick="alert('Dev In Progress')">
-                                <span>{{.i18n.paste}}</span>
-                            </li>
-                            <li class="hr"></li>
                             <li class="edit disabled"
                                 onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('selectAll'); wide.curEditor.focus()}">
                                 <span>{{.i18n.select_all}}</span>
                                 <span class="fn-right ft-small">Ctrl-A</span>
                             </li>
-                            <li class="edit disabled" onclick="alert('Dev In Progress')">
+                            <li class="edit disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.focus(); wide.curEditor.execCommand('selectIdentifier')}">
                                 <span>{{.i18n.select_identifier}}</span>
+                                <span class="fn-right ft-small">Shift-Alt-J</span>
                             </li>
                             <li class="hr"></li>
                             <li class="edit disabled"
@@ -176,20 +168,30 @@
                                 <span class="fn-right ft-small">Ctrl-F</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="find disabled" onclick="alert('Dev In Progress')">
+                            <li class="find disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('find');}">
                                 <span>{{.i18n.find}}</span>
+                                <span class="fn-right ft-small">Ctrl-F</span>
                             </li>
-                            <li class="find-next disabled" onclick="alert('Dev In Progress')">
+                            <li class="find-next disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('findNext');}">
                                 <span>{{.i18n.find_next}}</span>
+                                <span class="fn-right ft-small">Ctrl-G</span>
                             </li>
-                            <li class="find-previous disabled" onclick="alert('Dev In Progress')">
+                            <li class="find-previous disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('findPrev');}">
                                 <span>{{.i18n.find_previous}}</span>
+                                <span class="fn-right ft-small">Shift-Ctrl-G</span>
                             </li>
-                            <li class="replace disabled" onclick="alert('Dev In Progress')">
+                            <li class="replace disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('replace');}">
                                 <span>{{.i18n.replace}}</span>
+                                <span class="fn-right ft-small">Shift-Ctrl-F</span>
                             </li>
-                            <li class="replace-all disabled" onclick="alert('Dev In Progress')">
+                            <li class="replace-all disabled" 
+                                onclick="if (!$(this).hasClass('disabled')){wide.curEditor.execCommand('replaceAll');}">
                                 <span>{{.i18n.replace_all}}</span>
+                                <span class="fn-right ft-small">Shift-Ctrl-R</span>
                             </li>
                         </ul>
                     </div>

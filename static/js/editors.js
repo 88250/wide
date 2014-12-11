@@ -22,7 +22,7 @@ var editors = {
             if (editors.data[i].editor.options.path === path) {
                 return editors.data[i].editor;
             }
-        }        
+        }
     },
     close: function () {
         $(".edit-panel .tabs > div[data-index=" + $(".edit-panel .frame").data("index") + "]").find(".ico-close").click();
@@ -613,6 +613,12 @@ var editors = {
                 }
             });
         };
+
+        CodeMirror.commands.selectIdentifier = function (cm) {
+            var cur = cm.getCursor();
+            var word = cm.findWordAt(cur);
+            cm.extendSelection(word.anchor, word.head);
+        };
     },
     appendSearch: function (data, type, key) {
         var searcHTML = '<ul class="list">';
@@ -756,7 +762,8 @@ var editors = {
                 "Shift-Ctrl-Up": "copyLinesUp",
                 "Shift-Ctrl-Down": "copyLinesDown",
                 "Shift-Alt-Up": "moveLinesUp",
-                "Shift-Alt-Down": "moveLinesDown"
+                "Shift-Alt-Down": "moveLinesDown",
+                "Shift-Alt-J": "selectIdentifier"
             }
         });
 
