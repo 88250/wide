@@ -17,7 +17,7 @@
 var shell = {
     _shellWS: undefined,
     _initWS: function () {
-        shell.shellWS = new ReconnectingWebSocket(config.channel.shell + '/shell/ws?sid=' + config.wideSessionId);
+        shell.shellWS = new ReconnectingWebSocket(config.channel + '/shell/ws?sid=' + config.wideSessionId);
         shell.shellWS.onopen = function () {
             console.log('[shell onopen] connected');
         };

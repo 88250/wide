@@ -25,7 +25,7 @@ var notification = {
         this._initWS();
     },
     _initWS: function () {
-        var notificationWS = new ReconnectingWebSocket(config.channel.shell + '/notification/ws?sid=' + config.wideSessionId);
+        var notificationWS = new ReconnectingWebSocket(config.channel + '/notification/ws?sid=' + config.wideSessionId);
 
         notificationWS.onopen = function () {
             console.log('[notification onopen] connected');

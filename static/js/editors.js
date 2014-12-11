@@ -260,7 +260,7 @@ var editors = {
             title: '<span title="' + config.label.start_page + '">' + config.label.start_page + '</span>',
             content: '<div id="startPage"></div>',
             after: function () {
-                $("#startPage").load('/start?sid=' + config.wideSessionId);
+                $("#startPage").load(config.context + '/start?sid=' + config.wideSessionId);
                 $.ajax({
                     url: "http://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=30",
                     type: "GET",
@@ -334,7 +334,7 @@ var editors = {
             $.ajax({
                 async: false, // 同步执行
                 type: 'POST',
-                url: '/autocomplete',
+                url: config.context + '/autocomplete',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
@@ -419,7 +419,7 @@ var editors = {
 
             $.ajax({
                 type: 'POST',
-                url: '/exprinfo',
+                url: config.context + '/exprinfo',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
@@ -566,7 +566,7 @@ var editors = {
 
             $.ajax({
                 type: 'POST',
-                url: '/find/decl',
+                url: config.context + '/find/decl',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
@@ -594,7 +594,7 @@ var editors = {
 
             $.ajax({
                 type: 'POST',
-                url: '/find/usages',
+                url: config.context + '/find/usages',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {

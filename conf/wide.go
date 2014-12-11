@@ -90,12 +90,10 @@ type Editor struct {
 type conf struct {
 	IP                    string  // server ip, ${ip}
 	Port                  string  // server port
+	Context               string  // server context
 	Server                string  // server host and port ({IP}:{Port})
 	StaticServer          string  // static resources server scheme, host and port (http://{IP}:{Port})
-	EditorChannel         string  // editor channel (ws://{IP}:{Port})
-	OutputChannel         string  // output channel (ws://{IP}:{Port})
-	ShellChannel          string  // shell channel(ws://{IP}:{Port})
-	SessionChannel        string  // wide session channel (ws://{IP}:{Port})
+	Channel               string  // channel (ws://{IP}:{Port})
 	HTTPSessionMaxAge     int     // HTTP session max age (in seciond)
 	StaticResourceVersion string  // version of static resources
 	MaxProcs              int     // Go max procs
@@ -251,7 +249,7 @@ func Save() bool {
 }
 
 // Load loads the configurations from wide.json.
-func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker bool) {
+func Load(confPath, confIP, confPort, confServer, confContext, confChannel string, confDocker bool) {
 	bytes, _ := ioutil.ReadFile(confPath)
 
 	err := json.Unmarshal(bytes, &Wide)
@@ -301,34 +299,24 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 		Wide.Server = confServer
 	}
 
+	// Context
+	if "" != confContext {
+		Wide.Context = confContext
+	}
+
 	// Static Server
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
 	Wide.StaticResourceVersion = strings.Replace(Wide.StaticResourceVersion, "${time}", strconv.FormatInt(time.Now().UnixNano(), 10), 1)
 
-	// Channels
-	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{IP}", Wide.IP, 1)
+	// Channel
+	Wide.Channel = strings.Replace(Wide.Channel, "{IP}", Wide.IP, 1)
+	Wide.Channel = strings.Replace(Wide.Channel, "{Port}", Wide.Port, 1)
 	if "" != confChannel {
-		Wide.EditorChannel = confChannel
-	}
-	Wide.OutputChannel = strings.Replace(Wide.OutputChannel, "{IP}", Wide.IP, 1)
-	if "" != confChannel {
-		Wide.OutputChannel = confChannel
-	}
-	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{IP}", Wide.IP, 1)
-	if "" != confChannel {
-		Wide.ShellChannel = confChannel
-	}
-	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{IP}", Wide.IP, 1)
-	if "" != confChannel {
-		Wide.SessionChannel = confChannel
+		Wide.Channel = confChannel
 	}
 
 	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
-	Wide.EditorChannel = strings.Replace(Wide.EditorChannel, "{Port}", Wide.Port, 1)
-	Wide.OutputChannel = strings.Replace(Wide.OutputChannel, "{Port}", Wide.Port, 1)
-	Wide.ShellChannel = strings.Replace(Wide.ShellChannel, "{Port}", Wide.Port, 1)
-	Wide.SessionChannel = strings.Replace(Wide.SessionChannel, "{Port}", Wide.Port, 1)
 
 	glog.V(5).Info("Conf: \n" + string(bytes))
 
@@ -338,6 +326,7 @@ func Load(confPath, confIP, confPort, confServer, confChannel string, confDocker
 
 // upgrade upgrades the wide.json.
 func upgrade() {
+	// Users
 	for _, user := range Wide.Users {
 		if "" == user.Theme {
 			user.Theme = "default" // since 1.1.0

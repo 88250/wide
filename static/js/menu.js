@@ -27,7 +27,7 @@ var menu = {
         });
     },
     _initAbout: function () {
-        $("#dialogAbout").load('/about', function () {
+        $("#dialogAbout").load(config.context + '/about', function () {
             $("#dialogAbout").dialog({
                 "modal": true,
                 "height": 460,
@@ -121,7 +121,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: '/logout',
+            url: config.context + '/logout',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (data) {
@@ -151,7 +151,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: '/go/get',
+            url: config.context + '/go/get',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
@@ -178,7 +178,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: '/go/install',
+            url: config.context + '/go/install',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
@@ -206,7 +206,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: '/go/test',
+            url: config.context + '/go/test',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
@@ -241,7 +241,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: '/build',
+            url: config.context + '/build',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
@@ -273,7 +273,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: '/build',
+            url: config.context + '/build',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
@@ -284,7 +284,7 @@ var menu = {
         });
     },
     _initPreference: function () {
-        $("#dialogPreference").load('/preference', function () {
+        $("#dialogPreference").load(config.context + '/preference', function () {
             $("#dialogPreference input").keyup(function () {
                 var isChange = false,
                         emptys = [],
@@ -386,7 +386,7 @@ var menu = {
 
                     $.ajax({
                         type: 'POST',
-                        url: '/preference',
+                        url: config.context + '/preference',
                         data: JSON.stringify(request),
                         success: function (data, textStatus, jqXHR) {
                             if (!data.succ) {

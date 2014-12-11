@@ -48,7 +48,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := HTTPSession.Get(r, "wide-session")
 
 	if httpSession.IsNew {
-		http.Redirect(w, r, "/preference", http.StatusFound)
+		http.Redirect(w, r, conf.Wide.Context+"login", http.StatusFound)
 
 		return
 	}

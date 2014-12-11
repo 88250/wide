@@ -154,7 +154,7 @@ var tree = {
 
         $.ajax({
             type: 'POST',
-            url: '/file/zip/new',
+            url: config.context + '/file/zip/new',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (data) {
@@ -164,7 +164,7 @@ var tree = {
                     return false;
                 }
 
-                window.open('/file/zip?path=' + wide.curNode.path + '.zip');
+                window.open(config.context + '/file/zip?path=' + wide.curNode.path + '.zip');
             }
         });
     },
@@ -205,7 +205,7 @@ var tree = {
 
         $.ajax({
             type: 'POST',
-            url: '/files',
+            url: config.context + '/files',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (data) {
@@ -224,7 +224,7 @@ var tree = {
                         },
                         async: {
                             enable: true,
-                            url: "/file/refresh",
+                            url: config.context + "/file/refresh",
                             autoParam: ["path"]
                         },
                         callback: {
@@ -323,7 +323,7 @@ var tree = {
             $.ajax({
                 async: false,
                 type: 'POST',
-                url: '/file',
+                url: config.context + '/file',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
@@ -335,7 +335,7 @@ var tree = {
 
                     if ("img" === data.mode) { // 是图片文件的话新建 tab 打开
                         // 最好是开 tab，但这个最终取决于浏览器设置
-                        var w = window.open(data.path);
+                        var w = window.open(config.context + data.path);
                         return false;
                     }
 
@@ -394,7 +394,7 @@ var tree = {
 
                 $.ajax({
                     type: 'POST',
-                    url: '/file/search/text',
+                    url: config.context + '/file/search/text',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (data) {
@@ -433,7 +433,7 @@ var tree = {
 
                 $.ajax({
                     type: 'POST',
-                    url: '/file/rename',
+                    url: config.context + '/file/rename',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (data) {

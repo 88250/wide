@@ -60,7 +60,7 @@ var wide = {
 
                 $.ajax({
                     type: 'POST',
-                    url: '/file/remove',
+                    url: config.context + '/file/remove',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (data) {
@@ -117,7 +117,7 @@ var wide = {
 
                 $.ajax({
                     type: 'POST',
-                    url: '/file/new',
+                    url: config.context + '/file/new',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (data) {
@@ -165,7 +165,7 @@ var wide = {
 
                 $.ajax({
                     type: 'POST',
-                    url: '/file/new',
+                    url: config.context + '/file/new',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (data) {
@@ -232,7 +232,7 @@ var wide = {
 
                     $.ajax({
                         type: 'POST',
-                        url: '/file/find/name',
+                        url: config.context + '/file/find/name',
                         data: JSON.stringify(request),
                         dataType: "json",
                         success: function (data) {
@@ -320,7 +320,7 @@ var wide = {
         }
     },
     _initWS: function () {
-        var outputWS = new ReconnectingWebSocket(config.channel.output + '/output/ws?sid=' + config.wideSessionId);
+        var outputWS = new ReconnectingWebSocket(config.channel + '/output/ws?sid=' + config.wideSessionId);
         outputWS.onopen = function () {
             console.log('[output onopen] connected');
         };
@@ -339,7 +339,7 @@ var wide = {
 
                 $.ajax({
                     type: 'POST',
-                    url: '/run',
+                    url: config.context + '/run',
                     data: JSON.stringify(request),
                     dataType: "json"
                 });
@@ -468,7 +468,7 @@ var wide = {
 
         $.ajax({
             type: 'POST',
-            url: '/file/save',
+            url: config.context + '/file/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (data) {
@@ -518,7 +518,7 @@ var wide = {
 
         $.ajax({
             type: 'POST',
-            url: '/stop',
+            url: config.context + '/stop',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (data) {
@@ -540,7 +540,7 @@ var wide = {
         $.ajax({
             async: false, // sync
             type: 'POST',
-            url: '/go/fmt',
+            url: config.context + '/go/fmt',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (data) {
@@ -573,7 +573,7 @@ var wide = {
                 $.ajax({
                     async: false, // sync
                     type: 'POST',
-                    url: '/go/fmt',
+                    url: config.context + '/go/fmt',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (data) {

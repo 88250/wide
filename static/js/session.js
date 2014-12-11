@@ -41,7 +41,7 @@ var session = {
 
             $.ajax({
                 type: 'POST',
-                url: '/session/save',
+                url: config.context + '/session/save',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
@@ -112,7 +112,7 @@ var session = {
     },
     _initWS: function () {
         // 用于保持会话，如果该通道断开，则服务器端会销毁会话状态，回收相关资源.
-        var sessionWS = new ReconnectingWebSocket(config.channel.session + '/session/ws?sid=' + config.wideSessionId);
+        var sessionWS = new ReconnectingWebSocket(config.channel + '/session/ws?sid=' + config.wideSessionId);
 
         sessionWS.onopen = function () {
             console.log('[session onopen] connected');

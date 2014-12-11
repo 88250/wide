@@ -36,6 +36,7 @@ import (
 )
 
 // WSHandler handles request of creating editor channel.
+// XXX: NOT used at present
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	if httpSession.IsNew {

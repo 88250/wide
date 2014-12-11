@@ -1,12 +1,10 @@
 {
     "IP": "${ip}",
     "Port": "7070",
+    "Context": "",
     "Server": "{IP}:{Port}",
     "StaticServer": "",
-    "EditorChannel": "ws://{IP}:{Port}",
-    "OutputChannel": "ws://{IP}:{Port}",
-    "ShellChannel": "ws://{IP}:{Port}",
-    "SessionChannel": "ws://{IP}:{Port}",
+    "Channel": "ws://{IP}:{Port}",
     "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "${time}",
     "MaxProcs": 4,
@@ -32,7 +30,11 @@
                 "TabSize": "4"
             },
             "LatestSessionContent": {
-                "FileTree": [],
+                "FileTree": [
+                    "D:\\GoGoGo\\src",
+                    "D:\\GoGoGo\\src\\demo",
+                    "D:\\GoGoGo\\src\\hello"
+                ],
                 "Files": [],
                 "CurrentFile": ""
             }
