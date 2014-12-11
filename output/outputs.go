@@ -438,7 +438,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				lint := &Lint{
-					File:     file,
+					File:     filepath.Join(curDir,file),
 					LineNo:   lineNo - 1,
 					Severity: lintSeverityError,
 					Msg:      msg,

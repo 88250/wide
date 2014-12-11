@@ -17,6 +17,13 @@
 var editors = {
     data: [],
     tabs: {},
+    getEditorByPath: function (path) {
+        for (var i = 0, ii = editors.data.length; i < ii; i++) {
+            if (editors.data[i].editor.options.path === path) {
+                return editors.data[i].editor;
+            }
+        }        
+    },
     close: function () {
         $(".edit-panel .tabs > div[data-index=" + $(".edit-panel .frame").data("index") + "]").find(".ico-close").click();
     },

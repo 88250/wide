@@ -17,7 +17,7 @@
 var wide = {
     curNode: undefined,
     curEditor: undefined,
-    curProcessId: undefined, // 当前正在运行的进程 id（pid）
+    curProcessId: undefined, // curent running process id (pid)
     _initDialog: function () {
         $(".dialog-prompt > input").keyup(function (event) {
             var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
@@ -379,20 +379,27 @@ var wide = {
                     bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     if (data.lints) { // has build error
+                        var files = {};
+
                         for (var i = 0; i < data.lints.length; i++) {
                             var lint = data.lints[i];
 
                             goLintFound.push({from: CodeMirror.Pos(lint.lineNo, 0),
                                 to: CodeMirror.Pos(lint.lineNo, 0),
                                 message: lint.msg, severity: lint.severity});
+
+                            files[lint.file] = lint.file;
                         }
 
                         $(".toolbars .ico-stop").removeClass("ico-stop")
                                 .addClass("ico-buildrun").attr("title", config.label.build_n_run);
-                    }
 
-                    // trigger gutter lint
-                    CodeMirror.signal(wide.curEditor, "change", wide.curEditor);
+                        // trigger gutter lint
+                        for (var path in files) {
+                            var editor = editors.getEditorByPath(path);
+                            CodeMirror.signal(editor, "change", editor);
+                        }
+                    }
 
                     break;
             }
