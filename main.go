@@ -50,12 +50,12 @@ func init() {
 	confIP := flag.String("ip", "", "ip to visit")
 	confPort := flag.String("port", "", "port to visit")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
+	confLogLevel := flag.String("log_level", "info", "logging level: debug/info/warn/error")
 	confStaticServer := flag.String("static_server", "", "this will overwrite Wide.StaticServer if specified")
 	confContext := flag.String("context", "", "this will overwrite Wide.Context if specified")
 	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
 	confStat := flag.Bool("stat", false, "whether report statistics periodically")
 	confDocker := flag.Bool("docker", false, "whether run in a docker container")
-	//     confLogLevel := flag.String("log_level", "info", "logging level: debug/info/warn/error")
 
 	flag.Parse()
 
@@ -73,7 +73,8 @@ func init() {
 
 	event.Load()
 
-	conf.Load(*confPath, *confIP, *confPort, *confServer, *confStaticServer, *confContext, *confChannel, *confDocker)
+	conf.Load(*confPath, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel,
+		*confDocker)
 
 	conf.FixedTimeCheckEnv()
 	conf.FixedTimeSave()

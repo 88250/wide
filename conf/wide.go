@@ -253,7 +253,8 @@ func Save() bool {
 }
 
 // Load loads the configurations from wide.json.
-func Load(confPath, confIP, confPort, confServer, confStaticServer, confContext, confChannel string, confDocker bool) {
+func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel string,
+	confDocker bool) {
 	bytes, _ := ioutil.ReadFile(confPath)
 
 	err := json.Unmarshal(bytes, &Wide)
@@ -302,6 +303,11 @@ func Load(confPath, confIP, confPort, confServer, confStaticServer, confContext,
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
 	if "" != confServer {
 		Wide.Server = confServer
+	}
+
+	// Logging Level
+	if "" != confLogLevel {
+		Wide.LogLevel = confLogLevel
 	}
 
 	// Static Server
