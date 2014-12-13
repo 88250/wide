@@ -74,7 +74,7 @@ $.extend(Tabs.prototype, {
                 $tabs = this.obj._$tabs;
 
         $tabs.append('<div data-index="' + data.id + '">'
-                + data.title + '<span class="ico-close font-ico"></span></div>');
+                + data.title + ' <span class="ico-close font-ico"></span></div>');
         $tabsPanel.append('<div data-index="' + data.id + '">' + data.content
                 + '</div>');
 

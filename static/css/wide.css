@@ -36,8 +36,92 @@
     line-height: 20px;
 }
 
-.ico-play:before {
+.ico-moveup:before {
+    content: "\f148";
+}
+
+.ico-movedown:before {
+    content: "\f149";
+}
+
+.ico-keyboard:before {
+    content: "\f11c";
+}
+
+.ico-findfiles:before {
+    content: "\e603";
+}
+
+.ico-find:before {
+    content: "\e602";
+}
+
+.ico-editor:before {
+    content: "\e604";
+}
+
+.ico-tree:before {
+    content: "\e600";
+}
+
+.ico-build:before {
+    content: "\e601";
+}
+
+.ico-notification:before {
+    content: "\e607";
+}
+
+.ico-report:before {
     content: "\e605";
+}
+
+.ico-comment:before {
+    content: "\e620";
+}
+
+.ico-goline:before {
+    content: "\e61e";
+}
+
+.ico-info:before {
+    content: "\e61d";
+}
+
+.ico-signup:before {
+    content: "\e606";
+}
+
+.ico-signout:before {
+    content: "\e618";
+}
+
+.ico-redo:before {
+    content: "\e615";
+}
+
+.ico-undo:before {
+    content: "\e60e";
+}
+
+.ico-about:before {
+    content: "\e60d";
+}
+
+.ico-import:before {
+    content: "\f0ee";
+}
+
+.ico-export:before {
+    content: "\f0ed";
+}
+
+.ico-refresh:before {
+    content: "\f021";
+}
+
+.ico-remove:before {
+    content: "\e60b";
 }
 
 .ico-save:before {
@@ -45,33 +129,37 @@
 }
 
 .ico-max:before {
-    content: "\f096";
+    content: "\e609";
 }
 
 .ico-format:before {
-    content: "\e60b";
+    content: "\e612";
 }
 
 .ico-buildrun:before {
-    content: "\e607";
-}
-
-.ico-stop:before {
-    content: "\e608";
-}
-
-.ico-restore:before {
     content: "\e60c";
 }
 
+.ico-stop:before {
+    content: "\e60f";
+}
+
+.ico-restore:before {
+    content: "\e613";
+}
+
+.toolbars .ico-restore:before {
+    content: "\e60a";
+}
+
 .ico-min:before {
-    content: "\e60d";
+    content: "\e614";
     position: absolute;
     right: 5px;
 }
 
 .ico-close:before {
-    content: "\e60a";
+    content: "\e611";
 }
 /* end ico */
 
@@ -89,9 +177,10 @@
     cursor: pointer;
 }
 
-.frame li.disabled {
+.frame li.disabled,
+.frame li.disabled .font-ico,   
+.frame li.disabled:hover .font-ico {
     color: #999;
-    text-shadow: 0 0 0 !important;
 }
 
 .frame a {
@@ -102,6 +191,19 @@
 .frame li:hover a,
 .frame a:hover {
     color: #FFF;
+}
+
+.frame .space {
+    display: inline-block;
+    width: 20px;
+    height: 15px;
+}
+
+.frame .font-ico {
+    margin-right: 5px;
+    width: 15px;
+    display: inline-block;
+    text-align: center;
 }
 /* end frame */
 

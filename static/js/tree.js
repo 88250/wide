@@ -252,9 +252,9 @@ var tree = {
                                         }).show();
                                     } else { // 右击了目录
                                         if (wide.curNode.removable) {
-                                            $dirRMenu.find(".remove, .rename").removeClass("disabled");
+                                            $dirRMenu.find(".remove").removeClass("disabled");
                                         } else {
-                                            $dirRMenu.find(".remove, .rename").addClass("disabled");
+                                            $dirRMenu.find(".remove").addClass("disabled");
                                         }
 
                                         if (wide.curNode.creatable) {

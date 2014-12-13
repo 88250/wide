@@ -193,7 +193,6 @@ var editors = {
                         'find', 'find-next', 'find-previous', 'replace', 'replace-all',
                         'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment',
                         'edit']);
-                    $(".toolbars").hide();
                 }
 
                 if (!nextId) {
@@ -697,7 +696,6 @@ var editors = {
     },
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
     newEditor: function (data, cursor) {
-        $(".toolbars").show();
         var id = wide.curNode.tId;
 
         editors.tabs.add({

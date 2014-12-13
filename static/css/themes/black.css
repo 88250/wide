@@ -32,10 +32,10 @@
 
 .font-ico {
     color: rgba(255, 255, 255, 0.5);
-    text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.57);
 }
 
-.font-ico:hover {
+.font-ico:hover,
+.frame li:hover .font-ico {
     color: #e1e1e1;
 }
 
@@ -50,16 +50,19 @@
     text-shadow: #292a2b 0px 1px 0px;
 }
 
-.menu > ul > li > span:hover {
-    background-color: #333333;
-    box-shadow: 1px -1px 0 0 #000000, -1px 0 0 0 #000000, 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
-    color: #d4d4d4;
-}
-
+.menu > ul > li > span:hover,
 .menu > ul > li > span.selected {
     background-color: #494949;
     color: #d4d4d4;
     box-shadow: 1px 0 0 0 #000000 inset, 1px 0 0 0 #000000, 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
+}
+
+#buildRun {
+    background-color: #494949;
+    box-shadow: 1px 0 0 0 #000000 inset, 1px 0 0 0 #000000, 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
+    color: #6DB14C;
+    padding: 1px 5px;
+    border-radius: 3px;
 }
 
 .frame {
