@@ -3,7 +3,11 @@ MAINTAINER Liang Ding <dl88250@gmail.com>
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
 
-RUN useradd wide && chown -R wide:wide /wide && mkdir /var/log/wide && chown -R wide:wide /var/log/wide
+RUN useradd wide && chown -R wide:wide /wide && mkdir /var/log/wide
+RUN ln -sf /dev/stdout /var/log/wide/out.log
+RUN ln -sf /dev/stderr /var/log/wide/err.log
+RUN chown -R wide:wide /var/log/wide
+
 USER wide
 
 ENV GOROOT /usr/src/go
@@ -13,8 +17,5 @@ RUN go get -v github.com/88250/ide_stub github.com/nsf/gocode github.com/bradfit
 
 WORKDIR /wide/gogogo/src/github.com/b3log/wide
 RUN go get -v && go build -v
-
-RUN ln -sf /dev/stdout /var/log/wide/out.log
-RUN ln -sf /dev/stderr /var/log/wide/err.log
 
 EXPOSE 7070
