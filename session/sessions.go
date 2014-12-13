@@ -177,7 +177,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		wSession = WideSessions.New(httpSession, sid)
 
-		logger.Infof("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
+		logger.Debugf("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
 	}
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
