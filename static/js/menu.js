@@ -229,7 +229,7 @@ var menu = {
             return false;
         }
 
-        if ($(".toolbars .ico-stop").length === 1) {
+        if ($("#buildRun").hasClass("ico-stop")) {
             wide.stop();
             return false;
         }
@@ -248,7 +248,7 @@ var menu = {
                 bottomGroup.resetOutput();
             },
             success: function (data) {
-                $(".toolbars .ico-buildrun").addClass("ico-stop")
+                $("#buildRun").addClass("ico-stop")
                         .removeClass("ico-buildrun").attr("title", config.label.stop);
             }
         });

@@ -239,6 +239,25 @@
     cursor: pointer;
     padding: 4px 7px;
 }
+
+.menu .split {
+    float: left;
+    border-left: 1px solid #919191;
+    height: 21px;
+    margin: 0 5px 0 0px
+}
+
+#buildRun {
+    color: #6DB14C;
+    padding: 0px 3px 0 5px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+#buildRun.ico-stop {
+    color: #9d0000;
+    padding: 0 4px 0 4px;
+}
 /* end menu */
 
 /* start editor */

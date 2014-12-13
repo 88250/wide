@@ -57,12 +57,12 @@
     box-shadow: 1px 0 0 0 #000000 inset, 1px 0 0 0 #000000, 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
 }
 
+.menu .split {
+    border-color: #000000;
+}
+
 #buildRun {
     background-color: #494949;
-    box-shadow: 1px 0 0 0 #000000 inset, 1px 0 0 0 #000000, 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
-    color: #6DB14C;
-    padding: 1px 5px;
-    border-radius: 3px;
 }
 
 .frame {
