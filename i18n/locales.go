@@ -72,8 +72,6 @@ func load(localeStr string) {
 	}
 
 	Locales[localeStr] = l
-
-	logger.Debugf("Loaded [%s] locale configuration", localeStr)
 }
 
 // Get gets message with the specified locale and key.
