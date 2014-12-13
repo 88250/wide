@@ -55,12 +55,12 @@
     color: #393939;
 }
 
+.menu .split {
+    border-color: #b6b6b6;
+}
+
 #buildRun {
     background-color: #cfcfcf;
-    box-shadow: 1px 0 0 0 #b6b6b6 inset, 1px 0 0 0 #b6b6b6, 0 1px 0 0 rgba(255, 255, 255, 0.15) inset;
-    color: #6DB14C;
-    padding: 1px 5px;
-    border-radius: 3px;
 }
 
 .frame {

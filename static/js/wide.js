@@ -358,7 +358,7 @@ var wide = {
                     break;
                 case 'run-done':
                     wide.curProcessId = undefined;
-                    $(".toolbars .ico-stop").removeClass("ico-stop")
+                    $("#buildRun").removeClass("ico-stop")
                             .addClass("ico-buildrun").attr("title", config.label.build_n_run);
 
                     break;
@@ -391,7 +391,7 @@ var wide = {
                             files[lint.file] = lint.file;
                         }
 
-                        $(".toolbars .ico-stop").removeClass("ico-stop")
+                        $("#buildRun").removeClass("ico-stop")
                                 .addClass("ico-buildrun").attr("title", config.label.build_n_run);
 
                         // trigger gutter lint
@@ -511,7 +511,7 @@ var wide = {
         wide._save(path, wide.curEditor);
     },
     stop: function () {
-        if ($(".toolbars .ico-buildrun").length === 1) {
+        if ($("#buildRun").hasClass("ico-buildrun")) {
             menu.run();
             return false;
         }
@@ -529,7 +529,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function (data) {
-                $(".toolbars .ico-stop").removeClass("ico-stop")
+                $("#buildRun").removeClass("ico-stop")
                         .addClass("ico-buildrun").attr("title", config.label.build_n_run);
             }
         });
