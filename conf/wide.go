@@ -308,6 +308,7 @@ func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer
 	// Logging Level
 	if "" != confLogLevel {
 		Wide.LogLevel = confLogLevel
+		log.SetLevel(confLogLevel)
 	}
 
 	// Static Server
