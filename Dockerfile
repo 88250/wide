@@ -3,10 +3,7 @@ MAINTAINER Liang Ding <dl88250@gmail.com>
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
 
-RUN useradd wide && chown -R wide:wide /wide && mkdir /var/log/wide
-RUN ln -sf /dev/stdout /var/log/wide/out.log
-RUN ln -sf /dev/stderr /var/log/wide/err.log
-RUN chown -R wide:wide /var/log/wide
+RUN useradd wide && chown -R wide:wide /wide
 
 USER wide
 
