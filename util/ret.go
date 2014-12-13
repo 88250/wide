@@ -18,9 +18,13 @@ import (
 	"compress/gzip"
 	"encoding/json"
 	"net/http"
+	"os"
 
-	"github.com/golang/glog"
+	"github.com/b3log/wide/log"
 )
+
+// Logger.
+var retLogger = log.NewLogger(os.Stdout)
 
 // RetJSON writes HTTP response with "Content-Type, application/json".
 func RetJSON(w http.ResponseWriter, r *http.Request, res map[string]interface{}) {
@@ -28,7 +32,7 @@ func RetJSON(w http.ResponseWriter, r *http.Request, res map[string]interface{})
 
 	data, err := json.Marshal(res)
 	if err != nil {
-		glog.Error(err)
+		retLogger.Error(err)
 		return
 	}
 
@@ -43,13 +47,13 @@ func RetGzJSON(w http.ResponseWriter, r *http.Request, res map[string]interface{
 	gz := gzip.NewWriter(w)
 	err := json.NewEncoder(gz).Encode(res)
 	if nil != err {
-		glog.Error(err)
+		retLogger.Error(err)
 		return
 	}
 
 	err = gz.Close()
 	if nil != err {
-		glog.Error(err)
+		retLogger.Error(err)
 
 		return
 	}

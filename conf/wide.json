@@ -4,6 +4,7 @@
     "Context": "",
     "Server": "{IP}:{Port}",
     "StaticServer": "",
+    "LogLevel": "info",
     "Channel": "ws://{IP}:{Port}",
     "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "${time}",

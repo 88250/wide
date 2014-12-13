@@ -29,11 +29,14 @@ import (
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/file"
+	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 )
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 // WSHandler handles request of creating editor channel.
 // XXX: NOT used at present
@@ -58,7 +61,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.EditorWS[sid] = &editorChan
 
-	glog.Infof("Open a new [Editor] with session [%s], %d", sid, len(session.EditorWS))
+	logger.Infof("Open a new [Editor] with session [%s], %d", sid, len(session.EditorWS))
 
 	args := map[string]interface{}{}
 	for {
@@ -72,7 +75,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		offset := getCursorOffset(code, line, ch)
 
-		// glog.Infof("offset: %d", offset)
+		// logger.Infof("offset: %d", offset)
 
 		gocode := util.Go.GetExecutableInGOBIN("gocode")
 		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
@@ -91,7 +94,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 		ret = map[string]interface{}{"output": string(output.Bytes()), "cmd": "autocomplete"}
 
 		if err := session.EditorWS[sid].WriteJSON(&ret); err != nil {
-			glog.Error("Editor WS ERROR: " + err.Error())
+			logger.Error("Editor WS ERROR: " + err.Error())
 			return
 		}
 	}
@@ -102,7 +105,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -121,7 +124,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	fout, err := os.Create(path)
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -131,7 +134,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 
 	if err := fout.Close(); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -142,7 +145,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	offset := getCursorOffset(code, line, ch)
 
-	// glog.Infof("offset: %d", offset)
+	// logger.Infof("offset: %d", offset)
 
 	userWorkspace := conf.Wide.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
@@ -153,7 +156,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 		libPath += userLib + conf.PathListSeparator
 	}
 
-	glog.V(5).Infof("gocode set lib-path %s", libPath)
+	logger.Debugf("gocode set lib-path [%s]", libPath)
 
 	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
 	gocode := util.Go.GetExecutableInGOBIN("gocode")
@@ -169,7 +172,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -189,7 +192,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -202,7 +205,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	fout, err := os.Create(path)
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -212,7 +215,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 
 	if err := fout.Close(); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -223,7 +226,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	offset := getCursorOffset(code, line, ch)
 
-	// glog.Infof("offset [%d]", offset)
+	// logger.Infof("offset [%d]", offset)
 
 	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-info", "."}
@@ -234,7 +237,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -265,7 +268,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -278,7 +281,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	fout, err := os.Create(path)
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -288,7 +291,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 
 	if err := fout.Close(); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -299,7 +302,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	offset := getCursorOffset(code, line, ch)
 
-	// glog.Infof("offset [%d]", offset)
+	// logger.Infof("offset [%d]", offset)
 
 	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
@@ -310,7 +313,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -350,7 +353,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -363,7 +366,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	fout, err := os.Create(filePath)
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -373,7 +376,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 
 	if err := fout.Close(); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -383,7 +386,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	ch := int(args["cursorCh"].(float64))
 
 	offset := getCursorOffset(code, line, ch)
-	// glog.Infof("offset [%d]", offset)
+	// logger.Infof("offset [%d]", offset)
 
 	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
@@ -394,7 +397,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return

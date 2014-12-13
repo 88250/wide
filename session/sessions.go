@@ -33,8 +33,8 @@ import (
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
+	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 	"github.com/gorilla/sessions"
 	"github.com/gorilla/websocket"
 )
@@ -43,6 +43,9 @@ const (
 	sessionStateActive = iota
 	sessionStateClosed // (not used so far)
 )
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 var (
 	// SessionWS holds all session channels. <sid, *util.WSChannel>
@@ -97,7 +100,7 @@ func FixedTimeRelease() {
 
 			for _, s := range WideSessions {
 				if s.Updated.Before(threshold) {
-					glog.V(3).Infof("Removes a invalid session [%s], user [%s]", s.ID, s.Username)
+					logger.Debugf("Removes a invalid session [%s], user [%s]", s.ID, s.Username)
 
 					WideSessions.Remove(s.ID)
 				}
@@ -151,7 +154,7 @@ func FixedTimeReport() {
 				buf.WriteString("    " + t.report() + "\n")
 			}
 
-			glog.Info(buf.String())
+			logger.Info(buf.String())
 		}
 	}()
 }
@@ -174,7 +177,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		wSession = WideSessions.New(httpSession, sid)
 
-		glog.Infof("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
+		logger.Infof("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
 	}
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -188,13 +191,13 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	SessionWS[sid] = &wsChan
 
-	glog.V(4).Infof("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
+	logger.Debugf("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
 
 	input := map[string]interface{}{}
 
 	for {
 		if err := wsChan.ReadJSON(&input); err != nil {
-			glog.V(5).Infof("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]",
+			logger.Debugf("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]",
 				sid, wSession.Username)
 
 			WideSessions.Remove(sid)
@@ -205,7 +208,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 		ret = map[string]interface{}{"output": "", "cmd": "session-output"}
 
 		if err := wsChan.WriteJSON(&ret); err != nil {
-			glog.Error("Session WS ERROR: " + err.Error())
+			logger.Error("Session WS ERROR: " + err.Error())
 
 			return
 		}
@@ -225,7 +228,7 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -326,9 +329,9 @@ func (sessions *wSessions) Remove(sid string) {
 			// kill processes
 			for _, p := range s.Processes {
 				if err := p.Kill(); nil != err {
-					glog.Errorf("Can't kill process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
+					logger.Errorf("Can't kill process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
 				} else {
-					glog.V(3).Infof("Killed a process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
+					logger.Debugf("Killed a process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
 				}
 			}
 
@@ -355,7 +358,7 @@ func (sessions *wSessions) Remove(sid string) {
 				}
 			}
 
-			glog.V(5).Infof("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
+			logger.Debugf("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
 
 			return
 		}

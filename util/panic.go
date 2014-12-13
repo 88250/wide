@@ -15,14 +15,18 @@
 package util
 
 import (
+	"os"
 	"runtime/debug"
 
-	"github.com/golang/glog"
+	"github.com/b3log/wide/log"
 )
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 // Recover recovers a panic.
 func Recover() {
 	if re := recover(); nil != re {
-		glog.Errorf("PANIC RECOVERED:\n %v, %s", re, debug.Stack())
+		logger.Errorf("PANIC RECOVERED:\n %v, %s", re, debug.Stack())
 	}
 }

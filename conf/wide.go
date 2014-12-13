@@ -29,8 +29,8 @@ import (
 	"time"
 
 	"github.com/b3log/wide/event"
+	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 )
 
 const (
@@ -93,6 +93,7 @@ type conf struct {
 	Context               string  // server context
 	Server                string  // server host and port ({IP}:{Port})
 	StaticServer          string  // static resources server scheme, host and port (http://{IP}:{Port})
+	LogLevel              string  // logging level
 	Channel               string  // channel (ws://{IP}:{Port})
 	HTTPSessionMaxAge     int     // HTTP session max age (in seciond)
 	StaticResourceVersion string  // version of static resources
@@ -110,6 +111,9 @@ var Wide conf
 //
 // Save function will use this variable to persist.
 var rawWide conf
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 // FixedTimeCheckEnv checks Wide runtime enviorment periodically (7 minutes).
 //
@@ -129,14 +133,14 @@ func checkEnv() {
 	cmd := exec.Command("go", "version")
 	buf, err := cmd.CombinedOutput()
 	if nil != err {
-		glog.Fatal("Not found 'go' command, please make sure Go has been installed correctly")
+		logger.Error("Not found 'go' command, please make sure Go has been installed correctly")
 
 		os.Exit(-1)
 	}
-	glog.V(5).Info(string(buf))
+	logger.Debug(string(buf))
 
 	if "" == os.Getenv("GOPATH") {
-		glog.Fatal("Not found $GOPATH, please configure it before running Wide")
+		logger.Error("Not found $GOPATH, please configure it before running Wide")
 
 		os.Exit(-1)
 	}
@@ -147,7 +151,7 @@ func checkEnv() {
 	if nil != err {
 		event.EventQueue <- &event.Event{Code: event.EvtCodeGocodeNotFound}
 
-		glog.Warningf("Not found gocode [%s]", gocode)
+		logger.Warnf("Not found gocode [%s]", gocode)
 	}
 
 	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
@@ -156,7 +160,7 @@ func checkEnv() {
 	if nil != err {
 		event.EventQueue <- &event.Event{Code: event.EvtCodeIDEStubNotFound}
 
-		glog.Warningf("Not found ide_stub [%s]", ideStub)
+		logger.Warnf("Not found ide_stub [%s]", ideStub)
 	}
 }
 
@@ -192,7 +196,7 @@ func (c *conf) GetGoFmt(username string) string {
 			case "goimports":
 				return util.Go.GetExecutableInGOBIN("goimports")
 			default:
-				glog.Errorf("Unsupported Go Format tool [%s]", user.GoFormat)
+				logger.Errorf("Unsupported Go Format tool [%s]", user.GoFormat)
 				return "gofmt"
 			}
 		}
@@ -234,13 +238,13 @@ func Save() bool {
 	bytes, err := json.MarshalIndent(rawWide, "", "    ")
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		return false
 	}
 
 	if err = ioutil.WriteFile("conf/wide.json", bytes, 0644); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		return false
 	}
@@ -254,29 +258,31 @@ func Load(confPath, confIP, confPort, confServer, confStaticServer, confContext,
 
 	err := json.Unmarshal(bytes, &Wide)
 	if err != nil {
-		glog.Error("Parses wide.json error: ", err)
+		logger.Error("Parses wide.json error: ", err)
 
 		os.Exit(-1)
 	}
+
+	log.SetLevel(Wide.LogLevel)
 
 	// keep the raw content
 	json.Unmarshal(bytes, &rawWide)
 
-	glog.V(5).Info("Conf: \n" + string(bytes))
+	logger.Debug("Conf: \n" + string(bytes))
 
 	// Working Driectory
 	Wide.WD = util.OS.Pwd()
-	glog.V(5).Infof("${pwd} [%s]", Wide.WD)
+	logger.Debugf("${pwd} [%s]", Wide.WD)
 
 	// IP
 	ip, err := util.Net.LocalIP()
 	if err != nil {
-		glog.Error(err)
+		logger.Error(err)
 
 		os.Exit(-1)
 	}
 
-	glog.V(5).Infof("${ip} [%s]", ip)
+	logger.Debugf("${ip} [%s]", ip)
 
 	if confDocker {
 		// TODO: may be we need to do something here
@@ -374,7 +380,7 @@ func UpdateCustomizedConf(username string) {
 
 	t, err := template.ParseFiles("static/user/style.css.tmpl")
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		os.Exit(-1)
 	}
@@ -382,14 +388,14 @@ func UpdateCustomizedConf(username string) {
 	wd := util.OS.Pwd()
 	dir := filepath.Clean(wd + "/static/user/" + u.Name)
 	if err := os.MkdirAll(dir, 0755); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		os.Exit(-1)
 	}
 
 	fout, err := os.Create(dir + PathSeparator + "style.css")
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		os.Exit(-1)
 	}
@@ -397,7 +403,7 @@ func UpdateCustomizedConf(username string) {
 	defer fout.Close()
 
 	if err := t.Execute(fout, model); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		os.Exit(-1)
 	}
@@ -435,12 +441,10 @@ func CreateWorkspaceDir(path string) {
 func createDir(path string) {
 	if !util.File.IsExist(path) {
 		if err := os.MkdirAll(path, 0775); nil != err {
-			glog.Error(err)
+			logger.Error(err)
 
 			os.Exit(-1)
 		}
-
-		glog.V(7).Infof("Created a directory [%s]", path)
 	}
 }
 

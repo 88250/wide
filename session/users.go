@@ -28,7 +28,6 @@ import (
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 )
 
 const (
@@ -71,7 +70,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		t, err := template.ParseFiles("views/preference.html")
 
 		if nil != err {
-			glog.Error(err)
+			logger.Error(err)
 			http.Error(w, err.Error(), 500)
 
 			return
@@ -106,7 +105,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		succ = false
 
 		return
@@ -142,7 +141,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		t, err := template.ParseFiles("views/login.html")
 
 		if nil != err {
-			glog.Error(err)
+			logger.Error(err)
 			http.Error(w, err.Error(), 500)
 
 			return
@@ -165,7 +164,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		succ = false
 
 		return
@@ -194,7 +193,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	glog.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
+	logger.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
 }
 
 // LogoutHandler handles request of user logout (exit).
@@ -223,7 +222,7 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 		t, err := template.ParseFiles("views/sign_up.html")
 
 		if nil != err {
-			glog.Error(err)
+			logger.Error(err)
 			http.Error(w, err.Error(), 500)
 
 			return
@@ -243,7 +242,7 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		succ = false
 
 		return
@@ -298,7 +297,7 @@ func addUser(username, password, email string) string {
 	http.Handle("/workspace/"+username+"/",
 		http.StripPrefix("/workspace/"+username+"/", http.FileServer(http.Dir(newUser.GetWorkspace()))))
 
-	glog.Infof("Created a user [%s]", username)
+	logger.Infof("Created a user [%s]", username)
 
 	return userCreated
 }
@@ -307,14 +306,14 @@ func addUser(username, password, email string) string {
 func helloWorld(workspace string) {
 	dir := workspace + conf.PathSeparator + "src" + conf.PathSeparator + "hello"
 	if err := os.MkdirAll(dir, 0755); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		return
 	}
 
 	fout, err := os.Create(dir + conf.PathSeparator + "main.go")
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		os.Exit(-1)
 	}

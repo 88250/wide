@@ -26,10 +26,13 @@ import (
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
+	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 )
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 // Node represents a file node in file tree.
 type Node struct {
@@ -120,7 +123,7 @@ func RefreshDirectory(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(node.Children)
 	if err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		return
 	}
 
@@ -135,7 +138,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -162,7 +165,7 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 		user := GetUsre(path)
 		if nil == user {
-			glog.Warningf("The path [%s] has no owner")
+			logger.Warnf("The path [%s] has no owner")
 			data["path"] = ""
 
 			return
@@ -193,7 +196,7 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -205,7 +208,7 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 	fout, err := os.Create(filePath)
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -216,7 +219,7 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 
 	if err := fout.Close(); nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		wSession := session.WideSessions.Get(sid)
@@ -235,7 +238,7 @@ func NewFile(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -270,7 +273,7 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -297,7 +300,7 @@ func RenameFile(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -336,7 +339,7 @@ func Find(w http.ResponseWriter, r *http.Request) {
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -385,7 +388,7 @@ func SearchText(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -429,7 +432,7 @@ func walk(path string, node *Node, creatable, removable bool) {
 		node.Children = append(node.Children, &child)
 
 		if nil == fio {
-			glog.Warningf("Path [%s] is nil", fpath)
+			logger.Warnf("Path [%s] is nil", fpath)
 
 			continue
 		}
@@ -471,7 +474,7 @@ func listFiles(dirname string) []string {
 		fio, err := os.Lstat(path)
 
 		if nil != err {
-			glog.Warningf("Can't read file info [%s]", path)
+			logger.Warnf("Can't read file info [%s]", path)
 
 			continue
 		}
@@ -562,30 +565,30 @@ func createFile(path, fileType string) bool {
 	case "f":
 		file, err := os.OpenFile(path, os.O_CREATE, 0775)
 		if nil != err {
-			glog.Error(err)
+			logger.Error(err)
 
 			return false
 		}
 
 		defer file.Close()
 
-		glog.V(5).Infof("Created file [%s]", path)
+		logger.Debugf("Created file [%s]", path)
 
 		return true
 	case "d":
 		err := os.Mkdir(path, 0775)
 
 		if nil != err {
-			glog.Error(err)
+			logger.Error(err)
 
 			return false
 		}
 
-		glog.V(5).Infof("Created directory [%s]", path)
+		logger.Debugf("Created directory [%s]", path)
 
 		return true
 	default:
-		glog.Errorf("Unsupported file type [%s]", fileType)
+		logger.Errorf("Unsupported file type [%s]", fileType)
 
 		return false
 	}
@@ -594,12 +597,12 @@ func createFile(path, fileType string) bool {
 // removeFile removes file on the specified path.
 func removeFile(path string) bool {
 	if err := os.RemoveAll(path); nil != err {
-		glog.Errorf("Removes [%s] failed: [%s]", path, err.Error())
+		logger.Errorf("Removes [%s] failed: [%s]", path, err.Error())
 
 		return false
 	}
 
-	glog.V(5).Infof("Removed [%s]", path)
+	logger.Debugf("Removed [%s]", path)
 
 	return true
 }
@@ -607,12 +610,12 @@ func removeFile(path string) bool {
 // renameFile renames (moves) a file from the specified old path to the specified new path.
 func renameFile(oldPath, newPath string) bool {
 	if err := os.Rename(oldPath, newPath); nil != err {
-		glog.Errorf("Renames [%s] failed: [%s]", oldPath, err.Error())
+		logger.Errorf("Renames [%s] failed: [%s]", oldPath, err.Error())
 
 		return false
 	}
 
-	glog.V(5).Infof("Renamed [%s] to [%s]", oldPath, newPath)
+	logger.Debugf("Renamed [%s] to [%s]", oldPath, newPath)
 
 	return true
 }
@@ -632,7 +635,7 @@ func find(dir, name string, results []*string) []*string {
 	f.Close()
 
 	if nil != err {
-		glog.Errorf("Read dir [%s] failed: [%s]", dir, err.Error())
+		logger.Errorf("Read dir [%s] failed: [%s]", dir, err.Error())
 
 		return results
 	}
@@ -655,7 +658,7 @@ func find(dir, name string, results []*string) []*string {
 			match, err := filepath.Match(strings.ToLower(pattern), strings.ToLower(path))
 
 			if nil != err {
-				glog.Errorf("Find match filename failed: [%s]", err.Error)
+				logger.Errorf("Find match filename failed: [%s]", err.Error)
 
 				continue
 			}
@@ -681,7 +684,7 @@ func search(dir, extension, text string, snippets []*Snippet) []*Snippet {
 	f.Close()
 
 	if nil != err {
-		glog.Errorf("Read dir [%s] failed: [%s]", dir, err.Error())
+		logger.Errorf("Read dir [%s] failed: [%s]", dir, err.Error())
 
 		return snippets
 	}
@@ -709,7 +712,7 @@ func searchInFile(path string, text string) []*Snippet {
 
 	bytes, err := ioutil.ReadFile(path)
 	if nil != err {
-		glog.Errorf("Read file [%s] failed: [%s]", path, err.Error())
+		logger.Errorf("Read file [%s] failed: [%s]", path, err.Error())
 
 		return ret
 	}

@@ -14,7 +14,8 @@
 
 // Package log includes logging related manipulations.
 //
-// 	logger := log.NewLogger(os.Stdout, log.Debug)
+//  log.Level = log.Debug
+// 	logger := log.NewLogger(os.Stdout)
 //
 // 	logger.Debug("debug message")
 // 	logger.Info("info message")
@@ -28,6 +29,7 @@ import (
 	"fmt"
 	"io"
 	stdlog "log"
+	"strings"
 )
 
 // Logging level.
@@ -38,18 +40,63 @@ const (
 	Error
 )
 
-// Logger is a simple logger with level.
-// The underlying logger is the Go standard logging "log".
+// all loggers.
+var loggers []*Logger
+
+// the global default logging level, it will be used for creating logger.
+var logLevel = Debug
+
+// Logger represents a simple logger with level.
+// The underlying logger is the standard Go logging "log".
 type Logger struct {
 	level  int
 	logger *stdlog.Logger
 }
 
 // NewLogger creates a logger.
-func NewLogger(out io.Writer, level int) *Logger {
-	ret := &Logger{level: level, logger: stdlog.New(out, "", stdlog.Ldate|stdlog.Ltime|stdlog.Lshortfile)}
+func NewLogger(out io.Writer) *Logger {
+	ret := &Logger{level: logLevel, logger: stdlog.New(out, "", stdlog.Ldate|stdlog.Ltime|stdlog.Lshortfile)}
+
+	loggers = append(loggers, ret)
 
 	return ret
+}
+
+// SetLevel sets the logging level of all loggers.
+func SetLevel(level string) {
+	logLevel = getLevel(level)
+
+	for _, l := range loggers {
+		l.SetLevel(level)
+	}
+}
+
+// getLevel gets logging level int value corresponding to the specified level.
+func getLevel(level string) int {
+	level = strings.ToLower(level)
+
+	switch level {
+	case "debug":
+		return Debug
+	case "info":
+		return Info
+	case "warn":
+		return Warn
+	case "error":
+		return Error
+	default:
+		return Info
+	}
+}
+
+// SetLevel sets the logging level of a logger.
+func (l *Logger) SetLevel(level string) {
+	l.level = getLevel(level)
+}
+
+// IsDebugEnabled determines whether the debug level is enabled.
+func (l *Logger) IsDebugEnabled() bool {
+	return l.level <= Debug
 }
 
 // Debug prints debug level message.

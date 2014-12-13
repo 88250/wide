@@ -21,7 +21,6 @@ import (
 	"path/filepath"
 
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 )
 
 // GetZip handles request of retrieving zip file.
@@ -57,7 +56,7 @@ func CreateZip(w http.ResponseWriter, r *http.Request) {
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return
@@ -75,7 +74,7 @@ func CreateZip(w http.ResponseWriter, r *http.Request) {
 
 	zipFile, err := util.Zip.Create(path + ".zip")
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		data["succ"] = false
 
 		return

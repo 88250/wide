@@ -33,13 +33,16 @@ import (
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/file"
 	"github.com/b3log/wide/i18n"
+	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/notification"
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/shell"
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 )
+
+// Logger
+var logger *log.Logger
 
 // The only one init function in Wide.
 func init() {
@@ -52,16 +55,16 @@ func init() {
 	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
 	confStat := flag.Bool("stat", false, "whether report statistics periodically")
 	confDocker := flag.Bool("docker", false, "whether run in a docker container")
-
-	flag.Set("alsologtostderr", "true")
-	flag.Set("stderrthreshold", "INFO")
-	flag.Set("v", "3")
+	//     confLogLevel := flag.String("log_level", "info", "logging level: debug/info/warn/error")
 
 	flag.Parse()
 
+	log.SetLevel("warn")
+	logger = log.NewLogger(os.Stdout)
+
 	wd := util.OS.Pwd()
 	if strings.HasPrefix(wd, os.TempDir()) {
-		glog.Error("Don't run wide in OS' temp directory or with `go run`")
+		logger.Error("Don't run wide in OS' temp directory or with `go run`")
 
 		os.Exit(-1)
 	}
@@ -105,7 +108,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	username := httpSession.Values["username"].(string)
 	user := conf.Wide.GetUser(username)
 	if nil == user {
-		glog.Warningf("Not found user [%s]", username)
+		logger.Warnf("Not found user [%s]", username)
 
 		http.Redirect(w, r, conf.Wide.Context+"login", http.StatusFound)
 
@@ -121,12 +124,12 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
 		"user": user, "editorThemes": conf.GetEditorThemes()}
 
-	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
+	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("views/index.html")
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -164,7 +167,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
 	wSession := session.WideSessions.Get(sid)
 	if nil == wSession {
-		glog.Errorf("Session [%s] not found", sid)
+		logger.Errorf("Session [%s] not found", sid)
 	}
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
@@ -173,7 +176,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("views/start.html")
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -205,7 +208,7 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("views/keyboard_shortcuts.html")
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -238,7 +241,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("views/about.html")
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -252,8 +255,6 @@ func main() {
 	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
 
 	initMime()
-
-	defer glog.Flush()
 
 	// IDE
 	http.HandleFunc(conf.Wide.Context+"/", handlerGzWrapper(indexHandler))
@@ -321,11 +322,11 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/signup", handlerWrapper(session.SignUpUser))
 	http.HandleFunc(conf.Wide.Context+"/preference", handlerWrapper(session.PreferenceHandler))
 
-	glog.Infof("Wide is running [%s]", conf.Wide.Server+conf.Wide.Context)
+	logger.Infof("Wide is running [%s]", conf.Wide.Server+conf.Wide.Context)
 
 	err := http.ListenAndServe(conf.Wide.Server, nil)
 	if err != nil {
-		glog.Fatal(err)
+		logger.Error(err)
 	}
 }
 
@@ -390,7 +391,7 @@ func stopwatch(handler func(w http.ResponseWriter, r *http.Request)) func(w http
 		start := time.Now()
 
 		defer func() {
-			glog.V(5).Infof("[%s] [%s]", r.RequestURI, time.Since(start))
+			logger.Debugf("[%s] [%s]", r.RequestURI, time.Since(start))
 		}()
 
 		handler(w, r)

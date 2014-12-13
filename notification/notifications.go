@@ -17,15 +17,16 @@ package notification
 
 import (
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/i18n"
+	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 )
 
@@ -37,6 +38,9 @@ const (
 	setup  = "Setup"  // notification.type: setup
 	server = "Server" // notification.type: server
 )
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 // Notification represents a notification.
 type Notification struct {
@@ -74,7 +78,7 @@ func event2Notification(e *event.Event) {
 		notification = &Notification{event: e, Type: server, Severity: error,
 			Message: i18n.Get(locale, "notification_"+strconv.Itoa(e.Code)).(string) + " [" + e.Data.(string) + "]"}
 	default:
-		glog.Warningf("Can't handle event[code=%d]", e.Code)
+		logger.Warnf("Can't handle event[code=%d]", e.Code)
 
 		return
 	}
@@ -105,7 +109,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.NotificationWS[sid] = &wsChan
 
-	glog.V(4).Infof("Open a new [Notification] with session [%s], %d", sid, len(session.NotificationWS))
+	logger.Debugf("Open a new [Notification] with session [%s], %d", sid, len(session.NotificationWS))
 
 	// add user event handler
 	wSession.EventQueue.AddHandler(event.HandleFunc(event2Notification))

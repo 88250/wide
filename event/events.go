@@ -15,7 +15,11 @@
 // Package event includes event related manipulations.
 package event
 
-import "github.com/golang/glog"
+import (
+	"os"
+
+	"github.com/b3log/wide/log"
+)
 
 const (
 	// EvtCodeGOPATHNotFound indicates an event: not found $GOPATH env variable
@@ -32,6 +36,9 @@ const (
 
 // Max length of queue.
 const maxQueueLength = 10
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 // Event represents an event.
 type Event struct {
@@ -63,7 +70,7 @@ var UserEventQueues = queues{}
 func Load() {
 	go func() {
 		for event := range EventQueue {
-			glog.V(5).Infof("Received a global event [code=%d]", event.Code)
+			logger.Debugf("Received a global event [code=%d]", event.Code)
 
 			// dispatch the event to each user event queue
 			for _, userQueue := range UserEventQueues {
@@ -86,7 +93,7 @@ func (uq *UserEventQueue) AddHandler(handlers ...Handler) {
 func (ueqs queues) New(sid string) *UserEventQueue {
 	q := ueqs[sid]
 	if nil != q {
-		glog.Warningf("Already exist a user queue in session [%s]", sid)
+		logger.Warnf("Already exist a user queue in session [%s]", sid)
 
 		return q
 	}
@@ -100,7 +107,7 @@ func (ueqs queues) New(sid string) *UserEventQueue {
 
 	go func() { // start listening
 		for evt := range q.Queue {
-			glog.V(5).Infof("Session [%s] received an event [%d]", sid, evt.Code)
+			logger.Debugf("Session [%s] received an event [%d]", sid, evt.Code)
 
 			// process event by each handlers
 			for _, handler := range q.Handlers {

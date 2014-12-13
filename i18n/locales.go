@@ -22,8 +22,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/golang/glog"
+	"github.com/b3log/wide/log"
 )
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 // Locale.
 type locale struct {
@@ -54,7 +57,7 @@ func Load() {
 func load(localeStr string) {
 	bytes, err := ioutil.ReadFile("i18n/" + localeStr + ".json")
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		os.Exit(-1)
 	}
@@ -63,14 +66,14 @@ func load(localeStr string) {
 
 	err = json.Unmarshal(bytes, &l.Langs)
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 
 		os.Exit(-1)
 	}
 
 	Locales[localeStr] = l
 
-	glog.V(5).Infof("Loaded [%s] locale configuration", localeStr)
+	logger.Debugf("Loaded [%s] locale configuration", localeStr)
 }
 
 // Get gets message with the specified locale and key.

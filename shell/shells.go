@@ -28,9 +28,9 @@ import (
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
+	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
-	"github.com/golang/glog"
 	"github.com/gorilla/websocket"
 )
 
@@ -38,6 +38,9 @@ import (
 //
 // <sid, *util.WSChannel>>
 var ShellWS = map[string]*util.WSChannel{}
+
+// Logger.
+var logger = log.NewLogger(os.Stdout)
 
 // IndexHandler handles request of Shell index.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -67,12 +70,12 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	wideSessions := session.WideSessions.GetByUsername(username)
 
-	glog.V(3).Infof("User [%s] has [%d] sessions", username, len(wideSessions))
+	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("views/shell.html")
 
 	if nil != err {
-		glog.Error(err)
+		logger.Error(err)
 		http.Error(w, err.Error(), 500)
 
 		return
@@ -104,13 +107,13 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	ShellWS[sid] = &wsChan
 
-	glog.V(4).Infof("Open a new [Shell] with session [%s], %d", sid, len(ShellWS))
+	logger.Debugf("Open a new [Shell] with session [%s], %d", sid, len(ShellWS))
 
 	input := map[string]interface{}{}
 
 	for {
 		if err := wsChan.ReadJSON(&input); err != nil {
-			glog.Error("Shell WS ERROR: " + err.Error())
+			logger.Error("Shell WS ERROR: " + err.Error())
 
 			return
 		}
@@ -139,7 +142,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 		ret = map[string]interface{}{"output": output, "cmd": "shell-output"}
 
 		if err := wsChan.WriteJSON(&ret); err != nil {
-			glog.Error("Shell WS ERROR: " + err.Error())
+			logger.Error("Shell WS ERROR: " + err.Error())
 			return
 		}
 
