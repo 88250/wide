@@ -50,7 +50,7 @@ func init() {
 	confIP := flag.String("ip", "", "ip to visit")
 	confPort := flag.String("port", "", "port to visit")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
-	confLogLevel := flag.String("log_level", "info", "logging level: debug/info/warn/error")
+	confLogLevel := flag.String("log_level", "info", "logging level: trace/debug/info/warn/error")
 	confStaticServer := flag.String("static_server", "", "this will overwrite Wide.StaticServer if specified")
 	confContext := flag.String("context", "", "this will overwrite Wide.Context if specified")
 	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")

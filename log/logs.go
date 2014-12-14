@@ -17,6 +17,7 @@
 //  log.Level = log.Debug
 // 	logger := log.NewLogger(os.Stdout)
 //
+//  logger.Trace("trace message)
 // 	logger.Debug("debug message")
 // 	logger.Info("info message")
 // 	logger.Warn("warning message")
@@ -34,7 +35,8 @@ import (
 
 // Logging level.
 const (
-	Debug = iota
+	Trace = iota
+	Debug
 	Info
 	Warn
 	Error
@@ -76,6 +78,8 @@ func getLevel(level string) int {
 	level = strings.ToLower(level)
 
 	switch level {
+	case "trace":
+		return Trace
 	case "debug":
 		return Debug
 	case "info":
@@ -96,7 +100,7 @@ func (l *Logger) SetLevel(level string) {
 
 // Trace prints trace level message.
 func (l *Logger) Trace(v ...interface{}) {
-	if Debug < l.level {
+	if Trace < l.level {
 		return
 	}
 
@@ -106,7 +110,7 @@ func (l *Logger) Trace(v ...interface{}) {
 
 // Tracef prints trace level message with format.
 func (l *Logger) Tracef(format string, v ...interface{}) {
-	if Debug < l.level {
+	if Trace < l.level {
 		return
 	}
 
