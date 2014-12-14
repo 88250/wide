@@ -15,6 +15,8 @@
 package session
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"math/rand"
 	"net/http"
@@ -117,11 +119,11 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.Workspace = args.Workspace
 	user.Password = args.Password
 	user.Email = args.Email
-    
-    hash := md5.New()
+
+	hash := md5.New()
 	hash.Write([]byte(user.Email))
-	user.Gravatar := hex.EncodeToString(hash.Sum(nil))
-    
+	user.Gravatar = hex.EncodeToString(hash.Sum(nil))
+
 	user.Locale = args.Locale
 	user.Theme = args.Theme
 	user.Editor.FontFamily = args.EditorFontFamily
