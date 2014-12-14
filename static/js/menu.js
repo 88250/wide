@@ -41,7 +41,7 @@ var menu = {
                     pic = 'http://wide.b3log.org/static/images/wide-logo.png';
             var urls = {};
             urls.email = "mailto:?subject=" + $('title').text() 
-                    + "body=" + $('meta[name=description]').attr('content') + ' ' + url;
+                    + "&body=" + $('meta[name=description]').attr('content') + ' ' + url;
             urls.twitter = "https://twitter.com/intent/tweet?status=" 
                     + $('meta[name=description]').attr('content') + " " + url;
             urls.facebook = "https://www.facebook.com/sharer/sharer.php?u=" + url;
