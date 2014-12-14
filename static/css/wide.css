@@ -282,6 +282,8 @@
 .menu img.gravatar {
     float: left;
     margin: 2px 8px;
+    height: 17px;
+    width: 17px;
 }
 
 #buildRun {

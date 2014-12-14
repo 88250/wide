@@ -111,3 +111,8 @@
 #dialogPreference .preference {
     margin-bottom: 10px;
 }
+
+#dialogPreference img.gravatar {
+    width: 48px;
+    height: 48px;
+}
