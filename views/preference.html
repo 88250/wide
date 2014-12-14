@@ -91,8 +91,9 @@
                 <input data-value="{{.user.Password}}" value="{{.user.Password}}" name="password" type="password"/>
             </label>
             <label class="fn-clear">
-                <img src="http://secure.gravatar.com/avatar/{{.user.Gravatar}}?s=48&d=http://symphony.b3log.org/images/user-thumbnail.png" 
-                     title="{{.user.Name}}"/>
+                <img onerror="this.src='/images/user-thumbnail.png'"
+                     src="https://secure.gravatar.com/avatar/{{.user.Gravatar}}?s=48&d=http://symphony.b3log.org/images/user-thumbnail.png" 
+                     title="{{.user.Name}}" class='gravatar'/>
                 <a href="http://gravatar.com/" target="_blank">{{.i18n.change_avatar}} Gravatar.com</a>
             </label>
         </div>
