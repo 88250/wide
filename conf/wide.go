@@ -17,6 +17,8 @@
 package conf
 
 import (
+	"crypto/md5"
+	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -59,6 +61,7 @@ type User struct {
 	Name                 string
 	Password             string
 	Email                string
+	Gravatar             string // see http://gravatar.com
 	Workspace            string // the GOPATH of this user
 	Locale               string
 	GoFormat             string
@@ -67,14 +70,6 @@ type User struct {
 	Theme                string
 	Editor               *Editor
 	LatestSessionContent *LatestSessionContent
-}
-
-// NewUser creates a user with the specified username, password, email and workspace.
-func NewUser(username, password, email, workspace string) *User {
-	return &User{Name: username, Password: password, Email: email, Workspace: workspace,
-		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
-		Editor: &Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", Theme: "wide",
-			TabSize: "4"}}
 }
 
 // Editor configuration of a user.
@@ -114,6 +109,107 @@ var rawWide conf
 
 // Logger.
 var logger = log.NewLogger(os.Stdout)
+
+// NewUser creates a user with the specified username, password, email and workspace.
+func NewUser(username, password, email, workspace string) *User {
+	hash := md5.New()
+	hash.Write([]byte(email))
+	gravatar := hex.EncodeToString(hash.Sum(nil))
+
+	return &User{Name: username, Password: password, Email: email, Gravatar: gravatar, Workspace: workspace,
+		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
+		Editor: &Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", Theme: "wide",
+			TabSize: "4"}}
+}
+
+// Load loads the configurations from wide.json.
+func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel string,
+	confDocker bool) {
+	bytes, _ := ioutil.ReadFile(confPath)
+
+	err := json.Unmarshal(bytes, &Wide)
+	if err != nil {
+		logger.Error("Parses wide.json error: ", err)
+
+		os.Exit(-1)
+	}
+
+	log.SetLevel(Wide.LogLevel)
+
+	// keep the raw content
+	json.Unmarshal(bytes, &rawWide)
+
+	logger.Debug("Conf: \n" + string(bytes))
+
+	// Working Driectory
+	Wide.WD = util.OS.Pwd()
+	logger.Debugf("${pwd} [%s]", Wide.WD)
+
+	// IP
+	ip, err := util.Net.LocalIP()
+	if err != nil {
+		logger.Error(err)
+
+		os.Exit(-1)
+	}
+
+	logger.Debugf("${ip} [%s]", ip)
+
+	if confDocker {
+		// TODO: may be we need to do something here
+	}
+
+	if "" != confIP {
+		ip = confIP
+	}
+
+	Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
+
+	if "" != confPort {
+		Wide.Port = confPort
+	}
+
+	// Server
+	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
+	if "" != confServer {
+		Wide.Server = confServer
+	}
+
+	// Logging Level
+	if "" != confLogLevel {
+		Wide.LogLevel = confLogLevel
+		log.SetLevel(confLogLevel)
+	}
+
+	// Static Server
+	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
+	if "" != confStaticServer {
+		Wide.StaticServer = confStaticServer
+	}
+
+	// Context
+	if "" != confContext {
+		Wide.Context = confContext
+	}
+
+	Wide.StaticResourceVersion = strings.Replace(Wide.StaticResourceVersion, "${time}", strconv.FormatInt(time.Now().UnixNano(), 10), 1)
+
+	// Channel
+	Wide.Channel = strings.Replace(Wide.Channel, "{IP}", Wide.IP, 1)
+	Wide.Channel = strings.Replace(Wide.Channel, "{Port}", Wide.Port, 1)
+	if "" != confChannel {
+		Wide.Channel = confChannel
+	}
+
+	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
+	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
+
+	// upgrade if need
+	upgrade()
+
+	initWorkspaceDirs()
+	initCustomizedConfs()
+}
 
 // FixedTimeCheckEnv checks Wide runtime enviorment periodically (7 minutes).
 //
@@ -252,95 +348,6 @@ func Save() bool {
 	return true
 }
 
-// Load loads the configurations from wide.json.
-func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel string,
-	confDocker bool) {
-	bytes, _ := ioutil.ReadFile(confPath)
-
-	err := json.Unmarshal(bytes, &Wide)
-	if err != nil {
-		logger.Error("Parses wide.json error: ", err)
-
-		os.Exit(-1)
-	}
-
-	log.SetLevel(Wide.LogLevel)
-
-	// keep the raw content
-	json.Unmarshal(bytes, &rawWide)
-
-	logger.Debug("Conf: \n" + string(bytes))
-
-	// Working Driectory
-	Wide.WD = util.OS.Pwd()
-	logger.Debugf("${pwd} [%s]", Wide.WD)
-
-	// IP
-	ip, err := util.Net.LocalIP()
-	if err != nil {
-		logger.Error(err)
-
-		os.Exit(-1)
-	}
-
-	logger.Debugf("${ip} [%s]", ip)
-
-	if confDocker {
-		// TODO: may be we need to do something here
-	}
-
-	if "" != confIP {
-		ip = confIP
-	}
-
-	Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
-
-	if "" != confPort {
-		Wide.Port = confPort
-	}
-
-	// Server
-	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
-	if "" != confServer {
-		Wide.Server = confServer
-	}
-
-	// Logging Level
-	if "" != confLogLevel {
-		Wide.LogLevel = confLogLevel
-		log.SetLevel(confLogLevel)
-	}
-
-	// Static Server
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
-	if "" != confStaticServer {
-		Wide.StaticServer = confStaticServer
-	}
-
-	// Context
-	if "" != confContext {
-		Wide.Context = confContext
-	}
-
-	Wide.StaticResourceVersion = strings.Replace(Wide.StaticResourceVersion, "${time}", strconv.FormatInt(time.Now().UnixNano(), 10), 1)
-
-	// Channel
-	Wide.Channel = strings.Replace(Wide.Channel, "{IP}", Wide.IP, 1)
-	Wide.Channel = strings.Replace(Wide.Channel, "{Port}", Wide.Port, 1)
-	if "" != confChannel {
-		Wide.Channel = confChannel
-	}
-
-	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
-
-	// upgrade if need
-	upgrade()
-
-	initWorkspaceDirs()
-	initCustomizedConfs()
-}
-
 // upgrade upgrades the wide.json.
 func upgrade() {
 	// Users
@@ -355,6 +362,14 @@ func upgrade() {
 
 		if "" == user.Editor.TabSize {
 			user.Editor.TabSize = "4" // since 1.1.0
+		}
+
+		if "" != user.Email && "" == user.Gravatar {
+			hash := md5.New()
+			hash.Write([]byte(user.Email))
+			gravatar := hex.EncodeToString(hash.Sum(nil))
+
+			user.Gravatar = gravatar
 		}
 	}
 
