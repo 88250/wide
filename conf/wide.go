@@ -118,8 +118,8 @@ func NewUser(username, password, email, workspace string) *User {
 
 	return &User{Name: username, Password: password, Email: email, Gravatar: gravatar, Workspace: workspace,
 		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
-		Editor: &Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", Theme: "wide",
-			TabSize: "4"}}
+		Editor: &Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",
+			Theme: "wide", TabSize: "4"}}
 }
 
 // Load loads the configurations from wide.json.
