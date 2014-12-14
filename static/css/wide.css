@@ -9,7 +9,7 @@
  *  
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * WITHOUT WARRANTIES OR CONDIT#buildRunIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */ 
@@ -288,14 +288,12 @@
 
 #buildRun {
     color: #6DB14C;
-    padding: 0px 3px 0 5px;
-    border-radius: 10px;
-    display: inline-block;
+    font-size: 19px;
 }
 
 #buildRun.ico-stop {
     color: #9d0000;
-    padding: 0 4px 0 4px;
+    font-size: 16px;
 }
 
 .share-panel {
