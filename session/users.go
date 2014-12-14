@@ -117,6 +117,11 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.Workspace = args.Workspace
 	user.Password = args.Password
 	user.Email = args.Email
+    
+    hash := md5.New()
+	hash.Write([]byte(user.Email))
+	user.Gravatar := hex.EncodeToString(hash.Sum(nil))
+    
 	user.Locale = args.Locale
 	user.Theme = args.Theme
 	user.Editor.FontFamily = args.EditorFontFamily
