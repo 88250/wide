@@ -19,11 +19,38 @@ var menu = {
         this.subMenu();
         this._initPreference();
         this._initAbout();
+        this._initShare();
 
         // 点击子菜单后消失
         $(".frame li").click(function () {
             $(this).closest(".frame").hide();
             $(".menu > ul > li > a, .menu > ul> li > span").removeClass("selected");
+        });
+
+
+    },
+    _initShare: function () {
+        $(".menu .ico-share").hover(function () {
+            $(".menu .share-panel").show();
+        });
+
+        $(".share-panel .font-ico").click(function () {
+            var key = $(this).attr('class').split('-')[2];
+            var title = encodeURIComponent($('title').text() + '. \n' + $('meta[name=description]').attr('content')),
+                    url = "http://wide.b3log.org",
+                    pic = 'http://wide.b3log.org/static/images/wide-logo.png';
+            var urls = {};
+            urls.email = "mailto:?subject=" + $('title').text() 
+                    + "body=" + $('meta[name=description]').attr('content') + ' ' + url;
+            urls.twitter = "https://twitter.com/intent/tweet?status=" 
+                    + $('meta[name=description]').attr('content') + " " + url;
+            urls.facebook = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+            urls.googleplus = "https://plus.google.com/share?url=" + url;
+            urls.weibo = "http://v.t.sina.com.cn/share/share.php?title=" +
+                    title + "&url=" + url + "&pic=" + pic;
+            urls.tencent = "http://share.v.t.qq.com/index.php?c=share&a=index&title=" + title +
+                    "&url=" + url + "&pic=" + pic;
+            window.open(urls[key], "_blank", "top=100,left=200,width=648,height=618");
         });
     },
     _initAbout: function () {

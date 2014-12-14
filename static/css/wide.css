@@ -36,6 +36,38 @@
     line-height: 20px;
 }
 
+.ico-share:before {
+    content: "\e61f";
+}
+
+.ico-github:before {
+    content: "\f00a";
+}
+
+.ico-tencent:before {
+    content: "\e622";
+}
+
+.ico-weibo:before {
+    content: "\e621";
+}
+
+.ico-googleplus:before {
+    content: "\e61a";
+}
+
+.ico-twitter:before {
+    content: "\e61c";
+}
+
+.ico-email:before {
+    content: "\e619";
+}
+
+.ico-facebook:before {
+    content: "\e61b";
+}
+
 .ico-moveup:before {
     content: "\f148";
 }
@@ -247,6 +279,11 @@
     margin: 0 5px 0 0px
 }
 
+.menu img.gravatar {
+    float: left;
+    margin: 2px 8px;
+}
+
 #buildRun {
     color: #6DB14C;
     padding: 0px 3px 0 5px;
@@ -257,6 +294,25 @@
 #buildRun.ico-stop {
     color: #9d0000;
     padding: 0 4px 0 4px;
+}
+
+.share-panel {
+    position: absolute;
+    z-index: 20;
+    width: 226px;
+    padding: 5px 0;
+    right: 0px;
+}
+
+.share-panel .font-ico {
+    font-size: 20px;
+    transition:all .2s ease-out 0s;
+    margin: 0 5px;
+    width: 24px;
+}
+
+.share-panel .font-ico:hover {
+    transform:rotate(360deg);
 }
 /* end menu */
 

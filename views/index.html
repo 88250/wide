@@ -7,6 +7,7 @@
         <meta name="keywords" content="Wide, Golang, IDE, Teaam, Cloud, B3log"/>
         <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
         <meta name="author" content="B3log">
+        <meta property="og:description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
@@ -341,7 +342,25 @@
                     </div>                    
                 </li>
             </ul>
+            <span class="split"></span>
             <span id="buildRun" onclick="menu.run()" class="font-ico ico-buildrun" title="{{.i18n.build_n_run}}"></span>
+
+            <div class="fn-right">
+                <img class="gravatar"
+                     src="http://secure.gravatar.com/avatar/{{.user.Gravatar}}?s=17&d=http://symphony.b3log.org/images/user-thumbnail.png" 
+                     title="{{.user.Name}}"/>
+                <span class="font-ico ico-share"></span> &nbsp;
+                <span onclick="window.open('https://github.com/b3log/wide')"
+                      class="font-ico ico-github"></span>&nbsp;
+                <div class="share-panel frame">
+                    <span title="Email" class="font-ico ico-email"></span>
+                    <span title="Twitter" class="font-ico ico-twitter"></span>
+                    <span title="Facebook" class="font-ico ico-facebook"></span>
+                    <span title="G+" class="font-ico ico-googleplus"></span>
+                    <span title="微博" class="font-ico ico-weibo"></span>
+                    <span title="腾讯微博" class="font-ico ico-tencent"></span>
+                </div>
+            </div>
         </div>
 
         <div class="content">
@@ -519,7 +538,7 @@
         <script>
                     var config = {
                     "context": {{.conf.Context}},
-                            "staticServer": {{.conf.StaticServer}},
+                            "staticServer": '{{.conf.StaticServer}}',
                             "pathSeparator": '{{.pathSeparator}}',
                             "label": {
                             "restore_editor": "{{.i18n.restore_editor}}",

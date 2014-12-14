@@ -57,6 +57,19 @@ ul {
     box-sizing: border-box;
 }
 
+a {
+    color: #4183c4;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+img {
+    vertical-align: middle;
+}
+
 input,
 button {
     font-family: Helvetica;
