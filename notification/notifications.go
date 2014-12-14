@@ -109,7 +109,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.NotificationWS[sid] = &wsChan
 
-	logger.Debugf("Open a new [Notification] with session [%s], %d", sid, len(session.NotificationWS))
+	logger.Tracef("Open a new [Notification] with session [%s], %d", sid, len(session.NotificationWS))
 
 	// add user event handler
 	wSession.EventQueue.AddHandler(event.HandleFunc(event2Notification))

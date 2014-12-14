@@ -94,6 +94,26 @@ func (l *Logger) SetLevel(level string) {
 	l.level = getLevel(level)
 }
 
+// Trace prints trace level message.
+func (l *Logger) Trace(v ...interface{}) {
+	if Debug < l.level {
+		return
+	}
+
+	l.logger.SetPrefix("T ")
+	l.logger.Output(2, fmt.Sprint(v...))
+}
+
+// Tracef prints trace level message with format.
+func (l *Logger) Tracef(format string, v ...interface{}) {
+	if Debug < l.level {
+		return
+	}
+
+	l.logger.SetPrefix("T ")
+	l.logger.Output(2, fmt.Sprintf(format, v...))
+}
+
 // IsDebugEnabled determines whether the debug level is enabled.
 func (l *Logger) IsDebugEnabled() bool {
 	return l.level <= Debug

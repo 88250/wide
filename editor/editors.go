@@ -61,7 +61,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.EditorWS[sid] = &editorChan
 
-	logger.Infof("Open a new [Editor] with session [%s], %d", sid, len(session.EditorWS))
+	logger.Tracef("Open a new [Editor] with session [%s], %d", sid, len(session.EditorWS))
 
 	args := map[string]interface{}{}
 	for {
@@ -75,7 +75,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		offset := getCursorOffset(code, line, ch)
 
-		// logger.Infof("offset: %d", offset)
+		// logger.Debugf("offset: %d", offset)
 
 		gocode := util.Go.GetExecutableInGOBIN("gocode")
 		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}

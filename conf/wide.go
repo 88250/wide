@@ -233,7 +233,7 @@ func checkEnv() {
 
 		os.Exit(-1)
 	}
-	logger.Debug(string(buf))
+	logger.Trace(string(buf))
 
 	if "" == os.Getenv("GOPATH") {
 		logger.Error("Not found $GOPATH, please configure it before running Wide")

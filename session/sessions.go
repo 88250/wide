@@ -177,7 +177,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		wSession = WideSessions.New(httpSession, sid)
 
-		logger.Debugf("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
+		logger.Tracef("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
 	}
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
@@ -191,14 +191,13 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	SessionWS[sid] = &wsChan
 
-	logger.Debugf("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
+	logger.Tracef("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
 
 	input := map[string]interface{}{}
 
 	for {
 		if err := wsChan.ReadJSON(&input); err != nil {
-			logger.Debugf("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]",
-				sid, wSession.Username)
+			logger.Tracef("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]", sid, wSession.Username)
 
 			WideSessions.Remove(sid)
 

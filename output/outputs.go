@@ -69,7 +69,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	session.OutputWS[sid] = &wsChan
 
-	logger.Debugf("Open a new [Output] with session [%s], %d", sid, len(session.OutputWS))
+	logger.Tracef("Open a new [Output] with session [%s], %d", sid, len(session.OutputWS))
 }
 
 // RunHandler handles request of executing a binary file.
@@ -362,7 +362,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		logger.Debugf("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
+		// logger.Debugf("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
@@ -454,7 +454,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if nil != session.OutputWS[sid] {
-			logger.Debugf("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
+			// logger.Debugf("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
 
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)

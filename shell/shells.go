@@ -70,7 +70,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	wideSessions := session.WideSessions.GetByUsername(username)
 
-	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
+	logger.Tracef("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("views/shell.html")
 
