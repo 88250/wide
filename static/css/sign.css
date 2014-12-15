@@ -65,7 +65,7 @@
 
 .content .form {
     width: 320px;
-    margin-top: 28px;
+    margin-top: -18px;
     position: relative;
 }
 
@@ -159,6 +159,10 @@
 }
 
 #signUpBtn {
+    margin-top: 20px;
+}
+
+#loginBtn {
     margin-top: 20px;
 }
 /* end sign up */

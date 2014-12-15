@@ -31,6 +31,7 @@
                     <div id="msg" class="fn-none"></div>
                     <input id="username" placeholder="Username"/><br/>
                     <input id="password" type="password" placeholder="Password"/><br/>
+                    <button id="loginBtn" class="button">{{.i18n.login}}</button>
                 </div>
             </div>
         </div>
@@ -48,21 +49,24 @@
             .css("padding-top", (contentH - $(".content .fn-left").height()) / 2 + "px");
 
     var login = function () {
-        if ($.trim($("#username").val()) === "") {
+        var username = $.trim($("#username").val());
+        var password = $.trim($("#password").val());
+        
+        if (username === "") {
             $("#msg").text("{{.i18n.login_error}}").show();
             $("#username").focus();
             return false;
-        } else if ($.trim($("#password").val()) === "") {
+        } else if (password === "") {
             $("#msg").text("{{.i18n.login_error}}").show();
             $("#password").focus();
             return false;
         }
 
         var request = {
-            username: $("#username").val(),
-            password: $("#password").val()
+            username: username,
+            password: password
         };
-        
+
         $.ajax({
             type: 'POST',
             url: '/login',
@@ -102,6 +106,10 @@
         } else {
             $("#msg").hide();
         }
+    });
+
+    $("#loginBtn").click(function () {
+        login();
     });
 })();
         </script>        
