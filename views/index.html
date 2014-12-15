@@ -35,7 +35,7 @@
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
     <body>
-        <!-- 主菜单 -->
+        <!-- menu bar -->
         <div class="menu fn-clear">
             <ul class="fn-cleaer">
                 <li>
@@ -376,7 +376,7 @@
                     <div data-index="filreTree">
                         <ul id="files" tabindex="-1" class="ztree"></ul>
                         <input id="importFileupload" type="file" name="files[]" style="display: none;" onclick="tree.import();" multiple>
-                        <!-- 目录右键菜单 -->
+                        <!-- directory context menu -->
                         <div id="dirRMenu" class="frame">
                             <ul>
                                 <li class="create" onclick="tree.newFile(this);">
@@ -404,9 +404,12 @@
                             </ul>
                         </div>
 
-                        <!-- 文件右键菜单 -->
+                        <!-- file context menu -->
                         <div id="fileRMenu" class="frame">
                             <ul>
+                                <li class="open" onclick="tree.openFile(wide.curNode);">
+                                    <span class="space"></span> {{.i18n.open}}
+                                </li>
                                 <li class="remove" onclick="tree.removeIt(this);">
                                     <span class="ico-remove font-ico"></span> {{.i18n.delete}}
                                 </li>

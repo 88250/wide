@@ -105,6 +105,7 @@ var tree = {
         if (wide.curNode.iconSkin.indexOf("ico-ztree-dir") === 0) {
             return true;
         }
+        
         return false;
     },
     newFile: function (it) {
@@ -127,11 +128,11 @@ var tree = {
                 return false;
             }
         } else {
-            // 直接调用时，如果为 api 及其子目录或者 workspace 则不能进行删除
             if (!wide.curNode.removable) {
                 return false;
             }
         }
+        
         $("#dialogRemoveConfirm").dialog("open");
     },
     rename: function (it) {
@@ -140,6 +141,7 @@ var tree = {
                 return false;
             }
         }
+        
         $("#dialogRenamePrompt").dialog("open");
     },
     export: function (it) {
