@@ -63,7 +63,7 @@ var menu = {
                 "hideFooter": true,
                 "afterOpen": function () {
                     $.ajax({
-                        url: "http://rhythm.b3log.org/version/wide/latest",
+                        url: "https://rhythm.b3log.org/version/wide/latest",
                         type: "GET",
                         dataType: "jsonp",
                         jsonp: "callback",

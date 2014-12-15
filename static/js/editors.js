@@ -267,8 +267,8 @@ var editors = {
             content: '<div id="startPage"></div>',
             after: function () {
                 $("#startPage").load(config.context + '/start?sid=' + config.wideSessionId);
-               /* $.ajax({
-                    url: "http://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=30",
+                $.ajax({
+                    url: "https://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=30",
                     type: "GET",
                     dataType: "jsonp",
                     jsonp: "callback",
@@ -297,7 +297,7 @@ var editors = {
 
                         $("#startPage .news").html(listHTML + "</ul>");
                     }
-                });*/
+                });
             }
         });
     },
