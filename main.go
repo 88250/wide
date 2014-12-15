@@ -398,7 +398,7 @@ func stopwatch(handler func(w http.ResponseWriter, r *http.Request)) func(w http
 		start := time.Now()
 
 		defer func() {
-			logger.Tracef("[%s, %s, %s]", r.RequestURI, time.Since(start), r.Method)
+			logger.Tracef("[%s, %s, %s]", r.Method, r.RequestURI, time.Since(start))
 		}()
 
 		handler(w, r)
