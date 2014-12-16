@@ -45,7 +45,7 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 * [ ] Debug
 * [ ] Git integration: git command on the web
 
-## Demos
+## Screenshots
 
 * **Overview**
   ![Overview](https://cloud.githubusercontent.com/assets/873584/5450620/1d51831e-8543-11e4-930b-670871902425.png)
