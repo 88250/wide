@@ -200,7 +200,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	logger.Infof("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
+	logger.Debugf("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
 }
 
 // LogoutHandler handles request of user logout (exit).
