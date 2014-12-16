@@ -204,10 +204,11 @@ var wide = {
                     tree.openFile(tree.fileTree.getNodeByTId(tId));
                     tree.fileTree.selectNode(wide.curNode);
                     $("#dialogGoFilePrompt").dialog("close");
+                     wide.curEditor.focus();
                 });
 
                 $("#dialogGoFilePrompt").on("click", "li", function () {
-                    var $list = $("#dialogGoFilePrompt > .list")
+                    var $list = $("#dialogGoFilePrompt > .list");
                     $list.find("li").removeClass("selected");
                     $list.data("index", $(this).data("index"));
                     $(this).addClass("selected");
@@ -218,6 +219,7 @@ var wide = {
                     tree.openFile(tree.fileTree.getNodeByTId(tId));
                     tree.fileTree.selectNode(wide.curNode);
                     $("#dialogGoFilePrompt").dialog("close");
+                    wide.curEditor.focus();
                 });
 
                 $("#dialogGoFilePrompt > input").bind("input", function () {
@@ -274,6 +276,7 @@ var wide = {
                 tree.openFile(tree.fileTree.getNodeByTId(tId));
                 tree.fileTree.selectNode(wide.curNode);
                 $("#dialogGoFilePrompt").dialog("close");
+                wide.curEditor.focus();
             }
         });
 
