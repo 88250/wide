@@ -118,9 +118,19 @@ func (l *Logger) Tracef(format string, v ...interface{}) {
 	l.logger.Output(2, fmt.Sprintf(format, v...))
 }
 
+// IsTraceEnabled determines whether the trace level is enabled.
+func (l *Logger) IsTraceEnabled() bool {
+	return l.level <= Trace
+}
+
 // IsDebugEnabled determines whether the debug level is enabled.
 func (l *Logger) IsDebugEnabled() bool {
 	return l.level <= Debug
+}
+
+// IsWarnEnabled determines whether the debug level is enabled.
+func (l *Logger) IsWarnEnabled() bool {
+	return l.level <= Warn
 }
 
 // Debug prints debug level message.

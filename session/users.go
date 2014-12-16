@@ -171,7 +171,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		logger.Error(err)
+		logger.Error("login error: ", err)
 		succ = false
 
 		return
