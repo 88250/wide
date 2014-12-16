@@ -48,9 +48,17 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 ## Demos
 
 * **Overview**
-  ![overview](https://cloud.githubusercontent.com/assets/873584/5354274/9cfe742e-7fc0-11e4-8474-04a16e9b52e1.gif)
+  ![Overview](https://cloud.githubusercontent.com/assets/873584/5450620/1d51831e-8543-11e4-930b-670871902425.png)
+* **Goto File**
+  ![Goto File](https://cloud.githubusercontent.com/assets/873584/5450616/1d495da6-8543-11e4-9285-f9d9c60779ac.png)
+* **Autocomplete**
+  ![Autocomplete](https://cloud.githubusercontent.com/assets/873584/5450619/1d4d5712-8543-11e4-8fe4-35dbc8348a6e.png)
 * **Theme**
-  ![theme](https://cloud.githubusercontent.com/assets/873584/5354273/9c5215f8-7fc0-11e4-9f07-49d3d32ecb7f.gif)
+  ![4](https://cloud.githubusercontent.com/assets/873584/5450617/1d4c0826-8543-11e4-8b86-f79a4e41550a.png)
+* **Show Expression Info**
+  ![Show Expression Info](https://cloud.githubusercontent.com/assets/873584/5450618/1d4cd9f4-8543-11e4-950f-121bd3ff4a39.png)
+* **Build Error Info**
+  ![Build Error Info](https://cloud.githubusercontent.com/assets/873584/5450632/3e51cccc-8543-11e4-8ca8-8d2427aa16b8.png)
 
 ## Architecture 
 
