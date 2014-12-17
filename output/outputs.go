@@ -28,6 +28,7 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -95,6 +96,16 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	cmd := exec.Command(filePath)
 	cmd.Dir = curDir
+	// XXX: keep move with Go 1.4 and later's
+	cmd.SysProcAttr = &syscall.SysProcAttr{}
+	cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET
+	cmd.SysProcAttr.Credential = &syscall.Credential{
+		Uid: 1001, // user: wide_runner
+		Gid: 1001, // gourp: wide_runner
+	}
+
+	cmd.SysProcAttr.UidMappings = []syscall.SysProcIDMap{{ContainerID: 1001, HostID: 1000, Size: 1}}
+	cmd.SysProcAttr.GidMappings = []syscall.SysProcIDMap{{ContainerID: 1001, HostID: 1000, Size: 1}}
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
