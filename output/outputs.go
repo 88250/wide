@@ -114,8 +114,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		Gid: 1001,
 	}
 
-	cmd.SysProcAttr.UidMappings = []syscall.SysProcIDMap{{ContainerID: 1001, HostID: 1000, Size: 1}}
-	cmd.SysProcAttr.GidMappings = []syscall.SysProcIDMap{{ContainerID: 1001, HostID: 1000, Size: 1}}
+	cmd.SysProcAttr.UidMappings = []syscall.SysProcIDMap{{ContainerID: 1001, HostID: 1001, Size: 1}}
+	cmd.SysProcAttr.GidMappings = []syscall.SysProcIDMap{{ContainerID: 1001, HostID: 1001, Size: 1}}
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
