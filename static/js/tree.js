@@ -249,8 +249,12 @@ var tree = {
                                             $fileRMenu.find(".remove").addClass("disabled");
                                         }
 
+                                        var top = event.clientY - 10;
+                                        if ($fileRMenu.height() + top > $('.content').height()) {
+                                            top = top - $fileRMenu.height() - 25;
+                                        }
                                         $fileRMenu.css({
-                                            "top": event.clientY - 10 + "px",
+                                            "top": top + "px",
                                             "left": event.clientX + "px",
                                             "display": "block"
                                         }).show();
@@ -269,8 +273,13 @@ var tree = {
                                             $dirRMenu.find(".create").addClass("disabled");
                                         }
 
+                                        var top = event.clientY - 10;
+                                        if ($dirRMenu.height() + top > $('.content').height()) {
+                                            top = top - $dirRMenu.height() - 25;
+                                        }
+
                                         $dirRMenu.css({
-                                            "top": event.clientY - 10 + "px",
+                                            "top": top + "px",
                                             "left": event.clientX + "px",
                                             "display": "block"
                                         }).show();
