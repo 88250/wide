@@ -145,10 +145,12 @@ var tree = {
         $("#dialogRenamePrompt").dialog("open");
     },
     export: function () {
-        var request = newWideRequest();
+        var request = newWideRequest(),
+                isSucc = false;
         request.path = wide.curNode.path;
 
         $.ajax({
+            async: false,
             type: 'POST',
             url: config.context + '/file/zip/new',
             data: JSON.stringify(request),
@@ -160,9 +162,13 @@ var tree = {
                     return false;
                 }
 
-                window.open(config.context + '/file/zip?path=' + wide.curNode.path + '.zip');
+                isSucc = true;
             }
         });
+
+        if (isSucc) {
+            window.open(config.context + '/file/zip?path=' + wide.curNode.path + ".zip");
+        }
     },
     refresh: function (it) {
         if (it) {

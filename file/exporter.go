@@ -43,7 +43,7 @@ func GetZip(w http.ResponseWriter, r *http.Request) {
 	filename := filepath.Base(path)
 
 	w.Header().Set("Content-Disposition", "attachment; filename="+filename)
-	w.Header().Set("Content-type", "application/zip")
+	w.Header().Set("Content-Type", "application/zip")
 	http.ServeFile(w, r, path)
 
 	os.Remove(path)
