@@ -18,7 +18,6 @@ package output
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -94,15 +93,6 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["executable"].(string)
 	curDir := filepath.Dir(filePath)
-
-	cmd1 := exec.Command("cat", "/etc/passwd")
-	output, err := cmd1.Output()
-	if nil != err {
-		fmt.Println("err")
-		fmt.Println(err)
-	}
-
-	fmt.Println(string(output))
 
 	cmd := exec.Command(filePath)
 	cmd.Dir = curDir
