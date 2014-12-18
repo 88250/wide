@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- */ 
+ */
 
 var windows = {
     isMaxEditor: false,
@@ -74,10 +74,9 @@ var windows = {
                     || $(event.target).closest(".bottom-window-group").length === 1
                     || $(event.target).closest(".toolbars").length === 1
                     || $(event.target).closest(".side").length === 1) {
-                return false;
+            } else {
+                windows.clearFloat();
             }
-
-            windows.clearFloat();
         });
     },
     maxBottom: function () {
