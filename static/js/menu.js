@@ -36,20 +36,23 @@ var menu = {
 
         $(".share-panel .font-ico").click(function () {
             var key = $(this).attr('class').split('-')[2];
-            var title = encodeURIComponent($('title').text() + '. \n' + $('meta[name=description]').attr('content')),
-                    url = "https://wide.b3log.org",
-                    pic = 'https://wide.b3log.org/static/images/wide-logo.png';
+            var url = "https://wide.b3log.org", pic = 'https://wide.b3log.org/static/images/wide-logo.png';
             var urls = {};
-            urls.email = "mailto:?subject=" + $('title').text() 
+            urls.email = "mailto:?subject=" + $('title').text()
                     + "&body=" + $('meta[name=description]').attr('content') + ' ' + url;
-            urls.twitter = "https://twitter.com/intent/tweet?status=" 
-                    + $('meta[name=description]').attr('content') + " " + url + " #golang";
+
+            var twitterShare = encodeURIComponent($('meta[name=description]').attr('content') + " " + url + " #golang");
+            urls.twitter = "https://twitter.com/intent/tweet?status=" + twitterShare;
+
             urls.facebook = "https://www.facebook.com/sharer/sharer.php?u=" + url;
-            urls.googleplus = "https://plus.google.com/share?url=" + url + " +golang";
-            urls.weibo = "http://v.t.sina.com.cn/share/share.php?title=" +
-                    title + "&url=" + url + "&pic=" + pic;
+            urls.googleplus = "https://plus.google.com/share?url=" + url;
+
+            var title = encodeURIComponent($('title').text() + '. \n' + $('meta[name=description]').attr('content')
+                    + " #golang#");
+            urls.weibo = "http://v.t.sina.com.cn/share/share.php?title=" + title + "&url=" + url + "&pic=" + pic;
             urls.tencent = "http://share.v.t.qq.com/index.php?c=share&a=index&title=" + title +
                     "&url=" + url + "&pic=" + pic;
+            
             window.open(urls[key], "_blank", "top=100,left=200,width=648,height=618");
         });
     },
