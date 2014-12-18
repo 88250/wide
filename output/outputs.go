@@ -54,11 +54,6 @@ type Lint struct {
 	Msg      string `json:"msg"`
 }
 
-// namespace sets a namespace for child process, namespace just works on Linux.
-type namespace interface {
-	set(cmd *exec.Cmd)
-}
-
 // WSHandler handles request of creating output channel.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
@@ -102,9 +97,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	cmd.Dir = curDir
 
 	if conf.Docker {
-		var ns namespace
-
-		ns.set(cmd)
+		setNamespace(cmd)
 	}
 
 	stdout, err := cmd.StdoutPipe()
