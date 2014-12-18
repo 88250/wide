@@ -12,29 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package util
+package output
 
 import (
-	"os"
 	"os/exec"
-	"path/filepath"
-	"runtime"
 )
 
-type myos struct{}
-
-// OS utilities.
-var OS = myos{}
-
-// IsWindows determines whether current OS is Windows.
-func (*myos) IsWindows() bool {
-	return "windows" == runtime.GOOS
+type linuxNS struct {
 }
 
-// Pwd gets the path of current working directory.
-func (*myos) Pwd() string {
-	file, _ := exec.LookPath(os.Args[0])
-	pwd, _ := filepath.Abs(file)
+func (*linuxNS) set(cmd *exec.Cmd) {
+	// XXX: keep move with Go 1.4 and later's
 
-	return filepath.Dir(pwd)
+	cmd.SysProcAttr = &syscall.SysProcAttr{}
+	cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET
+	cmd.SysProcAttr.Credential = &syscall.Credential{
+		Uid: 0,
+		Gid: 0,
+	}
+
+	cmd.SysProcAttr.UidMappings = []syscall.SysProcIDMap{{ContainerID: 0, HostID: 1001, Size: 1}}
+	cmd.SysProcAttr.GidMappings = []syscall.SysProcIDMap{{ContainerID: 0, HostID: 1001, Size: 1}}
 }

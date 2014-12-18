@@ -28,7 +28,6 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -53,6 +52,11 @@ type Lint struct {
 	LineNo   int    `json:"lineNo"`
 	Severity string `json:"severity"`
 	Msg      string `json:"msg"`
+}
+
+// namespace sets a namespace for child process, namespace just works on Linux.
+type namespace interface {
+	set(cmd *exec.Cmd)
 }
 
 // WSHandler handles request of creating output channel.
@@ -96,16 +100,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	cmd := exec.Command(filePath)
 	cmd.Dir = curDir
-	// XXX: keep move with Go 1.4 and later's
-	cmd.SysProcAttr = &syscall.SysProcAttr{}
-	cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET
-	cmd.SysProcAttr.Credential = &syscall.Credential{
-		Uid: 0,
-		Gid: 0,
-	}
 
-	cmd.SysProcAttr.UidMappings = []syscall.SysProcIDMap{{ContainerID: 0, HostID: 1001, Size: 1}}
-	cmd.SysProcAttr.GidMappings = []syscall.SysProcIDMap{{ContainerID: 0, HostID: 1001, Size: 1}}
+	if conf.Docker {
+		var ns namespace
+
+		ns.set(cmd)
+	}
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {

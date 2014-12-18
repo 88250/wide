@@ -110,6 +110,9 @@ var rawWide conf
 // Logger.
 var logger = log.NewLogger(os.Stdout)
 
+// Indicates whether runs via Docker.
+var Docker bool
+
 // NewUser creates a user with the specified username, password, email and workspace.
 func NewUser(username, password, email, workspace string) *User {
 	hash := md5.New()
@@ -155,9 +158,7 @@ func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer
 
 	logger.Debugf("${ip} [%s]", ip)
 
-	if confDocker {
-		// TODO: may be we need to do something here
-	}
+	Docker = confDocker
 
 	if "" != confIP {
 		ip = confIP
