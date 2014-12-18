@@ -42,7 +42,7 @@
                     <span>{{.i18n.file}}</span>
                     <div class="frame">
                         <ul>     
-                            <li class="save-all disabled" onclick="menu.saveAllFiles()">
+                            <li class="save-all disabled" onclick="if (!$(this).hasClass('disabled')){menu.saveAllFiles()}">
                                 <span class="font-ico ico-save"></span>
                                 <span>{{.i18n.save_all_files}}</span>
                                 <span class="fn-right ft-small">Shift-Ctrl-S</span>
@@ -50,6 +50,13 @@
                             <li class="close-all" onclick="menu.closeAllFiles()">
                                 <span class="space"></span>
                                 <span>{{.i18n.close_all_files}}</span>
+                            </li>
+                            <li class="hr"></li>
+                            <li class="disabled import" onclick="if (!$(this).hasClass('disabled')){$('#importFileupload').click();}">
+                                <span class="ico-import font-ico"></span> {{.i18n.import}}
+                            </li>
+                            <li class="disabled export" onclick="if (!$(this).hasClass('disabled')){tree.export(this);}">
+                                <span class="ico-export font-ico"></span> {{.i18n.export}}
                             </li>
                             <li class="hr"></li>
                             <li onclick="menu.exit()">
@@ -259,27 +266,27 @@
                     <span>{{.i18n.run}}</span>
                     <div class="frame">
                         <ul>
-                            <li class="build disabled" onclick="menu.build()">
+                            <li class="build disabled" onclick="if (!$(this).hasClass('disabled')){menu.build()}">
                                 <span class="font-ico ico-build"></span>
                                 <span>{{.i18n.build}}</span>
                                 <span class="fn-right ft-small">F5</span>
                             </li>
-                            <li class="run disabled" onclick="menu.run()">
+                            <li class="run disabled" onclick="if (!$(this).hasClass('disabled')){menu.run()}">
                                 <span class="font-ico ico-buildrun"></span>
                                 <span>{{.i18n.build_n_run}}</span>
                                 <span class="fn-right ft-small">F6</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="go-test disabled" onclick="menu.test()">
+                            <li class="go-test disabled" onclick="if (!$(this).hasClass('disabled')){menu.test()}">
                                 <span class="space"></span>
                                 <span>{{.i18n.test}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="go-get disabled" onclick="menu.goget()">
+                            <li class="go-get disabled" onclick="if (!$(this).hasClass('disabled')){menu.goget()}">
                                 <span class="space"></span>
                                 <span>{{.i18n.goget}}</span>
                             </li>
-                            <li class="go-install disabled" onclick="menu.goinstall()">
+                            <li class="go-install disabled" onclick="if (!$(this).hasClass('disabled')){menu.goinstall()}">
                                 <span class="space"></span>
                                 <span>{{.i18n.goinstall}}</span>
                             </li>      

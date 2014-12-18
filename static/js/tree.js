@@ -105,7 +105,7 @@ var tree = {
         if (wide.curNode.iconSkin.indexOf("ico-ztree-dir") === 0) {
             return true;
         }
-        
+
         return false;
     },
     newFile: function (it) {
@@ -132,7 +132,7 @@ var tree = {
                 return false;
             }
         }
-        
+
         $("#dialogRemoveConfirm").dialog("open");
     },
     rename: function (it) {
@@ -141,7 +141,7 @@ var tree = {
                 return false;
             }
         }
-        
+
         $("#dialogRenamePrompt").dialog("open");
     },
     export: function (it) {
@@ -237,6 +237,8 @@ var tree = {
                             },
                             onRightClick: function (event, treeId, treeNode) {
                                 if (treeNode) {
+                                    menu.undisabled(['import', 'export']);
+
                                     wide.curNode = treeNode;
                                     tree.fileTree.selectNode(treeNode);
 
@@ -252,6 +254,8 @@ var tree = {
                                             "left": event.clientX + "px",
                                             "display": "block"
                                         }).show();
+
+                                        menu.disabled(['import']);
                                     } else { // 右击了目录
                                         if (wide.curNode.removable) {
                                             $dirRMenu.find(".remove").removeClass("disabled");
@@ -278,6 +282,12 @@ var tree = {
                                 if (treeNode) {
                                     wide.curNode = treeNode;
                                     tree.fileTree.selectNode(treeNode);
+
+                                    menu.undisabled(['import', 'export']);
+                                    if (!tree.isDir()) { // 如果右击了文件
+                                        menu.disabled(['import']);
+                                    }
+
                                     $("#files").focus();
                                 }
                             }
