@@ -156,7 +156,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 		libPath += userLib + conf.PathListSeparator
 	}
 
-	logger.Debugf("gocode set lib-path [%s]", libPath)
+	logger.Tracef("gocode set lib-path [%s]", libPath)
 
 	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
 	gocode := util.Go.GetExecutableInGOBIN("gocode")
