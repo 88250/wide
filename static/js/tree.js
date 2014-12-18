@@ -166,7 +166,7 @@ var tree = {
                     return false;
                 }
 
-                window.open(config.context + '/file/zip?path=' + wide.curNode.path + '.zip');
+                window.location.href = config.context + '/file/zip?path=' + wide.curNode.path + '.zip';
             }
         });
     },
