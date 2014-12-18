@@ -3,7 +3,7 @@ MAINTAINER Liang Ding <dl88250@gmail.com>
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
 
-RUN useradd runner
+RUN useradd wide && useradd runner
 
 ENV GOROOT /usr/src/go
 ENV GOPATH /wide/gogogo
