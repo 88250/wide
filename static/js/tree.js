@@ -144,13 +144,7 @@ var tree = {
 
         $("#dialogRenamePrompt").dialog("open");
     },
-    export: function (it) {
-        if (it) {
-            if ($(it).hasClass("disabled")) {
-                return false;
-            }
-        }
-
+    export: function () {
         var request = newWideRequest();
         request.path = wide.curNode.path;
 
@@ -179,13 +173,7 @@ var tree = {
 
         tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh", true);
     },
-    import: function (it) {
-        if (it) {
-            if ($(it).hasClass("disabled")) {
-                return false;
-            }
-        }
-
+    import: function () {
         var request = newWideRequest();
         request.path = wide.curNode.path;
 
@@ -195,6 +183,9 @@ var tree = {
             formData: request,
             done: function (e, data) {
                 tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
+            },
+            fail: function () {
+                console.log(arguments);
             }
         });
     },

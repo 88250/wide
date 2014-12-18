@@ -382,7 +382,8 @@
                 <div class="tabs-panel">
                     <div data-index="filreTree">
                         <ul id="files" tabindex="-1" class="ztree"></ul>
-                        <input id="importFileupload" type="file" name="files[]" style="display: none;" onclick="tree.import();" multiple>
+                        <input id="importFileupload" class="fn-none" type="file"
+                               name="files[]" onclick="tree.import();" multiple>
                         <!-- directory context menu -->
                         <div id="dirRMenu" class="frame">
                             <ul>
@@ -405,7 +406,7 @@
                                 <li onclick="$('#importFileupload').click();">
                                     <span class="ico-import font-ico"></span> {{.i18n.import}}
                                 </li>
-                                <li onclick="tree.export(this);">
+                                <li onclick="tree.export();">
                                     <span class="ico-export font-ico"></span> {{.i18n.export}}
                                 </li>
                             </ul>
@@ -639,7 +640,7 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify-html.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify-css.js?{{.conf.StaticResourceVersion}}"></script>
 
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/zeroclipboard/ZeroClipboard.min.js?{{.conf.StaticResourceVersion}}"></script>
+        <!--script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/zeroclipboard/ZeroClipboard.min.js?{{.conf.StaticResourceVersion}}"></script-->
 
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/vendor/jquery.ui.widget.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.iframe-transport.js?{{.conf.StaticResourceVersion}}"></script>
