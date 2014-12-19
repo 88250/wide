@@ -36,6 +36,18 @@
     line-height: 20px;
 }
 
+.ico-book:before {
+    content: "\e623";
+}
+
+.ico-price:before {
+    content: "\e616";
+}
+
+.ico-start:before {
+    content: "\e9d7";
+}
+
 .ico-share:before {
     content: "\e61f";
 }

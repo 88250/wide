@@ -52,10 +52,10 @@
                                 <span>{{.i18n.close_all_files}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="disabled import" onclick="if (!$(this).hasClass('disabled')){$('#importFileupload').click();}">
+                            <li class="disabled import" onclick="if (!$(this).hasClass('disabled')){$('#importFileupload').click(); }">
                                 <span class="ico-import font-ico"></span> {{.i18n.import}}
                             </li>
-                            <li class="disabled export" onclick="if (!$(this).hasClass('disabled')){tree.export(this);}">
+                            <li class="disabled export" onclick="if (!$(this).hasClass('disabled')){tree.export(this); }">
                                 <span class="ico-export font-ico"></span> {{.i18n.export}}
                             </li>
                             <li class="hr"></li>
@@ -324,7 +324,7 @@
                     <div class="frame">
                         <ul>
                             <li onclick="window.open('https://www.gitbook.io/book/88250/wide-user-guide')">
-                                <span class="space"></span>
+                                <span class="font-ico ico-book"></span>
                                 <span>{{.i18n.wide_doc}}</span>
                             </li>                            
                             <li onclick="window.open('https://github.com/b3log/wide/issues/new')">
@@ -337,8 +337,12 @@
                                 {{.i18n.keyboard_shortcuts}}
                             </li>
                             <li class="hr"></li>
+                            <li onclick="window.open('http://b3log.org/services')">
+                                <span class="font-ico ico-price"></span>
+                                <span>{{.i18n.pricing}}</span>
+                            </li>
                             <li onclick="editors.openStartPage()">
-                                <span class="space"></span>
+                                <span class="font-ico ico-start"></span>
                                 <span>{{.i18n.start_page}}</span>
                             </li>
                             <li onclick="menu.openAbout()">
@@ -450,7 +454,7 @@
                             <span>{{.i18n.close_other}}</span>
                         </li>
                         <li class="hr"></li>
-                        <li id="copyFilePath" title="Copy file path">
+                        <li id="copyFilePath" title="{{.i18n.copy_file_path}}">
                             <span>{{.i18n.copy_file_path}}</span>
                         </li>    
                     </ul>

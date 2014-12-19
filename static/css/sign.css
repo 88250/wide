@@ -31,12 +31,13 @@
 
 .header li {
     float: left;
+    margin-left: 25px;
 }
 
 .header a {
     display: block;
     font-weight: bold;
-    padding: 4px 8px;
+    padding: 5px 0;
     color: #333;
     line-height: 30px;
     text-decoration: none;
@@ -70,6 +71,8 @@
 }
 
 .content .form input {
+    border: 1px solid #ccc;
+    border-radius: 3px;
     width: 100%;
     background-color: #fafafa; 
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset;
@@ -84,34 +87,56 @@
 }
 
 .content .form input:focus {
+    background-color: #FFF;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset, 0 0 12px rgba(255, 255, 255, 0.75);
 }
 
-.button {
+.btn {
     width: 100%;
     color: #fff;
-    font-size: 16px;
     text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
     background-color: #60b044;
     background-image: linear-gradient(#8add6d, #60b044);
     border: 1px solid #5ca941;
     padding: 10px;
+    border-radius: 3px;
+    cursor: pointer;
 }
 
-.button:hover {
+.btn:hover {
     background-color: #569e3d;
     background-image: linear-gradient(#79d858, #569e3d);
     border-color: #4a993e;
 }
 
-.header .button {
-    color: #fff;
-    padding: 0 8px;
-    font-size: 13px;
+.btn.btn-white,
+.btn.btn-red {
+    color: #333;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+    background-color: #eee;
+    background-image: linear-gradient(#fcfcfc, #eee);
+    border-color: #d5d5d5;
 }
 
-.header .button:hover {
-    color: #FFF;
+.btn.btn-red {
+    color: #9d0000;
+}
+
+.btn.btn-white:hover {
+    color: #333;
+    text-shadow: 0 1px 0 rgba(255,255,255,0.9);
+    background-color: #ddd;
+    background-image: linear-gradient(#eee, #ddd);
+    border-color: #ccc;
+}
+
+.btn.btn-red:hover {
+    background-color: #b33630;
+    background-image: linear-gradient(#dc5f59, #b33630);
+    background-repeat: repeat-x;
+    border-color: #cd504a;
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
 }
 
 #msg {
@@ -158,11 +183,9 @@
     margin-top: -108px;
 }
 
+#loginBtn,
 #signUpBtn {
     margin-top: 20px;
-}
-
-#loginBtn {
-    margin-top: 20px;
+    font-size: 16px;
 }
 /* end sign up */

@@ -263,7 +263,8 @@ var editors = {
 
         editors.tabs.add({
             id: "startPage",
-            title: '<span title="' + config.label.start_page + '">' + config.label.start_page + '</span>',
+            title: '<span title="' + config.label.start_page 
+                    + '"><span class="ico-start font-ico"></span> ' + config.label.start_page + '</span>',
             content: '<div id="startPage"></div>',
             after: function () {
                 $("#startPage").load(config.context + '/start?sid=' + config.wideSessionId);
