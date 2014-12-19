@@ -64,7 +64,7 @@ func event2Notification(e *event.Event) {
 
 	httpSession, _ := session.HTTPSession.Get(wsChannel.Request, "wide-session")
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	locale := conf.GetUser(username).Locale
 
 	var notification *Notification
 

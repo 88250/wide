@@ -263,7 +263,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	locale := conf.GetUser(username).Locale
 
 	var args map[string]interface{}
 
@@ -522,7 +522,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	locale := conf.GetUser(username).Locale
 
 	var args map[string]interface{}
 
@@ -640,7 +640,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	locale := conf.GetUser(username).Locale
 
 	var args map[string]interface{}
 
@@ -805,7 +805,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	locale := conf.GetUser(username).Locale
 
 	var args map[string]interface{}
 
@@ -937,7 +937,7 @@ func StopHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func setCmdEnv(cmd *exec.Cmd, username string) {
-	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(username)
 
 	cmd.Env = append(cmd.Env,
 		"GOPATH="+userWorkspace,

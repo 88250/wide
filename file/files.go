@@ -82,7 +82,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	}
 	username := session.Values["username"].(string)
 
-	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 
 	root := Node{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", Children: []*Node{}}
@@ -163,13 +163,15 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 
 		data["mode"] = "img"
 
-		user := GetUsre(path)
-		if nil == user {
+		username := conf.GetOwner(path)
+		if "" == username {
 			logger.Warnf("The path [%s] has no owner")
 			data["path"] = ""
 
 			return
 		}
+
+		user := conf.GetUser(username)
 
 		data["path"] = "/workspace/" + user.Name + "/" + strings.Replace(path, user.GetWorkspace(), "", 1)
 
@@ -356,7 +358,7 @@ func Find(w http.ResponseWriter, r *http.Request) {
 	}
 	username := session.Values["username"].(string)
 
-	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 
 	if "" != path && !util.File.IsDir(path) {
@@ -406,7 +408,7 @@ func SearchText(w http.ResponseWriter, r *http.Request) {
 
 	dir := args["dir"].(string)
 	if "" == dir {
-		userWorkspace := conf.Wide.GetUserWorkspace(wSession.Username)
+		userWorkspace := conf.GetUserWorkspace(wSession.Username)
 		workspaces := filepath.SplitList(userWorkspace)
 		dir = workspaces[0]
 	}
@@ -735,15 +737,4 @@ func searchInFile(path string, text string) []*Snippet {
 	}
 
 	return ret
-}
-
-// GetUsre gets the user the specified path belongs to. Returns nil if not found.
-func GetUsre(path string) *conf.User {
-	for _, user := range conf.Wide.Users {
-		if strings.HasPrefix(path, user.GetWorkspace()) {
-			return user
-		}
-	}
-
-	return nil
 }

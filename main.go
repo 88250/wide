@@ -47,13 +47,13 @@ var logger *log.Logger
 // The only one init function in Wide.
 func init() {
 	confPath := flag.String("conf", "conf/wide.json", "path of wide.json")
-	confIP := flag.String("ip", "", "ip to visit")
-	confPort := flag.String("port", "", "port to visit")
+	confIP := flag.String("ip", "", "this will overwrite Wide.IP if specified")
+	confPort := flag.String("port", "", "this will overwrite Wide.Port if specified")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
-	confLogLevel := flag.String("log_level", "info", "logging level: trace/debug/info/warn/error")
+	confLogLevel := flag.String("log_level", "info", "this will overwrite Wide.LogLevel if specified")
 	confStaticServer := flag.String("static_server", "", "this will overwrite Wide.StaticServer if specified")
 	confContext := flag.String("context", "", "this will overwrite Wide.Context if specified")
-	confChannel := flag.String("channel", "", "this will overwrite Wide.XXXChannel if specified")
+	confChannel := flag.String("channel", "", "this will overwrite Wide.Channel if specified")
 	confStat := flag.Bool("stat", false, "whether report statistics periodically")
 	confDocker := flag.Bool("docker", false, "whether run in a docker container")
 
@@ -77,8 +77,8 @@ func init() {
 		*confDocker)
 
 	conf.FixedTimeCheckEnv()
-	conf.FixedTimeSave()
 
+	session.FixedTimeSave()
 	session.FixedTimeRelease()
 
 	if *confStat {
@@ -103,7 +103,7 @@ func main() {
 	serveSingle("/favicon.ico", "./static/favicon.ico")
 
 	// workspaces
-	for _, user := range conf.Wide.Users {
+	for _, user := range conf.Users {
 		http.Handle(conf.Wide.Context+"/workspace/"+user.Name+"/",
 			http.StripPrefix(conf.Wide.Context+"/workspace/"+user.Name+"/", http.FileServer(http.Dir(user.GetWorkspace()))))
 	}
@@ -193,7 +193,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	wideSession := session.WideSessions.New(httpSession, sid)
 
 	username := httpSession.Values["username"].(string)
-	user := conf.Wide.GetUser(username)
+	user := conf.GetUser(username)
 	if nil == user {
 		logger.Warnf("Not found user [%s]", username)
 
@@ -248,8 +248,8 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
-	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	locale := conf.GetUser(username).Locale
+	userWorkspace := conf.GetUserWorkspace(username)
 
 	sid := r.URL.Query()["sid"][0]
 	wSession := session.WideSessions.Get(sid)
@@ -288,7 +288,7 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	locale := conf.GetUser(username).Locale
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale}
 
@@ -320,7 +320,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	locale := conf.GetUser(username).Locale
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}

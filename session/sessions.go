@@ -242,7 +242,7 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 
 	wSession.Content = args.LatestSessionContent
 
-	for _, user := range conf.Wide.Users {
+	for _, user := range conf.Users {
 		if user.Name == wSession.Username {
 			// update the variable in-memory, conf.FixedTimeSave() function will persist it periodically
 			user.LatestSessionContent = wSession.Content

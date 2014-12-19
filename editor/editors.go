@@ -147,7 +147,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// logger.Infof("offset: %d", offset)
 
-	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 	libPath := ""
 	for _, workspace := range workspaces {
@@ -455,7 +455,7 @@ func getCursorOffset(code string, line, ch int) (offset int) {
 }
 
 func setCmdEnv(cmd *exec.Cmd, username string) {
-	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(username)
 
 	cmd.Env = append(cmd.Env,
 		"GOPATH="+userWorkspace,

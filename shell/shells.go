@@ -63,7 +63,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	wideSession := session.WideSessions.New(httpSession, sid)
 
 	username := httpSession.Values["username"].(string)
-	locale := conf.Wide.GetUser(username).Locale
+	locale := conf.GetUser(username).Locale
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession}
@@ -182,7 +182,7 @@ func pipeCommands(username string, commands ...*exec.Cmd) string {
 }
 
 func setCmdEnv(cmd *exec.Cmd, username string) {
-	userWorkspace := conf.Wide.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(username)
 
 	cmd.Env = append(cmd.Env,
 		"TERM="+os.Getenv("TERM"),

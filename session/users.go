@@ -26,6 +26,7 @@ import (
 	"strconv"
 	"sync"
 	"text/template"
+	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
@@ -61,7 +62,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	username := httpSession.Values["username"].(string)
-	user := conf.Wide.GetUser(username)
+	user := conf.GetUser(username)
 
 	if "GET" == r.Method {
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
@@ -134,7 +135,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	conf.UpdateCustomizedConf(username)
 
-	succ = conf.Save()
+	succ = user.Save()
 }
 
 // LoginHandler handles request of user login.
@@ -178,7 +179,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	succ = false
-	for _, user := range conf.Wide.Users {
+	for _, user := range conf.Users {
 		if user.Name == args.Username && user.Password == args.Password {
 			succ = true
 
@@ -219,7 +220,7 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 	if "GET" == r.Method {
 		// show the user sign up page
 
-		firstUserWorkspace := conf.Wide.GetUserWorkspace(conf.Wide.Users[0].Name)
+		firstUserWorkspace := conf.GetUserWorkspace(conf.Users[0].Name)
 		dir := filepath.Dir(firstUserWorkspace)
 
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
@@ -266,6 +267,46 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// FixedTimeSave saves online users' configurations periodically (1 minute).
+//
+// Main goal of this function is to save user session content, for restoring session content while user open Wide next time.
+func FixedTimeSave() {
+	go func() {
+		for _ = range time.Tick(time.Minute) {
+			users := getOnlineUsers()
+
+			for _, u := range users {
+				if u.Save() {
+					logger.Tracef("Saved online user [%s]'s configurations")
+				}
+			}
+		}
+	}()
+}
+
+func getOnlineUsers() []*conf.User {
+	ret := []*conf.User{}
+
+	usernames := map[string]string{} // distinct username
+	for _, s := range WideSessions {
+		usernames[s.Username] = ""
+	}
+
+	for _, username := range usernames {
+		u := conf.GetUser(username)
+
+		if nil == u {
+			logger.Warnf("Not found user [%s]", username)
+
+			continue
+		}
+
+		ret = append(ret, u)
+	}
+
+	return ret
+}
+
 // addUser add a user with the specified username, password and email.
 //
 //  1. create the user's workspace
@@ -276,7 +317,7 @@ func addUser(username, password, email string) string {
 	addUserMutex.Lock()
 	defer addUserMutex.Unlock()
 
-	for _, user := range conf.Wide.Users {
+	for _, user := range conf.Users {
 		if user.Name == username {
 			return userExists
 		}
@@ -286,12 +327,12 @@ func addUser(username, password, email string) string {
 		}
 	}
 
-	firstUserWorkspace := conf.Wide.GetUserWorkspace(conf.Wide.Users[0].Name)
+	firstUserWorkspace := conf.GetUserWorkspace(conf.Users[0].Name)
 	dir := filepath.Dir(firstUserWorkspace)
 	workspace := filepath.Join(dir, username)
 
 	newUser := conf.NewUser(username, password, email, workspace)
-	conf.Wide.Users = append(conf.Wide.Users, newUser)
+	conf.Users = append(conf.Users, newUser)
 
 	if !conf.Save() {
 		return userCreateError

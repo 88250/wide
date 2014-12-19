@@ -77,7 +77,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt := conf.Wide.GetGoFmt(username)
+	fmt := conf.GetGoFmt(username)
 
 	argv := []string{filePath}
 	cmd := exec.Command(fmt, argv...)

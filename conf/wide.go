@@ -12,13 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package conf includes configurations related manipulations, all configurations (including user configurations) are
-// stored in wide.json.
+// Package conf includes configurations related manipulations.
 package conf
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -40,107 +37,101 @@ const (
 	PathSeparator = string(os.PathSeparator)
 	// PathListSeparator holds the OS-specific path list separator.
 	PathListSeparator = string(os.PathListSeparator)
-)
 
-const (
 	// WideVersion holds the current wide version.
 	WideVersion = "1.1.0"
 	// CodeMirrorVer holds the current editor version.
 	CodeMirrorVer = "4.8"
 )
 
-// LatestSessionContent represents the latest session content.
-type LatestSessionContent struct {
-	FileTree    []string // paths of expanding nodes of file tree
-	Files       []string // paths of files of opening editor tabs
-	CurrentFile string   // path of file of the current focused editor tab
-}
-
-// User configuration.
-type User struct {
-	Name                 string
-	Password             string
-	Email                string
-	Gravatar             string // see http://gravatar.com
-	Workspace            string // the GOPATH of this user
-	Locale               string
-	GoFormat             string
-	FontFamily           string
-	FontSize             string
-	Theme                string
-	Editor               *Editor
-	LatestSessionContent *LatestSessionContent
-}
-
-// Editor configuration of a user.
-type Editor struct {
-	FontFamily string
-	FontSize   string
-	LineHeight string
-	Theme      string
-	TabSize    string
-}
-
 // Configuration.
 type conf struct {
-	IP                    string  // server ip, ${ip}
-	Port                  string  // server port
-	Context               string  // server context
-	Server                string  // server host and port ({IP}:{Port})
-	StaticServer          string  // static resources server scheme, host and port (http://{IP}:{Port})
-	LogLevel              string  // logging level
-	Channel               string  // channel (ws://{IP}:{Port})
-	HTTPSessionMaxAge     int     // HTTP session max age (in seciond)
-	StaticResourceVersion string  // version of static resources
-	MaxProcs              int     // Go max procs
-	RuntimeMode           string  // runtime mode (dev/prod)
-	WD                    string  // current working direcitory, ${pwd}
-	Locale                string  // default locale
-	Users                 []*User // configurations of users
+	IP                    string // server ip, ${ip}
+	Port                  string // server port
+	Context               string // server context
+	Server                string // server host and port ({IP}:{Port})
+	StaticServer          string // static resources server scheme, host and port (http://{IP}:{Port})
+	LogLevel              string // logging level: trace/debug/info/warn/error
+	Channel               string // channel (ws://{IP}:{Port})
+	HTTPSessionMaxAge     int    // HTTP session max age (in seciond)
+	StaticResourceVersion string // version of static resources
+	MaxProcs              int    // Go max procs
+	RuntimeMode           string // runtime mode (dev/prod)
+	WD                    string // current working direcitory, ${pwd}
+	Locale                string // default locale
 }
-
-// Configuration variable.
-var Wide conf
-
-// A raw copy of configuration variable.
-//
-// Save function will use this variable to persist.
-var rawWide conf
 
 // Logger.
 var logger = log.NewLogger(os.Stdout)
 
+// Wide configurations.
+var Wide *conf
+
+// configurations of users.
+var Users []*User
+
 // Indicates whether runs via Docker.
 var Docker bool
 
-// NewUser creates a user with the specified username, password, email and workspace.
-func NewUser(username, password, email, workspace string) *User {
-	hash := md5.New()
-	hash.Write([]byte(email))
-	gravatar := hex.EncodeToString(hash.Sum(nil))
-
-	return &User{Name: username, Password: password, Email: email, Gravatar: gravatar, Workspace: workspace,
-		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
-		Editor: &Editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",
-			Theme: "wide", TabSize: "4"}}
+// Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
+func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel string, confDocker bool) {
+	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confDocker)
+	initUsers()
 }
 
-// Load loads the configurations from wide.json.
-func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel string,
-	confDocker bool) {
-	bytes, _ := ioutil.ReadFile(confPath)
+func initUsers() {
+	f, err := os.Open("conf/users")
+	if nil != err {
+		logger.Error(err)
 
-	err := json.Unmarshal(bytes, &Wide)
+		os.Exit(-1)
+	}
+
+	names, err := f.Readdirnames(-1)
+	if nil != err {
+		logger.Error(err)
+
+		os.Exit(-1)
+	}
+	f.Close()
+
+	for _, name := range names {
+		user := &User{}
+
+		bytes, _ := ioutil.ReadFile("conf/users/" + name)
+
+		err := json.Unmarshal(bytes, user)
+		if err != nil {
+			logger.Errorf("Parses [%s] error: %v", name, err)
+
+			os.Exit(-1)
+		}
+
+		Users = append(Users, user)
+	}
+
+	initWorkspaceDirs()
+	initCustomizedConfs()
+}
+
+func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel string, confDocker bool) {
+	bytes, err := ioutil.ReadFile(confPath)
+	if nil != err {
+		logger.Error(err)
+
+		os.Exit(-1)
+	}
+
+	Wide = &conf{}
+
+	err = json.Unmarshal(bytes, Wide)
 	if err != nil {
-		logger.Error("Parses wide.json error: ", err)
+		logger.Error("Parses [wide.json] error: ", err)
 
 		os.Exit(-1)
 	}
 
 	log.SetLevel(Wide.LogLevel)
-
-	// keep the raw content
-	json.Unmarshal(bytes, &rawWide)
 
 	logger.Debug("Conf: \n" + string(bytes))
 
@@ -204,12 +195,6 @@ func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer
 
 	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
-
-	// upgrade if need
-	upgrade()
-
-	initWorkspaceDirs()
-	initCustomizedConfs()
 }
 
 // FixedTimeCheckEnv checks Wide runtime enviorment periodically (7 minutes).
@@ -261,20 +246,9 @@ func checkEnv() {
 	}
 }
 
-// FixedTimeSave saves configurations (wide.json) periodically (1 minute).
-//
-// Main goal of this function is to save user session content, for restoring session content while user open Wide next time.
-func FixedTimeSave() {
-	go func() {
-		for _ = range time.Tick(time.Minute) {
-			Save()
-		}
-	}()
-}
-
 // GetUserWorkspace gets workspace path with the specified username, returns "" if not found.
-func (c *conf) GetUserWorkspace(username string) string {
-	for _, user := range c.Users {
+func GetUserWorkspace(username string) string {
+	for _, user := range Users {
 		if user.Name == username {
 			return user.GetWorkspace()
 		}
@@ -284,8 +258,8 @@ func (c *conf) GetUserWorkspace(username string) string {
 }
 
 // GetGoFmt gets the path of Go format tool, returns "gofmt" if not found "goimports".
-func (c *conf) GetGoFmt(username string) string {
-	for _, user := range c.Users {
+func GetGoFmt(username string) string {
+	for _, user := range Users {
 		if user.Name == username {
 			switch user.GoFormat {
 			case "gofmt":
@@ -302,22 +276,9 @@ func (c *conf) GetGoFmt(username string) string {
 	return "gofmt"
 }
 
-// GetWorkspace gets workspace path of the user.
-//
-// Compared to the use of Wide.Workspace, this function will be processed as follows:
-//  1. Replace {WD} variable with the actual directory path
-//  2. Replace ${GOPATH} with enviorment variable GOPATH
-//  3. Replace "/" with "\\" (Windows)
-func (u *User) GetWorkspace() string {
-	w := strings.Replace(u.Workspace, "{WD}", Wide.WD, 1)
-	w = strings.Replace(w, "${GOPATH}", os.Getenv("GOPATH"), 1)
-
-	return filepath.FromSlash(w)
-}
-
 // GetUser gets configuration of the user specified by the given username, returns nil if not found.
-func (*conf) GetUser(username string) *User {
-	for _, user := range Wide.Users {
+func GetUser(username string) *User {
+	for _, user := range Users {
 		if user.Name == username {
 			return user
 		}
@@ -326,13 +287,10 @@ func (*conf) GetUser(username string) *User {
 	return nil
 }
 
-// Save saves Wide configurations.
+// Save saves Wide and all users' configurations.
 func Save() bool {
-	// just the Users field are volatile
-	rawWide.Users = Wide.Users
-
-	// format
-	bytes, err := json.MarshalIndent(rawWide, "", "    ")
+	// Wide, XXX: does we need to save wide.json?
+	bytes, err := json.MarshalIndent(Wide, "", "    ")
 
 	if nil != err {
 		logger.Error(err)
@@ -346,40 +304,17 @@ func Save() bool {
 		return false
 	}
 
-	return true
-}
-
-// upgrade upgrades the wide.json.
-func upgrade() {
 	// Users
-	for _, user := range Wide.Users {
-		if "" == user.Theme {
-			user.Theme = "default" // since 1.1.0
-		}
-
-		if "" == user.Editor.Theme {
-			user.Editor.Theme = "wide" // since 1.1.0
-		}
-
-		if "" == user.Editor.TabSize {
-			user.Editor.TabSize = "4" // since 1.1.0
-		}
-
-		if "" != user.Email && "" == user.Gravatar {
-			hash := md5.New()
-			hash.Write([]byte(user.Email))
-			gravatar := hex.EncodeToString(hash.Sum(nil))
-
-			user.Gravatar = gravatar
-		}
+	for _, user := range Users {
+		user.Save()
 	}
 
-	Save()
+	return true
 }
 
 // initCustomizedConfs initializes the user customized configurations.
 func initCustomizedConfs() {
-	for _, user := range Wide.Users {
+	for _, user := range Users {
 		UpdateCustomizedConf(user.Name)
 	}
 }
@@ -389,7 +324,7 @@ func initCustomizedConfs() {
 //  1. /static/user/{username}/style.css
 func UpdateCustomizedConf(username string) {
 	var u *User
-	for _, user := range Wide.Users { // maybe it is a beauty of the trade-off of the another world between design and implementation
+	for _, user := range Users { // maybe it is a beauty of the trade-off of the another world between design and implementation
 		if user.Name == username {
 			u = user
 		}
@@ -438,7 +373,7 @@ func UpdateCustomizedConf(username string) {
 func initWorkspaceDirs() {
 	paths := []string{}
 
-	for _, user := range Wide.Users {
+	for _, user := range Users {
 		paths = append(paths, filepath.SplitList(user.GetWorkspace())...)
 	}
 
