@@ -334,7 +334,7 @@ func addUser(username, password, email string) string {
 	newUser := conf.NewUser(username, password, email, workspace)
 	conf.Users = append(conf.Users, newUser)
 
-	if !conf.Save() {
+	if !newUser.Save() {
 		return userCreateError
 	}
 

@@ -287,31 +287,6 @@ func GetUser(username string) *User {
 	return nil
 }
 
-// Save saves Wide and all users' configurations.
-func Save() bool {
-	// Wide, XXX: does we need to save wide.json?
-	bytes, err := json.MarshalIndent(Wide, "", "    ")
-
-	if nil != err {
-		logger.Error(err)
-
-		return false
-	}
-
-	if err = ioutil.WriteFile("conf/wide.json", bytes, 0644); nil != err {
-		logger.Error(err)
-
-		return false
-	}
-
-	// Users
-	for _, user := range Users {
-		user.Save()
-	}
-
-	return true
-}
-
 // initCustomizedConfs initializes the user customized configurations.
 func initCustomizedConfs() {
 	for _, user := range Users {

@@ -8,7 +8,7 @@
     "GoFormat": "gofmt",
     "FontFamily": "Helvetica",
     "FontSize": "13px",
-    "Theme": "black",
+    "Theme": "default",
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "13px",
@@ -17,9 +17,7 @@
         "TabSize": "4"
     },
     "LatestSessionContent": {
-        "FileTree": [
-            "D:\\GoGoGo\\src"
-        ],
+        "FileTree": [],
         "Files": [],
         "CurrentFile": ""
     }
