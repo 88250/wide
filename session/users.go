@@ -289,7 +289,7 @@ func getOnlineUsers() []*conf.User {
 
 	usernames := map[string]string{} // distinct username
 	for _, s := range WideSessions {
-		usernames[s.Username] = ""
+		usernames[s.Username] = s.Username
 	}
 
 	for _, username := range usernames {
