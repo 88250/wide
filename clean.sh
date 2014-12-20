@@ -1,20 +1,7 @@
 #!/bin/bash
-# The script does automatic checking on a Go package and its sub-packages, including:
-# 1. gofmt         (http://golang.org/cmd/gofmt/)
-# 2. goimports     (https://github.com/bradfitz/goimports)
-# 3. golint        (https://github.com/golang/lint)
-# 4. go vet        (http://golang.org/cmd/vet)
-# 5. race detector (http://blog.golang.org/race-detector)
-# 6. test coverage (http://blog.golang.org/cover)
+# see https://gist.github.com/hailiang/0f22736320abe6be71ce for more details
  
 set -e
- 
-# Automatic checks
-test -z "$(gofmt -l -w .     | tee /dev/stderr)"
-test -z "$(goimports -l -w . | tee /dev/stderr)"
-test -z "$(golint .          | tee /dev/stderr)"
-go vet ./...
-go test -race ./...
  
 # Run test coverage on each subdirectories and merge the coverage profile.
  
