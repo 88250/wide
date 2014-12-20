@@ -7,5 +7,5 @@ before_install:
   - go get github.com/mattn/goveralls
   - go get golang.org/x/tools/cmd/cover
 script:
-    - ./clean.sh
+    - "./clean.sh"
     - $HOME/gopath/bin/goveralls -repotoken W04Y4p452CDeI9gcsC8t5y217uHnUDFCb
