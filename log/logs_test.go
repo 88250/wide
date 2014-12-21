@@ -19,6 +19,7 @@ import (
 	"testing"
 )
 
+// Logger.
 var logger = NewLogger(os.Stdout)
 
 func TestSetLevel(t *testing.T) {
