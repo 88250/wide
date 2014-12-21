@@ -40,3 +40,60 @@ func TestInfo(t *testing.T) {
 func TestInfof(t *testing.T) {
 	logger.Infof("infof")
 }
+
+func TestWarn(t *testing.T) {
+	logger.Warn("warn")
+}
+
+func TestWarnf(t *testing.T) {
+	logger.Warnf("warnf")
+}
+
+func TestError(t *testing.T) {
+	logger.Error("error")
+}
+
+func TestErrorf(t *testing.T) {
+	logger.Errorf("errorf")
+}
+
+func TestGetLevel(t *testing.T) {
+	l := getLevel("info")
+	logger.Info(l)
+}
+
+func TestLoggerSetLevel(t *testing.T) {
+	if logger.level != Trace {
+		t.FailNow()
+
+		return
+	}
+
+	logger.SetLevel("info")
+
+	if logger.level != Info {
+		t.FailNow()
+
+		return
+	}
+}
+
+func TestIsTraceEnabled(t *testing.T) {
+	logger.SetLevel("trace")
+
+	if !logger.IsTraceEnabled() {
+		t.FailNow()
+
+		return
+	}
+}
+
+func TestIsDebugEnabled(t *testing.T) {
+	logger.SetLevel("debug")
+
+	if !logger.IsDebugEnabled() {
+		t.FailNow()
+
+		return
+	}
+}
