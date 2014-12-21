@@ -35,7 +35,8 @@ import (
 
 // Logging level.
 const (
-	Trace = iota
+	Off = iota
+	Trace
 	Debug
 	Info
 	Warn
@@ -78,6 +79,8 @@ func getLevel(level string) int {
 	level = strings.ToLower(level)
 
 	switch level {
+	case "off":
+		return Off
 	case "trace":
 		return Trace
 	case "debug":
@@ -98,6 +101,21 @@ func (l *Logger) SetLevel(level string) {
 	l.level = getLevel(level)
 }
 
+// IsTraceEnabled determines whether the trace level is enabled.
+func (l *Logger) IsTraceEnabled() bool {
+	return l.level <= Trace
+}
+
+// IsDebugEnabled determines whether the debug level is enabled.
+func (l *Logger) IsDebugEnabled() bool {
+	return l.level <= Debug
+}
+
+// IsWarnEnabled determines whether the debug level is enabled.
+func (l *Logger) IsWarnEnabled() bool {
+	return l.level <= Warn
+}
+
 // Trace prints trace level message.
 func (l *Logger) Trace(v ...interface{}) {
 	if Trace < l.level {
@@ -116,21 +134,6 @@ func (l *Logger) Tracef(format string, v ...interface{}) {
 
 	l.logger.SetPrefix("T ")
 	l.logger.Output(2, fmt.Sprintf(format, v...))
-}
-
-// IsTraceEnabled determines whether the trace level is enabled.
-func (l *Logger) IsTraceEnabled() bool {
-	return l.level <= Trace
-}
-
-// IsDebugEnabled determines whether the debug level is enabled.
-func (l *Logger) IsDebugEnabled() bool {
-	return l.level <= Debug
-}
-
-// IsWarnEnabled determines whether the debug level is enabled.
-func (l *Logger) IsWarnEnabled() bool {
-	return l.level <= Warn
 }
 
 // Debug prints debug level message.
