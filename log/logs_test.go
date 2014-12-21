@@ -128,15 +128,9 @@ func TestGetLevel(t *testing.T) {
 }
 
 func TestLoggerSetLevel(t *testing.T) {
+	logger.SetLevel("trace")
+
 	if logger.level != Trace {
-		t.FailNow()
-
-		return
-	}
-
-	logger.SetLevel("info")
-
-	if logger.level != Info {
 		t.FailNow()
 
 		return
