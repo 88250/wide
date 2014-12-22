@@ -14,10 +14,15 @@
 
 package util
 
-import "testing"
+import (
+	"strconv"
+	"testing"
+)
 
 func TestGetFileSize(t *testing.T) {
 	size := File.GetFileSize(".")
+
+	t.Log("size: " + strconv.FormatInt(size, 10))
 
 	if 4096 != size {
 		t.Error("Size of a directory should be 4096")
