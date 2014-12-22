@@ -95,7 +95,7 @@
 }
 
 .tabs > div {
-    background-color: #444444;
+    background-color: #303030;
     color: #adadad;
     text-shadow: 0 1px rgba(0, 0, 0, 0.4);
     border-right: 1px solid #181B1D;
@@ -108,7 +108,7 @@
 .tabs > div.current {
     color: rgba(255, 255, 255, 0.85);
     text-shadow: 0 1px rgba(0, 0, 0, 0.4);
-    background-color: #303030;
+    background-color: #555;
 }
 
 .dialog-header-bg {

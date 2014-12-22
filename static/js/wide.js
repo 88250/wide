@@ -46,7 +46,7 @@ var wide = {
 
         $("#dialogRemoveConfirm").dialog({
             "modal": true,
-            "height": 26,
+            "height": 36,
             "width": 260,
             "title": config.label.delete,
             "okText": config.label.delete,
