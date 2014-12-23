@@ -160,5 +160,6 @@
     "no_empty": "Can not Empty!",
     "change_avatar": "Avatar modify go",
     "open": "Open",
-    "pricing": "Pricing"
+    "pricing": "Pricing",
+    "search_no_match": "No matching files were found."
 }

@@ -160,5 +160,6 @@
     "no_empty": "不能為空",
     "change_avatar": "頭像修改請到",
     "open": "打開",
-    "pricing": "價格"
+    "pricing": "價格",
+    "search_no_match": "沒有發現匹配的文件。"
 }

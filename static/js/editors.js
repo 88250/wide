@@ -646,6 +646,10 @@ var editors = {
                     + data[i].line + '" data-ch="' + data[i].ch + '"> (' + data[i].line + ':'
                     + data[i].ch + ')</i></span></li>';
         }
+        
+        if (data.length === 0) {
+            searcHTML += '<li>' + config.label.search_no_match + '</li>';
+        }
         searcHTML += '</ul>';
 
         var $search = $('.bottom-window-group .search'),

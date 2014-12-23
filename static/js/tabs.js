@@ -23,6 +23,19 @@ var Tabs = function (obj) {
     this.obj.STACKSIZE = 64;
 
     this._init(obj);
+
+    // DOM 元素存在时，应顺序入栈
+    var _it = this;
+    $(obj.id + " > .tabs > div").each(function () {
+        var id = $(this).data("index");
+        if (obj._stack.length === _it.obj.STACKSIZE) {
+            obj._stack.splice(0, 1);
+        }
+        if (obj._stack[obj._stack.length - 1] !== id) {
+            _it.obj._stack.push(id);
+        }
+    });
+
 };
 
 $.extend(Tabs.prototype, {
