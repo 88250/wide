@@ -371,7 +371,7 @@ func (sessions *wSessions) Remove(sid string) {
 				delete(SessionWS, sid)
 			}
 
-			cnt := -1 // count wide sessions associated with HTTP session
+			cnt := 0 // count wide sessions associated with HTTP session
 			for _, ses := range *sessions {
 				if ses.HTTPSession.ID == s.HTTPSession.ID {
 					cnt++
