@@ -1,6 +1,7 @@
 {
     "Name": "admin",
-    "Password": "admin",
+    "Password": "d1bfca21893c908e64fabda01d71294b1ccdcaa7",
+    "Salt": "dnoyeb",
     "Email": "",
     "Gravatar": "d41d8cd98f00b204e9800998ecf8427e",
     "Workspace": "${GOPATH}",
@@ -9,6 +10,9 @@
     "FontFamily": "Helvetica",
     "FontSize": "13px",
     "Theme": "default",
+    "Created": 1414080000000000000,
+    "Updated": 1414080000000000000,
+    "Lived": 1414080000000000000,
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "13px",

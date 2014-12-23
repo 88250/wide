@@ -135,6 +135,10 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	conf.UpdateCustomizedConf(username)
 
+	now := time.Now().UnixNano()
+	user.Lived = now
+	user.Updated = now
+
 	succ = user.Save()
 }
 
@@ -180,7 +184,7 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	succ = false
 	for _, user := range conf.Users {
-		if user.Name == args.Username && user.Password == args.Password {
+		if user.Name == args.Username && user.Password == conf.Salt(args.Password, user.Salt) {
 			succ = true
 
 			break

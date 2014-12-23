@@ -16,12 +16,16 @@ package conf
 
 import (
 	"crypto/md5"
+	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
+
+	"github.com/b3log/wide/util"
 )
 
 // LatestSessionContent represents the latest session content.
@@ -35,6 +39,7 @@ type LatestSessionContent struct {
 type User struct {
 	Name                 string
 	Password             string
+	Salt                 string
 	Email                string
 	Gravatar             string // see http://gravatar.com
 	Workspace            string // the GOPATH of this user
@@ -43,6 +48,9 @@ type User struct {
 	FontFamily           string
 	FontSize             string
 	Theme                string
+	Created              int64 // user create time in unix nano
+	Updated              int64 // preference update time in unix nano
+	Lived                int64 // the latest session activity in unix nano
 	Editor               *editor
 	LatestSessionContent *LatestSessionContent
 }
@@ -58,12 +66,18 @@ type editor struct {
 
 // NewUser creates a user with the specified username, password, email and workspace.
 func NewUser(username, password, email, workspace string) *User {
-	hash := md5.New()
-	hash.Write([]byte(email))
-	gravatar := hex.EncodeToString(hash.Sum(nil))
+	md5hash := md5.New()
+	md5hash.Write([]byte(email))
+	gravatar := hex.EncodeToString(md5hash.Sum(nil))
 
-	return &User{Name: username, Password: password, Email: email, Gravatar: gravatar, Workspace: workspace,
+	salt := util.Rand.String(16)
+	password = Salt(password, salt)
+
+	now := time.Now().UnixNano()
+
+	return &User{Name: username, Password: password, Salt: salt, Email: email, Gravatar: gravatar, Workspace: workspace,
 		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
+		Created: now, Updated: now, Lived: now,
 		Editor: &editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",
 			Theme: "wide", TabSize: "4"}}
 }
@@ -109,4 +123,12 @@ func GetOwner(path string) string {
 	}
 
 	return ""
+}
+
+// Salt salts the specified password with the specified salt.
+func Salt(password, salt string) string {
+	sha1hash := sha1.New()
+	sha1hash.Write([]byte(password + salt))
+
+	return hex.EncodeToString(sha1hash.Sum(nil))
 }

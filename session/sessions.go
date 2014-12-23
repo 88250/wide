@@ -235,7 +235,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// SaveContent handles request of session content storing.
+// SaveContent handles request of session content string.
 func SaveContent(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
@@ -263,8 +263,10 @@ func SaveContent(w http.ResponseWriter, r *http.Request) {
 
 	for _, user := range conf.Users {
 		if user.Name == wSession.Username {
-			// update the variable in-memory, conf.FixedTimeSave() function will persist it periodically
+			// update the variable in-memory, session.FixedTimeSave() function will persist it periodically
 			user.LatestSessionContent = wSession.Content
+
+			user.Lived = time.Now().UnixNano()
 
 			wSession.Refresh()
 
