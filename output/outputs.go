@@ -112,8 +112,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		data["succ"] = false
 	}
 
-	outReader := util.NewReader(stdout)
-	errReader := util.NewReader(stderr)
+	outReader := bufio.NewReader(stdout)
+	errReader := bufio.NewReader(stderr)
 
 	if err := cmd.Start(); nil != err {
 		logger.Error(err)
@@ -167,11 +167,17 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 		go func() {
 			for {
-				buf, err := outReader.ReadData()
+				r, _, err := outReader.ReadRune()
+
+				if nil == session.OutputWS[sid] {
+					break
+				}
+
+				wsChannel := session.OutputWS[sid]
+
+				buf := string(r)
 				buf = strings.Replace(buf, "<", "&lt;", -1)
 				buf = strings.Replace(buf, ">", "&gt;", -1)
-
-				// TODO: fix the duplicated error
 
 				if nil != err {
 					// remove the exited process from user process set
@@ -209,15 +215,17 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}()
 
 		for {
-			buf, err := errReader.ReadData()
-			buf = strings.Replace(buf, "<", "&lt;", -1)
-			buf = strings.Replace(buf, ">", "&gt;", -1)
+			r, _, err := errReader.ReadRune()
 
 			if nil == session.OutputWS[sid] {
 				break
 			}
 
 			wsChannel := session.OutputWS[sid]
+
+			buf := string(r)
+			buf = strings.Replace(buf, "<", "&lt;", -1)
+			buf = strings.Replace(buf, ">", "&gt;", -1)
 
 			if nil != err {
 				// remove the exited process from user process set
