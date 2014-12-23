@@ -277,7 +277,7 @@ func FixedTimeSave() {
 
 			for _, u := range users {
 				if u.Save() {
-					logger.Tracef("Saved online user [%s]'s configurations")
+					logger.Tracef("Saved online user [%s]'s configurations", u.Name)
 				}
 			}
 		}
