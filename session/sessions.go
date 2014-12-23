@@ -27,6 +27,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"sync"
 	"time"
@@ -126,29 +127,31 @@ func (u *userReport) report() string {
 // FixedTimeReport reports the Wide sessions status periodically (10 minutes).
 func FixedTimeReport() {
 	go func() {
-		for _ = range time.Tick(10 * time.Minute) {
-			users := map[string]*userReport{} // <username, *userReport>
+		for _ = range time.Tick(10 * time.Second) {
+			users := userReports{}
 			processSum := 0
 
 			for _, s := range WideSessions {
 				processCnt := len(s.Processes)
 				processSum += processCnt
 
-				if report, exists := users[s.Username]; exists {
+				if report, exists := contains(users, s.Username); exists {
 					if s.Updated.After(report.updated) {
-						users[s.Username].updated = s.Updated
+						report.updated = s.Updated
 					}
 
 					report.sessionCnt++
 					report.processCnt += processCnt
 				} else {
-					users[s.Username] = &userReport{username: s.Username, sessionCnt: 1, processCnt: processCnt, updated: s.Updated}
+					users = append(users, &userReport{username: s.Username, sessionCnt: 1, processCnt: processCnt, updated: s.Updated})
 				}
 			}
 
 			var buf bytes.Buffer
 			buf.WriteString("\n  [" + strconv.Itoa(len(users)) + "] users, [" + strconv.Itoa(processSum) + "] running processes and [" +
 				strconv.Itoa(len(WideSessions)) + "] sessions currently\n")
+
+			sort.Sort(users)
 
 			for _, t := range users {
 				buf.WriteString("    " + t.report() + "\n")
@@ -158,6 +161,22 @@ func FixedTimeReport() {
 		}
 	}()
 }
+
+func contains(reports []*userReport, username string) (*userReport, bool) {
+	for _, ur := range reports {
+		if username == ur.username {
+			return ur, true
+		}
+	}
+
+	return nil, false
+}
+
+type userReports []*userReport
+
+func (f userReports) Len() int           { return len(f) }
+func (f userReports) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
+func (f userReports) Less(i, j int) bool { return f[i].processCnt > f[j].processCnt }
 
 // WSHandler handles request of creating session channel.
 //
