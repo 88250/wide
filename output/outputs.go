@@ -177,7 +177,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					// remove the exited process from user process set
 					processes.remove(wSession, cmd.Process)
 
-					logger.Debugf("Session [%s] 's running [id=%d, file=%s] has done [stdout err]", sid, runningId, filePath)
+					logger.Tracef("Session [%s] 's running [id=%d, file=%s] has done [stdout err]", sid, runningId, filePath)
 
 					if nil != wsChannel {
 						channelRet["cmd"] = "run-done"
@@ -223,7 +223,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				// remove the exited process from user process set
 				processes.remove(wSession, cmd.Process)
 
-				logger.Debugf("Session [%s] 's running [id=%d, file=%s] has done [stderr err]", sid, runningId, filePath)
+				logger.Tracef("Session [%s] 's running [id=%d, file=%s] has done [stderr err]", sid, runningId, filePath)
 
 				channelRet["cmd"] = "run-done"
 				channelRet["output"] = "<span class='stderr'>" + buf + "</span>"

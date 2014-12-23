@@ -46,7 +46,7 @@ func (procs *procs) add(wSession *session.WideSession, proc *os.Process) {
 	// bind process with wide session
 	wSession.SetProcesses(userProcesses)
 
-	logger.Debugf("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
+	logger.Tracef("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
 }
 
 // remove removes the specified process from the user process set.
@@ -67,7 +67,7 @@ func (procs *procs) remove(wSession *session.WideSession, proc *os.Process) {
 			// bind process with wide session
 			wSession.SetProcesses(newProcesses)
 
-			logger.Debugf("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
+			logger.Tracef("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
 
 			return
 		}
