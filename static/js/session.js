@@ -108,7 +108,14 @@ var session = {
             }
         }
 
+        // 设置当前编辑器
         editors.tabs.setCurrent(id);
+        for (var c = 0, max = editors.data.length; c < max; c++) {
+            if (id === editors.data[c].id) {
+                wide.curEditor = editors.data[c].editor;
+                break;
+            }
+        }
     },
     _initWS: function () {
         // 用于保持会话，如果该通道断开，则服务器端会销毁会话状态，回收相关资源.
