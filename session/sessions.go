@@ -127,7 +127,7 @@ func (u *userReport) report() string {
 // FixedTimeReport reports the Wide sessions status periodically (10 minutes).
 func FixedTimeReport() {
 	go func() {
-		for _ = range time.Tick(10 * time.Second) {
+		for _ = range time.Tick(10 * time.Minute) {
 			users := userReports{}
 			processSum := 0
 
