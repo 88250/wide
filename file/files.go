@@ -416,7 +416,12 @@ func SearchText(w http.ResponseWriter, r *http.Request) {
 	extension := args["extension"].(string)
 	text := args["text"].(string)
 
-	founds := search(dir, extension, text, []*Snippet{})
+	founds := []*Snippet{}
+	if util.File.IsDir(dir) {
+		founds = search(dir, extension, text, []*Snippet{})
+	} else {
+		founds = searchInFile(dir, text)
+	}
 
 	data["founds"] = founds
 }
@@ -727,7 +732,7 @@ func searchInFile(path string, text string) []*Snippet {
 	lines := strings.Split(content, "\n")
 
 	for idx, line := range lines {
-		ch := strings.Index(line, text)
+		ch := strings.Index(strings.ToLower(line), strings.ToLower(text))
 
 		if -1 != ch {
 			snippet := &Snippet{Path: path, Line: idx + 1, Ch: ch + 1, Contents: []string{line}}
