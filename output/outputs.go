@@ -183,7 +183,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					// remove the exited process from user process set
 					processes.remove(wSession, cmd.Process)
 
-					logger.Tracef("Session [%s] 's running [id=%d, file=%s] has done [stdout err]", sid, runningId, filePath)
+					logger.Tracef("Session [%s] 's running [id=%d, file=%s] has done [stdout %v], ", sid, runningId, filePath, err)
 
 					if nil != wsChannel {
 						channelRet["cmd"] = "run-done"
@@ -227,24 +227,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			buf = strings.Replace(buf, "<", "&lt;", -1)
 			buf = strings.Replace(buf, ">", "&gt;", -1)
 
-			if nil != err {
-				// remove the exited process from user process set
-				processes.remove(wSession, cmd.Process)
-
-				logger.Tracef("Session [%s] 's running [id=%d, file=%s] has done [stderr err]", sid, runningId, filePath)
-
-				channelRet["cmd"] = "run-done"
-				channelRet["output"] = "<span class='stderr'>" + buf + "</span>"
-				err := wsChannel.WriteJSON(&channelRet)
-				if nil != err {
-					logger.Error(err)
-					break
-				}
-
-				wsChannel.Refresh()
-
-				break
-			} else {
+			if nil == err {
 				channelRet["cmd"] = "run"
 				channelRet["output"] = "<span class='stderr'>" + buf + "</span>"
 				err := wsChannel.WriteJSON(&channelRet)
