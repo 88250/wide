@@ -263,7 +263,7 @@ var editors = {
 
         editors.tabs.add({
             id: "startPage",
-            title: '<span title="' + config.label.start_page 
+            title: '<span title="' + config.label.start_page
                     + '"><span class="ico-start font-ico"></span> ' + config.label.start_page + '</span>',
             content: '<div id="startPage"></div>',
             after: function () {
@@ -621,14 +621,24 @@ var editors = {
         };
     },
     appendSearch: function (data, type, key) {
-        var searcHTML = '<ul class="list">';
+        var searcHTML = '<ul class="list">',
+                key = key.toLowerCase();
 
         for (var i = 0, ii = data.length; i < ii; i++) {
-            var contents = data[i].contents[0],
-                    index = contents.indexOf(key);
-            contents = contents.substring(0, index)
-                    + '<b>' + key + '</b>'
-                    + contents.substring(index + key.length);
+            var contents = '',
+                    lowerCaseContents = data[i].contents[0].toLowerCase(),
+                    matches = lowerCaseContents.split(key),
+                    startIndex = 0,
+                    endIndex = 0;
+            for (var j = 0, max = matches.length; j < max; j++) {
+                startIndex = endIndex + matches[j].length;
+                endIndex = startIndex + key.length;
+                var keyWord = data[i].contents[0].substring(startIndex, endIndex);
+                if (keyWord !== '') {
+                    keyWord = '<b>' + keyWord + '</b>';
+                }
+                contents += matches[j] + keyWord;
+            }
 
             searcHTML += '<li title="' + data[i].path + '">'
                     + contents + "&nbsp;&nbsp;&nbsp;&nbsp;<span class='ft-small'>" + data[i].path
