@@ -310,8 +310,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	setCmdEnv(cmd, username)
 
 	executable := filepath.Base(curDir) + suffix
-	logger.Debugf("go build for [%s]", executable)
-
 	executable = filepath.Join(curDir, executable)
 
 	stdout, err := cmd.StdoutPipe()
