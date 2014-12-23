@@ -35,24 +35,25 @@ var bottomGroup = {
         });
     },
     _initFrame: function () {
-        $(".bottom-window-group .output").mousedown(function (event) {
+        $(".bottom-window-group .output").parent().mousedown(function (event) {
             event.stopPropagation();
 
             if (event.button === 0) { // 左键
                 $(".bottom-window-group .frame").hide();
-                return false;
+                return;
             }
 
             // event.button === 2 右键
-            var left = event.screenX;
+            var left = event.screenX,
+                    $it = $(this);
             if ($(".side").css("left") === "auto" || $(".side").css("left") === "0px") {
                 left = event.screenX - $(".side").width();
             }
             $(".bottom-window-group .frame").show().css({
                 "left": left + "px",
-                "top": (event.offsetY + 20) + "px"
+                "top": (event.offsetY + event.target.offsetTop - $it.scrollTop() - 10) + "px"
             });
-            return false;
+            return;
         });
     },
     clear: function (id) {
