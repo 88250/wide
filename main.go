@@ -22,6 +22,7 @@ import (
 	"math/rand"
 	"mime"
 	"net/http"
+	_ "net/http/pprof"
 	"os"
 	"runtime"
 	"strconv"
