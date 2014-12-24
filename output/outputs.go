@@ -229,7 +229,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 			channelRet["cmd"] = "run"
 			channelRet["output"] = "<span class='stderr'>" + buf + "</span>"
-			err := wsChannel.WriteJSON(&channelRet)
+			err = wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				logger.Error(err)
 				break
