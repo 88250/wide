@@ -217,7 +217,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		for {
 			r, _, err := errReader.ReadRune()
 
-			if nil == session.OutputWS[sid] {
+			if nil != err || nil == session.OutputWS[sid] {
 				break
 			}
 
@@ -227,17 +227,15 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			buf = strings.Replace(buf, "<", "&lt;", -1)
 			buf = strings.Replace(buf, ">", "&gt;", -1)
 
-			if nil == err {
-				channelRet["cmd"] = "run"
-				channelRet["output"] = "<span class='stderr'>" + buf + "</span>"
-				err := wsChannel.WriteJSON(&channelRet)
-				if nil != err {
-					logger.Error(err)
-					break
-				}
-
-				wsChannel.Refresh()
+			channelRet["cmd"] = "run"
+			channelRet["output"] = "<span class='stderr'>" + buf + "</span>"
+			err := wsChannel.WriteJSON(&channelRet)
+			if nil != err {
+				logger.Error(err)
+				break
 			}
+
+			wsChannel.Refresh()
 		}
 	}(rand.Int())
 }
