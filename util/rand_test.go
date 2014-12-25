@@ -14,34 +14,22 @@
 
 package util
 
-import (
-	"math/rand"
-	"time"
-)
+import "testing"
 
-type myrand struct{}
+func TestString(t *testing.T) {
+	r1 := Rand.String(16)
+	r2 := Rand.String(16)
 
-// Random utilities.
-var Rand = myrand{}
-
-// String returns a random string ['a', 'z'] in the specified length
-func (*myrand) String(length int) string {
-	bytes := make([]byte, length)
-
-	for i := 0; i < length; i++ {
-		bytes[i] = byte(Rand.Int('a', 'z'))
-
-		time.Sleep(100 * time.Nanosecond)
+	if r1 == r2 {
+		t.Fail()
 	}
-
-	return string(bytes)
 }
 
-// Int returns a random integer in range [min, max].
-func (*myrand) Int(min int, max int) int {
-	rand.Seed(time.Now().UnixNano())
+func TestInt(t *testing.T) {
+	r1 := Rand.Int(0, 65535)
+	r2 := Rand.Int(0, 65535)
 
-	time.Sleep(100 * time.Nanosecond)
-
-	return min + rand.Intn(max-min)
+	if r1 == r2 {
+		t.Fail()
+	}
 }

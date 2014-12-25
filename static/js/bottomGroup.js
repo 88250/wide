@@ -74,7 +74,14 @@ var bottomGroup = {
     },
     fillOutput: function (data) {
         var $output = $('.bottom-window-group .output');
-        $output.find("div").html(data.replace(/\n/g, '<br/>'));
+        
+        data = data.replace(/\n/g, '<br/>');
+        
+        if (-1 !== data.indexOf("<br/>")) {
+            data = Autolinker.link(data);
+        }
+        
+        $output.find("div").html(data);
         $output.parent().scrollTop($output[0].scrollHeight);
     }
 };
