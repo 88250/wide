@@ -204,7 +204,7 @@ var wide = {
                     tree.openFile(tree.fileTree.getNodeByTId(tId));
                     tree.fileTree.selectNode(wide.curNode);
                     $("#dialogGoFilePrompt").dialog("close");
-                     wide.curEditor.focus();
+                    wide.curEditor.focus();
                 });
 
                 $("#dialogGoFilePrompt").on("click", "li", function () {
@@ -483,7 +483,6 @@ var wide = {
             dataType: "json",
             success: function (data) {
                 // reset the save state
-
                 editor.doc.markClean();
                 $(".edit-panel .tabs > div").each(function () {
                     var $span = $(this).find("span:eq(0)");
@@ -507,6 +506,24 @@ var wide = {
 
         if ("text/x-go" === editor.getOption("mode")) {
             wide.gofmt(path, wide.curEditor); // go fmt will save
+
+            // build the file at once
+            var request = newWideRequest();
+            request.file = path;
+            request.code = editor.getValue();
+            request.nextCmd = ""; // build only, no following operation
+
+            $.ajax({
+                type: 'POST',
+                url: config.context + '/build',
+                data: JSON.stringify(request),
+                dataType: "json",
+                beforeSend: function (data) {
+                    bottomGroup.resetOutput();
+                },
+                success: function (data) {
+                }
+            });
 
             return;
         }
