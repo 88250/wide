@@ -42,6 +42,7 @@ type Node struct {
 	Type      string  `json:"type"`      // "f": file, "d": directory
 	Creatable bool    `json:"creatable"` // whether can create file in this file node
 	Removable bool    `json:"removable"` // whether can remove this file node
+	IsGoAPI   bool    `json:"isGOAPI"`
 	Mode      string  `json:"mode"`
 	Children  []*Node `json:"children"`
 }
@@ -61,9 +62,9 @@ func initAPINode() {
 	apiPath := util.Go.GetAPIPath()
 
 	apiNode = &Node{Name: "Go API", Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
-		Creatable: false, Removable: false, Children: []*Node{}}
+		Creatable: false, Removable: false, IsGoAPI: true, Children: []*Node{}}
 
-	walk(apiPath, apiNode, false, false)
+	walk(apiPath, apiNode, false, false, true)
 }
 
 // GetFiles handles request of constructing user workspace file tree.
@@ -97,9 +98,9 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 
 		workspaceNode := Node{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
 			Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d",
-			Creatable: true, Removable: false, Children: []*Node{}}
+			Creatable: true, Removable: false, IsGoAPI: false, Children: []*Node{}}
 
-		walk(workspacePath, &workspaceNode, true, true)
+		walk(workspacePath, &workspaceNode, true, true, false)
 
 		// add workspace node
 		root.Children = append(root.Children, &workspaceNode)
@@ -118,7 +119,7 @@ func RefreshDirectory(w http.ResponseWriter, r *http.Request) {
 
 	node := Node{Name: "root", Path: path, IconSkin: "ico-ztree-dir ", Type: "d", Children: []*Node{}}
 
-	walk(path, &node, true, true)
+	walk(path, &node, true, true, false)
 
 	w.Header().Set("Content-Type", "application/json")
 	data, err := json.Marshal(node.Children)
@@ -427,7 +428,7 @@ func SearchText(w http.ResponseWriter, r *http.Request) {
 }
 
 // walk traverses the specified path to build a file tree.
-func walk(path string, node *Node, creatable, removable bool) {
+func walk(path string, node *Node, creatable, removable, isGOAPI bool) {
 	files := listFiles(path)
 
 	for _, filename := range files {
@@ -435,7 +436,7 @@ func walk(path string, node *Node, creatable, removable bool) {
 
 		fio, _ := os.Lstat(fpath)
 
-		child := Node{Name: filename, Path: fpath, Removable: removable, Children: []*Node{}}
+		child := Node{Name: filename, Path: fpath, Removable: removable, IsGoAPI: isGOAPI, Children: []*Node{}}
 		node.Children = append(node.Children, &child)
 
 		if nil == fio {
@@ -449,7 +450,7 @@ func walk(path string, node *Node, creatable, removable bool) {
 			child.Creatable = creatable
 			child.IconSkin = "ico-ztree-dir "
 
-			walk(fpath, &child, creatable, removable)
+			walk(fpath, &child, creatable, removable, isGOAPI)
 		} else {
 			child.Type = "f"
 			child.Creatable = creatable
