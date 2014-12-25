@@ -233,7 +233,7 @@ var tree = {
                                 }
                             },
                             onRightClick: function (event, treeId, treeNode) {
-                                if (treeNode) {
+                                if (treeNode && !treeNode.isGOAPI) {
                                     menu.undisabled(['import', 'export']);
 
                                     wide.curNode = treeNode;
