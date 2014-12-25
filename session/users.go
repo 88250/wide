@@ -118,7 +118,9 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.FontSize = args.FontSize
 	user.GoFormat = args.GoFmt
 	user.Workspace = args.Workspace
-	user.Password = conf.Salt(args.Password, user.Salt)
+	if user.Password != args.Password {
+		user.Password = conf.Salt(args.Password, user.Salt)
+	}
 	user.Email = args.Email
 
 	hash := md5.New()
