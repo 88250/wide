@@ -218,7 +218,7 @@ var menu = {
             }
         });
     },
-    // 测试.
+    // go test.
     test: function () {
         menu.saveAllFiles();
 
@@ -299,7 +299,7 @@ var menu = {
         var request = newWideRequest();
         request.file = currentPath;
         request.code = wide.curEditor.getValue();
-        request.nextCmd = ""; // 只构建，无下一步操作
+        request.nextCmd = ""; // build only, no following operation
 
         $.ajax({
             type: 'POST',
