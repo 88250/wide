@@ -353,7 +353,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		// logger.Debugf("Session [%s] is building [id=%d, dir=%s]", sid, runningId, curDir)
+		// logger.Debugf("User [%s, %s] is building [id=%d, dir=%s]", username, sid, runningId, curDir)
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
@@ -445,7 +445,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if nil != session.OutputWS[sid] {
-			// logger.Debugf("Session [%s] 's build [id=%d, dir=%s] has done", sid, runningId, curDir)
+			// logger.Debugf("User [%s, %s] 's build [id=%d, dir=%s] has done", username, sid, runningId, curDir)
 
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)
@@ -581,7 +581,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	go func(runningId int) {
 		defer util.Recover()
 
-		logger.Debugf("Session [%s] is running [go test] [runningId=%d]", sid, runningId)
+		logger.Debugf("User [%s, %s] is running [go test] [runningId=%d]", username, sid, runningId)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go test"
@@ -593,11 +593,11 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 		cmd.Wait()
 
 		if !cmd.ProcessState.Success() {
-			logger.Debugf("Session [%s] 's running [go test] [runningId=%d] has done (with error)", sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go test] [runningId=%d] has done (with error)", username, sid, runningId)
 
 			channelRet["output"] = "<span class='test-error'>" + i18n.Get(locale, "test-error").(string) + "</span>\n" + string(buf)
 		} else {
-			logger.Debugf("Session [%s] 's running [go test] [runningId=%d] has done", sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go test] [runningId=%d] has done", username, sid, runningId)
 
 			channelRet["output"] = "<span class='test-succ'>" + i18n.Get(locale, "test-succ").(string) + "</span>\n" + string(buf)
 		}
@@ -702,7 +702,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		logger.Debugf("Session [%s] is running [go install] [id=%d, dir=%s]", sid, runningId, curDir)
+		logger.Debugf("User [%s, %s] is running [go install] [id=%d, dir=%s]", username, sid, runningId, curDir)
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
@@ -766,7 +766,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if nil != session.OutputWS[sid] {
-			logger.Debugf("Session [%s] 's running [go install] [id=%d, dir=%s] has done", sid, runningId, curDir)
+			logger.Debugf("User [%s, %s] 's running [go install] [id=%d, dir=%s] has done", username, sid, runningId, curDir)
 
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)
@@ -865,7 +865,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		logger.Debugf("Session [%s] is running [go get] [runningId=%d]", sid, runningId)
+		logger.Debugf("User [%s, %s] is running [go get] [runningId=%d]", username, sid, runningId)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go get"
@@ -874,11 +874,11 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		buf, _ := ioutil.ReadAll(reader)
 
 		if 0 != len(buf) {
-			logger.Debugf("Session [%s] 's running [go get] [runningId=%d] has done (with error)", sid, runningId)
+			logger.Debugf("User [%s, %s] 's [go get] [runningId=%d] has done (with error)", username, sid, runningId)
 
 			channelRet["output"] = "<span class='get-error'>" + i18n.Get(locale, "get-error").(string) + "</span>\n" + string(buf)
 		} else {
-			logger.Debugf("Session [%s] 's running [go get] [runningId=%d] has done", sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go get] [runningId=%d] has done", username, sid, runningId)
 
 			channelRet["output"] = "<span class='get-succ'>" + i18n.Get(locale, "get-succ").(string) + "</span>\n"
 
