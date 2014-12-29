@@ -133,6 +133,9 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/file/search/text", handlerWrapper(file.SearchText))
 	http.HandleFunc(conf.Wide.Context+"/file/find/name", handlerWrapper(file.Find))
 
+	// outline
+	http.HandleFunc(conf.Wide.Context+"/outline", handlerWrapper(file.GetOutline))
+
 	// file export/import
 	http.HandleFunc(conf.Wide.Context+"/file/zip/new", handlerWrapper(file.CreateZip))
 	http.HandleFunc(conf.Wide.Context+"/file/zip", handlerWrapper(file.GetZip))

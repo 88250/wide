@@ -24,7 +24,7 @@ func setNamespace(cmd *exec.Cmd) {
 
 	cmd.SysProcAttr = &syscall.SysProcAttr{}
 	//cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET
-	cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC
+	cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER /*| syscall.CLONE_NEWNS*/ | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC /*| syscall.CLONE_NEWNET*/
 	cmd.SysProcAttr.Credential = &syscall.Credential{
 		Uid: 0,
 		Gid: 0,
