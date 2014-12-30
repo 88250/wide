@@ -512,7 +512,6 @@ var wide = {
             request.file = path;
             request.code = editor.getValue();
             request.nextCmd = ""; // build only, no following operation
-
             $.ajax({
                 type: 'POST',
                 url: config.context + '/build',
@@ -522,6 +521,24 @@ var wide = {
                     bottomGroup.resetOutput();
                 },
                 success: function (data) {
+                }
+            });
+            
+            // refresh outline
+            var request = newWideRequest();
+            request.code = wide.curEditor.getValue();
+
+            $.ajax({
+                type: 'POST',
+                url: config.context + '/outline',
+                data: JSON.stringify(request),
+                dataType: "json",
+                success: function (data) {
+                    if (!data.succ) {
+                        return;
+                    }
+                    
+                    $("#outline").html(JSON.stringify(data));
                 }
             });
 

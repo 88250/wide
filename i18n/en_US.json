@@ -161,5 +161,6 @@
     "change_avatar": "Avatar modify go",
     "open": "Open",
     "pricing": "Pricing",
-    "search_no_match": "No matching files were found."
+    "search_no_match": "No matching files were found.",
+    "outline": "Outline"
 }

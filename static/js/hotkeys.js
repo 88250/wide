@@ -51,12 +51,17 @@ var hotkeys = {
                 $("#files").focus();
             }
         },
+        // Ctrl-2
         goOutline: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 50,
             fun: function () {
+                if (!wide.curEditor) {
+                    return;
+                }
+                
                 var request = newWideRequest();
                 request.code = wide.curEditor.getValue();
 

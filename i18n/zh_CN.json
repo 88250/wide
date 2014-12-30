@@ -161,5 +161,6 @@
     "change_avatar": "头像修改请到",
     "open": "打开",
     "pricing": "价格",
-    "search_no_match": "没有发现匹配的文件。"
+    "search_no_match": "没有发现匹配的文件。",
+    "outline": "大纲"
 }

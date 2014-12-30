@@ -49,7 +49,9 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, "", code, 0)
 	if err != nil {
-		panic(err)
+		data["succ"] = false
+
+		return
 	}
 
 	//ast.Print(fset, f)
