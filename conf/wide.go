@@ -41,7 +41,7 @@ const (
 	// WideVersion holds the current wide version.
 	WideVersion = "1.1.0"
 	// CodeMirrorVer holds the current editor version.
-	CodeMirrorVer = "4.8"
+	CodeMirrorVer = "4.10"
 )
 
 // Configuration.
