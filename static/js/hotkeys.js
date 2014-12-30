@@ -16,7 +16,7 @@
 
 var hotkeys = {
     defaultKeyMap: {
-        // Ctrl-0 焦点切换到当前编辑器   
+        // Ctrl-0
         goEditor: {
             ctrlKey: true,
             altKey: false,
@@ -28,7 +28,7 @@ var hotkeys = {
                 }
             }
         },
-        // Ctrl-1 焦点切换到文件树
+        // Ctrl-1
         goFileTree: {
             ctrlKey: true,
             altKey: false,
@@ -51,7 +51,27 @@ var hotkeys = {
                 $("#files").focus();
             }
         },
-        // Ctrl-4 焦点切换到输出窗口   
+        goOutline: {
+            ctrlKey: true,
+            altKey: false,
+            shiftKey: false,
+            which: 50,
+            fun: function () {
+                var request = newWideRequest();
+                request.code = wide.curEditor.getValue();
+
+                $.ajax({
+                    type: 'POST',
+                    url: config.context + '/outline',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function (data) {
+                        console.log(data);
+                    }
+                });
+            }
+        },
+        // Ctrl-4
         goOutput: {
             ctrlKey: true,
             altKey: false,
@@ -63,7 +83,7 @@ var hotkeys = {
                 $(".bottom-window-group .output").focus();
             }
         },
-        // Ctrl-5 焦点切换到搜索窗口   
+        // Ctrl-5
         goSearch: {
             ctrlKey: true,
             altKey: false,
@@ -75,7 +95,7 @@ var hotkeys = {
                 $(".bottom-window-group .search").focus();
             }
         },
-        // Ctrl-6 焦点切换到通知窗口   
+        // Ctrl-6
         goNotification: {
             ctrlKey: true,
             altKey: false,
@@ -87,7 +107,7 @@ var hotkeys = {
                 $(".bottom-window-group .notification").focus();
             }
         },
-        // Ctrl-C 清空窗口内容   
+        // Ctrl-C
         clearWindow: {
             ctrlKey: true,
             altKey: false,
@@ -101,21 +121,21 @@ var hotkeys = {
             shiftKey: false,
             which: 68
         },
-        // Ctrl-F 搜索  
+        // Ctrl-F search  
         search: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 70
         },
-        // Ctrl-Q 关闭当前编辑器   
+        // Ctrl-Q close current editor   
         closeCurEditor: {
             ctrlKey: true,
             altKey: false,
             shiftKey: false,
             which: 81
         },
-        // Ctrl-R 重命名   
+        // Ctrl-R
         rename: {
             ctrlKey: true,
             altKey: false,
@@ -245,7 +265,7 @@ var hotkeys = {
 
                         tree.fileTree.expandNode(wide.curNode, true, false, true);
                         $("#files").focus();
-                        
+
                         break;
                     }
 
@@ -361,6 +381,14 @@ var hotkeys = {
             if (event.ctrlKey === hotKeys.goFileTree.ctrlKey
                     && event.which === hotKeys.goFileTree.which) { // Ctrl-1 焦点切换到文件树
                 hotKeys.goFileTree.fun();
+                event.preventDefault();
+
+                return;
+            }
+            
+            if (event.ctrlKey === hotKeys.goOutline.ctrlKey
+                    && event.which === hotKeys.goOutline.which) { // Ctrl-2 焦点切换到大纲
+                hotKeys.goOutline.fun();
                 event.preventDefault();
 
                 return;

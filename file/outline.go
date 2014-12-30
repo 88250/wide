@@ -24,6 +24,12 @@ import (
 	"github.com/b3log/wide/util"
 )
 
+type element struct {
+	Name string
+	Pos  token.Pos
+	End  token.Pos
+}
+
 // GetOutline gets outfile of a go file.
 func GetOutline(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
@@ -46,5 +52,67 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 		panic(err)
 	}
 
-	ast.Print(fset, f)
+	//ast.Print(fset, f)
+
+	data["package"] = &element{Name: f.Name.Name, Pos: f.Name.Pos(), End: f.Name.End()}
+
+	imports := []*element{}
+	for _, astImport := range f.Imports {
+
+		impt := &element{Name: astImport.Path.Value, Pos: astImport.Path.Pos(), End: astImport.Path.End()}
+
+		imports = append(imports, impt)
+	}
+	data["imports"] = imports
+
+	funcDecls := []*element{}
+	varDecls := []*element{}
+	constDecls := []*element{}
+	structDecls := []*element{}
+	interfaceDecls := []*element{}
+	for _, decl := range f.Decls {
+		switch decl.(type) {
+		case *ast.FuncDecl:
+			funcDecl := decl.(*ast.FuncDecl)
+
+			decl := &element{Name: funcDecl.Name.Name, Pos: funcDecl.Name.Pos(), End: funcDecl.Name.End()}
+
+			funcDecls = append(funcDecls, decl)
+		case *ast.GenDecl:
+			genDecl := decl.(*ast.GenDecl)
+
+			for _, spec := range genDecl.Specs {
+
+				switch genDecl.Tok {
+				case token.VAR:
+					variableSpec := spec.(*ast.ValueSpec)
+					decl := &element{Name: variableSpec.Names[0].Name, Pos: variableSpec.Pos(), End: variableSpec.End()}
+
+					varDecls = append(varDecls, decl)
+				case token.TYPE:
+					typeSpec := spec.(*ast.TypeSpec)
+					decl := &element{Name: typeSpec.Name.Name, Pos: typeSpec.Name.Pos(), End: typeSpec.Name.End()}
+
+					switch typeSpec.Type.(type) {
+					case *ast.StructType:
+						structDecls = append(structDecls, decl)
+					case *ast.InterfaceType:
+						interfaceDecls = append(interfaceDecls, decl)
+					}
+				case token.CONST:
+					constSpec := spec.(*ast.ValueSpec)
+					decl := &element{Name: constSpec.Names[0].Name, Pos: constSpec.Pos(), End: constSpec.End()}
+
+					constDecls = append(constDecls, decl)
+				}
+			}
+
+		}
+	}
+
+	data["funcDecls"] = funcDecls
+	data["varDecls"] = varDecls
+	data["constDecls"] = constDecls
+	data["structDecls"] = structDecls
+	data["interfaceDecls"] = interfaceDecls
 }
