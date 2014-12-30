@@ -390,7 +390,8 @@ var editors = {
 
         CodeMirror.commands.autocompleteAfterDot = function (cm) {
             var token = cm.getTokenAt(cm.getCursor());
-            if ("comment" === token.type) {
+
+            if ("comment" === token.type || "string" === token.type) {
                 return CodeMirror.Pass;
             }
 
