@@ -228,7 +228,7 @@ func checkEnv() {
 	}
 
 	gocode := util.Go.GetExecutableInGOBIN("gocode")
-	cmd = exec.Command(gocode, "close")
+	cmd = exec.Command(gocode)
 	_, err = cmd.Output()
 	if nil != err {
 		event.EventQueue <- &event.Event{Code: event.EvtCodeGocodeNotFound}
