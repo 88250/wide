@@ -86,7 +86,7 @@ func (procs *procs) kill(wSession *session.WideSession, pid int) {
 	for i, p := range userProcesses {
 		if p.Pid == pid {
 			if err := p.Kill(); nil != err {
-				logger.Error("Kill a process [pid=%d] of user [%s, %s] failed [error=%v]", pid, wSession.Username, sid, err)
+				logger.Errorf("Kill a process [pid=%d] of user [%s, %s] failed [error=%v]", pid, wSession.Username, sid, err)
 			} else {
 				var newProcesses []*os.Process
 

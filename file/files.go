@@ -666,7 +666,7 @@ func find(dir, name string, results []*string) []*string {
 			match, err := filepath.Match(strings.ToLower(pattern), strings.ToLower(path))
 
 			if nil != err {
-				logger.Errorf("Find match filename failed: [%s]", err.Error)
+				logger.Errorf("Find match filename failed: [%s]", err.Error())
 
 				continue
 			}

@@ -118,6 +118,7 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/run", handlerWrapper(output.RunHandler))
 	http.HandleFunc(conf.Wide.Context+"/stop", handlerWrapper(output.StopHandler))
 	http.HandleFunc(conf.Wide.Context+"/go/test", handlerWrapper(output.GoTestHandler))
+	http.HandleFunc(conf.Wide.Context+"/go/vet", handlerWrapper(output.GoVetHandler))
 	http.HandleFunc(conf.Wide.Context+"/go/get", handlerWrapper(output.GoGetHandler))
 	http.HandleFunc(conf.Wide.Context+"/go/install", handlerWrapper(output.GoInstallHandler))
 	http.HandleFunc(conf.Wide.Context+"/output/ws", handlerWrapper(output.WSHandler))

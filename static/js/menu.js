@@ -227,7 +227,7 @@ var menu = {
             return false;
         }
 
-        if ($(".menu li.test").hasClass("disabled")) {
+        if ($(".menu li.go-test").hasClass("disabled")) {
             return false;
         }
 
@@ -237,6 +237,34 @@ var menu = {
         $.ajax({
             type: 'POST',
             url: config.context + '/go/test',
+            data: JSON.stringify(request),
+            dataType: "json",
+            beforeSend: function (data) {
+                bottomGroup.resetOutput();
+            },
+            success: function (data) {
+            }
+        });
+    },
+    // go vet.
+    govet: function () {
+        menu.saveAllFiles();
+
+        var currentPath = editors.getCurrentPath();
+        if (!currentPath) {
+            return false;
+        }
+
+        if ($(".menu li.go-vet").hasClass("disabled")) {
+            return false;
+        }
+
+        var request = newWideRequest();
+        request.file = currentPath;
+
+        $.ajax({
+            type: 'POST',
+            url: config.context + '/go/vet',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function (data) {
