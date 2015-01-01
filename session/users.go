@@ -148,9 +148,9 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if "GET" == r.Method {
 		// show the login page
-
+		
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
-			"locale": conf.Wide.Locale, "ver": conf.WideVersion}
+			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "year": time.Now().Year()}
 
 		t, err := template.ParseFiles("views/login.html")
 
@@ -231,7 +231,7 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
 			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "dir": dir,
-			"pathSeparator": conf.PathSeparator}
+			"pathSeparator": conf.PathSeparator, "year": time.Now().Year()}
 
 		t, err := template.ParseFiles("views/sign_up.html")
 
