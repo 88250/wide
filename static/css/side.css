@@ -30,7 +30,23 @@
 .side .tabs-panel {
     overflow: auto;
 }
-/* start side */
+/* end side */
+
+/* start side right */
+.side-right {
+    height: 70%;
+    position: absolute;
+    right: 0;
+    width: 20%;
+    z-index: 8;
+}
+
+.side-right-max {
+    width: 100%;
+    height: 100%;
+    z-index: 11;
+}
+/* end side right */
 
 /* start tree */
 .ztree {

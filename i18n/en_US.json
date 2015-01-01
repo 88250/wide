@@ -56,7 +56,7 @@
     "find_previous": "Find Previous",
     "replace": "Replace",
     "replace_all": "Replace All",
-    "restore_bottom": "Bottom Windows Restore",
+    "restore_bottom": "Restore Bottom Windows",
     "file_format": "File Extension",
     "keyword": "Keyword",
     "user_guide": "User Guide",
@@ -166,5 +166,6 @@
     "govet": "go vet",
     "start-vet": "START [go vet]",
     "vet-succ": "[go vet] SUCCESS",
-    "vet-error": "[go vet] ERROR"
+    "vet-error": "[go vet] ERROR",
+    "restore_outline": "Restore Outline"
 }

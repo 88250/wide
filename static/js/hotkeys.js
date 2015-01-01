@@ -41,11 +41,6 @@ var hotkeys = {
                     $(".side").css({
                         "left": "0"
                     });
-
-                    if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
-                        // 当底部最小化时
-                        $(".bottom-window-group").css("top", "100%").hide();
-                    }
                 }
 
                 $("#files").focus();
@@ -58,22 +53,27 @@ var hotkeys = {
             shiftKey: false,
             which: 50,
             fun: function () {
-                if (!wide.curEditor) {
-                    return;
+                if ($(".footer .ico-restore:eq(2)").css("display") === "inline") {
+                    // 当文件树最小化时
+                    $(".side-right").css({
+                        "right": "0"
+                    });
                 }
-                
-                var request = newWideRequest();
-                request.code = wide.curEditor.getValue();
 
-                $.ajax({
-                    type: 'POST',
-                    url: config.context + '/outline',
-                    data: JSON.stringify(request),
-                    dataType: "json",
-                    success: function (data) {
-                        console.log(data);
-                    }
-                });
+                $("#outline").focus();
+                
+//                var request = newWideRequest();
+//                request.code = wide.curEditor.getValue();
+//
+//                $.ajax({
+//                    type: 'POST',
+//                    url: config.context + '/outline',
+//                    data: JSON.stringify(request),
+//                    dataType: "json",
+//                    success: function (data) {
+//                        console.log(data);
+//                    }
+//                });
             }
         },
         // Ctrl-4

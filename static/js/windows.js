@@ -17,9 +17,11 @@
 var windows = {
     isMaxEditor: false,
     init: function () {
+        // bottom windows
         $(".footer .ico-restore:eq(1)").click(function () {
             windows.restoreBottom();
-            if ($(".footer .ico-restore:eq(0)").css("display") === "none") {
+            if ($(".footer .ico-restore:eq(0)").css("display") === "none"
+                    && $(".footer .ico-restore:eq(2)").css("display") === "none") {
                 $(".toolbars .ico-restore").removeClass("ico-restore").addClass("ico-max")
                         .attr({
                             "title": config.label.max_editor,
@@ -30,7 +32,8 @@ var windows = {
 
         $(".bottom-window-group .ico-min").click(function () {
             windows.minBottom();
-            if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+            if ($(".footer .ico-restore:eq(0)").css("display") === "inline"
+                    && $(".footer .ico-restore:eq(2)").css("display") === "inline") {
                 $(".toolbars .ico-max").removeClass("ico-max").addClass("ico-restore")
                         .attr({
                             "title": config.label.restore_editor,
@@ -43,9 +46,11 @@ var windows = {
             windows.maxBottom();
         });
 
+        // side
         $(".footer .ico-restore:eq(0)").click(function () {
             windows.restoreSide();
-            if ($(".footer .ico-restore:eq(1)").css("display") === "none") {
+            if ($(".footer .ico-restore:eq(1)").css("display") === "none"
+                    && $(".footer .ico-restore:eq(2)").css("display") === "none") {
                 $(".toolbars .ico-restore").removeClass("ico-restore").addClass("ico-max")
                         .attr({
                             "title": config.label.max_editor,
@@ -56,7 +61,8 @@ var windows = {
 
         $(".side .ico-min").click(function () {
             windows.minSide();
-            if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
+            if ($(".footer .ico-restore:eq(1)").css("display") === "inline"
+                    && $(".footer .ico-restore:eq(2)").css("display") === "inline") {
                 $(".toolbars .ico-max").removeClass("ico-max").addClass("ico-restore")
                         .attr({
                             "title": config.label.restore_editor,
@@ -69,11 +75,41 @@ var windows = {
             windows.maxSide();
         });
 
+        // side right
+        $(".footer .ico-restore:eq(2)").click(function () {
+            windows.restoreSideRight();
+            if ($(".footer .ico-restore:eq(1)").css("display") === "none"
+                    && $(".footer .ico-restore:eq(0)").css("display") === "none") {
+                $(".toolbars .ico-restore").removeClass("ico-restore").addClass("ico-max")
+                        .attr({
+                            "title": config.label.max_editor,
+                            "onclick": "windows.maxEditor()"
+                        });
+            }
+        });
+
+        $(".side-right .ico-min").click(function () {
+            windows.minSideRight();
+            if ($(".footer .ico-restore:eq(1)").css("display") === "inline"
+                    && $(".footer .ico-restore:eq(0)").css("display") === "inline") {
+                $(".toolbars .ico-max").removeClass("ico-max").addClass("ico-restore")
+                        .attr({
+                            "title": config.label.restore_editor,
+                            "onclick": "windows.restoreEditor()"
+                        });
+            }
+        });
+
+        $(".side-right .tabs").dblclick(function () {
+            windows.maxSideRight();
+        });
+
         $(window).click(function (event) {
             if ($(event.target).closest(".footer").length === 1
                     || $(event.target).closest(".bottom-window-group").length === 1
                     || $(event.target).closest(".toolbars").length === 1
-                    || $(event.target).closest(".side").length === 1) {
+                    || $(event.target).closest(".side").length === 1
+                    || $(event.target).closest(".side-right").length === 1) {
             } else {
                 windows.clearFloat();
             }
@@ -107,6 +143,14 @@ var windows = {
             $it.addClass("side-max");
         }
     },
+    maxSideRight: function () {
+        var $it = $(".side-right");
+        if ($it.hasClass("side-right-max")) {
+            windows.restoreSideRight();
+        } else {
+            $it.addClass("side-right-max");
+        }
+    },
     restoreBottom: function () {
         var $it = $(".bottom-window-group");
         $it.removeClass("bottom-window-group-max").attr("style", "");
@@ -117,7 +161,7 @@ var windows = {
         $it.animate({
             "top": "70%"
         }, function () {
-            $(".edit-panel").css("height", "70%");
+            $(".edit-panel, .side-right").css("height", "70%");
 
             var editorDatas = editors.data,
                     height = $(".edit-panel").height() - $(".edit-panel .tabs").height();
@@ -146,11 +190,33 @@ var windows = {
                 "width": "80%"
             });
 
+            if ($(".footer .ico-restore:eq(2)").css("display") === "inline") {
+                // 当outline最小化时
+                $(".edit-panel").css("width", "80%");
+            } else {
+                $(".edit-panel").css("width", "60%");
+            }
+
             $(".footer .ico-restore:eq(0)").hide();
         }).removeClass("side-max");
     },
+    restoreSideRight: function () {
+        $(".side-right").animate({
+            "right": "0"
+        }, function () {
+            if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+                // 当文件树最小化时
+                $(".edit-panel").css("width", "80%");
+            } else {
+                $(".edit-panel").css("width", "60%");
+            }
+
+            $(".footer .ico-restore:eq(2)").hide();
+        }).removeClass("side-right-max");
+        ;
+    },
     minBottom: function () {
-        $(".edit-panel").css("height", "100%");
+        $(".edit-panel, .side-right").css("height", "100%");
 
         var editorDatas = editors.data,
                 height = $(".content").height() - $(".edit-panel .tabs").height();
@@ -164,11 +230,35 @@ var windows = {
     minSide: function () {
         $(".side").css("left", "-20%").removeClass("side-max");
 
+        var width = '80%';
+        if ($(".footer .ico-restore:eq(2)").css("display") === "inline") {
+            // 当 outline 最小化时
+            width = '100%';
+        }
+
         $(".edit-panel, .bottom-window-group").css({
             "left": "0",
-            "width": "100%"
+            "width": width
         });
+
+        $(".bottom-window-group").css({
+            "left": "0",
+            "width": '100%'
+        });
+
+
         $(".footer .ico-restore:eq(0)").show();
+    },
+    minSideRight: function () {
+        $(".side-right").css("right", "-20%");
+        $(".footer .ico-restore:eq(2)").show();
+
+        if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
+            // 当文件树最小化时
+            $(".edit-panel").css("width", "100%");
+        } else {
+            $(".edit-panel").css("width", "80%");
+        }
     },
     maxEditor: function () {
         $(".toolbars .ico-max").removeClass("ico-max").addClass("ico-restore")
@@ -179,6 +269,7 @@ var windows = {
 
         windows.minBottom();
         windows.minSide();
+        windows.minSideRight();
         if (wide.curEditor) {
             wide.curEditor.focus();
         }
@@ -194,6 +285,7 @@ var windows = {
 
         windows.restoreBottom();
         windows.restoreSide();
+        windows.restoreSideRight();
         if (wide.curEditor) {
             wide.curEditor.focus();
         }
@@ -210,6 +302,11 @@ var windows = {
             // 当底部最小化时
             windows.minBottom();
         }
+
+        if ($(".footer .ico-restore:eq(2)").css("display") === "inline") {
+            // 当 outline 最小化时
+            windows.minSideRight();
+        }
     },
     flowBottom: function () {
         if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
@@ -220,11 +317,6 @@ var windows = {
                 "width": "100%",
                 "z-index": "8"
             }).show();
-
-            if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
-                // 当文件最小化时
-                $(".side").css("left", "-20%");
-            }
         }
     }
 };
