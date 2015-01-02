@@ -189,7 +189,7 @@ var editors = {
                 }
 
                 if (editors.data.length === 0) { // 起始页可能存在，所以用编辑器数据判断
-                    menu.disabled(['save-all', 'build', 'run', 'go-test','go-vet', 'go-get', 'go-install',
+                    menu.disabled(['save-all', 'build', 'run', 'go-test', 'go-vet', 'go-get', 'go-install',
                         'find', 'find-next', 'find-previous', 'replace', 'replace-all',
                         'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment',
                         'edit']);
@@ -354,15 +354,27 @@ var editors = {
 
                             switch (autocompleteArray[i].class) {
                                 case "type":
+                                    displayText = '<span class="fn-clear"><span class="ico-type ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>    '
+                                            + autocompleteArray[i].type + '</span>';
+                                    break;
                                 case "const":
+                                    displayText = '<span class="fn-clear"><span class="ico-const ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>    '
+                                            + autocompleteArray[i].type + '</span>';
+                                    break;
                                 case "var":
+                                    displayText = '<span class="fn-clear"><span class="ico-var ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>    '
+                                            + autocompleteArray[i].type + '</span>';
+                                    break;
                                 case "package":
-                                    displayText = '<span class="fn-clear">'// + autocompleteArray[i].class 
-                                            + '<b class="fn-left">' + autocompleteArray[i].name + '</b>    '
+                                    displayText = '<span class="fn-clear"><span class="ico-package ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>    '
                                             + autocompleteArray[i].type + '</span>';
                                     break;
                                 case "func":
-                                    displayText = '<span>'// + autocompleteArray[i].class 
+                                    displayText = '<span><span class="ico-func ico"></span>'// + autocompleteArray[i].class 
                                             + '<b>' + autocompleteArray[i].name + '</b>'
                                             + autocompleteArray[i].type.substring(4) + '</span>';
                                     text += '()';

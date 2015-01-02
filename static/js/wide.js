@@ -37,7 +37,7 @@ var wide = {
                     return;
                 }
                 
-                var outlineHTML = '<ul>',
+                var outlineHTML = '<ul class="list">',
                         decls = ['funcDecls', 'interfaceDecls', 'structDecls', 
                     'constDecls', 'varDecls'];
                 
@@ -45,7 +45,8 @@ var wide = {
                     var key = decls[i];
                     for (var j = 0, maxj = data[key].length; j < maxj; j++) {
                         var name = data[key][j].Name;
-                        outlineHTML += '<li>' + name + '</li>';
+                        outlineHTML += '<li><span class="ico ico-'
+                                + key.replace('Decls', '') + '"></span> ' + name + '</li>';
                     }
                 }
                 $("#outline").html(outlineHTML + '</ul>');

@@ -344,8 +344,7 @@
     top: 1px;
 }
 
-.edit-panel .tabs .ico,
-#dialogGoFilePrompt .ico {
+.ico {
     background-image: url("../images/ico-file.png");
     float: left;
     height: 16px;
@@ -378,6 +377,10 @@
 
 .CodeMirror,
 .CodeMirror-hints {
+}
+
+.CodeMirror-hints .ico {
+    margin: -1px 2px 0 -1px;
 }
 
 .CodeMirror-focused .cm-matchhighlight {

@@ -50,6 +50,38 @@
 .side-right .tabs-panel > div {
     overflow: auto;
 }
+
+#outline .ico {
+    margin: 2px 2px 0 2px;
+}
+
+.ico-func {
+    background-position: -122px -21px;
+}
+
+.ico-interface {
+    background-position: -143px -21px;
+}
+
+.ico-const {
+    background-position: -103px -21px;
+}
+
+.ico-var {
+    background-position: -63px -21px;
+}
+
+.ico-struct {
+    background-position: -83px -21px;
+}
+
+.ico-type {
+    background-position: -163px -21px;
+}
+
+.ico-package {
+    background-position: -183px -21px;
+}
 /* end side right */
 
 /* start tree */
