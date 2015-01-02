@@ -61,19 +61,6 @@ var hotkeys = {
                 }
 
                 $("#outline").focus();
-                
-//                var request = newWideRequest();
-//                request.code = wide.curEditor.getValue();
-//
-//                $.ajax({
-//                    type: 'POST',
-//                    url: config.context + '/outline',
-//                    data: JSON.stringify(request),
-//                    dataType: "json",
-//                    success: function (data) {
-//                        console.log(data);
-//                    }
-//                });
             }
         },
         // Ctrl-4

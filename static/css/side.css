@@ -46,6 +46,10 @@
     height: 100%;
     z-index: 11;
 }
+
+.side-right .tabs-panel > div {
+    overflow: auto;
+}
 /* end side right */
 
 /* start tree */

@@ -149,6 +149,7 @@ var windows = {
             windows.restoreSideRight();
         } else {
             $it.addClass("side-right-max");
+            $(".side-right > .tabs-panel > div").height($(".content").height() - $it.children(".tabs").height());
         }
     },
     restoreBottom: function () {
@@ -212,8 +213,9 @@ var windows = {
             }
 
             $(".footer .ico-restore:eq(2)").hide();
+            $(".side-right > .tabs-panel > div").height($('.side-right').height()
+                    - $(this).children(".tabs").height());
         }).removeClass("side-right-max");
-        ;
     },
     minBottom: function () {
         $(".edit-panel, .side-right").css("height", "100%");

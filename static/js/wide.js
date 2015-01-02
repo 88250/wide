@@ -18,6 +18,40 @@ var wide = {
     curNode: undefined,
     curEditor: undefined,
     curProcessId: undefined, // curent running process id (pid)
+    refreshOutline: function () {
+        if (wide.curEditor.doc.getMode().name !== "go") {
+            $("#outline").html('');
+            return false;
+        }
+        
+        var request = newWideRequest();
+        request.code = wide.curEditor.getValue();
+
+        $.ajax({
+            type: 'POST',
+            url: config.context + '/outline',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                if (!data.succ) {
+                    return;
+                }
+                
+                var outlineHTML = '<ul>',
+                        decls = ['funcDecls', 'interfaceDecls', 'structDecls', 
+                    'constDecls', 'varDecls'];
+                
+                for (var i = 0, max = decls.length; i < max; i++) {
+                    var key = decls[i];
+                    for (var j = 0, maxj = data[key].length; j < maxj; j++) {
+                        var name = data[key][j].Name;
+                        outlineHTML += '<li>' + name + '</li>';
+                    }
+                }
+                $("#outline").html(outlineHTML + '</ul>');
+            }
+        });
+    },
     _initDialog: function () {
         $(".dialog-prompt > input").keyup(function (event) {
             var $okBtn = $(this).closest(".dialog-main").find(".dialog-footer > button:eq(0)");
@@ -321,6 +355,12 @@ var wide = {
         } else {
             $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - $bottomGroup.children(".tabs").height());
         }
+        
+        if ($(".side-right").hasClass("side-right-max")) {
+            $(".side-right > .tabs-panel > div").height(mainH - $bottomGroup.children(".tabs").height());
+        } else {
+            $(".side-right > .tabs-panel > div").height($('.side-right').height() - $bottomGroup.children(".tabs").height());
+        }
     },
     _initWS: function () {
         var outputWS = new ReconnectingWebSocket(config.channel + '/output/ws?sid=' + config.wideSessionId);
@@ -525,24 +565,9 @@ var wide = {
                 success: function (data) {
                 }
             });
-            
-            // refresh outline
-            var request = newWideRequest();
-            request.code = wide.curEditor.getValue();
 
-            $.ajax({
-                type: 'POST',
-                url: config.context + '/outline',
-                data: JSON.stringify(request),
-                dataType: "json",
-                success: function (data) {
-                    if (!data.succ) {
-                        return;
-                    }
-                    
-                    $("#outline").html(JSON.stringify(data));
-                }
-            });
+            // refresh outline
+            wide.randerOutline();
 
             return;
         }

@@ -330,6 +330,7 @@ var tree = {
                 wide.curEditor.scrollTo(0, cursorCoords.top);
                 wide.curEditor.focus();
 
+                wide.refreshOutline();
                 return false;
             }
         }
@@ -361,6 +362,8 @@ var tree = {
                         tempCursor = CodeMirror.Pos(0, 0);
                     }
                     editors.newEditor(data, tempCursor);
+
+                    wide.refreshOutline();
                 }
             });
         }
