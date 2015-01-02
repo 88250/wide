@@ -148,7 +148,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	if "GET" == r.Method {
 		// show the login page
-		
+
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
 			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "year": time.Now().Year()}
 
@@ -270,7 +270,19 @@ func SignUpUser(w http.ResponseWriter, r *http.Request) {
 	if userCreated != msg {
 		succ = false
 		data["msg"] = msg
+
+		return
 	}
+
+	// create a HTTP session
+	httpSession, _ := HTTPSession.Get(r, "wide-session")
+	httpSession.Values["username"] = username
+	httpSession.Values["id"] = strconv.Itoa(rand.Int())
+	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+	if "" != conf.Wide.Context {
+		httpSession.Options.Path = conf.Wide.Context
+	}
+	httpSession.Save(r, w)
 }
 
 // FixedTimeSave saves online users' configurations periodically (1 minute).

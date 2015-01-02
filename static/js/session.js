@@ -50,12 +50,15 @@ var session = {
         }, 30000);
     },
     restore: function () {
+        if (!config.latestSessionContent) {
+            return;
+        }
+
         var fileTree = config.latestSessionContent.FileTree,
                 files = config.latestSessionContent.Files,
                 currentFile = config.latestSessionContent.CurrentFile,
                 id = "",
                 nodesToOpen = [];
-
 
         var nodes = tree.fileTree.transformToArray(tree.fileTree.getNodes());
 
