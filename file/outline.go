@@ -56,7 +56,7 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	//ast.Print(fset, f)
+	// ast.Print(fset, f)
 
 	line, ch := getCursor(code, int(f.Name.Pos()))
 	data["package"] = &element{Name: f.Name.Name, Line: line, Ch: ch}
@@ -74,6 +74,7 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 	constDecls := []*element{}
 	structDecls := []*element{}
 	interfaceDecls := []*element{}
+	typeDecls := []*element{}
 	for _, decl := range f.Decls {
 		switch decl.(type) {
 		case *ast.FuncDecl:
@@ -98,12 +99,15 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 					}
 				case token.TYPE:
 					typeSpec := spec.(*ast.TypeSpec)
+					line, ch := getCursor(code, int(typeSpec.Pos()))
 
 					switch typeSpec.Type.(type) {
 					case *ast.StructType:
 						structDecls = append(structDecls, &element{Name: typeSpec.Name.Name, Line: line, Ch: ch})
 					case *ast.InterfaceType:
 						interfaceDecls = append(interfaceDecls, &element{Name: typeSpec.Name.Name, Line: line, Ch: ch})
+					case *ast.Ident:
+						typeDecls = append(typeDecls, &element{Name: typeSpec.Name.Name, Line: line, Ch: ch})
 					}
 				case token.CONST:
 					constSpec := spec.(*ast.ValueSpec)
@@ -123,6 +127,7 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 	data["constDecls"] = constDecls
 	data["structDecls"] = structDecls
 	data["interfaceDecls"] = interfaceDecls
+	data["typeDecls"] = typeDecls
 }
 
 // getCursor calculates the cursor position (line, ch) by the specified offset.
