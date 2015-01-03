@@ -15,19 +15,21 @@
 package file
 
 import (
+	"bytes"
 	"encoding/json"
 	"go/ast"
 	"go/parser"
 	"go/token"
 	"net/http"
+	"strings"
 
 	"github.com/b3log/wide/util"
 )
 
 type element struct {
 	Name string
-	Pos  token.Pos
-	End  token.Pos
+	Line int
+	Ch   int
 }
 
 // GetOutline gets outfile of a go file.
@@ -56,14 +58,14 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 
 	//ast.Print(fset, f)
 
-	data["package"] = &element{Name: f.Name.Name, Pos: f.Name.Pos(), End: f.Name.End()}
+	line, ch := getCursor(code, int(f.Name.Pos()))
+	data["package"] = &element{Name: f.Name.Name, Line: line, Ch: ch}
 
 	imports := []*element{}
 	for _, astImport := range f.Imports {
+		line, ch := getCursor(code, int(astImport.Path.Pos()))
 
-		impt := &element{Name: astImport.Path.Value, Pos: astImport.Path.Pos(), End: astImport.Path.End()}
-
-		imports = append(imports, impt)
+		imports = append(imports, &element{Name: astImport.Path.Value, Line: line, Ch: ch})
 	}
 	data["imports"] = imports
 
@@ -77,9 +79,9 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 		case *ast.FuncDecl:
 			funcDecl := decl.(*ast.FuncDecl)
 
-			decl := &element{Name: funcDecl.Name.Name, Pos: funcDecl.Name.Pos(), End: funcDecl.Name.End()}
+			line, ch := getCursor(code, int(funcDecl.Name.Pos()))
 
-			funcDecls = append(funcDecls, decl)
+			funcDecls = append(funcDecls, &element{Name: funcDecl.Name.Name, Line: line, Ch: ch})
 		case *ast.GenDecl:
 			genDecl := decl.(*ast.GenDecl)
 
@@ -88,27 +90,31 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 				switch genDecl.Tok {
 				case token.VAR:
 					variableSpec := spec.(*ast.ValueSpec)
-					decl := &element{Name: variableSpec.Names[0].Name, Pos: variableSpec.Pos(), End: variableSpec.End()}
 
-					varDecls = append(varDecls, decl)
+					for _, varName := range variableSpec.Names {
+						line, ch := getCursor(code, int(varName.Pos()))
+
+						varDecls = append(varDecls, &element{Name: varName.Name, Line: line, Ch: ch})
+					}
 				case token.TYPE:
 					typeSpec := spec.(*ast.TypeSpec)
-					decl := &element{Name: typeSpec.Name.Name, Pos: typeSpec.Name.Pos(), End: typeSpec.Name.End()}
 
 					switch typeSpec.Type.(type) {
 					case *ast.StructType:
-						structDecls = append(structDecls, decl)
+						structDecls = append(structDecls, &element{Name: typeSpec.Name.Name, Line: line, Ch: ch})
 					case *ast.InterfaceType:
-						interfaceDecls = append(interfaceDecls, decl)
+						interfaceDecls = append(interfaceDecls, &element{Name: typeSpec.Name.Name, Line: line, Ch: ch})
 					}
 				case token.CONST:
 					constSpec := spec.(*ast.ValueSpec)
-					decl := &element{Name: constSpec.Names[0].Name, Pos: constSpec.Pos(), End: constSpec.End()}
 
-					constDecls = append(constDecls, decl)
+					for _, constName := range constSpec.Names {
+						line, ch := getCursor(code, int(constName.Pos()))
+
+						constDecls = append(constDecls, &element{Name: constName.Name, Line: line, Ch: ch})
+					}
 				}
 			}
-
 		}
 	}
 
@@ -117,4 +123,29 @@ func GetOutline(w http.ResponseWriter, r *http.Request) {
 	data["constDecls"] = constDecls
 	data["structDecls"] = structDecls
 	data["interfaceDecls"] = interfaceDecls
+}
+
+// getCursor calculates the cursor position (line, ch) by the specified offset.
+//
+// line is the line number, starts with 0 that means the first line
+// ch is the column number, starts with 0 that means the first column
+func getCursor(code string, offset int) (line, ch int) {
+	code = code[:offset]
+
+	lines := strings.Split(code, "\n")
+
+	line = 0
+	for range lines {
+		line++
+	}
+
+	var buffer bytes.Buffer
+	runes := []rune(lines[line-1])
+	for _, r := range runes {
+		buffer.WriteString(string(r))
+	}
+
+	ch = len(buffer.String())
+
+	return line - 1, ch - 1
 }
