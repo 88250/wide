@@ -377,7 +377,7 @@ var hotkeys = {
 
                 return;
             }
-            
+
             if (event.ctrlKey === hotKeys.goOutline.ctrlKey
                     && event.which === hotKeys.goOutline.which) { // Ctrl-2 焦点切换到大纲
                 hotKeys.goOutline.fun();
@@ -465,7 +465,9 @@ var hotkeys = {
                     editors.tabs.setCurrent(nextId);
                     wide.curNode = tree.fileTree.getNodeByTId(nextId);
                     tree.fileTree.selectNode(wide.curNode);
-
+                    wide.refreshOutline();
+                    var cursor = wide.curEditor.getCursor();
+                    $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
                     wide.curEditor.focus();
                 }
 

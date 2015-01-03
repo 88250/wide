@@ -22,12 +22,11 @@ var menu = {
         this._initShare();
 
         // 点击子菜单后消失
-        $(".frame li").click(function () {
-            $(this).closest(".frame").hide();
-            $(".menu > ul > li > a, .menu > ul> li > span").removeClass("selected");
+        $(".menu .frame li").click(function () {
+            $(".frame").hide();
+            $(".menu > ul > li").unbind().removeClass("selected");
+            menu.subMenu();
         });
-
-
     },
     _initShare: function () {
         $(".menu .ico-share").hover(function () {
@@ -52,7 +51,7 @@ var menu = {
             urls.weibo = "http://v.t.sina.com.cn/share/share.php?title=" + title + "&url=" + url + "&pic=" + pic;
             urls.tencent = "http://share.v.t.qq.com/index.php?c=share&a=index&title=" + title +
                     "&url=" + url + "&pic=" + pic;
-            
+
             window.open(urls[key], "_blank", "top=100,left=200,width=648,height=618");
         });
     },
@@ -96,18 +95,24 @@ var menu = {
     },
     // 焦点不在菜单上时需点击展开子菜单，否则为鼠标移动展开
     subMenu: function () {
-        $(".menu > ul > li > a, .menu > ul> li > span").click(function () {
+        $(".menu > ul > li").click(function (event) {
+            if ($(event.target).closest(".frame").length === 1) {
+                return;
+            }
             var $it = $(this);
-            $it.next().show();
-            $(".menu > ul > li > a, .menu > ul> li > span").removeClass("selected");
+            $it.find('.frame').show();
+            $(".menu > ul > li").removeClass("selected");
             $(this).addClass("selected");
 
-            $(".menu > ul > li > a, .menu > ul> li > span").unbind();
+            $(".menu > ul > li").unbind();
 
-            $(".menu > ul > li > a, .menu > ul> li > span").mouseover(function () {
+            $(".menu > ul > li").mouseover(function () {
+                if ($(event.target).closest(".frame").length === 1) {
+                    return;
+                }
                 $(".frame").hide();
-                $(this).next().show();
-                $(".menu > ul > li > a, .menu > ul> li > span").removeClass("selected");
+                $(this).find('.frame').show();
+                $(".menu > ul > li").removeClass("selected");
                 $(this).addClass("selected");
             });
         });

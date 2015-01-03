@@ -110,6 +110,7 @@ $.extend(Tabs.prototype, {
         for (var i = 0; i < stack.length; i++) {
             if (id === stack[i]) {
                 stack.splice(i, 1);
+                i--;
             }
         }
 

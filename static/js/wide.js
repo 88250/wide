@@ -19,11 +19,12 @@ var wide = {
     curEditor: undefined,
     curProcessId: undefined, // curent running process id (pid)
     refreshOutline: function () {
-        if (wide.curEditor.doc.getMode().name !== "go") {
+        if (!wide.curEditor ||
+                (wide.curEditor && wide.curEditor.doc.getMode().name !== "go")) {
             $("#outline").html('');
             return false;
         }
-        
+
         var request = newWideRequest();
         request.code = wide.curEditor.getValue();
 
@@ -36,20 +37,28 @@ var wide = {
                 if (!data.succ) {
                     return;
                 }
-                
+
                 var outlineHTML = '<ul class="list">',
-                        decls = ['funcDecls', 'interfaceDecls', 'structDecls', 
-                    'constDecls', 'varDecls'];
-                
+                        decls = ['constDecls', 'varDecls', 'funcDecls',
+                            'structDecls', 'interfaceDecls', 'typeDecls'];
+
                 for (var i = 0, max = decls.length; i < max; i++) {
                     var key = decls[i];
                     for (var j = 0, maxj = data[key].length; j < maxj; j++) {
-                        var name = data[key][j].Name;
-                        outlineHTML += '<li><span class="ico ico-'
-                                + key.replace('Decls', '') + '"></span> ' + name + '</li>';
+                        var obj = data[key][j];
+                        outlineHTML += '<li data-ch="' + obj.Ch + '" data-line="'
+                                + obj.Line + '"><span class="ico ico-'
+                                + key.replace('Decls', '') + '"></span> ' + obj.Name + '</li>';
                     }
                 }
                 $("#outline").html(outlineHTML + '</ul>');
+
+                $("#outline li").dblclick(function () {
+                    var $it = $(this),
+                    cursor = CodeMirror.Pos($it.data('line'), $it.data("ch"));
+                    wide.curEditor.setCursor(cursor);
+                    wide.curEditor.focus();
+                });
             }
         });
     },
@@ -356,7 +365,7 @@ var wide = {
         } else {
             $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - $bottomGroup.children(".tabs").height());
         }
-        
+
         if ($(".side-right").hasClass("side-right-max")) {
             $(".side-right > .tabs-panel > div").height(mainH - $bottomGroup.children(".tabs").height());
         } else {
@@ -479,7 +488,7 @@ var wide = {
 
             if (!($(event.target).closest(".frame").length > 0 || event.target.className === "frame")) {
                 $(".frame").hide();
-                $(".menu > ul > li > a, .menu > ul> li > span").unbind("mouseover").removeClass("selected");
+                $(".menu > ul > li").unbind().removeClass("selected");
                 menu.subMenu();
             }
         });
@@ -568,7 +577,7 @@ var wide = {
             });
 
             // refresh outline
-            wide.randerOutline();
+            wide.refreshOutline();
 
             return;
         }

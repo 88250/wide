@@ -126,7 +126,9 @@ var editors = {
             },
             clickAfter: function (id) {
                 if (id === 'startPage') {
+                    wide.curEditor = undefined;
                     $(".footer .cursor").text('');
+                    wide.refreshOutline();
                     return false;
                 }
 
@@ -145,6 +147,7 @@ var editors = {
                 var cursor = wide.curEditor.getCursor();
                 wide.curEditor.setCursor(cursor);
                 wide.curEditor.focus();
+                wide.refreshOutline();
 
                 $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             },
@@ -176,10 +179,6 @@ var editors = {
                     menu.disabled(['close-all']);
                 }
 
-                if (id === 'startPage') { // 当前关闭的 tab 是起始页
-                    return false;
-                }
-
                 // 移除编辑器
                 for (var i = 0, ii = editors.data.length; i < ii; i++) {
                     if (editors.data[i].id === id) {
@@ -201,6 +200,7 @@ var editors = {
                     tree.fileTree.cancelSelectedNode();
                     wide.curNode = undefined;
                     wide.curEditor = undefined;
+                    wide.refreshOutline();
                     $(".footer .cursor").text('');
                     return false;
                 }
@@ -222,6 +222,7 @@ var editors = {
                     }
                 }
 
+                wide.refreshOutline();
                 var cursor = wide.curEditor.getCursor();
                 $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             }
@@ -240,6 +241,10 @@ var editors = {
         this._initClose();
     },
     openStartPage: function () {
+        wide.curEditor = undefined;
+        wide.refreshOutline();
+        $(".footer .cursor").text('');
+        
         var dateFormat = function (time, fmt) {
             var date = new Date(time);
             var dateObj = {
