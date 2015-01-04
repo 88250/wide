@@ -60,7 +60,7 @@ var editors = {
         new ZeroClipboard($("#copyFilePath"));
 
         // 关闭、关闭其他、关闭所有
-        $(".edit-panel").on("mousedown", '.tabs > div', function (event) {
+        $(".edit-panel").on("mouseup", '.tabs > div', function (event) {
             event.stopPropagation();
 
             if (event.button === 0) { // 左键

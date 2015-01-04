@@ -23,7 +23,6 @@ var menu = {
 
         // 点击子菜单后消失
         $(".menu .frame li").click(function () {
-            $(".frame").hide();
             $(".menu > ul > li").unbind().removeClass("selected");
             menu.subMenu();
         });
@@ -110,7 +109,7 @@ var menu = {
                 if ($(event.target).closest(".frame").length === 1) {
                     return;
                 }
-                $(".frame").hide();
+                $(".menu .frame").hide();
                 $(this).find('.frame').show();
                 $(".menu > ul > li").removeClass("selected");
                 $(this).addClass("selected");

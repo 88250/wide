@@ -55,7 +55,7 @@ var wide = {
 
                 $("#outline li").dblclick(function () {
                     var $it = $(this),
-                    cursor = CodeMirror.Pos($it.data('line'), $it.data("ch"));
+                            cursor = CodeMirror.Pos($it.data('line'), $it.data("ch"));
                     wide.curEditor.setCursor(cursor);
                     wide.curEditor.focus();
                 });
@@ -477,17 +477,10 @@ var wide = {
         this._initWS();
 
         // 点击隐藏弹出层
-        $("body").bind("mousedown", function (event) {
-            if (!(event.target.id === "dirRMenu" || $(event.target).closest("#dirRMenu").length > 0)) {
-                $("#dirRMenu").hide();
-            }
+        $("body").bind("mouseup", function (event) {
+            $(".frame").hide();
 
-            if (!(event.target.id === "fileRMenu" || $(event.target).closest("#fileRMenu").length > 0)) {
-                $("#fileRMenu").hide();
-            }
-
-            if (!($(event.target).closest(".frame").length > 0 || event.target.className === "frame")) {
-                $(".frame").hide();
+            if (!($(event.target).closest(".frame").length === 1 || event.target.className === "frame")) {
                 $(".menu > ul > li").unbind().removeClass("selected");
                 menu.subMenu();
             }

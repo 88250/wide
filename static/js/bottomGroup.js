@@ -35,7 +35,7 @@ var bottomGroup = {
         });
     },
     _initFrame: function () {
-        $(".bottom-window-group .output").parent().mousedown(function (event) {
+        $(".bottom-window-group .output").parent().mouseup(function (event) {
             event.stopPropagation();
 
             if (event.button === 0) { // 左键
