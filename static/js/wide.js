@@ -30,6 +30,7 @@ var wide = {
 
         $.ajax({
             type: 'POST',
+            async: false,
             url: config.context + '/outline',
             data: JSON.stringify(request),
             dataType: "json",
@@ -85,7 +86,7 @@ var wide = {
 
         $("#dialogAlert").dialog({
             "modal": true,
-            "height": 26,
+            "height": 36,
             "width": 260,
             "title": config.label.tip,
             "hiddenOk": true,

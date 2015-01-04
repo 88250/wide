@@ -43,6 +43,10 @@ $.extend(Tabs.prototype, {
         var _that = this;
 
         obj._$tabs.on("click", "div", function (event) {
+            if ($(this).hasClass('current')) {
+                return false;
+            }
+            
             var id = $(this).data("index");
             _that.setCurrent(id);
             if (typeof (obj.clickAfter) === "function") {

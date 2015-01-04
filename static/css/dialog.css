@@ -63,6 +63,10 @@
     text-decoration: none;
 }
 
+.dialog-close-icon:hover {
+    text-decoration: none;
+}
+
 .dialog-main > div {
     width: 100%;
 }
