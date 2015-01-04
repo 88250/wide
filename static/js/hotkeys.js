@@ -216,7 +216,7 @@ var hotkeys = {
 
             var hotKeys = hotkeys.defaultKeyMap;
             if (event.ctrlKey === hotKeys.clearWindow.ctrlKey
-                    && event.which === hotKeys.clearWindow.which) {  // Ctrl-F 搜索
+                    && event.which === hotKeys.clearWindow.which) {  // Ctrl-C clear output
                 bottomGroup.clear('output');
                 return;
             }
