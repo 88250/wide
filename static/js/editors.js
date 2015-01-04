@@ -655,7 +655,7 @@ var editors = {
                 if (keyWord !== '') {
                     keyWord = '<b>' + keyWord + '</b>';
                 }
-                contents += matches[j] + keyWord;
+                contents += data[i].contents[0].substring(startIndex - matches[j].length, startIndex) + keyWord;
             }
 
             searcHTML += '<li title="' + data[i].path + '">'
