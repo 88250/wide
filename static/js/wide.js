@@ -56,8 +56,15 @@ var wide = {
                 $("#outline li").dblclick(function () {
                     var $it = $(this),
                             cursor = CodeMirror.Pos($it.data('line'), $it.data("ch"));
-                    wide.curEditor.setCursor(cursor);
-                    wide.curEditor.focus();
+
+                    var editor = wide.curEditor;
+                    editor.setCursor(cursor);
+
+                    var half = Math.floor(editor.getScrollInfo().clientHeight / editor.defaultTextHeight() / 2);
+                    var cursorCoords = editor.cursorCoords({line: cursor.line - half, ch: 0}, "local");
+                    editor.scrollTo(0, cursorCoords.top);
+
+                    editor.focus();
                 });
             }
         });
