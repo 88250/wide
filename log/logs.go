@@ -14,7 +14,7 @@
 
 // Package log includes logging related manipulations.
 //
-//  log.Level = log.Debug
+//  log.SetLevel("debug")
 // 	logger := log.NewLogger(os.Stdout)
 //
 //  logger.Trace("trace message)
