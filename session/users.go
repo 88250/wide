@@ -117,7 +117,8 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.FontFamily = args.FontFamily
 	user.FontSize = args.FontSize
 	user.GoFormat = args.GoFmt
-	user.Workspace = args.Workspace
+	// XXX: disallow change workspace at present
+	// user.Workspace = args.Workspace
 	if user.Password != args.Password {
 		user.Password = conf.Salt(args.Password, user.Salt)
 	}
