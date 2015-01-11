@@ -75,7 +75,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		offset := getCursorOffset(code, line, ch)
 
-		// logger.Debugf("offset: %d", offset)
+		logger.Tracef("offset: %d", offset)
 
 		gocode := util.Go.GetExecutableInGOBIN("gocode")
 		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
@@ -145,7 +145,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	offset := getCursorOffset(code, line, ch)
 
-	// logger.Infof("offset: %d", offset)
+	logger.Tracef("offset: %d", offset)
 
 	userWorkspace := conf.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
@@ -226,7 +226,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	offset := getCursorOffset(code, line, ch)
 
-	// logger.Infof("offset [%d]", offset)
+	logger.Tracef("offset [%d]", offset)
 
 	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-info", "."}
@@ -302,7 +302,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	offset := getCursorOffset(code, line, ch)
 
-	// logger.Infof("offset [%d]", offset)
+	logger.Tracef("offset [%d]", offset)
 
 	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-def", "."}
@@ -386,7 +386,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	ch := int(args["cursorCh"].(float64))
 
 	offset := getCursorOffset(code, line, ch)
-	// logger.Infof("offset [%d]", offset)
+	logger.Tracef("offset [%d]", offset)
 
 	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
 	argv := []string{"type", "-cursor", filename + ":" + strconv.Itoa(offset), "-use", "."}
