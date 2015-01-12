@@ -1050,4 +1050,9 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 		"GOARCH="+runtime.GOARCH,
 		"GOROOT="+runtime.GOROOT(),
 		"PATH="+os.Getenv("PATH"))
+
+	if util.OS.IsWindows() {
+		// FIXME: for some weird issues on Windows, such as: The requested service provider could not be loaded or initialized.
+		cmd.Env = append(cmd.Env, os.Environ()...)
+	}
 }
