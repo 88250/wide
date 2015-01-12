@@ -124,7 +124,8 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 ### Docker
 
 1. Get image: `sudo docker pull 88250/wide:latest`
-2. Run: `sudo docker run -p {ip}:{port}:7070 88250/wide:latest ./wide -docker=true -channel=ws://{ip}:{port}`
+2. Run: `sudo docker run -p 127.0.0.1:7070:7070 88250/wide:latest ./wide -docker=true -channel=ws://127.0.0.1:7070`
+3. Open browser: http://127.0.0.1:7070
 
 ## Known Issues
 
