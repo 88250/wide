@@ -99,10 +99,10 @@ var hotkeys = {
                 $(".bottom-window-group .notification").focus();
             }
         },
-        // Ctrl-C
+        // Alt-C
         clearWindow: {
-            ctrlKey: true,
-            altKey: false,
+            ctrlKey: false,
+            altKey: true,
             shiftKey: false,
             which: 67
         },
@@ -212,12 +212,13 @@ var hotkeys = {
     },
     _bindOutput: function () {
         $(".bottom-window-group .output").keydown(function (event) {
-            event.preventDefault();
-
             var hotKeys = hotkeys.defaultKeyMap;
-            if (event.ctrlKey === hotKeys.clearWindow.ctrlKey
-                    && event.which === hotKeys.clearWindow.which) {  // Ctrl-C clear output
+            if (event.altKey === hotKeys.clearWindow.altKey
+                    && event.which === hotKeys.clearWindow.which) {  // Alt-C clear output
                 bottomGroup.clear('output');
+                
+                event.preventDefault();
+                
                 return;
             }
         });
