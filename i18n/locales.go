@@ -74,7 +74,7 @@ func load(localeStr string) {
 	Locales[localeStr] = l
 }
 
-// Get gets message with the specified locale and key.
+// Get gets a message with the specified locale and key.
 func Get(locale, key string) interface{} {
 	return Locales[locale].Langs[key]
 }

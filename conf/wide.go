@@ -131,7 +131,12 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 		os.Exit(-1)
 	}
 
+	// Logging Level
 	log.SetLevel(Wide.LogLevel)
+	if "" != confLogLevel {
+		Wide.LogLevel = confLogLevel
+		log.SetLevel(confLogLevel)
+	}
 
 	logger.Debug("Conf: \n" + string(bytes))
 
@@ -163,18 +168,14 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 
 	// Server
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
+	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
 	if "" != confServer {
 		Wide.Server = confServer
 	}
 
-	// Logging Level
-	if "" != confLogLevel {
-		Wide.LogLevel = confLogLevel
-		log.SetLevel(confLogLevel)
-	}
-
 	// Static Server
 	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
+	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
 	if "" != confStaticServer {
 		Wide.StaticServer = confStaticServer
 	}
@@ -192,9 +193,6 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	if "" != confChannel {
 		Wide.Channel = confChannel
 	}
-
-	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
 }
 
 // FixedTimeCheckEnv checks Wide runtime enviorment periodically (7 minutes).
