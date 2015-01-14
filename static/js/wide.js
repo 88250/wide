@@ -408,10 +408,11 @@ var wide = {
 
             switch (data.cmd) {
                 case 'run':
-                    if (!wide.curProcessId) { // output first time
-                        bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + '<pre>' + data.output + '</pre>');
-                    } else { // the following outputs
-                        bottomGroup.fillOutput($('.bottom-window-group .output > div').html().replace(/<\/pre>$/g, data.output + '</pre>'));
+                    var content = $('.bottom-window-group .output > div').html();
+                    if (!wide.curProcessId || '' === content) {
+                        bottomGroup.fillOutput(content + '<pre>' + data.output + '</pre>');
+                    } else {
+                        bottomGroup.fillOutput(content.replace(/<\/pre>$/g, data.output + '</pre>'));
                     }
 
                     wide.curProcessId = data.pid;
