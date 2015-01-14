@@ -22,11 +22,22 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 )
+
+const (
+	outputBufMax  = 128 // 128 string(rune)
+	outputTimeout = 100 // 100ms
+)
+
+type outputBuf struct {
+	content     string
+	millisecond int64
+}
 
 // RunHandler handles request of executing a binary file.
 func RunHandler(w http.ResponseWriter, r *http.Request) {
@@ -122,18 +133,21 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		go func() {
-			for {
-				r, _, err := outReader.ReadRune()
+			buf := outputBuf{}
 
-				if nil == session.OutputWS[sid] {
+			for {
+				wsChannel := session.OutputWS[sid]
+				if nil == wsChannel {
 					break
 				}
 
-				wsChannel := session.OutputWS[sid]
+				r, _, err := outReader.ReadRune()
 
-				buf := string(r)
-				buf = strings.Replace(buf, "<", "&lt;", -1)
-				buf = strings.Replace(buf, ">", "&gt;", -1)
+				oneRuneStr := string(r)
+				oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
+				oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
+
+				buf.content += oneRuneStr
 
 				if nil != err {
 					// remove the exited process from user process set
@@ -141,31 +155,38 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					logger.Tracef("User [%s, %s] 's running [id=%d, file=%s] has done [stdout %v], ", wSession.Username, sid, runningId, filePath, err)
 
-					if nil != wsChannel {
-						channelRet["cmd"] = "run-done"
-						channelRet["output"] = buf
-						err := wsChannel.WriteJSON(&channelRet)
-						if nil != err {
-							logger.Error(err)
-							break
-						}
-
-						wsChannel.Refresh()
+					channelRet["cmd"] = "run-done"
+					channelRet["output"] = buf.content
+					err := wsChannel.WriteJSON(&channelRet)
+					if nil != err {
+						logger.Error(err)
+						break
 					}
+
+					wsChannel.Refresh()
 
 					break
-				} else {
-					if nil != wsChannel {
-						channelRet["cmd"] = "run"
-						channelRet["output"] = buf
-						err := wsChannel.WriteJSON(&channelRet)
-						if nil != err {
-							logger.Error(err)
-							break
-						}
+				}
 
-						wsChannel.Refresh()
+				now := time.Now().UnixNano() / int64(time.Millisecond)
+
+				if 0 == buf.millisecond {
+					buf.millisecond = now
+				}
+
+				if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax || oneRuneStr == "\n" {
+					channelRet["cmd"] = "run"
+					channelRet["output"] = buf.content
+
+					buf = outputBuf{} // a new buffer
+
+					err = wsChannel.WriteJSON(&channelRet)
+					if nil != err {
+						logger.Error(err)
+						break
 					}
+
+					wsChannel.Refresh()
 				}
 			}
 		}()
@@ -173,11 +194,10 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		for {
 			r, _, err := errReader.ReadRune()
 
-			if nil != err || nil == session.OutputWS[sid] {
+			wsChannel := session.OutputWS[sid]
+			if nil != err || nil == wsChannel {
 				break
 			}
-
-			wsChannel := session.OutputWS[sid]
 
 			buf := string(r)
 			buf = strings.Replace(buf, "<", "&lt;", -1)

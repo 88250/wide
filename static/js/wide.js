@@ -418,6 +418,8 @@ var wide = {
 
                     break;
                 case 'run-done':
+                    bottomGroup.fillOutput($('.bottom-window-group .output > div').html().replace(/<\/pre>$/g, data.output + '</pre>'));
+                    
                     wide.curProcessId = undefined;
                     $("#buildRun").removeClass("ico-stop")
                             .addClass("ico-buildrun").attr("title", config.label.build_n_run);
