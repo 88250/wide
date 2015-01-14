@@ -191,6 +191,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}()
 
+		buf := outputBuf{}
 		for {
 			r, _, err := errReader.ReadRune()
 
@@ -199,19 +200,32 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
-			buf := string(r)
-			buf = strings.Replace(buf, "<", "&lt;", -1)
-			buf = strings.Replace(buf, ">", "&gt;", -1)
+			oneRuneStr := string(r)
+			oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
+			oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
 
-			channelRet["cmd"] = "run"
-			channelRet["output"] = "<span class='stderr'>" + buf + "</span>"
-			err = wsChannel.WriteJSON(&channelRet)
-			if nil != err {
-				logger.Error(err)
-				break
+			buf.content += oneRuneStr
+
+			now := time.Now().UnixNano() / int64(time.Millisecond)
+
+			if 0 == buf.millisecond {
+				buf.millisecond = now
 			}
 
-			wsChannel.Refresh()
+			if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax || oneRuneStr == "\n" {
+				channelRet["cmd"] = "run"
+				channelRet["output"] = "<span class='stderr'>" + buf.content + "</span>"
+
+				buf = outputBuf{} // a new buffer
+
+				err = wsChannel.WriteJSON(&channelRet)
+				if nil != err {
+					logger.Error(err)
+					break
+				}
+
+				wsChannel.Refresh()
+			}
 		}
 	}(rand.Int())
 }

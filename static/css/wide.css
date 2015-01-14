@@ -439,6 +439,7 @@
     padding: 0 5px;
     line-height: 16px;
     font-size: 12px;
+    overflow-x: scroll;
 }
 
 .bottom-window-group .output pre {
