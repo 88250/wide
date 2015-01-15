@@ -294,7 +294,7 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 
 	now := time.Now()
 
-	// create user event queuselect
+	// create user event queue
 	userEventQueue := event.UserEventQueues.New(sid)
 
 	ret := &WideSession{
