@@ -296,6 +296,7 @@
     margin: 2px 8px;
     height: 17px;
     width: 17px;
+    border-radius: 9px;
 }
 
 #buildRun {
@@ -330,7 +331,6 @@
 
 /* start editor */
 .edit-panel {
-    width: 80%;
     position: absolute;
     left: 20%;
     width: 60%;
