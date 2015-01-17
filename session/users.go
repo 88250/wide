@@ -24,6 +24,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strconv"
+	"strings"
 	"sync"
 	"text/template"
 	"time"
@@ -337,11 +338,11 @@ func addUser(username, password, email string) string {
 	defer addUserMutex.Unlock()
 
 	for _, user := range conf.Users {
-		if user.Name == username {
+		if strings.ToLower(user.Name) == strings.ToLower(username) {
 			return userExists
 		}
 
-		if user.Email == email {
+		if strings.ToLower(user.Email) == strings.ToLower(email) {
 			return emailExists
 		}
 	}
