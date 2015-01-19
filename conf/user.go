@@ -1,4 +1,4 @@
-// Copyright (c) 2015, B3log
+// Copyright (c) 2014-2015, b3log.org
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,11 +28,21 @@ import (
 	"github.com/b3log/wide/util"
 )
 
+// Layout represents the layot of a window.
+type Layout struct {
+	State string // min/max/normal
+}
+
 // LatestSessionContent represents the latest session content.
 type LatestSessionContent struct {
 	FileTree    []string // paths of expanding nodes of file tree
 	Files       []string // paths of files of opening editor tabs
 	CurrentFile string   // path of file of the current focused editor tab
+
+	FileTreeLayout *Layout
+	EditorLayout   *Layout
+	OutlineLayout  *Layout
+	BottomLayout   *Layout
 }
 
 // User configuration.

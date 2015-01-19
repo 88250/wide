@@ -23,6 +23,10 @@
     "LatestSessionContent": {
         "FileTree": [],
         "Files": [],
-        "CurrentFile": ""
+        "CurrentFile": "",
+        "FileTreeLayout": null,
+        "EditorLayout": null,
+        "OutlineLayout": null,
+        "BottomLayout": null
     }
 }
