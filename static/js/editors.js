@@ -406,6 +406,11 @@ var editors = {
         });
 
         CodeMirror.commands.autocompleteAfterDot = function (cm) {
+            var mode = cm.getMode();
+            if (mode && "go" !== mode.name) {
+                return CodeMirror.Pass;
+            }
+            
             var token = cm.getTokenAt(cm.getCursor());
 
             if ("comment" === token.type || "string" === token.type) {
