@@ -135,7 +135,7 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 ## License
 
-Copyright (c) 2014, B3log Team (http://b3log.org)
+Copyright (c) 2014-2015, B3log Team (http://b3log.org)
 
 Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/master/LICENSE).
 
