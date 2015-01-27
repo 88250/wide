@@ -489,6 +489,10 @@ var wide = {
 
         // 点击隐藏弹出层
         $("body").bind("mouseup", function (event) {
+	  //fix issue#200 右键文件树失效
+	  if (event.which == 3) {
+		return false;
+	  }
             $(".frame").hide();
 
             if (!($(event.target).closest(".frame").length === 1 || event.target.className === "frame")) {
