@@ -135,9 +135,10 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 ## Terms
 
-* Wide is open sourced under the [Apache License 2.0](https://github.com/b3log/wide/blob/master/LICENSE)
-* If you want to use Wide for commercial purpose, please mail to support@liuyun.io for request a commercial license
-* Copyright (c) [b3log.org](http://b3log.org), all rights reserved
+* This software is open sourced under the Apache License 2.0
+* You can not get rid of the "Powered by [B3log](http://b3log.org)" from any pages, even the pages are developed by you 
+* If you want to use this software for commercial purpose, please mail to support@liuyun.io for request a commercial license
+* Copyright (c) b3log.org, all rights reserved
 
 ## Credits
 
