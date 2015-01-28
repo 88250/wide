@@ -170,6 +170,7 @@ var windows = {
                 editorDatas[i].editor.setSize("100%", height);
             }
 
+            $("#startPage").height(height - 100);
             $it.show();
             $(".footer .ico-restore:eq(1)").hide();
         });
@@ -225,7 +226,7 @@ var windows = {
         for (var i = 0, ii = editorDatas.length; i < ii; i++) {
             editorDatas[i].editor.setSize("100%", height);
         }
-
+        $("#startPage").height(height - 100);
         $(".bottom-window-group").css("top", "100%").hide();
         $(".footer .ico-restore:eq(1)").show();
     },

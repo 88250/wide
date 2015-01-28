@@ -379,6 +379,8 @@ var wide = {
         } else {
             $(".side-right > .tabs-panel > div").height($('.side-right').height() - $bottomGroup.children(".tabs").height());
         }
+
+        $("#startPage").height($('.side-right').height() - $bottomGroup.children(".tabs").height() - 100);
     },
     _initWS: function () {
         var outputWS = new ReconnectingWebSocket(config.channel + '/output/ws?sid=' + config.wideSessionId);
@@ -420,7 +422,7 @@ var wide = {
                     break;
                 case 'run-done':
                     bottomGroup.fillOutput($('.bottom-window-group .output > div').html().replace(/<\/pre>$/g, data.output + '</pre>'));
-                    
+
                     wide.curProcessId = undefined;
                     $("#buildRun").removeClass("ico-stop")
                             .addClass("ico-buildrun").attr("title", config.label.build_n_run);
@@ -489,10 +491,10 @@ var wide = {
 
         // 点击隐藏弹出层
         $("body").bind("mouseup", function (event) {
-	  //fix issue#200 右键文件树失效
-	  if (event.which == 3) {
-		return false;
-	  }
+            //fix issue#200 右键文件树失效
+            if (event.which === 3) {
+                return false;
+            }
             $(".frame").hide();
 
             if (!($(event.target).closest(".frame").length === 1 || event.target.className === "frame")) {
@@ -524,7 +526,6 @@ var wide = {
             for (var i = 0, ii = editorDatas.length; i < ii; i++) {
                 editorDatas[i].editor.setSize("100%", height);
             }
-
         });
     },
     _save: function (path, editor) {

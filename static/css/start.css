@@ -19,6 +19,7 @@
     line-height: 28px;
     white-space: normal;
     word-wrap: break-word;
+    overflow: auto;
 }
 
 #startPage a {
@@ -65,7 +66,6 @@
 }
 
 #startPage .news {
-    height: 300px;
     width: 60%;
     float: right;
     border-left: 1px solid #f1f1f1;
@@ -80,4 +80,6 @@
 #startPage .date {
     color: #bbb;
     font-size: 13px;
+    word-wrap: normal;
+    white-space: nowrap;
 }

@@ -272,6 +272,7 @@ var editors = {
                     + '"><span class="ico-start font-ico"></span> ' + config.label.start_page + '</span>',
             content: '<div id="startPage"></div>',
             after: function () {
+                $("#startPage").height($('.side-right').height() - $(".bottom-window-group").children(".tabs").height() - 100);
                 $("#startPage").load(config.context + '/start?sid=' + config.wideSessionId);
                 $.ajax({
                     url: "https://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=30",
