@@ -133,11 +133,11 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 * [Shell is not available on Windows](https://github.com/b3log/wide/issues/32)
 
-## License
+## Terms
 
-Copyright (c) 2014-2015, B3log Team (http://b3log.org)
-
-Licensed under the [Apache License 2.0](https://github.com/b3log/wide/blob/master/LICENSE).
+* Wide is open sourced under the [Apache License 2.0](https://github.com/b3log/wide/blob/master/LICENSE)
+* If you want to use Wide for commercial purpose, please mail to support@liuyun.io for request a commercial license
+* Copyright (c) [b3log.org](http://b3log.org), all rights reserved
 
 ## Credits
 
