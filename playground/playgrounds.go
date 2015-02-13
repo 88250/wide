@@ -43,9 +43,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	// create a HTTP session
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
-	httpSession.Values["username"] = username
 	if httpSession.IsNew {
 		httpSession.Values["id"] = strconv.Itoa(rand.Int())
+		httpSession.Values["username"] = username
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge

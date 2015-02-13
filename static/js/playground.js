@@ -35,6 +35,10 @@ var playground = {
             foldGutter: true,
             cursorHeight: 1,
         });
+        
+        playground.editor.on('changes', function (cm) {
+            $("#url").html("");
+        });
 
         this._initWS();
     },
