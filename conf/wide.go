@@ -417,6 +417,8 @@ func createDir(path string) {
 
 			os.Exit(-1)
 		}
+
+		logger.Infof("Created a workspace [%s]", path)
 	}
 }
 
