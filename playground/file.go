@@ -67,15 +67,10 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 
 	bytes, _ := cmd.Output()
 	output := string(bytes)
-	if "" == output {
-		// format error, returns the original content
-		data["succ"] = true
-		data["code"] = code
-
-		return
+	if "" != output {
+		code = string(output)
 	}
 
-	code = string(output)
 	data["code"] = code
 
 	// Step2. generate file name
