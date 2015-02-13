@@ -166,6 +166,7 @@ func main() {
 
 	// playground
 	http.HandleFunc(conf.Wide.Context+"/playground", handlerWrapper(playground.IndexHandler))
+	http.HandleFunc(conf.Wide.Context+"/playground/", handlerWrapper(playground.IndexHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/ws", handlerWrapper(playground.WSHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/save", handlerWrapper(playground.SaveHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/build", handlerWrapper(playground.BuildHandler))

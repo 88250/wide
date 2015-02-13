@@ -386,7 +386,7 @@ func (sessions *wSessions) Remove(sid string) {
 				}
 			}
 
-			logger.Debugf("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
+			logger.Tracef("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
 
 			return
 		}

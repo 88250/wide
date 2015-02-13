@@ -17,10 +17,13 @@ package playground
 
 import (
 	"html/template"
+	"io/ioutil"
 	"math/rand"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -58,7 +61,19 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	locale := conf.Wide.Locale
 
+	// try to load file
 	code := conf.HelloWorld
+	if strings.HasSuffix(r.RequestURI, ".go") {
+		fileName := r.RequestURI[len("/playground/"):]
+		filePath := filepath.Clean(conf.Wide.Playground + "/" + fileName)
+
+		bytes, err := ioutil.ReadFile(filePath)
+		if nil != err {
+			logger.Warn(err)
+		}
+
+		code = string(bytes)
+	}
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession, "pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,

@@ -66,6 +66,10 @@ var playground = {
             console.log('[playground onmessage]' + e.data);
 
             var data = JSON.parse(e.data);
+            
+            if ("init-playground" === data.cmd) {
+                return;
+            }
 
             playground.pid = data.pid;
 
@@ -104,7 +108,7 @@ var playground = {
                     return;
                 }
                 
-                var url = window.location.protocol + "//" + window.location.host + '/' + data.url;
+                var url = window.location.protocol + "//" + window.location.host + '/playground/' + data.fileName;
                 var html = '<a href="' + url + '" target="_blank">'
                         + url + "</a>";
                 $("#url").html(html);
@@ -154,7 +158,7 @@ var playground = {
 
                 // Step 2. compile code
                 var request = newWideRequest();
-                request.filePath = data.filePath;
+                request.fileName = data.fileName;
 
                 $.ajax({
                     type: 'POST',

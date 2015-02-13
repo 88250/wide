@@ -47,14 +47,14 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	filePath := args["filePath"].(string)
+	fileName := args["fileName"].(string)
+	filePath := filepath.Clean(conf.Wide.Playground + "/" + fileName)
 
 	suffix := ""
 	if util.OS.IsWindows() {
 		suffix = ".exe"
 	}
 
-	fileName := filepath.Base(filePath)
 	executable := filepath.Clean(conf.Wide.Playground + "/" + strings.Replace(fileName, ".go", suffix, -1))
 
 	cmd := exec.Command("go", "build", "-o", executable, filePath)

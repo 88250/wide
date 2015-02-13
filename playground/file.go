@@ -18,14 +18,15 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"encoding/json"
+	"io"
 	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
 
+	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
-	"github.com/b3log/wide/conf"
 )
 
 // SaveHandler handles request of Playground code save.
@@ -50,14 +51,10 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 
 	code := args["code"].(string)
 
-	// generate file name
-	hasher := md5.New()
-	hasher.Write([]byte(code))
-	fileName := hex.EncodeToString(hasher.Sum(nil))
-	fileName += ".go"
-	filePath := filepath.Clean(conf.Wide.Playground + "/" + fileName)
+	// Step1. format code
+	cmd := exec.Command("gofmt")
 
-	fout, err := os.Create(filePath)
+	stdin, err := cmd.StdinPipe()
 	if nil != err {
 		logger.Error(err)
 		data["succ"] = false
@@ -65,19 +62,8 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fout.WriteString(code)
-	if err := fout.Close(); nil != err {
-		logger.Error(err)
-		data["succ"] = false
-
-		return
-	}
-
-	data["filePath"] = filePath
-	data["url"] = filepath.ToSlash(filePath)
-
-	argv := []string{filePath}
-	cmd := exec.Command("gofmt", argv...)
+	io.WriteString(stdin, code)
+	stdin.Close()
 
 	bytes, _ := cmd.Output()
 	output := string(bytes)
@@ -92,16 +78,16 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	code = string(output)
 	data["code"] = code
 
-	// generate file name
-	hasher = md5.New()
+	// Step2. generate file name
+	hasher := md5.New()
 	hasher.Write([]byte(code))
-	fileName = hex.EncodeToString(hasher.Sum(nil))
+	fileName := hex.EncodeToString(hasher.Sum(nil))
 	fileName += ".go"
-	filePath = filepath.Clean(conf.Wide.Playground + "/" +  fileName)
-	data["filePath"] = filePath
-	data["url"] = filepath.ToSlash(filePath)
+	data["fileName"] = fileName
 
-	fout, err = os.Create(filePath)
+	// Step3. write file
+	filePath := filepath.Clean(conf.Wide.Playground + "/" + fileName)
+	fout, err := os.Create(filePath)
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
