@@ -37,8 +37,8 @@ import (
 	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/notification"
 	"github.com/b3log/wide/output"
+	"github.com/b3log/wide/playground"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/shell"
 	"github.com/b3log/wide/util"
 )
 
@@ -57,6 +57,7 @@ func init() {
 	confChannel := flag.String("channel", "", "this will overwrite Wide.Channel if specified")
 	confStat := flag.Bool("stat", false, "whether report statistics periodically")
 	confDocker := flag.Bool("docker", false, "whether run in a docker container")
+	confPlayground := flag.String("playground", "", "this will overwrite Wide.Playground if specified")
 
 	flag.Parse()
 
@@ -75,7 +76,7 @@ func init() {
 	event.Load()
 
 	conf.Load(*confPath, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel,
-		*confDocker)
+		*confPlayground, *confDocker)
 
 	conf.FixedTimeCheckEnv()
 
@@ -151,8 +152,8 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/find/usages", handlerWrapper(editor.FindUsagesHandler))
 
 	// shell
-	http.HandleFunc(conf.Wide.Context+"/shell/ws", handlerWrapper(shell.WSHandler))
-	http.HandleFunc(conf.Wide.Context+"/shell", handlerWrapper(shell.IndexHandler))
+	// http.HandleFunc(conf.Wide.Context+"/shell/ws", handlerWrapper(shell.WSHandler))
+	// http.HandleFunc(conf.Wide.Context+"/shell", handlerWrapper(shell.IndexHandler))
 
 	// notification
 	http.HandleFunc(conf.Wide.Context+"/notification/ws", handlerWrapper(notification.WSHandler))
@@ -162,6 +163,14 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/logout", handlerWrapper(session.LogoutHandler))
 	http.HandleFunc(conf.Wide.Context+"/signup", handlerWrapper(session.SignUpUser))
 	http.HandleFunc(conf.Wide.Context+"/preference", handlerWrapper(session.PreferenceHandler))
+
+	// playground
+	http.HandleFunc(conf.Wide.Context+"/playground", handlerWrapper(playground.IndexHandler))
+	http.HandleFunc(conf.Wide.Context+"/playground/ws", handlerWrapper(playground.WSHandler))
+	http.HandleFunc(conf.Wide.Context+"/playground/save", handlerWrapper(playground.SaveHandler))
+	http.HandleFunc(conf.Wide.Context+"/playground/build", handlerWrapper(playground.BuildHandler))
+	http.HandleFunc(conf.Wide.Context+"/playground/run", handlerWrapper(playground.RunHandler))
+	http.HandleFunc(conf.Wide.Context+"/playground/stop", handlerWrapper(playground.StopHandler))
 
 	logger.Infof("Wide is running [%s]", conf.Wide.Server+conf.Wide.Context)
 
@@ -186,6 +195,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	username := httpSession.Values["username"].(string)
+
+	if "playground" == username { // reserved user for Playground
+		http.Redirect(w, r, conf.Wide.Context+"login", http.StatusFound)
+
+		return
+	}
+
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	if "" != conf.Wide.Context {
 		httpSession.Options.Path = conf.Wide.Context
@@ -197,7 +214,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	sid := strconv.Itoa(rand.Int())
 	wideSession := session.WideSessions.New(httpSession, sid)
 
-	username := httpSession.Values["username"].(string)
 	user := conf.GetUser(username)
 	if nil == user {
 		logger.Warnf("Not found user [%s]", username)

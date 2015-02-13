@@ -27,13 +27,13 @@ type procs map[string][]*os.Process
 // Processse of all users.
 //
 // <sid, []*os.Process>
-var processes = procs{}
+var Processes = procs{}
 
 // Exclusive lock.
 var mutex sync.Mutex
 
 // add adds the specified process to the user process set.
-func (procs *procs) add(wSession *session.WideSession, proc *os.Process) {
+func (procs *procs) Add(wSession *session.WideSession, proc *os.Process) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -50,7 +50,7 @@ func (procs *procs) add(wSession *session.WideSession, proc *os.Process) {
 }
 
 // remove removes the specified process from the user process set.
-func (procs *procs) remove(wSession *session.WideSession, proc *os.Process) {
+func (procs *procs) Remove(wSession *session.WideSession, proc *os.Process) {
 	mutex.Lock()
 	defer mutex.Unlock()
 
@@ -75,7 +75,7 @@ func (procs *procs) remove(wSession *session.WideSession, proc *os.Process) {
 }
 
 // kill kills a process specified by the given pid.
-func (procs *procs) kill(wSession *session.WideSession, pid int) {
+func (procs *procs) Kill(wSession *session.WideSession, pid int) {
 	mutex.Lock()
 	defer mutex.Unlock()
 

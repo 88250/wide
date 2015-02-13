@@ -20,6 +20,7 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -42,6 +43,15 @@ const (
 	WideVersion = "1.1.0"
 	// CodeMirrorVer holds the current editor version.
 	CodeMirrorVer = "4.10"
+
+	HelloWorld = `package main
+
+import "fmt"
+
+func main() {
+	fmt.Println("Hello, 世界")
+}
+`
 )
 
 // Configuration.
@@ -59,6 +69,7 @@ type conf struct {
 	RuntimeMode           string // runtime mode (dev/prod)
 	WD                    string // current working direcitory, ${pwd}
 	Locale                string // default locale
+	Playground            string // playground directory
 }
 
 // Logger.
@@ -74,8 +85,12 @@ var Users []*User
 var Docker bool
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
-func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel string, confDocker bool) {
-	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confDocker)
+func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
+	confPlayground string, confDocker bool) {
+	// XXX: ugly args list....
+
+	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
+		confPlayground, confDocker)
 	initUsers()
 }
 
@@ -114,7 +129,8 @@ func initUsers() {
 	initCustomizedConfs()
 }
 
-func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel string, confDocker bool) {
+func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
+	confPlayground string, confDocker bool) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -143,6 +159,31 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	// Working Driectory
 	Wide.WD = util.OS.Pwd()
 	logger.Debugf("${pwd} [%s]", Wide.WD)
+
+	// User Home
+	user, err := user.Current()
+	if nil != err {
+		logger.Error("Can't get user's home, please report this issue to developer")
+
+		os.Exit(-1)
+	}
+
+	userHome := user.HomeDir
+	logger.Debugf("${user.home} [%s]", userHome)
+
+	// Playground Directory
+	Wide.Playground = strings.Replace(Wide.Playground, "${home}", userHome, 1)
+	if "" != confPlayground {
+		Wide.Playground = confPlayground
+	}
+
+	if !util.File.IsExist(Wide.Playground) {
+		if err := os.Mkdir(Wide.Playground, 0775); nil != err {
+			logger.Errorf("Create Playground [%s] error", err)
+
+			os.Exit(-1)
+		}
+	}
 
 	// IP
 	ip, err := util.Net.LocalIP()

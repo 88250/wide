@@ -19,7 +19,7 @@ import (
 	"syscall"
 )
 
-func setNamespace(cmd *exec.Cmd) {
+func SetNamespace(cmd *exec.Cmd) {
 	// XXX: keep move with Go 1.4 and later's
 
 	cmd.SysProcAttr = &syscall.SysProcAttr{}

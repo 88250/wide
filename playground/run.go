@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package output
+package playground
 
 import (
 	"bufio"
@@ -20,11 +20,11 @@ import (
 	"math/rand"
 	"net/http"
 	"os/exec"
-	"path/filepath"
 	"strings"
 	"time"
 
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 )
@@ -58,13 +58,11 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["executable"].(string)
-	curDir := filepath.Dir(filePath)
 
 	cmd := exec.Command(filePath)
-	cmd.Dir = curDir
 
 	if conf.Docker {
-		SetNamespace(cmd)
+		output.SetNamespace(cmd)
 	}
 
 	stdout, err := cmd.StdoutPipe()
@@ -87,7 +85,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		data["succ"] = false
 	}
 
-	wsChannel := session.OutputWS[sid]
+	wsChannel := session.PlaygroundWS[sid]
 
 	channelRet := map[string]interface{}{}
 
@@ -111,13 +109,11 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet["pid"] = cmd.Process.Pid
 
 	// add the process to user's process set
-	Processes.Add(wSession, cmd.Process)
+	output.Processes.Add(wSession, cmd.Process)
 
 	go func(runningId int) {
 		defer util.Recover()
 		defer cmd.Wait()
-
-		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.Username, sid, runningId, filePath)
 
 		// push once for front-end to get the 'run' state and pid
 		if nil != wsChannel {
@@ -136,7 +132,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			buf := outputBuf{}
 
 			for {
-				wsChannel := session.OutputWS[sid]
+				wsChannel := session.PlaygroundWS[sid]
 				if nil == wsChannel {
 					break
 				}
@@ -151,7 +147,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 				if nil != err {
 					// remove the exited process from user process set
-					Processes.Remove(wSession, cmd.Process)
+					output.Processes.Remove(wSession, cmd.Process)
 
 					logger.Tracef("User [%s, %s] 's running [id=%d, file=%s] has done [stdout %v], ", wSession.Username, sid, runningId, filePath, err)
 
@@ -195,7 +191,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		for {
 			r, _, err := errReader.ReadRune()
 
-			wsChannel := session.OutputWS[sid]
+			wsChannel := session.PlaygroundWS[sid]
 			if nil != err || nil == wsChannel {
 				break
 			}
@@ -253,5 +249,5 @@ func StopHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	Processes.Kill(wSession, pid)
+	output.Processes.Kill(wSession, pid)
 }

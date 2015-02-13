@@ -315,6 +315,10 @@ func getOnlineUsers() []*conf.User {
 	for _, username := range usernames {
 		u := conf.GetUser(username)
 
+		if "playground" == username { // user [playground] is a reserved mock user
+			continue
+		}
+
 		if nil == u {
 			logger.Warnf("Not found user [%s]", username)
 
@@ -333,7 +337,13 @@ func getOnlineUsers() []*conf.User {
 //  2. generate 'Hello, 世界' demo code in the workspace (a console version and a http version)
 //  3. update the user customized configurations, such as style.css
 //  4. serve files of the user's workspace via HTTP
+//
+// Note: user [playground] is a reserved mock user
 func addUser(username, password, email string) string {
+	if "playground" == username {
+		return userExists
+	}
+
 	addUserMutex.Lock()
 	defer addUserMutex.Unlock()
 
@@ -393,14 +403,7 @@ func consoleHello(workspace string) {
 		return
 	}
 
-	fout.WriteString(`package main
-
-import "fmt"
-
-func main() {
-	fmt.Println("Hello, 世界")
-}
-`)
+	fout.WriteString(conf.HelloWorld)
 
 	fout.Close()
 }

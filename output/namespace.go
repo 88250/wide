@@ -20,6 +20,6 @@ import (
 	"os/exec"
 )
 
-func setNamespace(cmd *exec.Cmd) {
+func SetNamespace(cmd *exec.Cmd) {
 	// do nothing
 }

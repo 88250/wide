@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
+
+        <meta name="keywords" content="Wide, Golang, IDE, Team, Cloud, B3log, Playground"/>
+        <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
+        <meta name="author" content="B3log">
+
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
+
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css">
+        <link rel="stylesheet" href="{{$.conf.StaticServer}}/static/js/overwrite/codemirror/theme/wide.css">
+
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    </head>
+    <body>
+        <div>
+            <button id="run" onclick="playground.run();">Run</button>
+            <button id="stop" onclick="playground.stop();">Stop</button>
+            <button id="share" onclick="playground.share();">Share</button>
+            <span id="url"></span>
+        </div>
+        <div>
+            <div id="editorDiv">
+            </div>
+            <textarea id="output" rows="20" readonly="readonly" style="width: 100%;" ></textarea>
+        </div>
+
+        <script>
+            var config = {
+                "context": "{{.conf.Context}}",
+                "staticServer": "{{.conf.StaticServer}}",
+                "channel": "{{.conf.Channel}}",
+                "wideSessionId": "{{.session.ID}}"
+            };
+            var code = "{{.code}}";
+
+            function newWideRequest() {
+                var ret = {
+                    sid: config.wideSessionId
+                };
+                return ret;
+            }
+
+        </script>
+
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>   
+
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/selection/active-line.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/overwrite/codemirror/addon/hint/show-hint.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/anyword-hint.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/display/rulers.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closebrackets.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/matchbrackets.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closetag.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/searchcursor.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/search.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/match-highlighter.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldcode.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/brace-fold.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/comment-fold.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/mode/loadmode.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/comment/comment.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/meta.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/go/go.js"></script>
+
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/playground.js?{{.conf.StaticResourceVersion}}"></script>
+    </body>
+</html>

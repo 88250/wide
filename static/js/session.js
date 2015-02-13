@@ -121,7 +121,7 @@ var session = {
         }
     },
     _initWS: function () {
-        // 用于保持会话，如果该通道断开，则服务器端会销毁会话状态，回收相关资源.
+        // Used for session retention, server will release all resources of the session if this channel closed
         var sessionWS = new ReconnectingWebSocket(config.channel + '/session/ws?sid=' + config.wideSessionId);
 
         sessionWS.onopen = function () {
