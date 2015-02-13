@@ -18,7 +18,7 @@ var playground = {
     editor: undefined,
     pid: undefined,
     init: function () {
-        $("#editorDiv").append("<textarea id='editor'></textarea>");
+        $("#editorDiv").append("");
         var textArea = document.getElementById("editor");
         textArea.value = code;
         playground.editor = CodeMirror.fromTextArea(textArea, {
@@ -27,7 +27,7 @@ var playground = {
             autoCloseBrackets: true,
             matchBrackets: true,
             highlightSelectionMatches: {showToken: /\w/},
-            rulers: [{color: "#ccc", column: 120, lineStyle: "dashed"}],
+            rulers: [{color: "#ccc", column: 80, lineStyle: "dashed"}],
             styleActiveLine: true,
             theme: "wide",
             tabSize: 4,

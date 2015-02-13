@@ -9,6 +9,9 @@
         <meta name="author" content="B3log">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{$.conf.StaticServer}}/static/js/overwrite/codemirror/theme/wide.css?{{.conf.StaticResourceVersion}}">
@@ -16,18 +19,50 @@
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
     <body>
-        <div>
-            <button id="run" onclick="playground.run();">Run</button>
-            <button id="stop" onclick="playground.stop();">Stop</button>
-            <button id="share" onclick="playground.share();">Share</button>
-            <span id="url"></span>
-        </div>
-        <div>
-            <div id="editorDiv">
+        <div class="header menu fn-clear">
+            <ul class="fn-left">
+                <li>
+                    <a href="/login" rel="login">
+                        <img title="Wide, a Web-based IDE for Teams using Golang." src="{{.conf.StaticServer}}/static/images/wide-logo.png" 
+                             class="logo"/></a>
+                </li>
+                <li>
+                    <button class="btn" id="run" onclick="playground.run();">Run</button>
+                </li>
+                <li>
+                    <button class="btn btn-red" id="stop" onclick="playground.stop();">Stop</button>
+                </li>
+                <li>
+                    <button class="btn-white btn" id="share" onclick="playground.share();">Share</button>
+                    <span id="url"></span>
+                </li>
+            </ul>
+            <div class="fn-right">
+                <span class="font-ico ico-about"></span> &nbsp;
+                <span class="font-ico ico-share"></span> &nbsp;
+                <span onclick="window.open('https://github.com/b3log/wide')"
+                      class="font-ico ico-github"></span>&nbsp;
+                <div class="share-panel frame">
+                    <span title="Email" class="font-ico ico-email"></span>
+                    <span title="Twitter" class="font-ico ico-twitter"></span>
+                    <span title="Facebook" class="font-ico ico-facebook"></span>
+                    <span title="G+" class="font-ico ico-googleplus"></span>
+                    <span title="微博" class="font-ico ico-weibo"></span>
+                    <span title="腾讯微博" class="font-ico ico-tencent"></span>
+                </div>
             </div>
-            <textarea id="output" rows="20" readonly="readonly" style="width: 100%;" ></textarea>
         </div>
-
+        <div class="fn-clear">
+            <div id="editorDiv">
+                <textarea id='editor'></textarea>
+            </div>
+            <textarea id="output" rows="20" readonly="readonly" ></textarea>
+        </div>
+        <div class="footer">
+            <div class="wrapper">
+                Ver {{.ver}}, &copy; {{.year}} <a rel="copyright" href="http://b3log.org" target="_blank">B3LOG.ORG</a>
+            </div>
+        </div>
         <script>
             var config = {
                 "context": "{{.conf.Context}}",
