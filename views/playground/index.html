@@ -22,12 +22,15 @@
         <div class="header menu fn-clear">
             <ul class="fn-left">
                 <li>
-                    <a href="/login" rel="login">
+                    <a href="/" target="_blank">
                         <img title="Wide, a Web-based IDE for Teams using Golang." src="{{.conf.StaticServer}}/static/images/wide-logo.png" 
                              class="logo"/></a>
                 </li>
                 <li>
                     <button class="btn" id="run" onclick="playground.run();">Run</button>
+                </li>
+                <li>
+                    <button class="btn btn-red" id="Format" onclick="playground.format();">Format</button>
                 </li>
                 <li>
                     <button class="btn btn-red" id="stop" onclick="playground.stop();">Stop</button>
@@ -42,7 +45,7 @@
                 <span class="font-ico ico-share"></span> &nbsp;
                 <span onclick="window.open('https://github.com/b3log/wide')"
                       class="font-ico ico-github"></span>&nbsp;
-                <div class="share-panel frame">
+                <div class="share-panel frame" style="display: none;">
                     <span title="Email" class="font-ico ico-email"></span>
                     <span title="Twitter" class="font-ico ico-twitter"></span>
                     <span title="Facebook" class="font-ico ico-facebook"></span>

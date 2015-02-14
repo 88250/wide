@@ -35,7 +35,32 @@ var playground = {
             foldGutter: true,
             cursorHeight: 1,
         });
-        
+
+        var hovered = false;
+        $(".menu .ico-share").hover(function () {
+            $(".menu .share-panel").show();
+            hovered = true;
+        }, function () {
+            if (!hovered) {
+                $(".menu .share-panel").hide();
+            }
+
+            hovered = false;
+            setTimeout(function () {
+                if (!hovered) {
+                    $(".menu .share-panel").hide();
+                }
+            }, 500);
+        });
+
+        $(".menu .share-panel").hover(function () {
+            $(".menu .share-panel").show();
+            hovered = true;
+        }, function () {
+            $(".menu .share-panel").hide();
+            hovered = false;
+        });
+
         playground.editor.on('changes', function (cm) {
             $("#url").html("");
         });
@@ -70,7 +95,7 @@ var playground = {
             console.log('[playground onmessage]' + e.data);
 
             var data = JSON.parse(e.data);
-            
+
             if ("init-playground" === data.cmd) {
                 return;
             }
@@ -111,7 +136,7 @@ var playground = {
                 if (!data.succ) {
                     return;
                 }
-                
+
                 var url = window.location.protocol + "//" + window.location.host + '/playground/' + data.fileName;
                 var html = '<a href="' + url + '" target="_blank">'
                         + url + "</a>";
@@ -193,6 +218,26 @@ var playground = {
                         });
                     }
                 });
+            }
+        });
+    },
+    format: function () {
+        if (!playground.editor) {
+            return;
+        }
+
+        var code = playground.editor.getValue();
+
+        var request = newWideRequest();
+        request.code = code;
+
+        $.ajax({
+            type: 'POST',
+            url: config.context + '/playground/save',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                playground.editor.setValue(data.code);
             }
         });
     }

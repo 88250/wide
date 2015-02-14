@@ -77,7 +77,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession, "pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
-		"code": template.HTML(code)}
+		"code": template.HTML(code), "ver": conf.WideVersion, "year": time.Now().Year()}
 
 	wideSessions := session.WideSessions.GetByUsername(username)
 
