@@ -17,11 +17,37 @@
 var playground = {
     editor: undefined,
     pid: undefined,
+    _resize: function () {
+        $("#editor, #output").height($(window).height() - 57 - $(".footer").height());
+        // playground.editor.setSize($("#editor").width(), $("#editor").height() + 4);
+    },
+    _initShare: function () {
+        $(".share-panel .font-ico").click(function () {
+            var key = $(this).attr('class').split('-')[2];
+            var url = "https://wide.b3log.org", pic = 'https://wide.b3log.org/static/images/wide-logo.png';
+            var urls = {};
+            urls.email = "mailto:?subject=" + $('title').text()
+                    + "&body=" + $('meta[name=description]').attr('content') + ' ' + url;
+
+            var twitterShare = encodeURIComponent($('meta[name=description]').attr('content') + " " + url + " #golang");
+            urls.twitter = "https://twitter.com/intent/tweet?status=" + twitterShare;
+
+            urls.facebook = "https://www.facebook.com/sharer/sharer.php?u=" + url;
+            urls.googleplus = "https://plus.google.com/share?url=" + url;
+
+            var title = encodeURIComponent($('title').text() + '. \n' + $('meta[name=description]').attr('content')
+                    + " #golang#");
+            urls.weibo = "http://v.t.sina.com.cn/share/share.php?title=" + title + "&url=" + url + "&pic=" + pic;
+            urls.tencent = "http://share.v.t.qq.com/index.php?c=share&a=index&title=" + title +
+                    "&url=" + url + "&pic=" + pic;
+
+            window.open(urls[key], "_blank", "top=100,left=200,width=648,height=618");
+            
+            $(".menu .share-panel").hide();
+        });
+    },
     init: function () {
-        $("#editorDiv").append("");
-        var textArea = document.getElementById("editor");
-        textArea.value = code;
-        playground.editor = CodeMirror.fromTextArea(textArea, {
+        playground.editor = CodeMirror.fromTextArea($("#editor")[0], {
             lineNumbers: true,
             autofocus: true,
             autoCloseBrackets: true,
@@ -33,7 +59,11 @@ var playground = {
             tabSize: 4,
             indentUnit: 4,
             foldGutter: true,
-            cursorHeight: 1,
+            cursorHeight: 1
+        });
+
+        $(window).resize(function () {
+            playground._resize();
         });
 
         var hovered = false;
@@ -66,6 +96,9 @@ var playground = {
         });
 
         this._initWS();
+        this._resize();
+        this._initShare();
+        menu._initAbout();
     },
     _initWS: function () {
         // Used for session retention, server will release all resources of the session if this channel closed

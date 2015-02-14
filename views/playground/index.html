@@ -9,6 +9,8 @@
         <meta name="author" content="B3log">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
@@ -41,7 +43,7 @@
                 </li>
             </ul>
             <div class="fn-right">
-                <span class="font-ico ico-about"></span> &nbsp;
+                <span class="font-ico ico-about" onclick='$("#dialogAbout").dialog("open");'></span> &nbsp;
                 <span class="font-ico ico-share"></span> &nbsp;
                 <span onclick="window.open('https://github.com/b3log/wide')"
                       class="font-ico ico-github"></span>&nbsp;
@@ -57,7 +59,7 @@
         </div>
         <div class="fn-clear">
             <div id="editorDiv">
-                <textarea id='editor'></textarea>
+                <textarea id='editor'>"{{.code}}"</textarea>
             </div>
             <textarea id="output" rows="20" readonly="readonly" ></textarea>
         </div>
@@ -66,21 +68,22 @@
                 Ver {{.ver}}, &copy; {{.year}} <a rel="copyright" href="http://b3log.org" target="_blank">B3LOG.ORG</a>
             </div>
         </div>
-        <script>
-            var config = {
-                "context": "{{.conf.Context}}",
-                "staticServer": "{{.conf.StaticServer}}",
-                "channel": "{{.conf.Channel}}",
-                "wideSessionId": "{{.session.ID}}"
-            };
-            var code = "{{.code}}";
 
-            function newWideRequest() {
-                var ret = {
+        <div id="dialogAbout" class="fn-none"></div>
+        <script>
+                    var config = {
+                    "context": "{{.conf.Context}}",
+                            "staticServer": "{{.conf.StaticServer}}",
+                            "channel": "{{.conf.Channel}}",
+                            "wideSessionId": "{{.session.ID}}",
+                            "label": {{.i18n}}
+                    };
+                    function newWideRequest() {
+                    var ret = {
                     sid: config.wideSessionId
-                };
-                return ret;
-            }
+                    };
+                            return ret;
+                    }
 
         </script>
 
@@ -108,6 +111,8 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/meta.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/go/go.js"></script>
 
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/dialog.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/menu.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/playground.js?{{.conf.StaticResourceVersion}}"></script>
     </body>
 </html>

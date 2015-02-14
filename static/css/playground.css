@@ -64,4 +64,6 @@
 #output {
     width: 40%;
     float: right;
+    border-width: 0;
+    border-left: 1px solid #919191;
 }
