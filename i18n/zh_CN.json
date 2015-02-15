@@ -168,5 +168,5 @@
     "vet-succ": "[go vet] SUCCESS",
     "vet-error": "[go vet] ERROR",
     "restore_outline": "恢复大纲",
-    "share": "シェア"
+    "share": "分享"
 }

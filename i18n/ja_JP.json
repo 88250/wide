@@ -167,5 +167,6 @@
     "start-vet": "START [go vet]",
     "vet-succ": "[go vet] SUCCESS",
     "vet-error": "[go vet] ERROR",
-    "restore_outline": "アウトラインを復元"
+    "restore_outline": "アウトラインを復元",
+    "share": "シェア"
 }
