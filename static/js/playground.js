@@ -58,6 +58,109 @@ var playground = {
         });
     },
     init: function () {
+        CodeMirror.registerHelper("hint", "go", function (editor) {
+            var word = /[\w$]+/;
+
+            var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
+
+            var start = cur.ch, end = start;
+            while (end < curLine.length && word.test(curLine.charAt(end))) {
+                ++end;
+            }
+            while (start && word.test(curLine.charAt(start - 1))) {
+                --start;
+            }
+
+            var request = newWideRequest();
+            request.code = editor.getValue();
+            request.cursorLine = cur.line;
+            request.cursorCh = cur.ch;
+
+            var autocompleteHints = [];
+
+            $.ajax({
+                async: false, // 同步执行
+                type: 'POST',
+                url: config.context + '/playground/autocomplete',
+                data: JSON.stringify(request),
+                dataType: "json",
+                success: function (data) {
+                    var autocompleteArray = data[1];
+
+                    if (autocompleteArray) {
+                        for (var i = 0; i < autocompleteArray.length; i++) {
+                            var displayText = '',
+                                    text = autocompleteArray[i].name;
+
+                            switch (autocompleteArray[i].class) {
+                                case "type":
+                                    displayText = '<span class="fn-clear"><span class="ico-type ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>    '
+                                            + autocompleteArray[i].type + '</span>';
+                                    break;
+                                case "const":
+                                    displayText = '<span class="fn-clear"><span class="ico-const ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>    '
+                                            + autocompleteArray[i].type + '</span>';
+                                    break;
+                                case "var":
+                                    displayText = '<span class="fn-clear"><span class="ico-var ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>    '
+                                            + autocompleteArray[i].type + '</span>';
+                                    break;
+                                case "package":
+                                    displayText = '<span class="fn-clear"><span class="ico-package ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>    '
+                                            + autocompleteArray[i].type + '</span>';
+                                    break;
+                                case "func":
+                                    displayText = '<span><span class="ico-func ico"></span>'// + autocompleteArray[i].class 
+                                            + '<b>' + autocompleteArray[i].name + '</b>'
+                                            + autocompleteArray[i].type.substring(4) + '</span>';
+                                    text += '()';
+                                    break;
+                                default:
+                                    console.warn("Can't handle autocomplete [" + autocompleteArray[i].class + "]");
+                                    break;
+                            }
+
+                            autocompleteHints[i] = {
+                                displayText: displayText,
+                                text: text
+                            };
+                        }
+                    }
+                }
+            });
+
+            return {list: autocompleteHints, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
+        });
+
+        CodeMirror.commands.autocompleteAnyWord = function (cm) {
+            cm.showHint({hint: CodeMirror.hint.auto});
+        };
+
+        CodeMirror.commands.autocompleteAfterDot = function (cm) {
+            var mode = cm.getMode();
+            if (mode && "go" !== mode.name) {
+                return CodeMirror.Pass;
+            }
+
+            var token = cm.getTokenAt(cm.getCursor());
+
+            if ("comment" === token.type || "string" === token.type) {
+                return CodeMirror.Pass;
+            }
+
+            setTimeout(function () {
+                if (!cm.state.completionActive) {
+                    cm.showHint({hint: CodeMirror.hint.go, completeSingle: false});
+                }
+            }, 50);
+
+            return CodeMirror.Pass;
+        };
+
         playground.editor = CodeMirror.fromTextArea($("#editor")[0], {
             lineNumbers: true,
             autofocus: true,
@@ -71,7 +174,11 @@ var playground = {
             indentUnit: 4,
             foldGutter: true,
             cursorHeight: 1,
-            viewportMargin: 1000
+            viewportMargin: 500,
+            extraKeys: {
+                "Ctrl-\\": "autocompleteAnyWord",
+                ".": "autocompleteAfterDot"
+            }
         });
 
         $("#editorDiv").show();

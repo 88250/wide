@@ -172,6 +172,7 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/playground/build", handlerWrapper(playground.BuildHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/run", handlerWrapper(playground.RunHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/stop", handlerWrapper(playground.StopHandler))
+	http.HandleFunc(conf.Wide.Context+"/playground/autocomplete", handlerWrapper(playground.AutocompleteHandler))
 
 	logger.Infof("Wide is running [%s]", conf.Wide.Server+conf.Wide.Context)
 
