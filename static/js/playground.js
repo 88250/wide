@@ -22,42 +22,13 @@ var playground = {
         playground.editor.setSize("auto", $("#editor").height() + "px");
     },
     _initShare: function () {
-        if (!playground.editor) {
-            return;
-        }
-
-        var code = playground.editor.getValue();
-
-        var request = newWideRequest();
-        request.code = code;
-
-        $.ajax({
-            type: 'POST',
-            url: config.context + '/playground/save',
-            data: JSON.stringify(request),
-            dataType: "json",
-            success: function (data) {
-                playground.editor.setValue(data.code);
-
-                if (!data.succ) {
-                    return;
-                }
-
-                $("#dialogShare").dialog({
-                    "modal": true,
-                    "height": 460,
-                    "width": 800,
-                    "title": "Share",
-                    "hideFooter": true,
-                    "afterOpen": function () {
-                    }
-                });
-
-                var url = window.location.protocol + "//" + window.location.host + '/playground/' + data.fileName;
-                var html = 'URL: <a href="' + url + '" target="_blank">' + url + "</a><br/>";
-                html += "Embeded: xxxx";
-                
-                $("#dialogShare").html(html);
+        $("#dialogShare").dialog({
+            "modal": true,
+            "height": 460,
+            "width": 800,
+            "title": config.label.share,
+            "hideFooter": true,
+            "afterOpen": function () {
             }
         });
     },
@@ -188,6 +159,37 @@ var playground = {
         playgroundWS.onerror = function (e) {
             console.log('[playground onerror] ' + JSON.parse(e));
         };
+    },
+    share: function () {
+        if (!playground.editor) {
+            return;
+        }
+
+        var code = playground.editor.getValue();
+
+        var request = newWideRequest();
+        request.code = code;
+
+        $.ajax({
+            type: 'POST',
+            url: config.context + '/playground/save',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                playground.editor.setValue(data.code);
+
+                if (!data.succ) {
+                    return;
+                }
+
+                var url = window.location.protocol + "//" + window.location.host + '/playground/' + data.fileName;
+                var html = 'URL: <a href="' + url + '" target="_blank">' + url + "</a><br/>";
+                html += "Embeded: xxxx";
+
+                $("#dialogShare").html(html);
+                $("#dialogShare").dialog("open");
+            }
+        });
     },
     stop: function () {
         if (!playground.editor) {
