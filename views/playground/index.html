@@ -29,16 +29,16 @@
                              class="logo"/></a>
                 </li>
                 <li>
-                    <button class="btn" id="run" onclick="playground.run();">Run</button>
+                    <button class="btn" id="run" onclick="playground.run();">{{.i18n.run}}</button>
                 </li>
                 <li>
-                    <button class="btn btn-red" id="Format" onclick="playground.format();">Format</button>
+                    <button class="btn btn-red" id="Format" onclick="playground.format();">{{.i18n.format}}</button>
                 </li>
                 <li>
-                    <button class="btn btn-red" id="stop" onclick="playground.stop();">Stop</button>
+                    <button class="btn btn-red" id="stop" onclick="playground.stop();">{{.i18n.stop}}</button>
                 </li>
                 <li>
-                    <button class="btn-white btn" id="share" onclick='$("#dialogShare").dialog("open");'>Share</button>
+                    <button class="btn-white btn" id="share" onclick='$("#dialogShare").dialog("open");'>{{.i18n.share}}</button>
                 </li>
             </ul>
             <div class="fn-right">
