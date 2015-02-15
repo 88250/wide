@@ -317,6 +317,11 @@ func GetGoFmt(username string) string {
 
 // GetUser gets configuration of the user specified by the given username, returns nil if not found.
 func GetUser(username string) *User {
+	if "playground" == username { // reserved user for Playground
+		// mock it
+		return NewUser("playground", "", "", "")
+	}
+
 	for _, user := range Users {
 		if user.Name == username {
 			return user

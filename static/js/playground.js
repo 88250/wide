@@ -22,6 +22,46 @@ var playground = {
         playground.editor.setSize("auto", $("#editor").height() + "px");
     },
     _initShare: function () {
+        if (!playground.editor) {
+            return;
+        }
+
+        var code = playground.editor.getValue();
+
+        var request = newWideRequest();
+        request.code = code;
+
+        $.ajax({
+            type: 'POST',
+            url: config.context + '/playground/save',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                playground.editor.setValue(data.code);
+
+                if (!data.succ) {
+                    return;
+                }
+
+                $("#dialogShare").dialog({
+                    "modal": true,
+                    "height": 460,
+                    "width": 800,
+                    "title": "Share",
+                    "hideFooter": true,
+                    "afterOpen": function () {
+                    }
+                });
+
+                var url = window.location.protocol + "//" + window.location.host + '/playground/' + data.fileName;
+                var html = 'URL: <a href="' + url + '" target="_blank">' + url + "</a><br/>";
+                html += "Embeded: xxxx";
+                
+                $("#dialogShare").html(html);
+            }
+        });
+    },
+    _initWideShare: function () {
         $(".share-panel .font-ico").click(function () {
             var key = $(this).attr('class').split('-')[2];
             var url = "https://wide.b3log.org", pic = 'https://wide.b3log.org/static/images/wide-logo.png';
@@ -100,6 +140,7 @@ var playground = {
 
         this._initWS();
         this._resize();
+        this._initWideShare();
         this._initShare();
         menu._initAbout();
     },
@@ -147,38 +188,6 @@ var playground = {
         playgroundWS.onerror = function (e) {
             console.log('[playground onerror] ' + JSON.parse(e));
         };
-    },
-    share: function () {
-        if (!playground.editor) {
-            return;
-        }
-
-        var request = newWideRequest();
-        request.pid = playground.pid;
-
-        var code = playground.editor.getValue();
-
-        var request = newWideRequest();
-        request.code = code;
-
-        $.ajax({
-            type: 'POST',
-            url: config.context + '/playground/save',
-            data: JSON.stringify(request),
-            dataType: "json",
-            success: function (data) {
-                playground.editor.setValue(data.code);
-
-                if (!data.succ) {
-                    return;
-                }
-
-                var url = window.location.protocol + "//" + window.location.host + '/playground/' + data.fileName;
-                var html = '<a href="' + url + '" target="_blank">'
-                        + url + "</a>";
-                $("#url").html(html);
-            }
-        });
     },
     stop: function () {
         if (!playground.editor) {

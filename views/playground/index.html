@@ -38,8 +38,7 @@
                     <button class="btn btn-red" id="stop" onclick="playground.stop();">Stop</button>
                 </li>
                 <li>
-                    <button class="btn-white btn" id="share" onclick="playground.share();">Share</button>
-                    <span id="url"></span>
+                    <button class="btn-white btn" id="share" onclick='$("#dialogShare").dialog("open");'>Share</button>
                 </li>
             </ul>
             <div class="fn-right">
@@ -58,7 +57,7 @@
             </div>
         </div>
         <div class="fn-clear">
-            <div id="editorDiv" style="display: none;">
+            <div id="editorDiv" class="fn-none">
                 <textarea id='editor'>{{.code}}</textarea>
             </div>
             <textarea id="output" rows="20" readonly="readonly" ></textarea>
@@ -70,6 +69,7 @@
         </div>
 
         <div id="dialogAbout" class="fn-none"></div>
+        <div id="dialogShare" class="fn-none">share!</div>
         <script>
                     var config = {
                     "context": "{{.conf.Context}}",

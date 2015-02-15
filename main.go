@@ -197,7 +197,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	username := httpSession.Values["username"].(string)
-
 	if "playground" == username { // reserved user for Playground
 		http.Redirect(w, r, conf.Wide.Context+"login", http.StatusFound)
 
