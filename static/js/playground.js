@@ -19,7 +19,7 @@ var playground = {
     pid: undefined,
     _resize: function () {
         $("#editor, #output").height($(window).height() - 57 - $(".footer").height());
-        // playground.editor.setSize($("#editor").width(), $("#editor").height() + 4);
+        playground.editor.setSize("auto", $("#editor").height() + "px");
     },
     _initShare: function () {
         $(".share-panel .font-ico").click(function () {
@@ -42,7 +42,7 @@ var playground = {
                     "&url=" + url + "&pic=" + pic;
 
             window.open(urls[key], "_blank", "top=100,left=200,width=648,height=618");
-            
+
             $(".menu .share-panel").hide();
         });
     },
@@ -59,8 +59,11 @@ var playground = {
             tabSize: 4,
             indentUnit: 4,
             foldGutter: true,
-            cursorHeight: 1
+            cursorHeight: 1,
+            viewportMargin: 1000
         });
+
+        $("#editorDiv").show();
 
         $(window).resize(function () {
             playground._resize();
@@ -178,7 +181,16 @@ var playground = {
         });
     },
     stop: function () {
-        if (!playground.editor || !playground.pid) {
+        if (!playground.editor) {
+            return;
+        }
+
+        var cursor = playground.editor.getCursor();
+        playground.editor.focus();
+
+        playground.editor.setCursor(cursor);
+
+        if (!playground.pid) {
             return;
         }
 
@@ -197,6 +209,9 @@ var playground = {
             return;
         }
 
+        var cursor = playground.editor.getCursor();
+        playground.editor.focus();
+
         var code = playground.editor.getValue();
 
         // Step 1. save & format code
@@ -213,6 +228,7 @@ var playground = {
             success: function (data) {
                 // console.log(data);
                 playground.editor.setValue(data.code);
+                playground.editor.setCursor(cursor);
 
                 if (!data.succ) {
                     return;
@@ -259,6 +275,9 @@ var playground = {
             return;
         }
 
+        var cursor = playground.editor.getCursor();
+        playground.editor.focus();
+
         var code = playground.editor.getValue();
 
         var request = newWideRequest();
@@ -271,6 +290,7 @@ var playground = {
             dataType: "json",
             success: function (data) {
                 playground.editor.setValue(data.code);
+                playground.editor.setCursor(cursor);
             }
         });
     }
