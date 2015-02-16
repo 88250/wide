@@ -25,6 +25,7 @@ func TestGetAPIPath(t *testing.T) {
 	apiPath := Go.GetAPIPath()
 
 	v := runtime.Version()[2:]
+	v = v[:3]
 
 	verNum, err := strconv.ParseFloat(v, 64)
 

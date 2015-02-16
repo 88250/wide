@@ -161,14 +161,22 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	logger.Debugf("${pwd} [%s]", Wide.WD)
 
 	// User Home
+	userHome := ""
 	user, err := user.Current()
-	if nil != err {
-		logger.Error("Can't get user's home, please report this issue to developer")
+	if nil == err {
+		userHome = user.HomeDir
+	} else {
+		// cross compile support for darwin
+		home, er := util.OS.Home()
+		if nil != er {
+			logger.Error("Can't get user's home, please report this issue to developer", err, er)
 
-		os.Exit(-1)
+			os.Exit(-1)
+		}
+
+		userHome = home
 	}
 
-	userHome := user.HomeDir
 	logger.Debugf("${user.home} [%s]", userHome)
 
 	// Playground Directory
