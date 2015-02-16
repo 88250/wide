@@ -54,6 +54,7 @@ func (*myos) Home() (string, error) {
 	}
 
 	// cross compile support
+
 	if OS.IsWindows() {
 		return homeWindows()
 	}
