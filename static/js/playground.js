@@ -286,15 +286,32 @@ var playground = {
                 playground.editor.setValue(data.code);
 
                 if (!data.succ) {
+                    console.log(data);
                     return;
                 }
 
                 var url = window.location.protocol + "//" + window.location.host + '/playground/' + data.fileName;
-                var html = 'URL: <a href="' + url + '" target="_blank">' + url + "</a><br/>";                
-                html += 'Embeded: <br/><textarea rows="5" cols="80"><p><iframe src="' + url + '?embed=true" width="100%" height="600"></iframe></p></textarea>';
 
-                $("#dialogShare").html(html);
-                $("#dialogShare").dialog("open");
+                var request = newWideRequest();
+                request.url = url;
+                $.ajax({
+                    type: 'POST',
+                    url: config.context + '/playground/short-url',
+                    data: JSON.stringify(request),
+                    dataType: "json",
+                    success: function (data) {
+                        if (!data.succ) {
+                            console.log(data);
+                            return;
+                        }
+
+                        var html = 'URL: <a href="' + url + '" target="_blank">' + url + "</a><br/>";
+                        html += 'Short URL: <a href="' + data.shortURL + '" target="_blank">' + data.shortURL + '</a><br/>';
+                        html += 'Embeded: <br/><textarea rows="5" cols="80"><p><iframe src="' + url + '?embed=true" width="100%" height="600"></iframe></p></textarea>';
+
+                        $("#dialogShare").html(html);
+                        $("#dialogShare").dialog("open");
+                    }});
             }
         });
     },

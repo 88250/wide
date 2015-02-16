@@ -23,6 +23,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
@@ -90,5 +91,45 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
+}
 
+// ShortURLHandler handles request of short URL.
+func ShortURLHandler(w http.ResponseWriter, r *http.Request) {
+	data := map[string]interface{}{"succ": true}
+	defer util.RetJSON(w, r, data)
+
+	session, _ := session.HTTPSession.Get(r, "wide-session")
+	if session.IsNew {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
+
+	var args map[string]interface{}
+	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
+		logger.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	url := args["url"].(string)
+
+	resp, _ := http.Post("http://dwz.cn/create.php", "application/x-www-form-urlencoded",
+		strings.NewReader("url="+url))
+
+	var response map[string]interface{}
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		logger.Error(err)
+		data["succ"] = false
+
+		return
+	}
+
+	shortURL := url
+	if 0 == response["status"].(float64) {
+		shortURL = response["tinyurl"].(string)
+	}
+
+	data["shortURL"] = shortURL
 }
