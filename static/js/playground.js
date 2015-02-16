@@ -290,8 +290,8 @@ var playground = {
                 }
 
                 var url = window.location.protocol + "//" + window.location.host + '/playground/' + data.fileName;
-                var html = 'URL: <a href="' + url + '" target="_blank">' + url + "</a><br/>";
-                html += "Embeded: xxxx";
+                var html = 'URL: <a href="' + url + '" target="_blank">' + url + "</a><br/>";                
+                html += 'Embeded: <br/><textarea rows="5" cols="80"><p><iframe src="' + url + '?embed=true" width="100%" height="600"></iframe></p></textarea>';
 
                 $("#dialogShare").html(html);
                 $("#dialogShare").dialog("open");
