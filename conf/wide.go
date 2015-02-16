@@ -110,6 +110,10 @@ func initUsers() {
 	f.Close()
 
 	for _, name := range names {
+		if strings.HasPrefix(name, ".") { // hiden files that not be created by Wide
+			continue
+		}
+
 		user := &User{}
 
 		bytes, _ := ioutil.ReadFile("conf/users/" + name)
