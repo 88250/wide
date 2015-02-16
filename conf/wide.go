@@ -20,7 +20,6 @@ import (
 	"io/ioutil"
 	"os"
 	"os/exec"
-	"os/user"
 	"path/filepath"
 	"sort"
 	"strconv"
@@ -161,26 +160,17 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	logger.Debugf("${pwd} [%s]", Wide.WD)
 
 	// User Home
-	userHome := ""
-	user, err := user.Current()
-	if nil == err {
-		userHome = user.HomeDir
-	} else {
-		// cross compile support for darwin
-		home, er := util.OS.Home()
-		if nil != er {
-			logger.Error("Can't get user's home, please report this issue to developer", err, er)
+	home, err := util.OS.Home()
+	if nil != err {
+		logger.Error("Can't get user's home, please report this issue to developer", err)
 
-			os.Exit(-1)
-		}
-
-		userHome = home
+		os.Exit(-1)
 	}
 
-	logger.Debugf("${user.home} [%s]", userHome)
+	logger.Debugf("${user.home} [%s]", home)
 
 	// Playground Directory
-	Wide.Playground = strings.Replace(Wide.Playground, "${home}", userHome, 1)
+	Wide.Playground = strings.Replace(Wide.Playground, "${home}", home, 1)
 	if "" != confPlayground {
 		Wide.Playground = confPlayground
 	}

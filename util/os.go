@@ -19,6 +19,7 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -47,6 +48,12 @@ func (*myos) Pwd() string {
 // This uses an OS-specific method for discovering the home directory.
 // An error is returned if a home directory cannot be detected.
 func (*myos) Home() (string, error) {
+	user, err := user.Current()
+	if nil == err {
+		return user.HomeDir, nil
+	}
+
+	// cross compile support
 	if OS.IsWindows() {
 		return homeWindows()
 	}
