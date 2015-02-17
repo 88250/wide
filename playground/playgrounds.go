@@ -39,13 +39,11 @@ var logger = log.NewLogger(os.Stdout)
 
 // IndexHandler handles request of Playground index.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
-	username := "playground"
-
 	// create a HTTP session
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	if httpSession.IsNew {
 		httpSession.Values["id"] = strconv.Itoa(rand.Int())
-		httpSession.Values["username"] = username
+		httpSession.Values["username"] = "playground"
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
@@ -53,6 +51,8 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		httpSession.Options.Path = conf.Wide.Context
 	}
 	httpSession.Save(r, w)
+
+	username := httpSession.Values["username"].(string)
 
 	// create a wide session
 	rand.Seed(time.Now().UnixNano())
@@ -87,7 +87,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	wideSessions := session.WideSessions.GetByUsername(username)
 
-	logger.Tracef("User [%s] has [%d] sessions", username, len(wideSessions))
+	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("views/playground/index.html")
 
