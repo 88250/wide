@@ -168,5 +168,8 @@
     "vet-succ": "[go vet] SUCCESS",
     "vet-error": "[go vet] ERROR",
     "restore_outline": "アウトラインを復元",
-    "share": "シェア"
+    "share": "シェア",
+    "url": "リンク",
+    "short_url": "ショートリンク",
+    "embeded": "埋め込む"
 }

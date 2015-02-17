@@ -168,5 +168,8 @@
     "vet-succ": "[go vet] SUCCESS",
     "vet-error": "[go vet] ERROR",
     "restore_outline": "恢復大綱",
-    "share": "分享"
+    "share": "分享",
+    "url": "鏈接",
+    "short_url": "短鏈接",
+    "embeded": "嵌入"
 }

@@ -305,9 +305,10 @@ var playground = {
                             return;
                         }
 
-                        var html = 'URL: <a href="' + url + '" target="_blank">' + url + "</a><br/>";
-                        html += 'Short URL: <a href="' + data.shortURL + '" target="_blank">' + data.shortURL + '</a><br/>';
-                        html += 'Embeded: <br/><textarea rows="5" cols="80"><p><iframe src="' + url + '?embed=true" width="100%" height="600"></iframe></p></textarea>';
+                        var html = '<div class="fn-clear"><label>' + config.label.url + config.label.colon + '</label><a href="' + url + '" target="_blank">' + url + "</a><br/>";
+                        html += '<label>' + config.label.short_url + config.label.colon + '</label><a href="' + data.shortURL + '" target="_blank">' + data.shortURL + '</a><br/>';
+                        html += '<label>' + config.label.embeded + config.label.colon + '</label><br/><textarea rows="10" cols="80"><p><iframe src="' + url + '?embed=true" width="100%" height="600"></iframe></p></textarea>';
+                        html += '</div>';
 
                         $("#dialogShare").html(html);
                         $("#dialogShare").dialog("open");

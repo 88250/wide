@@ -168,5 +168,8 @@
     "vet-succ": "[go vet] SUCCESS",
     "vet-error": "[go vet] ERROR",
     "restore_outline": "Restore Outline",
-    "share": "Share"
+    "share": "Share",
+    "url": "URL",
+    "short_url": "Short URL",
+    "embeded": "Embeded"
 }

@@ -67,3 +67,8 @@
     border-width: 0;
     border-left: 1px solid #919191;
 }
+
+#dialogShare {
+    margin: 35px 100px 0 100px;
+    line-height: 28px;
+}
