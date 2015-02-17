@@ -63,7 +63,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	data["output"] = template.HTML(string(out))
 
 	if nil != err {
-		logger.Error(err)
 		data["succ"] = false
 
 		return
