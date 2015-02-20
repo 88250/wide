@@ -12,10 +12,10 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/wide.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
         {{if .embed}}<link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground-embed.css?{{.conf.StaticResourceVersion}}">{{else}}<link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground.css?{{.conf.StaticResourceVersion}}">{{end}}
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css?{{.conf.StaticResourceVersion}}">       
         <link rel="stylesheet" href="{{$.conf.StaticServer}}/static/js/overwrite/codemirror/theme/wide.css?{{.conf.StaticResourceVersion}}">
@@ -79,7 +79,8 @@
                             "staticServer": "{{.conf.StaticServer}}",
                             "channel": "{{.conf.Channel}}",
                             "wideSessionId": "{{.session.ID}}",
-                            "label": {{.i18n}}
+                            "label": {{.i18n}},
+                            "embed": {{.embed}}
                     };
                     function newWideRequest() {
                     var ret = {

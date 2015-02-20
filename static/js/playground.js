@@ -18,18 +18,21 @@ var playground = {
     editor: undefined,
     pid: undefined,
     _resize: function () {
-        $("#editor, #output").height($(window).height() - 57 - $(".footer").height());
-        playground.editor.setSize("auto", $("#editor").height() + "px");
+        if (config.embed) {
+            $("#editorDiv").parent().height($(window).height() - 35 - $(".footer").height());
+            playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
+        } else {
+            $("#editor, #output").height($(window).height() - 58 - $(".footer").height());
+            playground.editor.setSize("auto", $("#editor").height() + "px");
+        }
     },
     _initShare: function () {
         $("#dialogShare").dialog({
             "modal": true,
-            "height": 460,
-            "width": 800,
+            "height": 200,
+            "width": 560,
             "title": config.label.share,
-            "hideFooter": true,
-            "afterOpen": function () {
-            }
+            "hideFooter": true
         });
     },
     _initWideShare: function () {
@@ -307,7 +310,7 @@ var playground = {
 
                         var html = '<div class="fn-clear"><label>' + config.label.url + config.label.colon + '</label><a href="' + url + '" target="_blank">' + url + "</a><br/>";
                         html += '<label>' + config.label.short_url + config.label.colon + '</label><a href="' + data.shortURL + '" target="_blank">' + data.shortURL + '</a><br/>';
-                        html += '<label>' + config.label.embeded + config.label.colon + '</label><br/><textarea rows="10" cols="80"><p><iframe src="' + url + '?embed=true" width="100%" height="600"></iframe></p></textarea>';
+                        html += '<label>' + config.label.embeded + config.label.colon + '</label><br/><textarea rows="5" cols="72" readonly><iframe src="' + url + '?embed=true" width="100%" height="600"></iframe></textarea>';
                         html += '</div>';
 
                         $("#dialogShare").html(html);

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-.font-ico {
-    font-size: 26px;
-}
-
 .header {
     margin: 0;
     padding: 10px;
+}
+
+.font-ico {
+    font-size: 26px;
 }
 
 .header .gravatar {
@@ -56,6 +56,11 @@
     transform:rotate(360deg);
 }
 
+.footer {
+    height: 30px;
+    text-shadow: 0 0 0;
+}
+
 #editorDiv {
     width: 60%;
     float: left;
@@ -65,10 +70,17 @@
     width: 40%;
     float: right;
     border-width: 0;
+    margin: 0;
+    padding: 0;
     border-left: 1px solid #919191;
 }
 
 #dialogShare {
-    margin: 35px 100px 0 100px;
+    margin: 10px 15px 0;
     line-height: 28px;
+}
+
+#dialogShare a {
+    white-space: pre-wrap;
+    word-wrap: break-word;
 }
