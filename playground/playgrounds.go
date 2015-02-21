@@ -63,27 +63,37 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	// try to load file
 	code := conf.HelloWorld
+	fileName := "8b7cc38b4c12e6fde5c4d15a4f2f32e5.go" // MD5 of HelloWorld.go
 	if strings.HasSuffix(r.RequestURI, ".go") {
-		fileName := r.RequestURI[len("/playground/"):]
-		filePath := filepath.Clean(conf.Wide.Playground + "/" + fileName)
+		fileNameArg := r.RequestURI[len("/playground/"):]
+		filePath := filepath.Clean(conf.Wide.Playground + "/" + fileNameArg)
 
 		bytes, err := ioutil.ReadFile(filePath)
 		if nil != err {
 			logger.Warn(err)
+		} else {
+			code = string(bytes)
+			fileName = fileNameArg
 		}
-
-		code = string(bytes)
 	}
 
+	query := r.URL.Query()
 	embed := false
-	embedArg, ok := r.URL.Query()["embed"]
+	embedArg, ok := query["embed"]
 	if ok && "true" == embedArg[0] {
 		embed = true
 	}
 
+	disqus := false
+	disqusArg, ok := query["disqus"]
+	if ok && "true" == disqusArg[0] {
+		disqus = true
+	}
+
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession, "pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
-		"code": template.HTML(code), "ver": conf.WideVersion, "year": time.Now().Year(), "embed": embed}
+		"code": template.HTML(code), "ver": conf.WideVersion, "year": time.Now().Year(),
+		"embed": embed, "disqus": disqus, "fileName": fileName}
 
 	wideSessions := session.WideSessions.GetByUsername(username)
 

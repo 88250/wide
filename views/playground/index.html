@@ -65,6 +65,19 @@
             </div>
             <textarea id="output" rows="20" readonly="readonly" ></textarea>
         </div>
+        {{if .disqus}}
+        <div id="disqus_thread"></div>
+        <script type="text/javascript">
+                    var disqus_shortname = 'wide-playground';
+                    var disqus_identifier = {{.fileName}};
+                    var disqus_url = window.location.protocol + "//" + {{.conf.Server}} + {{.conf.Context}} + "/playground/" + {{.fileName}}
+                    (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();</script>
+        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        {{end}}
         <div class="footer">
             <div class="wrapper">
                 Ver {{.ver}}, &copy; {{.year}} <a rel="copyright" href="http://b3log.org" target="_blank">B3LOG.ORG</a>
@@ -76,6 +89,7 @@
         <script>
                     var config = {
                     "context": "{{.conf.Context}}",
+                            "server": "{{.conf.Server}}",
                             "staticServer": "{{.conf.StaticServer}}",
                             "channel": "{{.conf.Channel}}",
                             "wideSessionId": "{{.session.ID}}",
