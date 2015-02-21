@@ -29,8 +29,6 @@ var playground = {
     _initShare: function () {
         $("#dialogShare").dialog({
             "modal": true,
-            "height": 200,
-            "width": 560,
             "title": config.label.share,
             "hideFooter": true
         });
@@ -308,9 +306,15 @@ var playground = {
                             return;
                         }
 
-                        var html = '<div class="fn-clear"><label>' + config.label.url + config.label.colon + '</label><a href="' + url + '" target="_blank">' + url + "</a><br/>";
-                        html += '<label>' + config.label.short_url + config.label.colon + '</label><a href="' + data.shortURL + '" target="_blank">' + data.shortURL + '</a><br/>';
-                        html += '<label>' + config.label.embeded + config.label.colon + '</label><br/><textarea rows="5" cols="72" readonly><iframe src="' + url + '?embed=true" width="100%" height="600"></iframe></textarea>';
+                        var html = '<div class="fn-clear"><label>' + config.label.url 
+                                + config.label.colon + '</label><a href="' 
+                                + url + '" target="_blank">' + url + "</a><br/>";
+                        html += '<label>' + config.label.short_url + config.label.colon 
+                                + '</label><a href="' + data.shortURL + '" target="_blank">' 
+                                + data.shortURL + '</a><br/>';
+                        html += '<label>' + config.label.embeded + config.label.colon 
+                                + '</label><br/><textarea rows="5" style="width:100%" readonly><iframe style="border:1px solid" src="'
+                                + url + '?embed=true" width="100%" height="600"></iframe></textarea>';
                         html += '</div>';
 
                         $("#dialogShare").html(html);
