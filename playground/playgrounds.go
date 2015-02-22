@@ -64,8 +64,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	// try to load file
 	code := conf.HelloWorld
 	fileName := "8b7cc38b4c12e6fde5c4d15a4f2f32e5.go" // MD5 of HelloWorld.go
-	if strings.HasSuffix(r.RequestURI, ".go") {
-		fileNameArg := r.RequestURI[len("/playground/"):]
+
+	if strings.HasSuffix(r.URL.Path, ".go") {
+		fileNameArg := r.URL.Path[len("/playground/"):]
 		filePath := filepath.Clean(conf.Wide.Playground + "/" + fileNameArg)
 
 		bytes, err := ioutil.ReadFile(filePath)
