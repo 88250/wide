@@ -22,7 +22,7 @@ var playground = {
             return false;
         }
         if (config.embed) {
-            $("#editorDiv").parent().height($(window).height() - 35 - $(".footer").height());
+            $("#editorDiv").parent().height($(window).height() - 33 - $(".footer").height());
             playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
         } else {
             $("#editor, #output").height($(window).height() - 60 - $(".footer").height());
@@ -191,6 +191,12 @@ var playground = {
             playground._resize();
         });
 
+        if (config.embed) {
+            playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
+        } else {
+            playground.editor.setSize("auto", $("#editor").height() + "px");
+        }
+
         var hovered = false;
         $(".menu .ico-share").hover(function () {
             $(".menu .share-panel").show();
@@ -309,13 +315,13 @@ var playground = {
                             return;
                         }
 
-                        var html = '<div class="fn-clear"><label>' + config.label.url 
-                                + config.label.colon + '</label><a href="' 
+                        var html = '<div class="fn-clear"><label>' + config.label.url
+                                + config.label.colon + '</label><a href="'
                                 + url + '" target="_blank">' + url + "</a><br/>";
-                        html += '<label>' + config.label.short_url + config.label.colon 
-                                + '</label><a href="' + data.shortURL + '" target="_blank">' 
+                        html += '<label>' + config.label.short_url + config.label.colon
+                                + '</label><a href="' + data.shortURL + '" target="_blank">'
                                 + data.shortURL + '</a><br/>';
-                        html += '<label>' + config.label.embeded + config.label.colon 
+                        html += '<label>' + config.label.embeded + config.label.colon
                                 + '</label><br/><textarea rows="5" style="width:100%" readonly><iframe style="border:1px solid" src="'
                                 + url + '?embed=true" width="100%" height="600"></iframe></textarea>';
                         html += '</div>';
