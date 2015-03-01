@@ -161,7 +161,8 @@
             });
 
             $(window).resize(function () {
-                $(".dialog-background").height($("body").height());
+                var height = $("body").height() > $(window).height() ? $("body").height() : $(window).height();
+                $(".dialog-background").height(height);
             });
 
             if (typeof settings.afterInit === "function") {

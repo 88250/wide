@@ -1,52 +1,51 @@
-<div class="fn-clear">
-    <img class="logo" src="{{.conf.StaticServer}}/static/images/wide-logo.png" alt="wide logi"/>
-    <div class="fn-left">
-        <h2>Hello, 世界</h2>
-        <h3>Coding with Go on the Wide way.</h3>
+<div class="item">
+    <div class="fn-clear">
+        <img class="logo" src="{{.conf.StaticServer}}/static/images/wide-logo.png" alt="wide logi"/>
+        <div class="fn-left">
+            <h2>Hello, 世界</h2>
+            <h3>Coding with Go on the Wide way.</h3>
+        </div>
     </div>
-</div>
-<div>
     <label>{{.i18n.current_ver}}{{.i18n.colon}}</label> 
     <span class="version">{{.ver}}</span>,
     <span class="upgrade">{{.i18n.check_version}}....</span>
-    <div class="space"></div>
+</div>
 
-    <div class="fn-clear">
-        <div class="fn-left">            
-            <label>{{.i18n.project_address}}{{.i18n.colon}}</label>
-            <a href="https://github.com/b3log/wide" target="_blank">github.com/b3log/wide</a><br/>
+<div class="space"></div>
 
-            <label>{{.i18n.dev_team}}{{.i18n.colon}}</label>
-            <a href="https://github.com/b3log/b3log-solo/wiki/About_us" target="_blank">B3log</a><br/> 
+<div class="item">            
+    <label>{{.i18n.project_address}}{{.i18n.colon}}</label>
+    <a href="https://github.com/b3log/wide" target="_blank">github.com/b3log/wide</a><br/>
 
-            <label>{{.i18n.go_env}}{{.i18n.colon}}</label>
-            {{.gover}}, {{.goos}}_{{.goarch}}<br/> 
-            
-            <label>{{.i18n.donate}}{{.i18n.colon}}</label>
-            <a href="http://b3log.org/donate.html" target="_blank">b3log.org/donate.html</a>
-        </div>
-        <div class="fn-left thx">
-            <label>{{.i18n.credits}}{{.i18n.colon}}</label>
-            <ul>
-                <li>
-                    <a href="http://golang.org" target="_blank">golang</a>
-                    <a href="https://github.com/marijnh/CodeMirror" target="_blank">CodeMirror</a>
-                </li>
-                <li>
-                    <a href="https://github.com/zTree/zTree_v3" target="_blank">zTree</a>
-                    <a href="https://github.com/visualfc/liteide" target="_blank">LiteIDE</a>
-                </li>
-                <li>
-                    <a href="https://github.com/nsf/gocode" target="_blank">gocode</a>
-                    <a href="https://github.com/gorilla" target="_blank">Gorilla</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <div class="space"></div>
-    <div>
-        <label>{{.i18n.license}}{{.i18n.colon}}</label>
-        <pre class="license">
+    <label>{{.i18n.dev_team}}{{.i18n.colon}}</label>
+    <a href="https://github.com/b3log/b3log-solo/wiki/About_us" target="_blank">B3log</a><br/> 
+
+    <label>{{.i18n.go_env}}{{.i18n.colon}}</label>
+    {{.gover}}, {{.goos}}_{{.goarch}}<br/> 
+
+    <label>{{.i18n.donate}}{{.i18n.colon}}</label>
+    <a href="http://b3log.org/donate.html" target="_blank">b3log.org/donate.html</a>
+</div>
+
+<div class="thx item">
+    <label>{{.i18n.credits}}{{.i18n.colon}}</label>
+    <ul>
+        <li>
+            <a href="http://golang.org" target="_blank">golang</a>
+            <a href="https://github.com/marijnh/CodeMirror" target="_blank">CodeMirror</a>
+            <a href="https://github.com/zTree/zTree_v3" target="_blank">zTree</a>
+            <a href="https://github.com/visualfc/liteide" target="_blank">LiteIDE</a>
+            <a href="https://github.com/nsf/gocode" target="_blank">gocode</a>
+            <a href="https://github.com/gorilla" target="_blank">Gorilla</a>
+        </li>
+    </ul>
+</div>
+
+<div class="space"></div>
+
+<div class="item">
+    <label>{{.i18n.license}}{{.i18n.colon}}</label>
+    <pre class="license">
                                  Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -248,6 +247,5 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
-        </pre>
-    </div>
+    </pre>
 </div>
