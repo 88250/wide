@@ -332,6 +332,21 @@ var playground = {
             }
         });
     },
+    disqus: function () {
+        var url = window.location.href;
+        if (url.indexOf("?") >= 0) {
+            if (url.indexOf("disqus=") >= 0) {
+                url = url.replace("disqus=false", "disqus=true");
+                console.log(url);
+            } else {
+                url += "&disqus=true";
+            }
+        } else {
+            url += "?disqus=true";
+        }
+
+        window.location.href = url;
+    },
     stop: function () {
         if (!playground.editor) {
             return;

@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
-        {{if .embed}}<link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground-embed.css?{{.conf.StaticResourceVersion}}">{{else}}<link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground.css?{{.conf.StaticResourceVersion}}">{{end}}
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground{{if .embed}}-embed{{end}}.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css?{{.conf.StaticResourceVersion}}">       
         <link rel="stylesheet" href="{{$.conf.StaticServer}}/static/js/overwrite/codemirror/theme/wide.css?{{.conf.StaticResourceVersion}}">
@@ -39,6 +39,9 @@
                 </li>
                 <li>
                     <button class="btn btn-red" id="stop" onclick="playground.stop();">{{.i18n.stop}}</button>
+                </li>
+                <li>
+                    <button class="btn-white btn" id="disqus" onclick="playground.disqus();">Disqus</button>
                 </li>
                 <li>
                     <button class="btn-white btn" id="share" onclick="playground.share();">{{.i18n.share}}</button>
@@ -75,9 +78,7 @@
                     var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
                             dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
                             (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                    })();
-                                    
-        </script>
+                    })();        </script>
         <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         {{end}}
         <div class="footer">
