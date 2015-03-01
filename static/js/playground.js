@@ -18,11 +18,14 @@ var playground = {
     editor: undefined,
     pid: undefined,
     _resize: function () {
+        if (config.disqus) {
+            return false;
+        }
         if (config.embed) {
             $("#editorDiv").parent().height($(window).height() - 35 - $(".footer").height());
             playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
         } else {
-            $("#editor, #output").height($(window).height() - 58 - $(".footer").height());
+            $("#editor, #output").height($(window).height() - 60 - $(".footer").height());
             playground.editor.setSize("auto", $("#editor").height() + "px");
         }
     },
