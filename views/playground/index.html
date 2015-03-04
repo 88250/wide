@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
-        {{if .embed}}<link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground-embed.css?{{.conf.StaticResourceVersion}}">{{else}}<link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground.css?{{.conf.StaticResourceVersion}}">{{end}}
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground{{if .embed}}-embed{{end}}.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
@@ -39,6 +39,9 @@
                 </li>
                 <li>
                     <button class="btn btn-red" id="stop" onclick="playground.stop();">{{.i18n.stop}}</button>
+                </li>
+                <li>
+                    <button class="btn-white btn" id="disqus" onclick="playground.disqus();">Disqus</button>
                 </li>
                 <li>
                     <button class="btn-white btn" id="share" onclick="playground.share();">{{.i18n.share}}</button>
@@ -61,7 +64,7 @@
         </div>
         <div class="fn-clear">
             <div id="editorDiv" class="fn-none">
-                <textarea id='editor'>{{.code}}</textarea>
+                <textarea rows="20" id='editor'>{{.code}}</textarea>
             </div>
             <textarea id="output" rows="20" readonly="readonly" ></textarea>
         </div>
@@ -70,12 +73,12 @@
         <script type="text/javascript">
                     var disqus_shortname = 'wide-playground';
                     var disqus_identifier = {{.fileName}};
-                    var disqus_url = window.location.protocol + "//" + {{.conf.Server}} + {{.conf.Context}} + "/playground/" + {{.fileName}}
-            (function() {
-            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-            })();</script>
+                    var disqus_url = window.location.protocol + "//" + {{.conf.Server}} + {{.conf.Context}} + "/playground/" + {{.fileName}};
+                    (function() {
+                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                    })();        </script>
         <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         {{end}}
         <div class="footer">
@@ -94,7 +97,8 @@
                             "channel": "{{.conf.Channel}}",
                             "wideSessionId": "{{.session.ID}}",
                             "label": {{.i18n}},
-                            "embed": {{.embed}}
+                            "embed": {{.embed}},
+                            "disqus": {{.disqus}}
                     };
                     function newWideRequest() {
                     var ret = {

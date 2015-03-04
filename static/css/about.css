@@ -19,8 +19,12 @@
 }
 
 #dialogAbout {
-    margin: 35px 100px 0 100px;
+    margin: 35px 20px;
     line-height: 28px;
+}
+
+#dialogAbout .item {
+    margin: 0 10px;
 }
 
 #dialogAbout a {
@@ -49,12 +53,6 @@
 
 }
 
-#dialogAbout .thx {
-    border-left: 1px solid #919191;
-    padding-left: 24px;
-}
-
-#dialogAbout .thx,
 #dialogAbout .thx ul {
     margin-left: 50px;
 }
@@ -69,5 +67,6 @@
     font-size: 12px;
     line-height: normal;
     height: 85px;
-    overflow: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
 }

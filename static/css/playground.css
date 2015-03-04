@@ -13,6 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+body {
+    overflow: auto;
+}
+
 .header {
     margin: 0;
     padding: 10px;
@@ -83,4 +87,9 @@
 #dialogShare a {
     white-space: pre-wrap;
     word-wrap: break-word;
+}
+
+#disqus_thread {
+    border-top: 1px solid #919191;
+    padding: 0 30px;
 }

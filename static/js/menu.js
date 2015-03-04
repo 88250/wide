@@ -58,8 +58,6 @@ var menu = {
         $("#dialogAbout").load(config.context + '/about', function () {
             $("#dialogAbout").dialog({
                 "modal": true,
-                "height": 460,
-                "width": 800,
                 "title": config.label.about,
                 "hideFooter": true,
                 "afterOpen": function () {
