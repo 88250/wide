@@ -179,6 +179,15 @@ var tree = {
 
         tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh", true);
     },
+    gitClone: function (it) {
+        if (it) {
+            if ($(it).hasClass("disabled")) {
+                return false;
+            }
+        }
+
+        alert("dev");
+    },
     import: function () {
         var request = newWideRequest();
         request.path = wide.curNode.path;

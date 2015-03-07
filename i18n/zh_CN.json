@@ -171,5 +171,6 @@
     "share": "分享",
     "url": "链接",
     "short_url": "短链接",
-    "embeded": "嵌入"
+    "embeded": "嵌入",
+    "git_clone": "Git 克隆"
 }
