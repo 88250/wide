@@ -173,6 +173,10 @@ button {
     content: "\f00a";
 }
 
+.ico-git:before {
+    content: "\e624";
+}
+
 .ico-tencent:before {
     content: "\e622";
 }

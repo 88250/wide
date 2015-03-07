@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package output
+package git
 
 import (
 	"bufio"
@@ -21,17 +21,19 @@ import (
 	"io/ioutil"
 	"math/rand"
 	"net/http"
+	"os"
 	"os/exec"
-	"path/filepath"
 
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/i18n"
+	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 )
 
-// GoGetHandler handles request of go get.
-func GoGetHandler(w http.ResponseWriter, r *http.Request) {
+// Logger.
+var logger = log.NewLogger(os.Stdout)
+
+// Clone handles request of git clone.
+func CloneHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -42,10 +44,8 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
 
 	var args map[string]interface{}
-
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
 		data["succ"] = false
@@ -54,14 +54,11 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sid := args["sid"].(string)
+	path := args["path"].(string)
+	repository := args["repository"].(string)
 
-	filePath := args["file"].(string)
-	curDir := filepath.Dir(filePath)
-
-	cmd := exec.Command("go", "get")
-	cmd.Dir = curDir
-
-	setCmdEnv(cmd, username)
+	cmd := exec.Command("git", "clone", repository)
+	cmd.Dir = path
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
@@ -86,10 +83,10 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	if nil != session.OutputWS[sid] {
-		// display "START [go get]" in front-end browser
+		// display "START [git clone]" in front-end browser
 
-		channelRet["output"] = "<span class='start-get'>" + i18n.Get(locale, "start-get").(string) + "</span>\n"
-		channelRet["cmd"] = "start-get"
+		channelRet["output"] = "<span class='start-get'>git clone</span>\n"
+		channelRet["cmd"] = "start-git_clone"
 
 		wsChannel := session.OutputWS[sid]
 
@@ -115,23 +112,17 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		logger.Debugf("User [%s, %s] is running [go get] [runningId=%d]", username, sid, runningId)
+		logger.Debugf("User [%s, %s] is running [git clone] [runningId=%d]", username, sid, runningId)
 
 		channelRet := map[string]interface{}{}
-		channelRet["cmd"] = "go get"
+		channelRet["cmd"] = "git clone"
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
 
-		if 0 != len(buf) {
-			logger.Debugf("User [%s, %s] 's [go get] [runningId=%d] has done (with error)", username, sid, runningId)
+		logger.Debugf("User [%s, %s] 's running [git clone] [runningId=%d] has done: %s", username, sid, runningId, string(buf))
 
-			channelRet["output"] = "<span class='get-error'>" + i18n.Get(locale, "get-error").(string) + "</span>\n" + string(buf)
-		} else {
-			logger.Debugf("User [%s, %s] 's running [go get] [runningId=%d] has done", username, sid, runningId)
-
-			channelRet["output"] = "<span class='get-succ'>" + i18n.Get(locale, "get-succ").(string) + "</span>\n"
-		}
+		channelRet["output"] = "<span class='get-succ'>git clone succ</span>\n"
 
 		if nil != session.OutputWS[sid] {
 			wsChannel := session.OutputWS[sid]

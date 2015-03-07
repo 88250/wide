@@ -38,6 +38,7 @@ import (
 	"github.com/b3log/wide/notification"
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/playground"
+	"github.com/b3log/wide/scm/git"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 )
@@ -174,6 +175,9 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/playground/run", handlerWrapper(playground.RunHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/stop", handlerWrapper(playground.StopHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/autocomplete", handlerWrapper(playground.AutocompleteHandler))
+
+	// git
+	http.HandleFunc(conf.Wide.Context+"/git/clone", handlerWrapper(git.CloneHandler))
 
 	logger.Infof("Wide is running [%s]", conf.Wide.Server+conf.Wide.Context)
 

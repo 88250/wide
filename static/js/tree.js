@@ -185,8 +185,8 @@ var tree = {
                 return false;
             }
         }
-
-        alert("dev");
+        
+        $("#dialogGitClonePrompt").dialog('open');
     },
     import: function () {
         var request = newWideRequest();
@@ -264,6 +264,8 @@ var tree = {
                                             "left": event.clientX + "px",
                                             "display": "block"
                                         }).show();
+                                        
+                                        $dirRMenu.hide();
 
                                         menu.disabled(['import']);
                                     } else { // 右击了目录
@@ -289,6 +291,8 @@ var tree = {
                                             "left": event.clientX + "px",
                                             "display": "block"
                                         }).show();
+                                        
+                                        $fileRMenu.hide();
                                     }
                                     $("#files").focus();
                                 }
