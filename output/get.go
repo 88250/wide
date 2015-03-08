@@ -45,7 +45,6 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	locale := conf.GetUser(username).Locale
 
 	var args map[string]interface{}
-
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
 		data["succ"] = false

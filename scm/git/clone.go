@@ -23,6 +23,8 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"outline/wide/conf"
+	"outline/wide/i18n"
 
 	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
@@ -44,6 +46,7 @@ func CloneHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := httpSession.Values["username"].(string)
+	locale := conf.GetUser(username).Locale
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -85,7 +88,7 @@ func CloneHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != session.OutputWS[sid] {
 		// display "START [git clone]" in front-end browser
 
-		channelRet["output"] = "<span class='start-get'>git clone</span>\n"
+		channelRet["output"] = "<span class='start-get'>" + i18n.Get(locale, "start-git_clone").(string) + "</span>\n"
 		channelRet["cmd"] = "start-git_clone"
 
 		wsChannel := session.OutputWS[sid]
@@ -122,7 +125,7 @@ func CloneHandler(w http.ResponseWriter, r *http.Request) {
 
 		logger.Debugf("User [%s, %s] 's running [git clone] [runningId=%d] has done: %s", username, sid, runningId, string(buf))
 
-		channelRet["output"] = "<span class='get-succ'>git clone succ</span>\n"
+		channelRet["output"] = "<span class='get-succ'>" + i18n.Get(locale, "git_clone-done").(string) + "</span>\n"
 
 		if nil != session.OutputWS[sid] {
 			wsChannel := session.OutputWS[sid]

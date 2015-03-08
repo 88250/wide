@@ -105,6 +105,8 @@
     "start-get": "START [go get]",
     "get-succ": "[go get] SUCCESS",
     "get-error": "[go get] ERROR",
+    "start-git_clone": "START [git clone]",
+    "git_clone-done": "[git clone] DONE",
     "check_version": "Checking update",
     "new_version_available": "new version available",
     "go_env": "Go",

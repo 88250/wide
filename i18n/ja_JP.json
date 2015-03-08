@@ -105,6 +105,8 @@
     "start-get": "[go get] 開始",
     "get-succ": "[go get] 成功",
     "get-error": "[go get] 失敗",
+    "start-git_clone": "[git clone] 開始",
+    "git_clone-done": "[git clone] 終わった",
     "check_version": "更新をチェック中",
     "new_version_available": "新しいバージョンがあります",
     "go_env": "Go",

@@ -105,6 +105,8 @@
     "start-get": "开始 [go get]",
     "get-succ": "[go get] 成功",
     "get-error": "[go get] 失败",
+    "start-git_clone": "开始 [git clone]",
+    "git_clone-done": "[git clone] 完成",
     "check_version": "正在检查更新",
     "new_version_available": "新版本可用",
     "go_env": "Go 环境",
