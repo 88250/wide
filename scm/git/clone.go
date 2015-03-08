@@ -23,9 +23,9 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
-	"outline/wide/conf"
-	"outline/wide/i18n"
 
+	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
