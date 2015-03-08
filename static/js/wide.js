@@ -236,7 +236,8 @@ var wide = {
                                 "iconSkin": "ico-ztree-dir ",
                                 "path": request.path,
                                 "removable": true,
-                                "creatable": true
+                                "creatable": true,
+                                "isParent": true
                             }]);
                     }
                 });
@@ -476,7 +477,7 @@ var wide = {
                     break;
                 case 'git clone':
                     bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
-                    tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh", true);
+                    tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh", false);
 
                     break;
                 case 'build':

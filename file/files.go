@@ -38,7 +38,8 @@ var logger = log.NewLogger(os.Stdout)
 type Node struct {
 	Name      string  `json:"name"`
 	Path      string  `json:"path"`
-	IconSkin  string  `json:"iconSkin"`  // Value should be end with a space
+	IconSkin  string  `json:"iconSkin"` // Value should be end with a space
+	IsParent  bool    `json:"isParent"`
 	Type      string  `json:"type"`      // "f": file, "d": directory
 	Creatable bool    `json:"creatable"` // whether can create file in this file node
 	Removable bool    `json:"removable"` // whether can remove this file node
@@ -86,7 +87,7 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	userWorkspace := conf.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 
-	root := Node{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", Children: []*Node{}}
+	root := Node{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", IsParent: true, Children: []*Node{}}
 
 	if nil == apiNode { // lazy init
 		initAPINode()
@@ -449,6 +450,7 @@ func walk(path string, node *Node, creatable, removable, isGOAPI bool) {
 			child.Type = "d"
 			child.Creatable = creatable
 			child.IconSkin = "ico-ztree-dir "
+			child.IsParent = true
 
 			walk(fpath, &child, creatable, removable, isGOAPI)
 		} else {
