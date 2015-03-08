@@ -12,7 +12,7 @@
     "Theme": "default",
     "Created": 1414080000000000000,
     "Updated": 1414080000000000000,
-    "Lived": 1425744005566916400,
+    "Lived": 1414080000000000000,
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "13px",
@@ -21,10 +21,7 @@
         "TabSize": "4"
     },
     "LatestSessionContent": {
-        "FileTree": [
-            "D:\\Vanessa\\Work\\go\\src",
-            "D:\\Vanessa\\Work\\go\\src\\outline"
-        ],
+        "FileTree": [],
         "Files": [],
         "CurrentFile": "",
         "FileTreeLayout": null,
