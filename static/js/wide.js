@@ -364,8 +364,8 @@ var wide = {
             "modal": true,
             "height": 52,
             "width": 360,
-            "title": config.label.goto_line,
-            "okText": config.label.go,
+            "title": config.label.git_clone,
+            "okText": config.label.confirm,
             "cancelText": config.label.cancel,
             "afterOpen": function () {
                 $("#dialogGitClonePrompt > input").val('').focus();
@@ -376,7 +376,7 @@ var wide = {
                 
                 var request = newWideRequest();
                 request.path = wide.curNode.path;
-                request.repository = $("#dialogGitClonePrompt").val();
+                request.repository = $("#dialogGitClonePrompt > input").val();
 
                 $.ajax({
                     type: 'POST',
