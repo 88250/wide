@@ -68,11 +68,11 @@ func initAPINode() {
 	walk(apiPath, apiNode, false, false, true)
 }
 
-// GetFiles handles request of constructing user workspace file tree.
+// GetFilesHandler handles request of constructing user workspace file tree.
 //
 // The Go API source code package also as a child node,
 // so that users can easily view the Go API source code in file tree.
-func GetFiles(w http.ResponseWriter, r *http.Request) {
+func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetGzJSON(w, r, data)
 
@@ -113,8 +113,8 @@ func GetFiles(w http.ResponseWriter, r *http.Request) {
 	data["root"] = root
 }
 
-// RefreshDirectory handles request of refresh a directory of file tree.
-func RefreshDirectory(w http.ResponseWriter, r *http.Request) {
+// RefreshDirectoryHandler handles request of refresh a directory of file tree.
+func RefreshDirectoryHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	path := r.FormValue("path")
 
@@ -132,8 +132,8 @@ func RefreshDirectory(w http.ResponseWriter, r *http.Request) {
 	w.Write(data)
 }
 
-// GetFile handles request of opening file by editor.
-func GetFile(w http.ResponseWriter, r *http.Request) {
+// GetFileHandler handles request of opening file by editor.
+func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -192,8 +192,8 @@ func GetFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// SaveFile handles request of saving file.
-func SaveFile(w http.ResponseWriter, r *http.Request) {
+// SaveFileHandler handles request of saving file.
+func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -234,8 +234,8 @@ func SaveFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// NewFile handles request of creating file or directory.
-func NewFile(w http.ResponseWriter, r *http.Request) {
+// NewFileHandler handles request of creating file or directory.
+func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -269,8 +269,8 @@ func NewFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// RemoveFile handles request of removing file or directory.
-func RemoveFile(w http.ResponseWriter, r *http.Request) {
+// RemoveFileHandler handles request of removing file or directory.
+func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -296,8 +296,8 @@ func RemoveFile(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// RenameFile handles request of renaming file or directory.
-func RenameFile(w http.ResponseWriter, r *http.Request) {
+// RenameFileHandler handles request of renaming file or directory.
+func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -336,8 +336,8 @@ func (f foundPaths) Len() int           { return len(f) }
 func (f foundPaths) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
 func (f foundPaths) Less(i, j int) bool { return f[i].score > f[j].score }
 
-// Find handles request of find files under the specified directory with the specified filename pattern.
-func Find(w http.ResponseWriter, r *http.Request) {
+// FindHandler handles request of find files under the specified directory with the specified filename pattern.
+func FindHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
@@ -384,8 +384,8 @@ func Find(w http.ResponseWriter, r *http.Request) {
 	data["founds"] = founds
 }
 
-// SearchText handles request of searching files under the specified directory with the specified keyword.
-func SearchText(w http.ResponseWriter, r *http.Request) {
+// SearchTextHandler handles request of searching files under the specified directory with the specified keyword.
+func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 

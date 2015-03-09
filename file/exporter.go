@@ -23,8 +23,8 @@ import (
 	"github.com/b3log/wide/util"
 )
 
-// GetZip handles request of retrieving zip file.
-func GetZip(w http.ResponseWriter, r *http.Request) {
+// GetZipHandler handles request of retrieving zip file.
+func GetZipHandler(w http.ResponseWriter, r *http.Request) {
 	q := r.URL.Query()
 	path := q["path"][0]
 
@@ -49,8 +49,8 @@ func GetZip(w http.ResponseWriter, r *http.Request) {
 	os.Remove(path)
 }
 
-// CreateZip handles request of creating zip.
-func CreateZip(w http.ResponseWriter, r *http.Request) {
+// CreateZipHandler handles request of creating zip.
+func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 

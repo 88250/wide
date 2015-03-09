@@ -238,8 +238,8 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// SaveContent handles request of session content string.
-func SaveContent(w http.ResponseWriter, r *http.Request) {
+// SaveContentHandler handles request of session content string.
+func SaveContentHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 

@@ -223,8 +223,8 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 }
 
-// SignUpUser handles request of registering user.
-func SignUpUser(w http.ResponseWriter, r *http.Request) {
+// SignUpUserHandler handles request of registering user.
+func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
 	if "GET" == r.Method {
 		// show the user sign up page
 

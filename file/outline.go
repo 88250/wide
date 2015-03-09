@@ -32,8 +32,8 @@ type element struct {
 	Ch   int
 }
 
-// GetOutline gets outfile of a go file.
-func GetOutline(w http.ResponseWriter, r *http.Request) {
+// GetOutlineHandler gets outfile of a go file.
+func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 

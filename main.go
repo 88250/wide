@@ -113,7 +113,7 @@ func main() {
 
 	// session
 	http.HandleFunc(conf.Wide.Context+"/session/ws", handlerWrapper(session.WSHandler))
-	http.HandleFunc(conf.Wide.Context+"/session/save", handlerWrapper(session.SaveContent))
+	http.HandleFunc(conf.Wide.Context+"/session/save", handlerWrapper(session.SaveContentHandler))
 
 	// run
 	http.HandleFunc(conf.Wide.Context+"/build", handlerWrapper(output.BuildHandler))
@@ -126,23 +126,23 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/output/ws", handlerWrapper(output.WSHandler))
 
 	// file tree
-	http.HandleFunc(conf.Wide.Context+"/files", handlerWrapper(file.GetFiles))
-	http.HandleFunc(conf.Wide.Context+"/file/refresh", handlerWrapper(file.RefreshDirectory))
-	http.HandleFunc(conf.Wide.Context+"/file", handlerWrapper(file.GetFile))
-	http.HandleFunc(conf.Wide.Context+"/file/save", handlerWrapper(file.SaveFile))
-	http.HandleFunc(conf.Wide.Context+"/file/new", handlerWrapper(file.NewFile))
-	http.HandleFunc(conf.Wide.Context+"/file/remove", handlerWrapper(file.RemoveFile))
-	http.HandleFunc(conf.Wide.Context+"/file/rename", handlerWrapper(file.RenameFile))
-	http.HandleFunc(conf.Wide.Context+"/file/search/text", handlerWrapper(file.SearchText))
-	http.HandleFunc(conf.Wide.Context+"/file/find/name", handlerWrapper(file.Find))
+	http.HandleFunc(conf.Wide.Context+"/files", handlerWrapper(file.GetFilesHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/refresh", handlerWrapper(file.RefreshDirectoryHandler))
+	http.HandleFunc(conf.Wide.Context+"/file", handlerWrapper(file.GetFileHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/save", handlerWrapper(file.SaveFileHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/new", handlerWrapper(file.NewFileHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/remove", handlerWrapper(file.RemoveFileHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/rename", handlerWrapper(file.RenameFileHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/search/text", handlerWrapper(file.SearchTextHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/find/name", handlerWrapper(file.FindHandler))
 
 	// outline
-	http.HandleFunc(conf.Wide.Context+"/outline", handlerWrapper(file.GetOutline))
+	http.HandleFunc(conf.Wide.Context+"/outline", handlerWrapper(file.GetOutlineHandler))
 
 	// file export/import
-	http.HandleFunc(conf.Wide.Context+"/file/zip/new", handlerWrapper(file.CreateZip))
-	http.HandleFunc(conf.Wide.Context+"/file/zip", handlerWrapper(file.GetZip))
-	http.HandleFunc(conf.Wide.Context+"/file/upload", handlerWrapper(file.Upload))
+	http.HandleFunc(conf.Wide.Context+"/file/zip/new", handlerWrapper(file.CreateZipHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/zip", handlerWrapper(file.GetZipHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/upload", handlerWrapper(file.UploadHandler))
 
 	// editor
 	http.HandleFunc(conf.Wide.Context+"/editor/ws", handlerWrapper(editor.WSHandler))
@@ -162,7 +162,7 @@ func main() {
 	// user
 	http.HandleFunc(conf.Wide.Context+"/login", handlerWrapper(session.LoginHandler))
 	http.HandleFunc(conf.Wide.Context+"/logout", handlerWrapper(session.LogoutHandler))
-	http.HandleFunc(conf.Wide.Context+"/signup", handlerWrapper(session.SignUpUser))
+	http.HandleFunc(conf.Wide.Context+"/signup", handlerWrapper(session.SignUpUserHandler))
 	http.HandleFunc(conf.Wide.Context+"/preference", handlerWrapper(session.PreferenceHandler))
 
 	// playground

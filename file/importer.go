@@ -65,8 +65,8 @@ func handleUploads(r *http.Request, dir string) (fileInfos []*fileInfo) {
 	return
 }
 
-// Upload handles request of file upload.
-func Upload(w http.ResponseWriter, r *http.Request) {
+// UploadHandler handles request of file upload.
+func UploadHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{"succ": true}
 	defer util.RetJSON(w, r, data)
 
