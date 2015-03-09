@@ -9,7 +9,7 @@
 
 ver=$1
 target=$2
-list="conf doc i18n static views README.md LICENSE"
+list="conf doc i18n static views README.md TERMS.md LICENSE"
 
 mkdir -p ${target}
 
@@ -22,13 +22,13 @@ os=darwin
 export GOOS=${os}
 export GOARCH=386
 go build
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude conf/*.go --exclude i18n/*.go
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide
 
 export GOOS=${os}
 export GOARCH=amd64
 go build
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude conf/*.go --exclude i18n/*.go
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide
 
 ## linux
@@ -37,13 +37,13 @@ os=linux
 export GOOS=${os}
 export GOARCH=386
 go build
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude conf/*.go --exclude i18n/*.go
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide
 
 export GOOS=${os}
 export GOARCH=amd64
 go build
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude conf/*.go --exclude i18n/*.go
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide
 
 ## windows
