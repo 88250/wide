@@ -243,7 +243,7 @@ var tree = {
                             },
                             onRightClick: function (event, treeId, treeNode) {
                                 if (treeNode && !treeNode.isGOAPI) {
-                                    menu.undisabled(['import', 'export']);
+                                    menu.undisabled(['import', 'export', 'git-clone']);
 
                                     wide.curNode = treeNode;
                                     tree.fileTree.selectNode(treeNode);
@@ -267,7 +267,7 @@ var tree = {
                                         
                                         $dirRMenu.hide();
 
-                                        menu.disabled(['import']);
+                                        menu.disabled(['import', 'git-clone']);
                                     } else { // 右击了目录
                                         if (wide.curNode.removable) {
                                             $dirRMenu.find(".remove").removeClass("disabled");
@@ -302,9 +302,9 @@ var tree = {
                                     wide.curNode = treeNode;
                                     tree.fileTree.selectNode(treeNode);
 
-                                    menu.undisabled(['import', 'export']);
-                                    if (!tree.isDir()) { // 如果右击了文件
-                                        menu.disabled(['import']);
+                                    menu.undisabled(['import', 'export', 'git-clone']);
+                                    if (!tree.isDir()) {
+                                        menu.disabled(['import', 'git-clone']);
                                     }
 
                                     $("#files").focus();
