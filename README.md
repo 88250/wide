@@ -116,7 +116,7 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 ### Build Wide for yourself
 
-1. [Download](https://github.com/b3log/wide/archive/master.zip) source or by `git clone`
+1. [Download](https://github.com/b3log/wide/archive/master.zip) source or by `git clone https://github.com/b3log/wide`
 2. Get dependencies with 
    * `go get`
    * `go get github.com/88250/ide_stub`
