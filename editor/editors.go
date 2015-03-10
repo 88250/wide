@@ -160,15 +160,10 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
 	gocode := util.Go.GetExecutableInGOBIN("gocode")
-	argv := []string{"set", "lib-path", libPath}
-	exec.Command(gocode, argv...).Run()
+	exec.Command(gocode, []string{"set", "lib-path", libPath}...).Run()
 
-	argv = []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
+	argv := []string{"-f=json", "--in=" + path, "autocomplete", strconv.Itoa(offset)}
 	cmd := exec.Command(gocode, argv...)
-
-	stdin, _ := cmd.StdinPipe()
-	stdin.Write([]byte(code))
-	stdin.Close()
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
