@@ -174,5 +174,6 @@
     "url": "リンク",
     "short_url": "ショートリンク",
     "embeded": "埋め込む",
-    "git_clone": "Git クローン"
+    "git_clone": "Git クローン",
+    "terms": "利用規約"
 }
