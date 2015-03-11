@@ -18,7 +18,7 @@ var session = {
     init: function () {
         this._initWS();
 
-        // 定时（30 秒）保存会话内容.
+        // save session content per 30 seconds
         setInterval(function () {
             var request = newWideRequest(),
                     filse = [],
@@ -35,9 +35,9 @@ var session = {
 
             fileTree = tree.getOpenPaths();
 
-            request.currentFile = currentFile; // 当前编辑器
-            request.fileTree = fileTree; // 文件树展开状态
-            request.files = filse; // 编辑器打开状态
+            request.currentFile = currentFile; // current editor file
+            request.fileTree = fileTree; // file tree expansion state
+            request.files = filse; // editor tabs
 
             $.ajax({
                 type: 'POST',
@@ -66,7 +66,7 @@ var session = {
             // expand tree
             for (var j = 0, jj = fileTree.length; j < jj; j++) {
                 if (nodes[i].path === fileTree[j]) {
-                    // 当父节点都展开时，才展开该节点
+                    // expand this node only if its parents are open
                     var parents = tree.getAllParents(tree.fileTree.getNodeByTId(nodes[i].tId)),
                             isOpen = true;
                     for (var l = 0, max = parents.length; l < max; l++) {
@@ -77,7 +77,7 @@ var session = {
                     if (isOpen) {
                         tree.fileTree.expandNode(nodes[i], true, false, true);
                     } else {
-                        // 设置状态
+                        // flag it is open
                         nodes[i].open = true;
                     }
                     break;
@@ -101,7 +101,7 @@ var session = {
             }
         }
 
-        // 处理编辑器打开顺序
+        // handle the open sequence of editors
         for (var m = 0, mm = files.length; m < mm; m++) {
             for (var n = 0, nn = nodesToOpen.length; n < nn; n++) {
                 if (nodesToOpen[n].path === files[m]) {
@@ -111,7 +111,7 @@ var session = {
             }
         }
 
-        // 设置当前编辑器
+        // set the current editor
         editors.tabs.setCurrent(id);
         for (var c = 0, max = editors.data.length; c < max; c++) {
             if (id === editors.data[c].id) {
@@ -130,13 +130,13 @@ var session = {
             var dateFormat = function (time, fmt) {
                 var date = new Date(time);
                 var dateObj = {
-                    "M+": date.getMonth() + 1, //月份 
-                    "d+": date.getDate(), //日 
-                    "h+": date.getHours(), //小时 
-                    "m+": date.getMinutes(), //分 
-                    "s+": date.getSeconds(), //秒 
-                    "q+": Math.floor((date.getMonth() + 3) / 3), //季度 
-                    "S": date.getMilliseconds() //毫秒 
+                    "M+": date.getMonth() + 1,
+                    "d+": date.getDate(),
+                    "h+": date.getHours(),
+                    "m+": date.getMinutes(),
+                    "s+": date.getSeconds(),
+                    "q+": Math.floor((date.getMonth() + 3) / 3),
+                    "S": date.getMilliseconds() 
                 };
                 if (/(y+)/.test(fmt))
                     fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
