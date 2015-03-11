@@ -39,10 +39,10 @@ type LatestSessionContent struct {
 	Files       []string // paths of files of opening editor tabs
 	CurrentFile string   // path of file of the current focused editor tab
 
-	FileTreeLayout *Layout
-	EditorLayout   *Layout
-	OutlineLayout  *Layout
-	BottomLayout   *Layout
+	FileTreeLayout *Layout // TODO: https://github.com/b3log/wide/issues/205
+	EditorLayout   *Layout // TODO: https://github.com/b3log/wide/issues/205
+	OutlineLayout  *Layout // TODO: https://github.com/b3log/wide/issues/205
+	BottomLayout   *Layout // TODO: https://github.com/b3log/wide/issues/205
 }
 
 // User configuration.
