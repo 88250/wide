@@ -52,7 +52,7 @@ type User struct {
 	Salt                 string
 	Email                string
 	Gravatar             string // see http://gravatar.com
-	Workspace            string // the GOPATH of this user
+	Workspace            string // the GOPATH of this user (maybe contain several paths splitted by os.PathListSeparator)
 	Locale               string
 	GoFormat             string
 	FontFamily           string
