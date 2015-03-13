@@ -266,7 +266,12 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	if "f" == fileType {
 		extension := filepath.Ext(path)
 		data["mode"] = getEditorMode(extension)
+
+		logger.Debugf("Created a file [%s] by user [%s]", path, wSession.Username)
+	} else {
+		logger.Debugf("Created a dir [%s] by user [%s]", path, wSession.Username)
 	}
+
 }
 
 // RemoveFileHandler handles request of removing file or directory.
@@ -293,7 +298,11 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't remove file " + path}
+
+		return
 	}
+
+	logger.Debugf("Removed a file [%s] by user [%s]", path, wSession.Username)
 }
 
 // RenameFileHandler handles request of renaming file or directory.
@@ -321,7 +330,11 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't rename file " + oldPath}
+
+		return
 	}
+
+	logger.Debugf("Renamed a file [%s] to [%s] by user [%s]", oldPath, newPath, wSession.Username)
 }
 
 // Use to find results sorting.
@@ -582,7 +595,7 @@ func createFile(path, fileType string) bool {
 
 		defer file.Close()
 
-		logger.Debugf("Created file [%s]", path)
+		logger.Tracef("Created file [%s]", path)
 
 		return true
 	case "d":
@@ -594,7 +607,7 @@ func createFile(path, fileType string) bool {
 			return false
 		}
 
-		logger.Debugf("Created directory [%s]", path)
+		logger.Tracef("Created directory [%s]", path)
 
 		return true
 	default:
@@ -612,7 +625,7 @@ func removeFile(path string) bool {
 		return false
 	}
 
-	logger.Debugf("Removed [%s]", path)
+	logger.Tracef("Removed [%s]", path)
 
 	return true
 }
@@ -625,7 +638,7 @@ func renameFile(oldPath, newPath string) bool {
 		return false
 	}
 
-	logger.Debugf("Renamed [%s] to [%s]", oldPath, newPath)
+	logger.Tracef("Renamed [%s] to [%s]", oldPath, newPath)
 
 	return true
 }
