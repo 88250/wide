@@ -69,6 +69,7 @@ type conf struct {
 	WD                    string // current working direcitory, ${pwd}
 	Locale                string // default locale
 	Playground            string // playground directory
+	AllowRegister         bool   // allow register or not
 }
 
 // Logger.

@@ -37,10 +37,11 @@ import (
 const (
 	// TODO: i18n
 
-	userExists      = "user exists"
-	emailExists     = "email exists"
-	userCreated     = "user created"
-	userCreateError = "user create error"
+	userExists       = "user exists"
+	emailExists      = "email exists"
+	userCreated      = "user created"
+	userCreateError  = "user create error"
+	notAllowRegister = "not allow register"
 )
 
 // Exclusive lock for adding user.
@@ -334,12 +335,16 @@ func getOnlineUsers() []*conf.User {
 // addUser add a user with the specified username, password and email.
 //
 //  1. create the user's workspace
-//  2. generate 'Hello, 世界' demo code in the workspace (a console version and a http version)
+//  2. generate 'Hello, 世界' demo code in the workspace (a console version and a HTTP version)
 //  3. update the user customized configurations, such as style.css
 //  4. serve files of the user's workspace via HTTP
 //
 // Note: user [playground] is a reserved mock user
 func addUser(username, password, email string) string {
+	if !conf.Wide.AllowRegister {
+		return notAllowRegister
+	}
+
 	if "playground" == username {
 		return userExists
 	}
