@@ -254,6 +254,8 @@ func FixedTimeCheckEnv() {
 }
 
 func checkEnv() {
+	defer util.Recover()
+
 	cmd := exec.Command("go", "version")
 	buf, err := cmd.CombinedOutput()
 	if nil != err {

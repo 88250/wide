@@ -133,6 +133,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		go func() {
+			defer util.Recover()
+
 			buf := outputBuf{}
 
 			for {

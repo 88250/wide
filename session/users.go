@@ -293,6 +293,8 @@ func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
 // Main goal of this function is to save user session content, for restoring session content while user open Wide next time.
 func FixedTimeSave() {
 	go func() {
+		defer util.Recover()
+
 		for _ = range time.Tick(time.Minute) {
 			users := getOnlineUsers()
 

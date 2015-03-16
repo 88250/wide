@@ -101,6 +101,8 @@ var mutex sync.Mutex
 // Invalid sessions: sessions that not used within 30 minutes, refers to WideSession.Updated field.
 func FixedTimeRelease() {
 	go func() {
+		defer util.Recover()
+
 		for _ = range time.Tick(time.Hour) {
 			hour, _ := time.ParseDuration("-30m")
 			threshold := time.Now().Add(hour)
@@ -133,6 +135,8 @@ func (u *userReport) report() string {
 // FixedTimeReport reports the Wide sessions status periodically (10 minutes).
 func FixedTimeReport() {
 	go func() {
+		defer util.Recover()
+
 		for _ = range time.Tick(10 * time.Minute) {
 			users := userReports{}
 			processSum := 0
@@ -332,6 +336,8 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 	}
 
 	go func() {
+		defer util.Recover()
+
 		workspaces := filepath.SplitList(conf.GetUserWorkspace(username))
 		for _, workspace := range workspaces {
 			filepath.Walk(filepath.Join(workspace, "src"), func(dirPath string, f os.FileInfo, err error) error {
@@ -356,6 +362,8 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 	}()
 
 	go func() {
+		defer util.Recover()
+
 		for {
 			select {
 			case event := <-watcher.Events:
