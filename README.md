@@ -43,7 +43,7 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 * [X] Web development: HTML/JS/CSS editor with [Emmet](http://emmet.io) integrated
 * [X] Go tool: go get/install/fmt etc.
 * [X] File Import & Export
-* [X] Themes: editor and UI respectively
+* [X] Themes: editor and UI adjust, respectively
 * [ ] Debug
 * [ ] Git integration: git command on the web
 
