@@ -766,6 +766,7 @@ var editors = {
             foldGutter: true,
             cursorHeight: 1,
             path: data.path,
+            profile: 'xhtml', // define Emmet output profile
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",
                 ".": "autocompleteAfterDot",
@@ -803,6 +804,10 @@ var editors = {
                 "Shift-Alt-J": "selectIdentifier"
             }
         });
+        
+        if ("text/html" === data.mode) {
+             emmetCodeMirror(editor);
+        }
 
         editor.on('cursorActivity', function (cm) {
             $(".edit-exprinfo").remove();
