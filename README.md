@@ -40,10 +40,10 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 * [X] Multiplayer: a real team development experience
 * [X] Navigation, Jump to declaration, Find usages, File search etc.
 * [X] Shell: run command on the server
-* [X] Web development: Frontend devlopment (HTML/JS/CSS) all in one
+* [X] Web development: HTML/JS/CSS editor with [Emmet](http://emmet.io) integrated
 * [X] Go tool: go get/install/fmt etc.
 * [X] File Import & Export
-* [X] Themes
+* [X] Themes: editor and UI respectively
 * [ ] Debug
 * [ ] Git integration: git command on the web
 
