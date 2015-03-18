@@ -44,7 +44,7 @@ func Recover() {
 
 // stack implements Stack, skipping 2 frames.
 func stack() []byte {
-	buf := new(bytes.Buffer) // the returned data
+	buf := &bytes.Buffer{} // the returned data
 	// As we loop, we open files and read them. These variables record the currently
 	// loaded file.
 	var lines [][]byte
