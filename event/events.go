@@ -131,6 +131,8 @@ func (ueqs queues) Close(sid string) {
 		return
 	}
 
+	close(q.Queue)
+
 	delete(ueqs, sid)
 }
 

@@ -365,15 +365,19 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 		defer util.Recover()
 
 		for {
+			ch := SessionWS[sid]
+			if nil == ch {
+				return // release this gorutine
+			}
+
 			select {
 			case event := <-watcher.Events:
 				path := event.Name
 				dir := filepath.Dir(path)
 
-				ch := SessionWS[sid]
-
+				ch = SessionWS[sid]
 				if nil == ch {
-					break
+					return // release this gorutine
 				}
 
 				if event.Op&fsnotify.Create == fsnotify.Create {
