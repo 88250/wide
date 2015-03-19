@@ -2,9 +2,9 @@
 
 _Have a [**try**](http://wide.b3log.org/signup) first, then [download](http://pan.baidu.com/s/1dD3XwOT) and setup it on your local area network, enjoy yourself!_
 
-先试试我们搭建好的[**在线服务**](http://wide.b3log.org/signup)，好用的话你可以在这里[下载](http://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请你的小伙伴们加入吧！
+先试试我们搭建好的[**在线服务**](http://wide.b3log.org/signup)，你可以在这里[下载](http://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们加入吧！
 
-## Intro
+## Introduction
 
 A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
 
