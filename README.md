@@ -148,7 +148,6 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 * [LiteIDE](https://github.com/visualfc/liteide)
 * [gocode](https://github.com/nsf/gocode)
 * [Gorilla](https://github.com/gorilla)
-* [GoBuild](http://gobuild.io)
 * [Docker](https://docker.com)
 
 ----
