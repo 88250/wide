@@ -121,7 +121,12 @@ func CloneHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet["cmd"] = "git clone"
 
 		// read all
-		buf, _ := ioutil.ReadAll(reader)
+		buf, err := ioutil.ReadAll(reader)
+		if nil != err {
+			logger.Warn(err)
+
+			// TODO: handle clone error
+		}
 
 		logger.Debugf("User [%s, %s] 's running [git clone] [runningId=%d] has done: %s", username, sid, runningId, string(buf))
 
