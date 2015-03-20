@@ -96,7 +96,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
-				logger.Error(err)
+				logger.Warn(err)
 				return
 			}
 
@@ -123,7 +123,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			channelRet["output"] = ""
 			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
-				logger.Error(err)
+				logger.Warn(err)
 				return
 			}
 
@@ -153,7 +153,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					channelRet["output"] = buf.content
 					err := wsChannel.WriteJSON(&channelRet)
 					if nil != err {
-						logger.Error(err)
+						logger.Warn(err)
 						break
 					}
 
@@ -182,7 +182,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					err = wsChannel.WriteJSON(&channelRet)
 					if nil != err {
-						logger.Error(err)
+						logger.Warn(err)
 						break
 					}
 
@@ -220,7 +220,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 				err = wsChannel.WriteJSON(&channelRet)
 				if nil != err {
-					logger.Error(err)
+					logger.Warn(err)
 					break
 				}
 

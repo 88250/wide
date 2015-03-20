@@ -245,7 +245,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
-				logger.Error(err)
+				logger.Warn(err)
 			}
 
 			wsChannel.Refresh()

@@ -94,7 +94,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 
 		err := wsChannel.WriteJSON(&channelRet)
 		if nil != err {
-			logger.Error(err)
+			logger.Warn(err)
 			return
 		}
 
@@ -137,7 +137,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 
 			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {
-				logger.Error(err)
+				logger.Warn(err)
 			}
 
 			wsChannel.Refresh()
