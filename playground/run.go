@@ -115,6 +115,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
+		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.Username, sid, runningId, filePath)
+
 		// push once for front-end to get the 'run' state and pid
 		if nil != wsChannel {
 			channelRet["cmd"] = "run"
@@ -141,17 +143,11 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 				r, _, err := outReader.ReadRune()
 
-				oneRuneStr := string(r)
-				oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
-				oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
-
-				buf.content += oneRuneStr
-
 				if nil != err {
 					// remove the exited process from user process set
 					output.Processes.Remove(wSession, cmd.Process)
 
-					logger.Tracef("User [%s, %s] 's running [id=%d, file=%s] has done [stdout %v], ", wSession.Username, sid, runningId, filePath, err)
+					logger.Debugf("User [%s, %s] 's running [id=%d, file=%s] has done [stdout %v], ", wSession.Username, sid, runningId, filePath, err)
 
 					channelRet["cmd"] = "run-done"
 					channelRet["output"] = buf.content
@@ -165,6 +161,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 					break
 				}
+
+				oneRuneStr := string(r)
+				oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
+				oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
+
+				buf.content += oneRuneStr
 
 				now := time.Now().UnixNano() / int64(time.Millisecond)
 
