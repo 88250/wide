@@ -180,12 +180,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		Password string
 	}{}
 
-	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		logger.Error("login error: ", err)
-		succ = false
-
-		return
-	}
+	args.Username = r.FormValue("username")
+	args.Password = r.FormValue("password")
 
 	succ = false
 	for _, user := range conf.Users {

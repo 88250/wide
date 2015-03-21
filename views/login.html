@@ -3,11 +3,11 @@
     <head>
         <meta charset="UTF-8">
         <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
-        
+
         <meta name="keywords" content="Wide, Golang, IDE, Team, Cloud, B3log, Login"/>
         <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
         <meta name="author" content="B3log">
-        
+
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -37,9 +37,11 @@
                 </div>
                 <div class="form fn-right">
                     <div id="msg" class="fn-none"></div>
-                    <input id="username" placeholder="Username"/><br/>
-                    <input id="password" type="password" placeholder="Password"/><br/>
-                    <button id="loginBtn" class="btn-white btn">{{.i18n.login}}</button>
+                    <form id="loginForm">
+                        <input id="username" name="username" placeholder="Username"/><br/>
+                        <input id="password" name="password" type="password" placeholder="Password"/><br/>
+                        <button id="loginBtn" type="submit" class="btn-white btn">{{.i18n.login}}</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -50,76 +52,72 @@
         </div>
 
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery.form.js"></script>
         <script type="text/javascript">
-(function () {
-    var contentH = $(window).height() - $(".footer").height() - $(".header").height() - 18;
-    $(".content").height(contentH)
-            .css("padding-top", (contentH - $(".content .fn-left").height()) / 2 + "px");
+                        (function () {
+                            var contentH = $(window).height() - $(".footer").height() - $(".header").height() - 18;
+                            $(".content").height(contentH)
+                                    .css("padding-top", (contentH - $(".content .fn-left").height()) / 2 + "px");
 
-    var login = function () {
-        var username = $.trim($("#username").val());
-        var password = $.trim($("#password").val());
-        
-        if (username === "") {
-            $("#msg").text("{{.i18n.login_error}}").show();
-            $("#username").focus();
-            return false;
-        } else if (password === "") {
-            $("#msg").text("{{.i18n.login_error}}").show();
-            $("#password").focus();
-            return false;
-        }
+                            $('#loginForm').submit(function () {
+                                console.log(1);
 
-        var request = {
-            username: username,
-            password: password
-        };
+                                var options = {
+                                    url: '/login',
+                                    type: 'POST',
+                                    dataType: 'json',
+                                    beforeSubmit: function () {
+                                        var username = $.trim($("#username").val());
+                                        var password = $.trim($("#password").val());
 
-        $.ajax({
-            type: 'POST',
-            url: '/login',
-            data: JSON.stringify(request),
-            dataType: "json",
-            success: function (data) {
-                if (!data.succ) {
-                    $("#msg").text('{{.i18n.login_error}}').show();
-                    return;
-                }
+                                        if (username === "") {
+                                            $("#msg").text("{{.i18n.login_error}}").show();
+                                            $("#username").focus();
+                                            return false;
+                                        } else if (password === "") {
+                                            $("#msg").text("{{.i18n.login_error}}").show();
+                                            $("#password").focus();
+                                            return false;
+                                        }
+                                    },
+                                    success: function (data) {
+                                        if (!data.succ) {
+                                            $("#msg").text('{{.i18n.login_error}}').show();
+                                            return;
+                                        }
 
-                window.location.href = "/";
-            }
-        });
-    };
+                                        window.location.href = "/";
+                                    }
+                                };
 
-    $("#username").keydown(function (event) {
-        if (event.which === 13) {
-            if ($.trim($(this).val()) === "") {
-                $("#msg").text("{{.i18n.login_error}}").show();
-            } else {
-                $("#password").focus();
-            }
-        } else {
-            $("#msg").hide();
-        }
-    }).focus();
+                                $('#loginForm').ajaxSubmit(options);
+                                return false;
+                            });
 
 
-    $("#password").keydown(function (event) {
-        if (event.which === 13) {
-            if ($.trim($(this).val()) === "") {
-                $("#msg").text("{{.i18n.login_error}}").show();
-            } else {
-                login();
-            }
-        } else {
-            $("#msg").hide();
-        }
-    });
+                            $("#username").keydown(function (event) {
+                                if (event.which === 13) {
+                                    if ($.trim($(this).val()) === "") {
+                                        $("#msg").text("{{.i18n.login_error}}").show();
+                                    } else {
+                                        $("#password").focus();
+                                        return false;
+                                    }
+                                } else {
+                                    $("#msg").hide();
+                                }
+                            }).focus();
 
-    $("#loginBtn").click(function () {
-        login();
-    });
-})();
+                            $("#password").keydown(function (event) {
+                                if (event.which === 13) {
+                                    if ($.trim($(this).val()) === "") {
+                                        $("#msg").text("{{.i18n.login_error}}").show();
+                                    }
+                                } else {
+                                    $("#msg").hide();
+                                }
+                            });
+                        })();
         </script>        
     </body>
 </html>
