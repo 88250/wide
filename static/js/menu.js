@@ -280,17 +280,17 @@ var menu = {
     run: function () {
         menu.saveAllFiles();
 
+        if ($("#buildRun").hasClass("ico-stop")) {
+            wide.stop();
+            return false;
+        }
+
         var currentPath = editors.getCurrentPath();
         if (!currentPath) {
             return false;
         }
 
         if ($(".menu li.run").hasClass("disabled")) {
-            return false;
-        }
-
-        if ($("#buildRun").hasClass("ico-stop")) {
-            wide.stop();
             return false;
         }
 

@@ -192,10 +192,18 @@ var editors = {
                         'find', 'find-next', 'find-previous', 'replace', 'replace-all',
                         'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment',
                         'edit']);
+                    
+                    // remove selected tree node
+                    tree.fileTree.cancelSelectedNode();
+                    wide.curNode = undefined;
+                    wide.curEditor = undefined;
+                    wide.refreshOutline();
+                    $(".footer .cursor").text('');
+                    return false;
                 }
 
                 if (!nextId) {
-                    // 不存在打开的编辑器
+                    // 编辑器区域不存在打开的 Tab
                     // remove selected tree node
                     tree.fileTree.cancelSelectedNode();
                     wide.curNode = undefined;
@@ -244,7 +252,7 @@ var editors = {
         wide.curEditor = undefined;
         wide.refreshOutline();
         $(".footer .cursor").text('');
-        
+
         var dateFormat = function (time, fmt) {
             var date = new Date(time);
             var dateObj = {
@@ -411,7 +419,7 @@ var editors = {
             if (mode && "go" !== mode.name) {
                 return CodeMirror.Pass;
             }
-            
+
             var token = cm.getTokenAt(cm.getCursor());
 
             if ("comment" === token.type || "string" === token.type) {
@@ -804,9 +812,9 @@ var editors = {
                 "Shift-Alt-J": "selectIdentifier"
             }
         });
-        
+
         if ("text/html" === data.mode) {
-             emmetCodeMirror(editor);
+            emmetCodeMirror(editor);
         }
 
         editor.on('cursorActivity', function (cm) {
