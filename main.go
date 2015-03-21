@@ -143,6 +143,7 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/file/zip/new", handlerWrapper(file.CreateZipHandler))
 	http.HandleFunc(conf.Wide.Context+"/file/zip", handlerWrapper(file.GetZipHandler))
 	http.HandleFunc(conf.Wide.Context+"/file/upload", handlerWrapper(file.UploadHandler))
+	http.HandleFunc(conf.Wide.Context+"/file/decompress", handlerWrapper(file.DecompressHandler))
 
 	// editor
 	http.HandleFunc(conf.Wide.Context+"/editor/ws", handlerWrapper(editor.WSHandler))

@@ -170,6 +170,27 @@ var tree = {
             window.open(config.context + '/file/zip?path=' + wide.curNode.path + ".zip");
         }
     },
+    decompress: function () {
+        var request = newWideRequest();
+        request.path = wide.curNode.path;
+
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: config.context + '/file/decompress',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                if (!data.succ) {
+                    $("#dialogAlert").dialog("open", data.msg);
+
+                    return false;
+                }
+
+                isSucc = true;
+            }
+        });
+    },
     refresh: function (it) {
         if (it) {
             if ($(it).hasClass("disabled")) {
@@ -248,11 +269,17 @@ var tree = {
                                     wide.curNode = treeNode;
                                     tree.fileTree.selectNode(treeNode);
 
-                                    if (!tree.isDir()) { // 如果右击了文件
+                                    if (!tree.isDir()) { // if right click on a file
                                         if (wide.curNode.removable) {
                                             $fileRMenu.find(".remove").removeClass("disabled");
                                         } else {
                                             $fileRMenu.find(".remove").addClass("disabled");
+                                        }
+                                        
+                                        if (wide.curNode.path.indexOf("zip", wide.curNode.path.length - "zip".length) === -1) { // !path.endsWith("zip")
+                                            $fileRMenu.find(".decompress").hide();
+                                        } else {
+                                            $fileRMenu.find(".decompress").show();
                                         }
 
                                         var top = event.clientY - 10;

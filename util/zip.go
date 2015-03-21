@@ -141,3 +141,61 @@ func (z *ZipFile) AddDirectory(path, dirName string) error {
 
 	return nil
 }
+
+func cloneZipItem(f *zip.File, dest string) error {
+	// create full directory path
+	path := filepath.Join(dest, f.Name)
+
+	err := os.MkdirAll(filepath.Dir(path), os.ModeDir|os.ModePerm)
+	if nil != err {
+		return err
+	}
+
+	if f.FileInfo().IsDir() {
+		return nil
+	}
+
+	// clone if item is a file
+
+	rc, err := f.Open()
+	if nil != err {
+		return err
+	}
+
+	defer rc.Close()
+
+	// use os.Create() since Zip don't store file permissions.
+	fileCopy, err := os.Create(path)
+	if nil != err {
+		return err
+	}
+
+	defer fileCopy.Close()
+
+	_, err = io.Copy(fileCopy, rc)
+	if nil != err {
+		return err
+	}
+
+	return nil
+}
+
+// Unzip extracts a zip file specified by the zipFilePath to the destination.
+func (*myzip) Unzip(zipFilePath, destination string) error {
+	r, err := zip.OpenReader(zipFilePath)
+
+	if nil != err {
+		return err
+	}
+
+	defer r.Close()
+
+	for _, f := range r.File {
+		err = cloneZipItem(f, destination)
+		if nil != err {
+			return err
+		}
+	}
+
+	return nil
+}
