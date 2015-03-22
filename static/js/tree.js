@@ -186,8 +186,9 @@ var tree = {
 
                     return false;
                 }
-
-                isSucc = true;
+                
+                var dir = wide.curNode.getParentNode();
+                tree.fileTree.reAsyncChildNodes(dir, "refresh");
             }
         });
     },
@@ -206,7 +207,7 @@ var tree = {
                 return false;
             }
         }
-        
+
         $("#dialogGitClonePrompt").dialog('open');
     },
     import: function () {
@@ -275,7 +276,7 @@ var tree = {
                                         } else {
                                             $fileRMenu.find(".remove").addClass("disabled");
                                         }
-                                        
+
                                         if (wide.curNode.path.indexOf("zip", wide.curNode.path.length - "zip".length) === -1) { // !path.endsWith("zip")
                                             $fileRMenu.find(".decompress").hide();
                                         } else {
@@ -291,7 +292,7 @@ var tree = {
                                             "left": event.clientX + "px",
                                             "display": "block"
                                         }).show();
-                                        
+
                                         $dirRMenu.hide();
 
                                         menu.disabled(['import', 'git-clone']);
@@ -318,7 +319,7 @@ var tree = {
                                             "left": event.clientX + "px",
                                             "display": "block"
                                         }).show();
-                                        
+
                                         $fileRMenu.hide();
                                     }
                                     $("#files").focus();
