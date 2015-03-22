@@ -99,8 +99,8 @@ Flow:
 
 ## Documents
 
-* [用户指南](http://88250.gitbooks.io/wide-user-guide)
-* [开发指南](http://88250.gitbooks.io/wide-dev-guide)
+* [用户指南](https://www.gitbook.com/book/88250/wide-user-guide)
+* [开发指南](https://www.gitbook.com/book/88250/wide-dev-guide)
 
 ## Setup
 
