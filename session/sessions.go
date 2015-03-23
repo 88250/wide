@@ -302,18 +302,14 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	now := time.Now()
-
-	// create user event queue
-	userEventQueue := event.UserEventQueues.New(sid)
-
 	username := httpSession.Values["username"].(string)
+	now := time.Now()
 
 	ret := &WideSession{
 		ID:          sid,
 		Username:    username,
 		HTTPSession: httpSession,
-		EventQueue:  userEventQueue,
+		EventQueue:  nil,
 		State:       sessionStateActive,
 		Content:     &conf.LatestSessionContent{},
 		Created:     now,
@@ -326,9 +322,11 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 		return ret
 	}
 
+	// create user event queue
+	ret.EventQueue = event.UserEventQueues.New(sid)
+
 	// add a filesystem watcher to notify front-end after the files changed
 	watcher, err := fsnotify.NewWatcher()
-
 	if err != nil {
 		logger.Error(err)
 
