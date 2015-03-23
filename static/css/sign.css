@@ -155,6 +155,7 @@
     color: #777;
     font-size: 12px;
     text-align: center;
+    position: relative;
 }
 
 .footer a {
@@ -164,6 +165,13 @@
 
 .footer a:hover {
     text-decoration: underline;
+}
+
+.footer .github-btns {
+    height: 25px;
+    position: absolute;
+    top: 5px;
+    right: 0;
 }
 
 /* start sign up */
