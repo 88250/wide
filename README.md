@@ -6,7 +6,7 @@ _Have a [**try**](http://wide.b3log.org/signup) first, then [download](http://pa
 
 ## Introduction
 
-A <b>W</b>eb-based <b>IDE</b> for Teams using Golang.
+A <b>W</b>eb-based <b>IDE</b> for Teams using Go programming language/Golang.
 
 ![Hello, 世界](https://cloud.githubusercontent.com/assets/873584/4606377/d0ca3c2a-521b-11e4-912c-d955ab05850b.png)
 
