@@ -41,7 +41,7 @@ const (
 	// WideVersion holds the current wide version.
 	WideVersion = "1.2.0"
 	// CodeMirrorVer holds the current editor version.
-	CodeMirrorVer = "4.10"
+	CodeMirrorVer = "5.1"
 
 	HelloWorld = `package main
 
