@@ -9,8 +9,10 @@
         <meta name="author" content="B3log">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css?{{.conf.StaticResourceVersion}}">       
-        <link rel="stylesheet" href="{{$.conf.StaticServer}}/static/js/overwrite/codemirror/theme/wide.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
+        <link rel="stylesheet" href="{{$.conf.StaticServer}}/static/js/overwrite/codemirror/theme/wide.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
@@ -63,8 +65,8 @@
             </div>
         </div>
         <div class="fn-clear">
-            <div id="editorDiv" class="fn-none">
-                <textarea rows="20" id='editor'>{{.code}}</textarea>
+            <div id="editorDiv">
+                <textarea rows="20" id='editor' class="fn-none">{{.code}}</textarea>
             </div>
             <textarea id="output" rows="20" readonly="readonly" ></textarea>
         </div>

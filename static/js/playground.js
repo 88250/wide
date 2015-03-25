@@ -184,8 +184,8 @@ var playground = {
                 ".": "autocompleteAfterDot"
             }
         });
-
-        $("#editorDiv").show();
+        
+        playground.editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
 
         $(window).resize(function () {
             playground._resize();
@@ -196,7 +196,7 @@ var playground = {
         } else {
             playground.editor.setSize("auto", $("#editor").height() + "px");
         }
-
+        
         var hovered = false;
         $(".menu .ico-share").hover(function () {
             $(".menu .share-panel").show();
