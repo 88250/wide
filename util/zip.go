@@ -16,10 +16,16 @@ package util
 
 import (
 	"archive/zip"
+	"bytes"
+	"fmt"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"unicode/utf8"
+
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 )
 
 type myzip struct{}
@@ -144,7 +150,22 @@ func (z *ZipFile) AddDirectory(path, dirName string) error {
 
 func cloneZipItem(f *zip.File, dest string) error {
 	// create full directory path
-	path := filepath.Join(dest, f.Name)
+	fileName := f.Name
+
+	fmt.Println(fileName)
+	if !utf8.ValidString(fileName) {
+		fmt.Println("!utf8")
+		data, err := ioutil.ReadAll(transform.NewReader(bytes.NewReader([]byte(fileName)), simplifiedchinese.GB18030.NewDecoder()))
+		if nil == err {
+			fileName = string(data)
+		} else {
+			fmt.Println(err)
+		}
+	}
+
+	fmt.Println(fileName)
+
+	path := filepath.Join(dest, fileName)
 
 	err := os.MkdirAll(filepath.Dir(path), os.ModeDir|os.ModePerm)
 	if nil != err {

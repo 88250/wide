@@ -58,7 +58,7 @@ func TestMain(m *testing.M) {
 
 	// clean test data
 	os.RemoveAll(packageName + ".zip")
-	os.RemoveAll(packageName)
+	//os.RemoveAll(packageName)
 
 	os.Exit(retCode)
 }
