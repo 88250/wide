@@ -184,6 +184,7 @@
 
 .CodeMirror,
 .CodeMirror-hints {
+    font-family: Consolas, 'Courier New', monospace;
 }
 
 .CodeMirror-hints .ico {
