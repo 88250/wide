@@ -152,18 +152,14 @@ func cloneZipItem(f *zip.File, dest string) error {
 	// create full directory path
 	fileName := f.Name
 
-	fmt.Println(fileName)
 	if !utf8.ValidString(fileName) {
-		fmt.Println("!utf8")
 		data, err := ioutil.ReadAll(transform.NewReader(bytes.NewReader([]byte(fileName)), simplifiedchinese.GB18030.NewDecoder()))
 		if nil == err {
 			fileName = string(data)
 		} else {
-			fmt.Println(err)
+			logger.Error(err)			
 		}
 	}
-
-	fmt.Println(fileName)
 
 	path := filepath.Join(dest, fileName)
 
