@@ -71,6 +71,8 @@
     border-left: 1px solid #f1f1f1;
     margin-left: 10%;
     padding-left: 10%;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 #startPage .news li {
