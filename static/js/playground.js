@@ -323,7 +323,7 @@ var playground = {
                                 + data.shortURL + '</a><br/>';
                         html += '<label>' + config.label.embeded + config.label.colon
                                 + '</label><br/><textarea rows="5" style="width:100%" readonly><iframe style="border:1px solid" src="'
-                                + url + '?embed=true" width="100%" height="600"></iframe></textarea>';
+                                + url + '?embed=true" width="99%" height="600"></iframe></textarea>';
                         html += '</div>';
 
                         $("#dialogShare").html(html);
