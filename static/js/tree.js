@@ -510,20 +510,27 @@ var tree = {
                         $("#dialogRenamePrompt").dialog("close");
 
                         // update tree node
-                        var suffixIndex = name.lastIndexOf('.'),
-                                iconSkin = wide.getClassBySuffix(name.substr(suffixIndex + 1));
+                        var suffixIndex = name.lastIndexOf('.');
+                        var suffix = name.substr(suffixIndex + 1);
+                        
+                        var iconSkin = 'ico-ztree-dir ';
+                        if ('f' === wide.curNode.type) {
+                            iconSkin = wide.getClassBySuffix(suffix);
+                        }
+                        
                         wide.curNode.name = name;
                         wide.curNode.title = request.newPath;
                         wide.curNode.path = request.newPath;
                         wide.curNode.iconSkin = iconSkin;
+
                         tree.fileTree.updateNode(wide.curNode);
 
                         // update open editor tab name
                         for (var i = 0, ii = editors.data.length; i < ii; i++) {
                             if (wide.curNode.tId === editors.data[i].id) {
-                                var info = CodeMirror.findModeByExtension(name.substr(suffixIndex + 1));
-                                if (info) {
-                                    editors.data[i].editor.setOption("mode", info.mime);
+                                var mode = CodeMirror.findModeByExtension(suffix);
+                                if (mode) {
+                                    editors.data[i].editor.setOption("mode", mode.mime);
                                 }
 
                                 var $currentSpan = $(".edit-panel .tabs > div[data-index=" + wide.curNode.tId + "] > span:eq(0)");
