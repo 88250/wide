@@ -192,7 +192,7 @@ var editors = {
                         'find', 'find-next', 'find-previous', 'replace', 'replace-all',
                         'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment',
                         'edit']);
-                    
+
                     // remove selected tree node
                     tree.fileTree.cancelSelectedNode();
                     wide.curNode = undefined;

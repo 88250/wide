@@ -187,7 +187,6 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 		data["msg"] = "Can't open a binary file :("
 	} else {
 		data["content"] = content
-		data["mode"] = getEditorMode(extension)
 		data["path"] = path
 	}
 }
@@ -264,9 +263,6 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if "f" == fileType {
-		extension := filepath.Ext(path)
-		data["mode"] = getEditorMode(extension)
-
 		logger.Debugf("Created a file [%s] by user [%s]", path, wSession.Username)
 	} else {
 		logger.Debugf("Created a dir [%s] by user [%s]", path, wSession.Username)
@@ -472,7 +468,6 @@ func walk(path string, node *Node, creatable, removable, isGOAPI bool) {
 			ext := filepath.Ext(fpath)
 
 			child.IconSkin = getIconSkin(ext)
-			child.Mode = getEditorMode(ext)
 		}
 	}
 
@@ -546,34 +541,6 @@ func getIconSkin(filenameExtension string) string {
 		return "ico-ztree-xml "
 	default:
 		return "ico-ztree-other "
-	}
-}
-
-// getEditorMode gets editor mode with the specified filename extension.
-//
-// Refers to the CodeMirror document for modes.
-func getEditorMode(filenameExtension string) string {
-	switch filenameExtension {
-	case ".go":
-		return "text/x-go"
-	case ".html":
-		return "text/html"
-	case ".md":
-		return "text/x-markdown"
-	case ".js":
-		return "text/javascript"
-	case ".json":
-		return "application/json"
-	case ".css":
-		return "text/css"
-	case ".xml":
-		return "application/xml"
-	case ".sh":
-		return "text/x-sh"
-	case ".sql":
-		return "text/x-sql"
-	default:
-		return "text/plain"
 	}
 }
 

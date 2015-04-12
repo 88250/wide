@@ -186,7 +186,7 @@ var tree = {
 
                     return false;
                 }
-                
+
                 var dir = wide.curNode.getParentNode();
                 tree.fileTree.reAsyncChildNodes(dir, "refresh");
             }
@@ -376,7 +376,7 @@ var tree = {
             }
         }
 
-        if (!tree.isDir()) { // 如果单击了文件
+        if (!tree.isDir()) {
             var request = newWideRequest();
             request.path = treeNode.path;
 
@@ -391,6 +391,15 @@ var tree = {
                         $("#dialogAlert").dialog("open", data.msg);
 
                         return false;
+                    }
+
+                    if (!data.mode) {
+                        var mode = CodeMirror.findModeByFileName(treeNode.path);
+                        data.mode = mode.mime;
+                    }
+                    
+                    if (!data.mode) {
+                        console.error("Can't find mode by file name [" + treeNode.path + "]");
                     }
 
                     if ("img" === data.mode) { // 是图片文件的话新建 tab 打开
@@ -512,12 +521,12 @@ var tree = {
                         // update tree node
                         var suffixIndex = name.lastIndexOf('.');
                         var suffix = name.substr(suffixIndex + 1);
-                        
+
                         var iconSkin = 'ico-ztree-dir ';
                         if ('f' === wide.curNode.type) {
                             iconSkin = wide.getClassBySuffix(suffix);
                         }
-                        
+
                         wide.curNode.name = name;
                         wide.curNode.title = request.newPath;
                         wide.curNode.path = request.newPath;

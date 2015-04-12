@@ -181,6 +181,8 @@ var wide = {
                             return false;
                         }
 
+                        var mode = CodeMirror.findModeByFileName(name);
+
                         $("#dialogNewFilePrompt").dialog("close");
                         var iconSkin = wide.getClassBySuffix(name.split(".")[1]);
 
@@ -188,7 +190,7 @@ var wide = {
                                 "name": name,
                                 "iconSkin": iconSkin,
                                 "path": request.path,
-                                "mode": data.mode,
+                                "mode": mode,
                                 "removable": true,
                                 "creatable": true
                             }]);
@@ -374,7 +376,7 @@ var wide = {
             },
             "ok": function () {
                 $("#dialogGitClonePrompt").dialog("close");
-                
+
                 var request = newWideRequest();
                 request.path = wide.curNode.path;
                 request.repository = $("#dialogGitClonePrompt > input").val();
