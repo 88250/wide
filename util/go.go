@@ -102,7 +102,7 @@ func (*mygo) GetExecutableInGOBIN(executable string) string {
 	// $GOBIN/executable
 	gobin := os.Getenv("GOBIN")
 	if "" != gobin {
-		ret = gobin + pathSeparator + executable
+		ret := gobin + pathSeparator + executable
 		if File.IsExist(ret) {
 			return ret
 		}
