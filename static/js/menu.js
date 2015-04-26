@@ -122,7 +122,7 @@ var menu = {
             return false;
         }
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
-            var path = tree.fileTree.getNodeByTId(editors.data[i].id).path;
+            var path = editors.data[i].id;
             var editor = editors.data[i].editor;
 
             if ("text/x-go" === editor.getOption("mode")) {
@@ -375,7 +375,7 @@ var menu = {
                     for (var i = 0, max = emptys.length; i < max; i++) {
                         var tabIndex = emptys[i].closest('div').data("index"),
                                 text = $.trim(emptys[i].parent().text());
-                        emptysTip += '[' + $("#dialogPreference .tabs > div[data-index=" + tabIndex + "]").text()
+                        emptysTip += '[' + $('#dialogPreference .tabs > div[data-index="' + tabIndex + '"]').text()
                                 + '] -> [' + text.substr(0, text.length - 1)
                                 + ']: ' + config.label.no_empty + "<br/>";
                     }

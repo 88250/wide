@@ -89,15 +89,16 @@ var tree = {
             return tree.getAllParents(node.getParentNode(), parents);
         }
     },
-    isParents: function (tId, parentTId) {
+    isParents: function (tId, parentPath) {
         var node = tree.fileTree.getNodeByTId(tId);
         if (!node || !node.parentTId) {
             return false;
         } else {
-            if (node.parentTId === parentTId) {
+            var parentNode = tree.fileTree.getNodeByTId(node.parentTId);
+            if (node.path === parentPath) {
                 return true;
             } else {
-                return tree.isParents(node.parentTId, parentTId);
+                return tree.isParents(parentNode.tId, parentPath);
             }
         }
     },
@@ -356,8 +357,8 @@ var tree = {
 
         for (var i = 0, ii = editors.data.length; i < ii; i++) {
             // 该节点文件已经打开
-            if (editors.data[i].id === treeNode.tId) {
-                editors.tabs.setCurrent(treeNode.tId);
+            if (editors.data[i].id === treeNode.path) {
+                editors.tabs.setCurrent(treeNode.path);
                 wide.curEditor = editors.data[i].editor;
 
                 if (!tempCursor) {
@@ -411,6 +412,7 @@ var tree = {
                     if (!tempCursor) {
                         tempCursor = CodeMirror.Pos(0, 0);
                     }
+                    
                     editors.newEditor(data, tempCursor);
 
                     wide.refreshOutline();
@@ -536,13 +538,13 @@ var tree = {
 
                         // update open editor tab name
                         for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                            if (wide.curNode.tId === editors.data[i].id) {
+                            if (wide.curNode.path === editors.data[i].id) {
                                 var mode = CodeMirror.findModeByExtension(suffix);
                                 if (mode) {
                                     editors.data[i].editor.setOption("mode", mode.mime);
                                 }
 
-                                var $currentSpan = $(".edit-panel .tabs > div[data-index=" + wide.curNode.tId + "] > span:eq(0)");
+                                var $currentSpan = $('.edit-panel .tabs > div[data-index="' + wide.curNode.path + '"] > span:eq(0)');
                                 $currentSpan.attr("title", request.newPath);
                                 $currentSpan.html('<span class="' + iconSkin + 'ico"></span>' + wide.curNode.name);
                                 break;

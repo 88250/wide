@@ -98,7 +98,8 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 		workspacePath := workspace + conf.PathSeparator + "src"
 
 		workspaceNode := Node{Name: workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
-			Path: workspacePath, IconSkin: "ico-ztree-dir-workspace ", Type: "d",
+			Path:     filepath.ToSlash(workspacePath), /* jQuery data-index API can't accept "\", so we convert it to "/" */
+			IconSkin: "ico-ztree-dir-workspace ", Type: "d",
 			Creatable: true, Removable: false, IsGoAPI: false, Children: []*Node{}}
 
 		walk(workspacePath, &workspaceNode, true, true, false)
@@ -446,7 +447,9 @@ func walk(path string, node *Node, creatable, removable, isGOAPI bool) {
 
 		fio, _ := os.Lstat(fpath)
 
-		child := Node{Name: filename, Path: fpath, Removable: removable, IsGoAPI: isGOAPI, Children: []*Node{}}
+		child := Node{Name: filename,
+			Path:      filepath.ToSlash(fpath), /* jQuery data-index API can't accept "\", so we convert it to "/" */
+			Removable: removable, IsGoAPI: isGOAPI, Children: []*Node{}}
 		node.Children = append(node.Children, &child)
 
 		if nil == fio {

@@ -70,7 +70,7 @@ $.extend(Tabs.prototype, {
     },
     _hasId: function (id) {
         var $tabs = this.obj._$tabs;
-        if ($tabs.find("div[data-index=" + id + "]").length === 0) {
+        if ($tabs.find('div[data-index="' + id + '"]').length === 0) {
             return false;
         }
         return true;
@@ -130,8 +130,8 @@ $.extend(Tabs.prototype, {
         var $tabs = this.obj._$tabs;
         return $tabs.children(".current").data("index");
     },
-    setCurrent: function (id) {
-        if (!id) {
+    setCurrent: function (path) {
+        if (!path) {
             return false;
         }
 
@@ -139,7 +139,7 @@ $.extend(Tabs.prototype, {
                 $tabs = this.obj._$tabs;
 
         var $currentTab = $tabs.children(".current");
-        if ($currentTab.data("index") === id) {
+        if ($currentTab.data("index") === path) {
             return false;
         }
 
@@ -148,15 +148,15 @@ $.extend(Tabs.prototype, {
         if (stack.length === this.obj.STACKSIZE) {
             stack.splice(0, 1);
         }
-        if (stack[stack.length - 1] !== id) {
-            this.obj._stack.push(id);
+        if (stack[stack.length - 1] !== path) {
+            this.obj._stack.push(path);
         }
 
         $tabs.children("div").removeClass("current");
         $tabsPanel.children("div").hide();
 
-        $tabs.children("div[data-index='" + id + "']").addClass("current");
-        $tabsPanel.children("div[data-index='" + id + "']").show();
+        $tabs.children('div[data-index="' + path + '"]').addClass("current");
+        $tabsPanel.children('div[data-index="' + path + '"]').show();
 
         if (typeof this.obj.setAfter === 'function') {
             this.obj.setAfter();

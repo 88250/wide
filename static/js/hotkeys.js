@@ -293,7 +293,7 @@ var hotkeys = {
                 case 40: // down
                     var node = {};
 
-                    if (!wide.curNode) { // select the first one if no node been selected
+                    if (!wide.curNode) { // select the first one if no node been selected                        
                         node = tree.fileTree.getNodeByTId("files_1");
                     } else {
                         if (wide.curNode && tree.isBottomNode(wide.curNode)) {
@@ -426,19 +426,19 @@ var hotkeys = {
                         || document.activeElement.className === "search") {
                     // 焦点在底部窗口组时，对底部进行切换
                     var tabs = ["output", "search", "notification"],
-                            nextId = "";
+                            nextPath = "";
                     for (var i = 0, ii = tabs.length; i < ii; i++) {
                         if (document.activeElement.className === tabs[i]) {
                             if (i < ii - 1) {
-                                nextId = tabs[i + 1];
+                                nextPath = tabs[i + 1];
                             } else {
-                                nextId = tabs[0];
+                                nextPath = tabs[0];
                             }
                             break;
                         }
                     }
-                    bottomGroup.tabs.setCurrent(nextId);
-                    $(".bottom-window-group ." + nextId).focus();
+                    bottomGroup.tabs.setCurrent(nextPath);
+                    $(".bottom-window-group ." + nextPath).focus();
 
                     event.preventDefault();
 
@@ -446,16 +446,16 @@ var hotkeys = {
                 }
 
                 if (editors.data.length > 1) {
-                    var nextId = "";
+                    var nextPath = "";
                     for (var i = 0, ii = editors.data.length; i < ii; i++) {
                         var currentId = editors.getCurrentId();
                         if (currentId) {
                             if (currentId === editors.data[i].id) {
                                 if (i < ii - 1) {
-                                    nextId = editors.data[i + 1].id;
+                                    nextPath = editors.data[i + 1].id;
                                     wide.curEditor = editors.data[i + 1].editor;
                                 } else {
-                                    nextId = editors.data[0].id;
+                                    nextPath = editors.data[0].id;
                                     wide.curEditor = editors.data[0].editor;
                                 }
                                 break;
@@ -463,8 +463,10 @@ var hotkeys = {
                         }
                     }
 
-                    editors.tabs.setCurrent(nextId);
-                    wide.curNode = tree.fileTree.getNodeByTId(nextId);
+                    editors.tabs.setCurrent(nextPath);
+                    var nextTId = tree.getTIdByPath(nextPath);
+                    wide.curNode = tree.fileTree.getNodeByTId(nextTId);
+                    
                     tree.fileTree.selectNode(wide.curNode);
                     wide.refreshOutline();
                     var cursor = wide.curEditor.getCursor();

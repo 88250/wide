@@ -25,7 +25,7 @@ var editors = {
         }
     },
     close: function () {
-        $(".edit-panel .tabs > div[data-index=" + $(".edit-panel .frame").data("index") + "]").find(".ico-close").click();
+        $('.edit-panel .tabs > div[data-index="' + $('.edit-panel .frame').data('index') + ']').find('.ico-close').click();
     },
     closeOther: function () {
         var currentIndex = $(".edit-panel .frame").data("index");
@@ -43,14 +43,14 @@ var editors = {
         var firstIndex = removeData.splice(0, 1);
         $("#dialogCloseEditor").data("removeData", removeData);
         // 开始关闭
-        $(".edit-panel .tabs > div[data-index=" + firstIndex + "]").find(".ico-close").click();
+        $('.edit-panel .tabs > div[data-index="' + firstIndex + '"]').find(".ico-close").click();
     },
     _removeAllMarker: function () {
         var removeData = $("#dialogCloseEditor").data("removeData");
         if (removeData && removeData.length > 0) {
             var removeIndex = removeData.splice(0, 1);
             $("#dialogCloseEditor").data("removeData", removeData);
-            $(".edit-panel .tabs > div[data-index=" + removeIndex + "] .ico-close").click();
+            $('.edit-panel .tabs > div[data-index="' + removeIndex + '"] .ico-close').click();
         }
         if (wide.curEditor) {
             wide.curEditor.focus();
@@ -97,7 +97,7 @@ var editors = {
             "afterInit": function () {
                 $("#dialogCloseEditor button.save").click(function () {
                     var i = $("#dialogCloseEditor").data("index");
-                    wide.fmt(tree.fileTree.getNodeByTId(editors.data[i].id).path, editors.data[i].editor);
+                    wide.fmt(editors.data[i].id, editors.data[i].editor);
                     editors.tabs.del(editors.data[i].id);
                     $("#dialogCloseEditor").dialog("close");
                     editors._removeAllMarker();
@@ -133,7 +133,8 @@ var editors = {
                 }
 
                 // set tree node selected
-                var node = tree.fileTree.getNodeByTId(id);
+                var tId = tree.getTIdByPath(id);                
+                var node = tree.fileTree.getNodeByTId(tId);
                 tree.fileTree.selectNode(node);
                 wide.curNode = node;
 
@@ -163,8 +164,8 @@ var editors = {
                             editors._removeAllMarker();
                             return true;
                         } else {
-                            $("#dialogCloseEditor").dialog("open", $(".edit-panel .tabs > div[data-index="
-                                    + editors.data[i].id + "] > span:eq(0)").text());
+                            $("#dialogCloseEditor").dialog("open", $('.edit-panel .tabs > div[data-index="'
+                                    + editors.data[i].id + '"] > span:eq(0)').text());
                             $("#dialogCloseEditor").data("index", i);
                             return false;
                         }
@@ -219,7 +220,8 @@ var editors = {
                 }
 
                 // set tree node selected
-                var node = tree.fileTree.getNodeByTId(nextId);
+                var tId = tree.getTIdByPath(id);
+                var node = tree.fileTree.getNodeByTId(tId);
                 tree.fileTree.selectNode(node);
                 wide.curNode = node;
 
@@ -743,7 +745,7 @@ var editors = {
     },
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
     newEditor: function (data, cursor) {
-        var id = wide.curNode.tId;
+        var id = wide.curNode.path;
 
         editors.tabs.add({
             id: id,
