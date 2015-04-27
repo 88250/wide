@@ -99,6 +99,7 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 		workspacePath := workspace + conf.PathSeparator + "src"
 
 		workspaceNode := Node{
+			Id:        filepath.ToSlash(workspacePath), // jQuery API can't accept "\", so we convert it to "/"
 			Name:      workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
 			Path:      workspacePath,
 			IconSkin:  "ico-ztree-dir-workspace ",
@@ -454,6 +455,7 @@ func walk(path string, node *Node, creatable, removable, isGOAPI bool) {
 		fio, _ := os.Lstat(fpath)
 
 		child := Node{
+			Id:        filepath.ToSlash(fpath), // jQuery API can't accept "\", so we convert it to "/"
 			Name:      filename,
 			Path:      fpath,
 			Removable: removable,
