@@ -745,7 +745,7 @@ var editors = {
     },
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
     newEditor: function (data, cursor) {
-        var id = wide.curNode.path;
+        var id = wide.curNode.id;
 
         editors.tabs.add({
             id: id,
