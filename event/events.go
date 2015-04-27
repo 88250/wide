@@ -87,9 +87,7 @@ func Load() {
 
 // AddHandler adds the specified handlers to user event queues.
 func (uq *UserEventQueue) AddHandler(handlers ...Handler) {
-	for _, handler := range handlers {
-		uq.Handlers = append(uq.Handlers, handler)
-	}
+	uq.Handlers = append(uq.Handlers, handlers...)
 }
 
 // New initializes a user event queue with the specified wide session id.
