@@ -133,7 +133,7 @@ var editors = {
                 }
 
                 // set tree node selected
-                var tId = tree.getTIdByPath(id);                
+                var tId = tree.getTIdByPath(id);
                 var node = tree.fileTree.getNodeByTId(tId);
                 tree.fileTree.selectNode(node);
                 wide.curNode = node;
@@ -835,8 +835,7 @@ var editors = {
         });
 
         editor.on('changes', function (cm) {
-            if (cm.doc.isClean()) {
-                // 没有修改过
+            if (cm.doc.isClean()) { // no modification
                 $(".edit-panel .tabs > div").each(function () {
                     var $span = $(this).find("span:eq(0)");
                     if ($span.attr("title") === cm.options.path) {
@@ -844,7 +843,6 @@ var editors = {
                     }
                 });
             } else {
-                // 修改过
                 $(".edit-panel .tabs > div").each(function () {
                     var $span = $(this).find("span:eq(0)");
                     if ($span.attr("title") === cm.options.path) {
@@ -857,6 +855,10 @@ var editors = {
         editor.setSize('100%', $(".edit-panel").height() - $(".edit-panel .tabs").height());
         editor.setOption("mode", data.mode);
         editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
+
+        if ("wide" !== config.keymap) {
+            editor.setOption("keyMap", config.keymap);
+        }
 
         if ("text/x-go" === data.mode || "application/json" === data.mode) {
             editor.setOption("lint", true);

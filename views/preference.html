@@ -9,6 +9,9 @@
         <div data-index="gotool">
             <span title="{{.i18n.gotool}}">{{.i18n.gotool}}</span>
         </div>
+        <div data-index="keymap">
+            <span title="{{.i18n.keymap}}">{{.i18n.keymap}}</span>
+        </div>
         <div data-index="user">
             <span title="{{.i18n.user}}">{{.i18n.user}}</span>
         </div>
@@ -65,6 +68,15 @@
                     {{range $index, $gofmt := .gofmts }}
                     <option name="{{$gofmt}}" value="{{$gofmt}}" {{if eq $.user.GoFormat $gofmt}}selected="selected"{{end}}>{{$gofmt}}</option>
                     {{end}}
+                </select>
+            </label>
+        </div>
+        <div class="fn-none" data-index="keymap">
+            <label>
+                {{.i18n.keymap}}{{.i18n.colon}}
+                <select class="select" data-value="{{.user.Keymap}}" name="keymap">
+                    <option name="wide" value="wide" {{if eq $.user.Keymap "wide"}}selected="selected"{{end}}>wide</option>
+                    <option name="vim" value="vim" {{if eq $.user.Keymap "vim"}}selected="selected"{{end}}>vim</option>
                 </select>
             </label>
         </div>

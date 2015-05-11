@@ -58,9 +58,10 @@ type User struct {
 	FontFamily           string
 	FontSize             string
 	Theme                string
-	Created              int64 // user create time in unix nano
-	Updated              int64 // preference update time in unix nano
-	Lived                int64 // the latest session activity in unix nano
+	Keymap               string // wide/vim
+	Created              int64  // user create time in unix nano
+	Updated              int64  // preference update time in unix nano
+	Lived                int64  // the latest session activity in unix nano
 	Editor               *editor
 	LatestSessionContent *LatestSessionContent
 }
@@ -87,6 +88,7 @@ func NewUser(username, password, email, workspace string) *User {
 
 	return &User{Name: username, Password: password, Salt: salt, Email: email, Gravatar: gravatar, Workspace: workspace,
 		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
+		Keymap:  "wide",
 		Created: now, Updated: now, Lived: now,
 		Editor: &editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",
 			Theme: "wide", TabSize: "4"}}

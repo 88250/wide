@@ -426,7 +426,8 @@ var menu = {
                             $editorFontSize = $dialogPreference.find("input[name=editorFontSize]"),
                             $editorLineHeight = $dialogPreference.find("input[name=editorLineHeight]"),
                             $editorTheme = $dialogPreference.find("select[name=editorTheme]"),
-                            $editorTabSize = $dialogPreference.find("input[name=editorTabSize]");
+                            $editorTabSize = $dialogPreference.find("input[name=editorTabSize]"),
+                            $keymap = $dialogPreference.find("select[name=keymap]");
 
                     $.extend(request, {
                         "fontFamily": $fontFamily.val(),
@@ -441,8 +442,13 @@ var menu = {
                         "editorFontSize": $editorFontSize.val(),
                         "editorLineHeight": $editorLineHeight.val(),
                         "editorTheme": $editorTheme.val(),
-                        "editorTabSize": $editorTabSize.val()
+                        "editorTabSize": $editorTabSize.val(),
+                        "keymap": $keymap.val()
                     });
+                    
+                    if (config.keymap !== $keymap.val()) {
+                        window.location.reload();
+                    }
 
                     $.ajax({
                         type: 'POST',
@@ -466,6 +472,10 @@ var menu = {
                             $editorLineHeight.data("value", $editorLineHeight.val());
                             $editorTheme.data("value", $editorTheme.val());
                             $editorTabSize.data("value", $editorTabSize.val());
+                            $keymap.data("value", $keymap.val());
+                            
+                            // update the config
+                            config.keymap = $keymap.val();
 
                             var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
                             $okBtn.prop("disabled", true);

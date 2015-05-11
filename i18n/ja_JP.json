@@ -177,5 +177,6 @@
     "git_clone": "Git クローン",
     "terms": "利用規約",
     "download": "ダウンロード",
-    "decompress": "解凍する"
+    "decompress": "解凍する",
+    "keymap": "キーマップ"
 }

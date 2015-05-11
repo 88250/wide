@@ -177,5 +177,6 @@
     "git_clone": "Git 克隆",
     "terms": "使用条款",
     "download": "下载",
-    "decompress": "解压缩"
+    "decompress": "解压缩",
+    "keymap": "快捷键"
 }

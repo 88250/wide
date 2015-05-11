@@ -126,6 +126,11 @@ func initUsers() {
 			os.Exit(-1)
 		}
 
+		// Compatibility upgrade (1.3.0): https://github.com/b3log/wide/issues/83
+		if "" == user.Keymap {
+			user.Keymap = "wide"
+		}
+
 		Users = append(Users, user)
 	}
 
