@@ -846,6 +846,10 @@ func searchInFile(path string, text string) []*Snippet {
 }
 
 func authWorkspace(username, path string) bool {
+	if strings.HasPrefix(path, util.Go.GetAPIPath()) {
+		return true
+	}
+
 	userWorkspace := conf.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
 
