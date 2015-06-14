@@ -846,6 +846,8 @@ func searchInFile(path string, text string) []*Snippet {
 }
 
 func authWorkspace(username, path string) bool {
+	path = filepath.FromSlash(path)
+
 	if strings.HasPrefix(path, util.Go.GetAPIPath()) {
 		return true
 	}
