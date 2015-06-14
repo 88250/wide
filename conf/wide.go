@@ -70,6 +70,7 @@ type conf struct {
 	Locale                string // default locale
 	Playground            string // playground directory
 	AllowRegister         bool   // allow register or not
+	Autocomplete          bool   // default autocomplete
 }
 
 // Logger.

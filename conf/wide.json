@@ -13,5 +13,6 @@
     "WD": "${pwd}",
     "Locale": "en_US",
     "Playground": "${home}/playground",
-    "AllowRegister": true
+    "AllowRegister": true,
+    "Autocomplete": true
 }

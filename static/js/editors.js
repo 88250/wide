@@ -15,6 +15,7 @@
  */
 
 var editors = {
+    autocompleteMutex: false,
     data: [],
     tabs: {},
     getEditorByPath: function (path) {
@@ -354,6 +355,10 @@ var editors = {
 
             var autocompleteHints = [];
 
+            if (editors.autocompleteMutex && editor.state.completionActive) {
+                return;
+            }
+
             $.ajax({
                 async: false, // 同步执行
                 type: 'POST',
@@ -407,9 +412,10 @@ var editors = {
                         }
                     }
 
-                    // 清除未保存状态
                     editor.doc.markClean();
                     $(".edit-panel .tabs > div.current > span").removeClass("changed");
+
+                    editors.autocompleteMutex = false;
                 }
             });
 
@@ -842,13 +848,24 @@ var editors = {
                         $span.removeClass("changed");
                     }
                 });
-            } else {
-                $(".edit-panel .tabs > div").each(function () {
-                    var $span = $(this).find("span:eq(0)");
-                    if ($span.attr("title") === cm.options.path) {
-                        $span.addClass("changed");
-                    }
-                });
+
+                return;
+            }
+
+            // changed
+
+            $(".edit-panel .tabs > div").each(function () {
+                var $span = $(this).find("span:eq(0)");
+                if ($span.attr("title") === cm.options.path) {
+                    $span.addClass("changed");
+                }
+            });
+
+            if (config.autocomplete) {
+                var curLine = cm.doc.getLine(cm.getCursor().line).trim().replace(/\W/, "");
+                if (0.5 <= Math.random() && "" !== curLine && /^\w+$/.test(curLine)) {
+                    CodeMirror.commands.autocompleteAfterDot(cm);
+                }
             }
         });
 
