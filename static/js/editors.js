@@ -359,6 +359,8 @@ var editors = {
                 return;
             }
 
+            editors.autocompleteMutex = true;
+
             $.ajax({
                 async: false, // 同步执行
                 type: 'POST',
@@ -414,10 +416,12 @@ var editors = {
 
                     editor.doc.markClean();
                     $(".edit-panel .tabs > div.current > span").removeClass("changed");
-
-                    editors.autocompleteMutex = false;
                 }
             });
+
+            setTimeout(function () {
+                editors.autocompleteMutex = false;
+            }, 20);
 
             return {list: autocompleteHints, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
         });
@@ -863,7 +867,8 @@ var editors = {
 
             if (config.autocomplete) {
                 var curLine = cm.doc.getLine(cm.getCursor().line).trim().replace(/\W/, "");
-                if (0.5 <= Math.random() && "" !== curLine && /^\w+$/.test(curLine)) {
+
+                if (1 === curLine.length || 0.5 <= Math.random() && "" !== curLine && /^\w+$/.test(curLine)) {
                     CodeMirror.commands.autocompleteAfterDot(cm);
                 }
             }

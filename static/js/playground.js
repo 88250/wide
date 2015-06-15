@@ -15,6 +15,7 @@
  */
 
 var playground = {
+    autocompleteMutex: false,
     editor: undefined,
     pid: undefined,
     _resize: function () {
@@ -82,6 +83,13 @@ var playground = {
 
             var autocompleteHints = [];
 
+            if (playground.autocompleteMutex && editor.state.completionActive) {
+                console.log(1);
+                return;
+            }
+
+            playground.autocompleteMutex = true;
+
             $.ajax({
                 async: false, // 同步执行
                 type: 'POST',
@@ -137,6 +145,10 @@ var playground = {
                 }
             });
 
+            setTimeout(function () {
+                playground.autocompleteMutex = false;
+            }, 20);
+
             return {list: autocompleteHints, from: CodeMirror.Pos(cur.line, start), to: CodeMirror.Pos(cur.line, end)};
         });
 
@@ -184,7 +196,7 @@ var playground = {
                 ".": "autocompleteAfterDot"
             }
         });
-        
+
         playground.editor.setOption("gutters", ["CodeMirror-lint-markers", "CodeMirror-foldgutter"]);
 
         $(window).resize(function () {
@@ -196,7 +208,7 @@ var playground = {
         } else {
             playground.editor.setSize("auto", $("#editor").height() + "px");
         }
-        
+
         var hovered = false;
         $(".menu .ico-share").hover(function () {
             $(".menu .share-panel").show();
@@ -224,6 +236,14 @@ var playground = {
 
         playground.editor.on('changes', function (cm) {
             $("#url").html("");
+
+            if (config.autocomplete) {
+                var curLine = cm.doc.getLine(cm.getCursor().line).trim().replace(/\W/, "");
+
+                if (1 === curLine.length || 0.5 <= Math.random() && "" !== curLine && /^\w+$/.test(curLine)) {
+                    CodeMirror.commands.autocompleteAfterDot(cm);
+                }
+            }
         });
 
         this._initWS();
