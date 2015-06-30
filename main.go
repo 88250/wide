@@ -191,7 +191,7 @@ func main() {
 // indexHandler handles request of Wide index.
 func indexHandler(w http.ResponseWriter, r *http.Request) {
 	if "/" != r.RequestURI {
-		http.NotFound(w, r)
+		http.Redirect(w, r, "/", http.StatusFound)
 
 		return
 	}
