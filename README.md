@@ -136,8 +136,8 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 ## Terms
 
 * This software is open sourced under the Apache License 2.0
-* You can not get rid of the "Powered by [B3log](http://b3log.org)" from any pages, even the pages are developed by you 
-* If you want to use this software for commercial purpose, please mail to support@liuyun.io for request a commercial license
+* You can not get rid of the "Powered by [B3log](http://b3log.org)" from any page, even which you made
+* If you want to use this software for commercial purpose, please mail to support@liuyun.io for a commercial license request
 * Copyright (c) b3log.org, all rights reserved
 
 ## Credits
