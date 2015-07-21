@@ -179,7 +179,6 @@ var playground = {
 
         playground.editor = CodeMirror.fromTextArea($("#editor")[0], {
             lineNumbers: true,
-            autofocus: true,
             autoCloseBrackets: true,
             matchBrackets: true,
             highlightSelectionMatches: {showToken: /\w/},
