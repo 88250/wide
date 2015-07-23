@@ -59,6 +59,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 
 	filePath := args["file"].(string)
+
+	if util.Go.IsAPI(filePath) || !session.CanAccess(username, filePath) {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+
+		return
+	}
+
 	curDir := filepath.Dir(filePath)
 
 	fout, err := os.Create(filePath)

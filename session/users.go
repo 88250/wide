@@ -305,6 +305,22 @@ func FixedTimeSave() {
 	}()
 }
 
+// CanAccess determines whether the user specified by the given username can access the specified path.
+func CanAccess(username, path string) bool {
+	path = filepath.FromSlash(path)
+
+	userWorkspace := conf.GetUserWorkspace(username)
+	workspaces := filepath.SplitList(userWorkspace)
+
+	for _, workspace := range workspaces {
+		if strings.HasPrefix(path, workspace) {
+			return true
+		}
+	}
+
+	return false
+}
+
 func getOnlineUsers() []*conf.User {
 	ret := []*conf.User{}
 

@@ -335,6 +335,7 @@ var editors = {
     },
     _initCodeMirrorHotKeys: function () {
         CodeMirror.registerHelper("hint", "go", function (editor) {
+            editor = wide.curEditor; // 使用当前编辑器覆盖实参，因为异步调用的原因，实参不一定正确
             var word = /[\w$]+/;
 
             var cur = editor.getCursor(), curLine = editor.getLine(cur.line);
@@ -415,7 +416,7 @@ var editors = {
                     }
 
                     editor.doc.markClean();
-                    $(".edit-panel .tabs > div.current > span").removeClass("changed");
+                    $(".edit-panel .tabs .current > span:eq(0)").removeClass("changed");
                 }
             });
 
@@ -756,7 +757,7 @@ var editors = {
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
     newEditor: function (data, cursor) {
         var id = wide.curNode.id;
-
+        
         editors.tabs.add({
             id: id,
             title: '<span title="' + wide.curNode.path + '"><span class="'
@@ -786,6 +787,7 @@ var editors = {
             foldGutter: true,
             cursorHeight: 1,
             path: data.path,
+            readOnly: wide.curNode.isGOAPI,
             profile: 'xhtml', // define Emmet output profile
             extraKeys: {
                 "Ctrl-\\": "autocompleteAnyWord",

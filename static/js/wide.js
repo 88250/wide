@@ -164,7 +164,7 @@ var wide = {
                 var request = newWideRequest(),
                         name = $("#dialogNewFilePrompt > input").val();
 
-                request.path = wide.curNode.path + config.pathSeparator + name;
+                request.path = wide.curNode.path + "/" + name;
                 request.fileType = "f";
 
                 $.ajax({
@@ -214,7 +214,7 @@ var wide = {
                 var name = $("#dialogNewDirPrompt > input").val(),
                         request = newWideRequest();
 
-                request.path = wide.curNode.path + config.pathSeparator + name;
+                request.path = wide.curNode.path + "/" + name;
                 request.fileType = "d";
 
                 $.ajax({
@@ -300,7 +300,7 @@ var wide = {
                             var goFileHTML = '';
                             for (var i = 0, max = data.founds.length; i < max; i++) {
                                 var path = data.founds[i].path,
-                                        name = path.substr(path.lastIndexOf(config.pathSeparator) + 1),
+                                        name = path.substr(path.lastIndexOf("/") + 1),
                                         icoSkin = wide.getClassBySuffix(name.split(".")[1]);
                                 if (i === 0) {
                                     goFileHTML += '<li data-index="' + i + '" class="selected" title="'

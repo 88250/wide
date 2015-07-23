@@ -50,7 +50,7 @@ func (*mygo) GetAPIPath() string {
 func (*mygo) IsAPI(path string) bool {
 	apiPath := Go.GetAPIPath()
 
-	return strings.HasPrefix(path, apiPath)
+	return strings.HasPrefix(filepath.FromSlash(path), apiPath)
 }
 
 // GetGoFormats gets Go format tools. It may return ["gofmt", "goimports"].

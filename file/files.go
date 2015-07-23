@@ -101,7 +101,7 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 		workspaceNode := Node{
 			Id:        filepath.ToSlash(workspacePath), // jQuery API can't accept "\", so we convert it to "/"
 			Name:      workspace[strings.LastIndex(workspace, conf.PathSeparator)+1:],
-			Path:      workspacePath,
+			Path:      filepath.ToSlash(workspacePath),
 			IconSkin:  "ico-ztree-dir-workspace ",
 			Type:      "d",
 			Creatable: true,
@@ -134,7 +134,7 @@ func RefreshDirectoryHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	path := r.FormValue("path")
 
-	if !authWorkspace(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -178,7 +178,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if !authWorkspace(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -252,7 +252,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 	sid := args["sid"].(string)
 
-	if !authWorkspace(username, filePath) {
+	if util.Go.IsAPI(filePath) || !session.CanAccess(username, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -307,7 +307,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if !authWorkspace(username, path) {
+	if util.Go.IsAPI(path) || !session.CanAccess(username, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -358,7 +358,8 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string)
-	if !authWorkspace(username, path) {
+
+	if util.Go.IsAPI(path) || !session.CanAccess(username, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -403,14 +404,15 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	oldPath := args["oldPath"].(string)
-	if !authWorkspace(username, oldPath) {
+	if util.Go.IsAPI(oldPath) ||
+		!session.CanAccess(username, oldPath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
 
 	newPath := args["newPath"].(string)
-	if !authWorkspace(username, newPath) {
+	if util.Go.IsAPI(newPath) || !session.CanAccess(username, newPath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -466,7 +468,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string) // path of selected file in file tree
-	if !authWorkspace(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -561,7 +563,7 @@ func walk(path string, node *Node, creatable, removable, isGOAPI bool) {
 		child := Node{
 			Id:        filepath.ToSlash(fpath), // jQuery API can't accept "\", so we convert it to "/"
 			Name:      filename,
-			Path:      fpath,
+			Path:      filepath.ToSlash(fpath),
 			Removable: removable,
 			IsGoAPI:   isGOAPI,
 			Children:  []*Node{}}
@@ -843,23 +845,4 @@ func searchInFile(path string, text string) []*Snippet {
 	}
 
 	return ret
-}
-
-func authWorkspace(username, path string) bool {
-	path = filepath.FromSlash(path)
-
-	if strings.HasPrefix(path, util.Go.GetAPIPath()) {
-		return true
-	}
-
-	userWorkspace := conf.GetUserWorkspace(username)
-	workspaces := filepath.SplitList(userWorkspace)
-
-	for _, workspace := range workspaces {
-		if strings.HasPrefix(path, workspace) {
-			return true
-		}
-	}
-
-	return false
 }

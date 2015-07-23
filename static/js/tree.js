@@ -398,7 +398,7 @@ var tree = {
                         var mode = CodeMirror.findModeByFileName(treeNode.path);
                         data.mode = mode.mime;
                     }
-                    
+
                     if (!data.mode) {
                         console.error("Can't find mode by file name [" + treeNode.path + "]");
                     }
@@ -412,7 +412,7 @@ var tree = {
                     if (!tempCursor) {
                         tempCursor = CodeMirror.Pos(0, 0);
                     }
-                    
+
                     editors.newEditor(data, tempCursor);
 
                     wide.refreshOutline();
@@ -499,10 +499,7 @@ var tree = {
                         request = newWideRequest();
 
                 request.oldPath = wide.curNode.path;
-
-                request.newPath = wide.curNode.path.substring(0,
-                        wide.curNode.path.lastIndexOf(config.pathSeparator))
-                        + config.pathSeparator + name;
+                request.newPath = wide.curNode.path.substring(0, wide.curNode.path.lastIndexOf("/")) + name;
 
                 $.ajax({
                     type: 'POST',

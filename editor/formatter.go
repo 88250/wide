@@ -54,7 +54,8 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 
 	if util.Go.IsAPI(filePath) {
-		// ignore it
+		data["succ"] = false
+
 		return
 	}
 
