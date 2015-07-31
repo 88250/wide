@@ -20,7 +20,6 @@ import (
 	"math/rand"
 	"net/http"
 	"os/exec"
-	"strings"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -163,8 +162,6 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				oneRuneStr := string(r)
-				oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
-				oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
 
 				buf.content += oneRuneStr
 
@@ -201,8 +198,6 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			oneRuneStr := string(r)
-			oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
-			oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
 
 			buf.content += oneRuneStr
 
@@ -214,7 +209,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 			if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax || oneRuneStr == "\n" {
 				channelRet["cmd"] = "run"
-				channelRet["output"] = "<span class='stderr'>" + buf.content + "</span>"
+				channelRet["output"] = buf.content
 
 				buf = outputBuf{} // a new buffer
 
