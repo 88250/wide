@@ -1,11 +1,11 @@
 # Wide [![Build Status](https://img.shields.io/travis/b3log/wide.svg?style=flat)](https://travis-ci.org/b3log/wide) [![Coverage Status](https://img.shields.io/coveralls/b3log/wide.svg?style=flat)](https://coveralls.io/r/b3log/wide) [![Apache License](http://img.shields.io/badge/license-apache2-orange.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![API Documentation](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](http://godoc.org/github.com/b3log/wide) [![Download](http://img.shields.io/badge/download-~1.5K-red.svg?style=flat)](http://pan.baidu.com/s/1dD3XwOT)
 
-_Have a [**try**](http://wide.b3log.org/signup) first, then [download](http://pan.baidu.com/s/1dD3XwOT) and setup it on your local area network, enjoy yourself!_
+_Have a [try](http://wide.b3log.org/signup) first, then [download](http://pan.baidu.com/s/1dD3XwOT) and setup it on your local area network, enjoy yourself!_
 
-_先试试我们搭建好的[**在线服务**](http://wide.b3log.org/signup)，你可以在这里[下载](http://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们加入吧！_
+_先试试我们搭建好的[在线服务](http://wide.b3log.org/signup)，你可以在这里[下载](http://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！_
 
 > * 关于 Wide 的产品定位，请看[这里](http://symphony.b3log.org/article/1438407961481)，并欢迎参与讨论~
-> * 加入[黑客与画家的社区](http://symphony.b3log.org/register?r=88250)，与其他程序员、设计师共同成长！
+> * 加入[**黑客与画家的社区**](http://symphony.b3log.org/register?r=88250)，与其他程序员、设计师共同成长！
 
 ## Introduction
 
