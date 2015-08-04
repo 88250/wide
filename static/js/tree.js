@@ -171,6 +171,26 @@ var tree = {
             window.open(config.context + '/file/zip?path=' + wide.curNode.path + ".zip");
         }
     },
+    crossCompile: function (platform) {
+        var request = newWideRequest();
+        request.path = wide.curNode.path;
+        request.platform = platform;
+
+        $.ajax({
+            async: false,
+            type: 'POST',
+            url: config.context + '/cross',
+            data: JSON.stringify(request),
+            dataType: "json",
+            success: function (data) {
+                if (!data.succ) {
+                    $("#dialogAlert").dialog("open", data.msg);
+
+                    return false;
+                }
+            }
+        });
+    },
     decompress: function () {
         var request = newWideRequest();
         request.path = wide.curNode.path;
@@ -278,10 +298,16 @@ var tree = {
                                             $fileRMenu.find(".remove").addClass("disabled");
                                         }
 
-                                        if (wide.curNode.path.indexOf("zip", wide.curNode.path.length - "zip".length) === -1) { // !path.endsWith("zip")
+                                        if (-1 === wide.curNode.path.indexOf("zip", wide.curNode.path.length - "zip".length)) { // !path.endsWith("zip")
                                             $fileRMenu.find(".decompress").hide();
                                         } else {
                                             $fileRMenu.find(".decompress").show();
+                                        }
+
+                                        if (-1 === wide.curNode.path.indexOf("go", wide.curNode.path.length - "go".length)) { // !path.endsWith("go")
+                                            $fileRMenu.find(".linux64").hide();
+                                        } else {
+                                            $fileRMenu.find(".linux64").show();
                                         }
 
                                         var top = event.clientY - 10;

@@ -5,7 +5,7 @@
         <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
 
         <meta name="keywords" content="Wide, Golang, IDE, Team, Cloud, B3log"/>
-        <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
+        <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywrhere."/>
         <meta name="author" content="B3log">
         <meta property="og:description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
 
@@ -457,6 +457,12 @@
                                     <span class="space"></span> {{.i18n.rename}}
                                 </li>
                                 <li class="hr"></li>
+                                {{range .crossPlatforms}}
+                                <li class="{{.}}" onclick="tree.crossCompile('');">
+                                    <span class="space"></span> {{.}}
+                                </li>
+                                {{end}}
+                                <li class="hr"></li>
                                 <li class="export" onclick="tree.export(this);">
                                     <span class="ico-export font-ico"></span> {{.i18n.export}}
                                 </li>
@@ -660,10 +666,10 @@
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/shell/shell.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/sql/sql.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/keymap/vim.js"></script>
-        
+
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/lint/json-lint.js?{{.conf.StaticResourceVersion}}"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/lint/go-lint.js?{{.conf.StaticResourceVersion}}"></script>
-        
+
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/emmet.js?{{.conf.StaticResourceVersion}}"></script>            
 
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify.js?{{.conf.StaticResourceVersion}}"></script>

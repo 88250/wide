@@ -63,7 +63,17 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string)
+	var name string
+
 	base := filepath.Base(path)
+
+	if nil != args["name"] {
+		name = args["name"].(string)
+	} else {
+		name = base
+	}
+
+	dir := filepath.Dir(path)
 
 	if !util.File.IsExist(path) {
 		data["succ"] = false
@@ -72,7 +82,8 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	zipFile, err := util.Zip.Create(path + ".zip")
+	zipPath := filepath.Join(dir, name)
+	zipFile, err := util.Zip.Create(zipPath + ".zip")
 	if nil != err {
 		logger.Error(err)
 		data["succ"] = false
@@ -86,4 +97,6 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		zipFile.AddEntry(base, path)
 	}
+
+	data["path"] = zipPath
 }

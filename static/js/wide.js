@@ -86,8 +86,8 @@ var wide = {
 
         $("#dialogAlert").dialog({
             "modal": true,
-            "height": 36,
-            "width": 260,
+            "height": 40,
+            "width": 350,
             "title": config.label.tip,
             "hiddenOk": true,
             "cancelText": config.label.confirm,
@@ -483,6 +483,7 @@ var wide = {
 
                     break;
                 case 'build':
+                case 'cross-build':
                     bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     if (data.lints) { // has build error
@@ -505,6 +506,30 @@ var wide = {
                         for (var path in files) {
                             var editor = editors.getEditorByPath(path);
                             CodeMirror.signal(editor, "change", editor);
+                        }
+                    } else {
+                        if ('cross-build' === data.cmd) {
+                            var request = newWideRequest(),
+                                    isSucc = false;
+                            request.path = data.executable;
+                            request.name = data.name;
+
+                            $.ajax({
+                                async: false,
+                                type: 'POST',
+                                url: config.context + '/file/zip/new',
+                                data: JSON.stringify(request),
+                                dataType: "json",
+                                success: function (data) {
+                                    if (!data.succ) {
+                                        $("#dialogAlert").dialog("open", data.msg);
+
+                                        return false;
+                                    }
+
+                                    window.open(config.context + '/file/zip?path=' + data.path + ".zip");
+                                }
+                            });
                         }
                     }
 

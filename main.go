@@ -87,6 +87,8 @@ func init() {
 	if *confStat {
 		session.FixedTimeReport()
 	}
+
+	logger.Debug("cross-compilation ", util.Go.GetCrossPlatforms())
 }
 
 // Main.
@@ -124,6 +126,9 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/go/get", handlerWrapper(output.GoGetHandler))
 	http.HandleFunc(conf.Wide.Context+"/go/install", handlerWrapper(output.GoInstallHandler))
 	http.HandleFunc(conf.Wide.Context+"/output/ws", handlerWrapper(output.WSHandler))
+
+	// cross compilation
+	http.HandleFunc(conf.Wide.Context+"/cross", handlerWrapper(output.CrossCompilationHandler))
 
 	// file tree
 	http.HandleFunc(conf.Wide.Context+"/files", handlerWrapper(file.GetFilesHandler))
@@ -237,7 +242,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"session": wideSession, "latestSessionContent": user.LatestSessionContent,
 		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
-		"user": user, "editorThemes": conf.GetEditorThemes()}
+		"user": user, "editorThemes": conf.GetEditorThemes(), "crossPlatforms": util.Go.GetCrossPlatforms()}
 
 	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
 

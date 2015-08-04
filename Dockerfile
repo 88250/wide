@@ -1,4 +1,4 @@
-FROM golang:latest
+FROM golang:cross
 MAINTAINER Liang Ding <dl88250@gmail.com>
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
