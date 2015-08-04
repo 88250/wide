@@ -127,7 +127,7 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/go/install", handlerWrapper(output.GoInstallHandler))
 	http.HandleFunc(conf.Wide.Context+"/output/ws", handlerWrapper(output.WSHandler))
 
-	// cross compilation
+	// cross-compilation
 	http.HandleFunc(conf.Wide.Context+"/cross", handlerWrapper(output.CrossCompilationHandler))
 
 	// file tree
