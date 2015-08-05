@@ -6,14 +6,14 @@ ADD . /wide/gogogo/src/github.com/b3log/wide
 RUN tar zxf /wide/gogogo/src/github.com/b3log/wide/deps/golang.org.tar.gz -C /wide/gogogo/src/
 RUN tar zxf /wide/gogogo/src/github.com/b3log/wide/deps/github.com.tar.gz -C /wide/gogogo/src/
 
-RUN go build github.com/go-fsnotify/fsnotify 
-RUN go build github.com/gorilla/sessions 
-RUN go build github.com/gorilla/websocket
-
 RUN useradd wide && useradd runner
 
 ENV GOROOT /usr/src/go
 ENV GOPATH /wide/gogogo
+
+RUN go build github.com/go-fsnotify/fsnotify 
+RUN go build github.com/gorilla/sessions 
+RUN go build github.com/gorilla/websocket
 
 WORKDIR /wide/gogogo/src/github.com/b3log/wide
 RUN go build -v
