@@ -6,6 +6,8 @@ ADD . /wide/gogogo/src/github.com/b3log/wide
 RUN tar zxf /wide/gogogo/src/github.com/b3log/wide/deps/golang.org.tar.gz -C /wide/gogogo/src/
 RUN tar zxf /wide/gogogo/src/github.com/b3log/wide/deps/github.com.tar.gz -C /wide/gogogo/src/
 
+RUN go build github.com/go-fsnotify/fsnotify github.com/gorilla/sessions github.com/gorilla/websocket
+
 RUN useradd wide && useradd runner
 
 ENV GOROOT /usr/src/go
