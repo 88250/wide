@@ -11,9 +11,7 @@ RUN useradd wide && useradd runner
 ENV GOROOT /usr/src/go
 ENV GOPATH /wide/gogogo
 
-RUN go get github.com/visualfc/gotools github.com/nsf/gocode github.com/bradfitz/goimports
-
 WORKDIR /wide/gogogo/src/github.com/b3log/wide
-RUN go get && go build -v
+RUN go build -v
 
 EXPOSE 7070
