@@ -47,6 +47,7 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Go programming language/Golang.
 * [X] Go tool: go get/install/fmt etc.
 * [X] File Import & Export
 * [X] Themes: editor and UI adjust, respectively
+* [X] Cross-Compilation
 * [ ] Debug
 * [ ] Git integration: git command on the web
 
