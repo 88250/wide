@@ -15,6 +15,8 @@ RUN go build github.com/go-fsnotify/fsnotify
 RUN go build github.com/gorilla/sessions 
 RUN go build github.com/gorilla/websocket
 
+RUN go install github.com/visualfc/gotools github.com/nsf/gocode github.com/bradfitz/goimports
+
 WORKDIR /wide/gogogo/src/github.com/b3log/wide
 RUN go build -v
 
