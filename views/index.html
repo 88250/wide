@@ -458,7 +458,7 @@
                                 </li>
                                 <li class="hr"></li>
                                 {{range .crossPlatforms}}
-                                {{if eq . "darwin_amd64" "linux_amd64" "windows_amd64"}}
+                                {{if eq . "darwin_amd64" "linux_amd64" "windows_amd64" "linux_arm"}}
                                 <li class="{{.}}" onclick="tree.crossCompile('{{.}}');">
                                     <span class="space"></span> {{.}}
                                 </li>
