@@ -2,7 +2,7 @@ FROM golang:cross
 MAINTAINER Liang Ding <dl88250@gmail.com>
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
-ADD ./golang.org /wide/gogogo/src/
+RUN unzip /wide/gogogo/src/github.com/b3log/wide/golang.org.zip -d /wide/gogogo/src/
 
 RUN useradd wide && useradd runner
 
