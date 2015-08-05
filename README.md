@@ -96,7 +96,7 @@ Flow:
 Flow: 
  1. Browser sends code assist request
  2. Handler gets user workspace of the request with HTTP session
- 3. Server executes ````gocode````/````ide_stub````<br/>
+ 3. Server executes ````gocode````/````ide_stub(gotools)````<br/>
     3.1 Sets environment variables (e.g. ${GOPATH})<br/>
     3.2 ````gocode```` with ````lib-path```` parameter
 
@@ -122,8 +122,7 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 1. [Download](https://github.com/b3log/wide/archive/master.zip) source or by `git clone https://github.com/b3log/wide`
 2. Get dependencies with 
    * `go get`
-   * `go get github.com/88250/ide_stub`
-   * `go get github.com/nsf/gocode`
+   * `go get go get github.com/visualfc/gotools github.com/nsf/gocode github.com/bradfitz/goimports`
 3. Compile wide with `go build` 
 
 ### Docker

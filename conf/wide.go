@@ -286,13 +286,13 @@ func checkEnv() {
 		logger.Warnf("Not found gocode [%s], please install it with this command: go get github.com/nsf/gocode", gocode)
 	}
 
-	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
+	ideStub := util.Go.GetExecutableInGOBIN("gotools")
 	cmd = exec.Command(ideStub, "version")
 	_, err = cmd.Output()
 	if nil != err {
 		event.EventQueue <- &event.Event{Code: event.EvtCodeIDEStubNotFound}
 
-		logger.Warnf("Not found ide_stub [%s], please install it with this command: go get github.com/88250/ide_stub", ideStub)
+		logger.Warnf("Not found gotools [%s], please install it with this command: go get github.com/visualfc/gotools", ideStub)
 	}
 }
 

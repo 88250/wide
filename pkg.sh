@@ -22,22 +22,22 @@ os=darwin
 export GOOS=${os}
 export GOARCH=386
 go build
-go build github.com/88250/ide_stub
+go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-cp ${GOPATH}/bin/${GOOS}_${GOARCH}/ide_stub .
+cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gotools .
 cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gocode .
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} ide_stub gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
-rm -f wide ide_stub gocode
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
+rm -f wide gotools gocode
 
 export GOOS=${os}
 export GOARCH=amd64
 go build
-go build github.com/88250/ide_stub
+go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-cp ${GOPATH}/bin/${GOOS}_${GOARCH}/ide_stub .
+cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gotools .
 cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gocode .
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} ide_stub gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
-rm -f wide ide_stub gocode
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
+rm -f wide gotools gocode
 
 ## linux
 os=linux
@@ -45,22 +45,22 @@ os=linux
 export GOOS=${os}
 export GOARCH=386
 go build
-go build github.com/88250/ide_stub
+go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-cp ${GOPATH}/bin/${GOOS}_${GOARCH}/ide_stub .
+cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gotools .
 cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gocode .
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} ide_stub gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
-rm -f wide ide_stub gocode
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
+rm -f wide gotools gocode
 
 export GOOS=${os}
 export GOARCH=amd64
 go build
-go build github.com/88250/ide_stub
+go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-cp ${GOPATH}/bin/${GOOS}_${GOARCH}/ide_stub .
+cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gotools .
 cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gocode .
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} ide_stub gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
-rm -f wide ide_stub gocode
+tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
+rm -f wide gotools gocode
 
 ## windows
 os=windows
@@ -68,20 +68,20 @@ os=windows
 export GOOS=${os}
 export GOARCH=386
 go build
-go build github.com/88250/ide_stub
+go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-cp ${GOPATH}/bin/${GOOS}_${GOARCH}/ide_stub.exe .
+cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gotools.exe .
 cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gocode.exe .
-zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} ide_stub.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
-rm -f wide.exe ide_stub.exe gocode.exe
+zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} gotools.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
+rm -f wide.exe gotools.exe gocode.exe
 
 export GOOS=${os}
 export GOARCH=amd64
 go build
-go build github.com/88250/ide_stub
+go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-cp ${GOPATH}/bin/${GOOS}_${GOARCH}/ide_stub.exe .
+cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gotools.exe .
 cp ${GOPATH}/bin/${GOOS}_${GOARCH}/gocode.exe .
-zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} ide_stub.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
-rm -f wide.exe ide_stub.exe gocode.exe
+zip -r ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} gotools.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
+rm -f wide.exe gotools.exe gocode.exe
 

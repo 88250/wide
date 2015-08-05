@@ -223,7 +223,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	logger.Tracef("offset [%d]", offset)
 
-	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
+	ideStub := util.Go.GetExecutableInGOBIN("gotools")
 	argv := []string{"types", "-pos", filename + ":" + strconv.Itoa(offset), "-info", "."}
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
@@ -299,7 +299,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	logger.Tracef("offset [%d]", offset)
 
-	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
+	ideStub := util.Go.GetExecutableInGOBIN("gotools")
 	argv := []string{"types", "-pos", filename + ":" + strconv.Itoa(offset), "-def", "."}
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
@@ -384,7 +384,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 	logger.Tracef("offset [%d]", offset)
 
-	ideStub := util.Go.GetExecutableInGOBIN("ide_stub")
+	ideStub := util.Go.GetExecutableInGOBIN("gotools")
 	argv := []string{"types", "-pos", filename + ":" + strconv.Itoa(offset), "-use", "."}
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir

@@ -29,7 +29,7 @@ const (
 	EvtCodeGOROOTNotFound
 	// EvtCodeGocodeNotFound indicates an event: not found gocode
 	EvtCodeGocodeNotFound
-	// EvtCodeIDEStubNotFound indicates an event: not found ide_stub
+	// EvtCodeIDEStubNotFound indicates an event: not found gotools
 	EvtCodeIDEStubNotFound
 	// EvtCodeServerInternalError indicates an event: server internal error
 	EvtCodeServerInternalError
