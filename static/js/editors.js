@@ -757,7 +757,7 @@ var editors = {
     // 新建一个编辑器 Tab，如果已经存在 Tab 则切换到该 Tab.
     newEditor: function (data, cursor) {
         var id = wide.curNode.id;
-        
+
         editors.tabs.add({
             id: id,
             title: '<span title="' + wide.curNode.path + '"><span class="'
@@ -866,11 +866,33 @@ var editors = {
                     $span.addClass("changed");
                 }
             });
+        });
+
+        editor.on('keydown', function (cm, evt) {
+            if (evt.altKey || evt.ctrlKey || evt.shiftKey) {
+                return;
+            }
+
+            var k = evt.which;
+
+            if (k < 48) {
+                return;
+            }
+
+            // hit [0-9]
+
+            if (k > 57 && k < 65) {
+                return;
+            }
+
+            // hit [a-z]
+
+            if (k > 90) {
+                return;
+            }
 
             if (config.autocomplete) {
-                var curLine = cm.doc.getLine(cm.getCursor().line).trim().replace(/\W/, "");
-
-                if (1 === curLine.length || 0.5 <= Math.random() && "" !== curLine && /^\w+$/.test(curLine)) {
+                if (0.5 <= Math.random()) {
                     CodeMirror.commands.autocompleteAfterDot(cm);
                 }
             }
