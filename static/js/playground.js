@@ -235,11 +235,33 @@ var playground = {
 
         playground.editor.on('changes', function (cm) {
             $("#url").html("");
+        });
+
+        playground.editor.on('keydown', function (cm, evt) {
+            if (evt.altKey || evt.ctrlKey || evt.shiftKey) {
+                return;
+            }
+
+            var k = evt.which;
+
+            if (k < 48) {
+                return;
+            }
+
+            // hit [0-9]
+
+            if (k > 57 && k < 65) {
+                return;
+            }
+
+            // hit [a-z]
+
+            if (k > 90) {
+                return;
+            }
 
             if (config.autocomplete) {
-                var curLine = cm.doc.getLine(cm.getCursor().line).trim().replace(/\W/, "");
-
-                if (1 === curLine.length || 0.5 <= Math.random() && "" !== curLine && /^\w+$/.test(curLine)) {
+                if (0.5 <= Math.random()) {
                     CodeMirror.commands.autocompleteAfterDot(cm);
                 }
             }
