@@ -25,7 +25,7 @@ echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-tar zcvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
+tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide gotools gocode
 
 export GOOS=${os}
@@ -34,7 +34,7 @@ echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-tar zvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
+tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide gotools gocode
 
 ## linux
@@ -46,7 +46,7 @@ echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-tar zvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
+tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide gotools gocode
 
 export GOOS=${os}
@@ -55,7 +55,7 @@ echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
 go build github.com/nsf/gocode
-tar zvf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
+tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide gotools gocode
 
 ## windows
