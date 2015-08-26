@@ -4,7 +4,7 @@ _Have a [try](http://wide.b3log.org/signup) first, then [download](http://pan.ba
 
 先试试我们搭建好的[在线服务](http://wide.b3log.org/signup)，你可以在这里[下载](http://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
 
-> * 关于 Wide 的产品定位，请看[这里](http://symphony.b3log.org/article/1438407961481)，并欢迎参与讨论~
+> * 关于 Wide 的产品定位，请看[这里](http://hacpai.com/article/1438407961481)，并欢迎参与讨论~
 > * 加入[**黑客派**](http://hacpai.com/register?r=88250)，与其他程序员、设计师共同成长！
 
 ## Introduction

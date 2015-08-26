@@ -306,7 +306,7 @@ var editors = {
                         for (var i = 0; i < length; i++) {
                             var article = articles[i];
                             listHTML += "<li>"
-                                    + "<a target='_blank' href='http://symphony.b3log.org"
+                                    + "<a target='_blank' href='http://hacpai.com"
                                     + article.articlePermalink + "'>"
                                     + article.articleTitle + "</a>&nbsp; <span class='date'>"
                                     + dateFormat(article.articleCreateTime, 'yyyy-MM-dd');
