@@ -166,7 +166,7 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 
 	logger.Debug("Conf: \n" + string(bytes))
 
-	// Working Driectory
+	// Working Directory
 	Wide.WD = util.OS.Pwd()
 	logger.Debugf("${pwd} [%s]", Wide.WD)
 
