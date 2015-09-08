@@ -404,7 +404,7 @@ var menu = {
                 "modal": true,
                 "height": 280,
                 "width": 800,
-                "title": config.label.perference,
+                "title": config.label.preference,
                 "okText": config.label.apply,
                 "cancelText": config.label.cancel,
                 "afterOpen": function () {
