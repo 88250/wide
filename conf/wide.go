@@ -195,19 +195,16 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	}
 
 	// IP
-	ip, err := util.Net.LocalIP()
-	if err != nil {
-		logger.Error(err)
-
-		os.Exit(-1)
-	}
-
-	logger.Debugf("${ip} [%s]", ip)
-
-	Docker = confDocker
-
+	ip := ""
 	if "" != confIP {
 		ip = confIP
+	} else {
+		ip, err = util.Net.LocalIP()
+		if nil != err {
+			logger.Error(err)
+
+			os.Exit(-1)
+		}
 	}
 
 	Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
@@ -215,6 +212,11 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	if "" != confPort {
 		Wide.Port = confPort
 	}
+
+	logger.Debugf("${ip} [%s]", ip)
+
+	// Docker flag
+	Docker = confDocker
 
 	// Server
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
