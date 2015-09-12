@@ -625,6 +625,11 @@ func listFiles(dirname string) []string {
 
 			dirs = append(dirs, name)
 		} else {
+			// exclude the .DS_Store directory on Mac OS X
+			if ".DS_Store" == fio.Name() {
+				continue
+			}
+
 			files = append(files, name)
 		}
 	}
