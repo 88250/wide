@@ -187,6 +187,7 @@ var playground = {
             theme: "wide",
             tabSize: 4,
             indentUnit: 4,
+            indentWithTabs: true,
             foldGutter: true,
             cursorHeight: 1,
             viewportMargin: 500,

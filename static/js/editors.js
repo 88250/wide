@@ -784,6 +784,7 @@ var editors = {
             theme: config.editorTheme,
             tabSize: config.editorTabSize,
             indentUnit: 4,
+            indentWithTabs: true,
             foldGutter: true,
             cursorHeight: 1,
             path: data.path,
