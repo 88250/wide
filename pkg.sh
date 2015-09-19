@@ -20,7 +20,7 @@ echo target=${target}
 os=darwin
 
 export GOOS=${os}
-export GOARCH=386
+export GOARCH=amd64
 echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
@@ -29,7 +29,7 @@ tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wi
 rm -f wide gotools gocode
 
 export GOOS=${os}
-export GOARCH=amd64
+export GOARCH=386
 echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
@@ -41,7 +41,7 @@ rm -f wide gotools gocode
 os=linux
 
 export GOOS=${os}
-export GOARCH=386
+export GOARCH=amd64
 echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
@@ -50,7 +50,7 @@ tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wi
 rm -f wide gotools gocode
 
 export GOOS=${os}
-export GOARCH=amd64
+export GOARCH=386
 echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
@@ -62,15 +62,6 @@ rm -f wide gotools gocode
 os=windows
 
 export GOOS=${os}
-export GOARCH=386
-echo wide-${ver}-${GOOS}-${GOARCH}.zip
-go build
-go build github.com/visualfc/gotools
-go build github.com/nsf/gocode
-zip -r -q ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} gotools.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
-rm -f wide.exe gotools.exe gocode.exe
-
-export GOOS=${os}
 export GOARCH=amd64
 echo wide-${ver}-${GOOS}-${GOARCH}.zip
 go build
@@ -79,3 +70,11 @@ go build github.com/nsf/gocode
 zip -r -q ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} gotools.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
 rm -f wide.exe gotools.exe gocode.exe
 
+export GOOS=${os}
+export GOARCH=386
+echo wide-${ver}-${GOOS}-${GOARCH}.zip
+go build
+go build github.com/visualfc/gotools
+go build github.com/nsf/gocode
+zip -r -q ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} gotools.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
+rm -f wide.exe gotools.exe gocode.exe
