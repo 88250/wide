@@ -491,7 +491,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 		for _, r := range rs {
 			substr := util.Str.LCS(path, *r)
 
-			founds = append(founds, &foundPath{Path: *r, score: len(substr)})
+			founds = append(founds, &foundPath{Path: filepath.ToSlash(*r), score: len(substr)})
 		}
 	}
 
