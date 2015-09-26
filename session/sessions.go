@@ -352,15 +352,11 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 					return // release this gorutine
 				}
 
-				logger.Info(event)
+				logger.Debug(event)
 
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					if err = watcher.Add(path); nil != err {
 						logger.Warn(err, path)
-					}
-
-					if util.File.IsDir(path) {
-						break
 					}
 
 					logger.Tracef("File watcher added a file [%s]", path)
