@@ -59,7 +59,7 @@
         <script type="text/javascript">
                         (function () {
                             var contentH = $(window).height() - $(".footer").height() - $(".header").height() - 18;
-                            $(".content").height(contentH)
+                            $(".content").outerHeight(contentH)
                                     .css("padding-top", (contentH - $(".content .fn-left").height()) / 2 + "px");
 
                             $('#loginForm').submit(function () {
