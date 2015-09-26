@@ -336,32 +336,6 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 	go func() {
 		defer util.Recover()
 
-		workspaces := filepath.SplitList(conf.GetUserWorkspace(username))
-		for _, workspace := range workspaces {
-			filepath.Walk(filepath.Join(workspace, "src"), func(dirPath string, f os.FileInfo, err error) error {
-				if ".git" == f.Name() { // XXX: discard other unconcered dirs
-					return filepath.SkipDir
-				}
-
-				if f.IsDir() {
-					if err = watcher.Add(dirPath); nil != err {
-						logger.Error(err, dirPath)
-					}
-
-					logger.Tracef("Added a file watcher [%s]", dirPath)
-				}
-
-				return nil
-			})
-
-		}
-
-		ret.FileWatcher = watcher
-	}()
-
-	go func() {
-		defer util.Recover()
-
 		for {
 			ch := SessionWS[sid]
 			if nil == ch {
@@ -378,12 +352,18 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 					return // release this gorutine
 				}
 
+				logger.Info(event)
+
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					if err = watcher.Add(path); nil != err {
 						logger.Warn(err, path)
 					}
 
-					logger.Tracef("Added a file watcher [%s]", path)
+					if util.File.IsDir(path) {
+						break
+					}
+
+					logger.Tracef("File watcher added a file [%s]", path)
 
 					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "create-file"}
 					ch.WriteJSON(&cmd)
@@ -401,6 +381,31 @@ func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideS
 				}
 			}
 		}
+	}()
+
+	go func() {
+		defer util.Recover()
+
+		workspaces := filepath.SplitList(conf.GetUserWorkspace(username))
+		for _, workspace := range workspaces {
+			filepath.Walk(filepath.Join(workspace, "src"), func(dirPath string, f os.FileInfo, err error) error {
+				if ".git" == f.Name() { // XXX: discard other unconcered dirs
+					return filepath.SkipDir
+				}
+
+				if f.IsDir() {
+					if err = watcher.Add(dirPath); nil != err {
+						logger.Error(err, dirPath)
+					}
+
+					logger.Tracef("File watcher added a dir [%s]", dirPath)
+				}
+
+				return nil
+			})
+		}
+
+		ret.FileWatcher = watcher
 	}()
 
 	return ret
