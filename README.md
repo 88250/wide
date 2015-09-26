@@ -145,6 +145,8 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 ## Credits
 
+Wide is made possible by the following open source projects.
+
 * [golang](http://golang.org)
 * [CodeMirror](https://github.com/marijnh/CodeMirror)
 * [zTree](https://github.com/zTree/zTree_v3) 
