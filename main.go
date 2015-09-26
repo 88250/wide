@@ -88,7 +88,8 @@ func init() {
 		session.FixedTimeReport()
 	}
 
-	logger.Debug("cross-compilation ", util.Go.GetCrossPlatforms())
+	logger.Debug("host ["+runtime.Version()+", "+runtime.GOOS+"_"+runtime.GOARCH+
+		"], cross-compilation ", util.Go.GetCrossPlatforms())
 }
 
 // Main.

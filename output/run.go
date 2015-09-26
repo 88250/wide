@@ -149,7 +149,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					// remove the exited process from user's process set
 					Processes.Remove(wSession, cmd.Process)
 
-					logger.Debugf("User [%s, %s] 's running [id=%d, file=%s] has done [stdout %v], ", wSession.Username, sid, runningId, filePath, err)
+					logger.Debugf("User [%s, %s] 's running [id=%d, file=%s] has done [stdout %v], ",
+						wSession.Username, sid, runningId, filePath, err)
 
 					channelRet["cmd"] = "run-done"
 					channelRet["output"] = buf.content

@@ -32,7 +32,7 @@ var Processes = procs{}
 // Exclusive lock.
 var mutex sync.Mutex
 
-// add adds the specified process to the user process set.
+// Add adds the specified process to the user process set.
 func (procs *procs) Add(wSession *session.WideSession, proc *os.Process) {
 	mutex.Lock()
 	defer mutex.Unlock()
@@ -49,7 +49,7 @@ func (procs *procs) Add(wSession *session.WideSession, proc *os.Process) {
 	logger.Tracef("Session [%s] has [%d] processes", sid, len((*procs)[sid]))
 }
 
-// remove removes the specified process from the user process set.
+// Remove removes the specified process from the user process set.
 func (procs *procs) Remove(wSession *session.WideSession, proc *os.Process) {
 	mutex.Lock()
 	defer mutex.Unlock()
@@ -74,7 +74,7 @@ func (procs *procs) Remove(wSession *session.WideSession, proc *os.Process) {
 	}
 }
 
-// kill kills a process specified by the given pid.
+// Kill kills a process specified by the given pid.
 func (procs *procs) Kill(wSession *session.WideSession, pid int) {
 	mutex.Lock()
 	defer mutex.Unlock()
