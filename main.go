@@ -19,13 +19,11 @@ import (
 	"flag"
 	"html/template"
 	"io"
-	"math/rand"
 	"mime"
 	"net/http"
 	_ "net/http/pprof"
 	"os"
 	"runtime"
-	"strconv"
 	"strings"
 	"time"
 
@@ -222,11 +220,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	// create a Wide session
-	rand.Seed(time.Now().UnixNano())
-	sid := strconv.Itoa(rand.Int())
-	wideSession := session.WideSessions.New(httpSession, sid)
-
 	user := conf.GetUser(username)
 	if nil == user {
 		logger.Warnf("Not found user [%s]", username)
@@ -241,7 +234,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	wideSessions := session.WideSessions.GetByUsername(username)
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"session": wideSession, "latestSessionContent": user.LatestSessionContent,
+		"username": username, "sid": session.WideSessions.GenId(), "latestSessionContent": user.LatestSessionContent,
 		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
 		"user": user, "editorThemes": conf.GetEditorThemes(), "crossPlatforms": util.Go.GetCrossPlatforms()}
 

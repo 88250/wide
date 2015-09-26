@@ -540,7 +540,7 @@ var wide = {
             console.log('[output onclose] disconnected (' + e.code + ')');
         };
         outputWS.onerror = function (e) {
-            console.log('[output onerror] ' + e);
+            console.log('[output onerror]');
         };
     },
     _initFooter: function () {
@@ -812,8 +812,8 @@ $(document).ready(function () {
     tree.init();
     menu.init();
     hotkeys.init();
-    notification.init();
     session.init();
+    notification.init();
     editors.init();
     windows.init();
     bottomGroup.init();

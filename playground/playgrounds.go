@@ -54,11 +54,6 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	username := httpSession.Values["username"].(string)
 
-	// create a wide session
-	rand.Seed(time.Now().UnixNano())
-	sid := strconv.Itoa(rand.Int())
-	wideSession := session.WideSessions.New(httpSession, sid)
-
 	locale := conf.Wide.Locale
 
 	// try to load file
@@ -92,8 +87,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"session": wideSession, "pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
-		"code": template.HTML(code), "ver": conf.WideVersion, "year": time.Now().Year(),
+		"sid": session.WideSessions.GenId(), "pathSeparator": conf.PathSeparator,
+		"codeMirrorVer": conf.CodeMirrorVer,
+		"code":          template.HTML(code), "ver": conf.WideVersion, "year": time.Now().Year(),
 		"embed": embed, "disqus": disqus, "fileName": fileName}
 
 	wideSessions := session.WideSessions.GetByUsername(username)

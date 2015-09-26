@@ -30,7 +30,7 @@
 
         <link id="themesLink" rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/{{.user.Theme}}.css?{{.conf.StaticResourceVersion}}">
 
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/user/{{.session.Username}}/style.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/user/{{.username}}/style.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
@@ -613,7 +613,7 @@
                             "pathSeparator": '{{.pathSeparator}}',
                             "label": {{.i18n}},
                             "channel": {{.conf.Channel}},
-                            "wideSessionId": '{{.session.ID}}',
+                            "wideSessionId": '{{.sid}}',
                             "editorTheme": '{{.user.Editor.Theme}}',
                             "latestSessionContent": {{.latestSessionContent}},
                             "editorTabSize": '{{.user.Editor.TabSize}}',

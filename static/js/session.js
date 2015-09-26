@@ -186,7 +186,7 @@ var session = {
             $(".notification-count").show();
         };
         sessionWS.onerror = function (e) {
-            console.log('[session onerror] ' + JSON.parse(e));
+            console.log('[session onerror]');
         };
     }
 };

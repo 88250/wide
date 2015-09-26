@@ -25,6 +25,7 @@ package session
 import (
 	"bytes"
 	"encoding/json"
+	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -193,21 +194,6 @@ func (f userReports) Less(i, j int) bool { return f[i].processCnt > f[j].process
 // When a channel closed, releases all resources associated with it.
 func WSHandler(w http.ResponseWriter, r *http.Request) {
 	sid := r.URL.Query()["sid"][0]
-	wSession := WideSessions.Get(sid)
-	if nil == wSession {
-		httpSession, _ := HTTPSession.Get(r, "wide-session")
-
-		if httpSession.IsNew {
-			return
-		}
-
-		httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
-		httpSession.Save(r, w)
-
-		wSession = WideSessions.New(httpSession, sid)
-
-		logger.Tracef("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
-	}
 
 	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
 	wsChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
@@ -219,6 +205,22 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	SessionWS[sid] = &wsChan
+
+	wSession := WideSessions.Get(sid)
+	if nil == wSession {
+		httpSession, _ := HTTPSession.Get(r, "wide-session")
+
+		if httpSession.IsNew {
+			return
+		}
+
+		httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
+		httpSession.Save(r, w)
+
+		wSession = WideSessions.new(httpSession, sid)
+
+		logger.Tracef("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
+	}
 
 	logger.Tracef("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
 
@@ -297,114 +299,11 @@ func (s *WideSession) Refresh() {
 	s.Updated = time.Now()
 }
 
-// New creates a wide session.
-func (sessions *wSessions) New(httpSession *sessions.Session, sid string) *WideSession {
-	mutex.Lock()
-	defer mutex.Unlock()
+// GenId generates a wide session id.
+func (sessions *wSessions) GenId() string {
+	rand.Seed(time.Now().UnixNano())
 
-	username := httpSession.Values["username"].(string)
-	now := time.Now()
-
-	ret := &WideSession{
-		ID:          sid,
-		Username:    username,
-		HTTPSession: httpSession,
-		EventQueue:  nil,
-		State:       sessionStateActive,
-		Content:     &conf.LatestSessionContent{},
-		Created:     now,
-		Updated:     now,
-	}
-
-	*sessions = append(*sessions, ret)
-
-	if "playground" == username {
-		return ret
-	}
-
-	// create user event queue
-	ret.EventQueue = event.UserEventQueues.New(sid)
-
-	// add a filesystem watcher to notify front-end after the files changed
-	watcher, err := fsnotify.NewWatcher()
-	if err != nil {
-		logger.Error(err)
-
-		return ret
-	}
-
-	go func() {
-		defer util.Recover()
-
-		for {
-			ch := SessionWS[sid]
-			if nil == ch {
-				return // release this gorutine
-			}
-
-			select {
-			case event := <-watcher.Events:
-				path := event.Name
-				dir := filepath.Dir(path)
-
-				ch = SessionWS[sid]
-				if nil == ch {
-					return // release this gorutine
-				}
-
-				logger.Debug(event)
-
-				if event.Op&fsnotify.Create == fsnotify.Create {
-					if err = watcher.Add(path); nil != err {
-						logger.Warn(err, path)
-					}
-
-					logger.Tracef("File watcher added a file [%s]", path)
-
-					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "create-file"}
-					ch.WriteJSON(&cmd)
-				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
-					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "remove-file"}
-					ch.WriteJSON(&cmd)
-
-				} else if event.Op&fsnotify.Rename == fsnotify.Rename {
-					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "rename-file"}
-					ch.WriteJSON(&cmd)
-				}
-			case err := <-watcher.Errors:
-				if nil != err {
-					logger.Error("File watcher ERROR: ", err)
-				}
-			}
-		}
-	}()
-
-	go func() {
-		defer util.Recover()
-
-		workspaces := filepath.SplitList(conf.GetUserWorkspace(username))
-		for _, workspace := range workspaces {
-			filepath.Walk(filepath.Join(workspace, "src"), func(dirPath string, f os.FileInfo, err error) error {
-				if ".git" == f.Name() { // XXX: discard other unconcered dirs
-					return filepath.SkipDir
-				}
-
-				if f.IsDir() {
-					if err = watcher.Add(dirPath); nil != err {
-						logger.Error(err, dirPath)
-					}
-
-					logger.Tracef("File watcher added a dir [%s]", dirPath)
-				}
-
-				return nil
-			})
-		}
-
-		ret.FileWatcher = watcher
-	}()
-
-	return ret
+	return strconv.Itoa(rand.Int())
 }
 
 // Get gets a wide session with the specified session id.
@@ -502,6 +401,114 @@ func (sessions *wSessions) GetByUsername(username string) []*WideSession {
 			ret = append(ret, s)
 		}
 	}
+
+	return ret
+}
+
+// new creates a wide session.
+func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideSession {
+	mutex.Lock()
+	defer mutex.Unlock()
+
+	username := httpSession.Values["username"].(string)
+	now := time.Now()
+
+	ret := &WideSession{
+		ID:          sid,
+		Username:    username,
+		HTTPSession: httpSession,
+		EventQueue:  nil,
+		State:       sessionStateActive,
+		Content:     &conf.LatestSessionContent{},
+		Created:     now,
+		Updated:     now,
+	}
+
+	*sessions = append(*sessions, ret)
+
+	if "playground" == username {
+		return ret
+	}
+
+	// create user event queue
+	ret.EventQueue = event.UserEventQueues.New(sid)
+
+	// add a filesystem watcher to notify front-end after the files changed
+	watcher, err := fsnotify.NewWatcher()
+	if err != nil {
+		logger.Error(err)
+
+		return ret
+	}
+
+	go func() {
+		defer util.Recover()
+
+		for {
+			ch := SessionWS[sid]
+			if nil == ch {
+				return // release this gorutine
+			}
+
+			select {
+			case event := <-watcher.Events:
+				path := event.Name
+				dir := filepath.Dir(path)
+
+				ch = SessionWS[sid]
+				if nil == ch {
+					return // release this gorutine
+				}
+
+				logger.Trace(event)
+
+				if event.Op&fsnotify.Create == fsnotify.Create {
+					if err = watcher.Add(path); nil != err {
+						logger.Warn(err, path)
+					}
+
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "create-file"}
+					ch.WriteJSON(&cmd)
+				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "remove-file"}
+					ch.WriteJSON(&cmd)
+
+				} else if event.Op&fsnotify.Rename == fsnotify.Rename {
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "rename-file"}
+					ch.WriteJSON(&cmd)
+				}
+			case err := <-watcher.Errors:
+				if nil != err {
+					logger.Error("File watcher ERROR: ", err)
+				}
+			}
+		}
+	}()
+
+	go func() {
+		defer util.Recover()
+
+		workspaces := filepath.SplitList(conf.GetUserWorkspace(username))
+		for _, workspace := range workspaces {
+			filepath.Walk(filepath.Join(workspace, "src"), func(dirPath string, f os.FileInfo, err error) error {
+				if ".git" == f.Name() { // XXX: discard other unconcered dirs
+					return filepath.SkipDir
+				}
+
+				if f.IsDir() {
+					if err = watcher.Add(dirPath); nil != err {
+						logger.Error(err, dirPath)
+					}
+
+					logger.Tracef("File watcher added a dir [%s]", dirPath)
+				}
+
+				return nil
+			})
+		}
+
+		ret.FileWatcher = watcher
+	}()
 
 	return ret
 }

@@ -55,7 +55,7 @@ var notification = {
         };
 
         notificationWS.onerror = function (e) {
-            console.log('[notification onerror] ' + JSON.parse(e));
+            console.log('[notification onerror]');
         };
     }
 };
