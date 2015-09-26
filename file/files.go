@@ -843,7 +843,8 @@ func searchInFile(path string, text string) []*Snippet {
 		ch := strings.Index(strings.ToLower(line), strings.ToLower(text))
 
 		if -1 != ch {
-			snippet := &Snippet{Path: path, Line: idx + 1, Ch: ch + 1, Contents: []string{line}}
+			snippet := &Snippet{Path: filepath.ToSlash(path),
+				Line: idx + 1, Ch: ch + 1, Contents: []string{line}}
 
 			ret = append(ret, snippet)
 		}
