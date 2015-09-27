@@ -452,8 +452,8 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 
 			select {
 			case event := <-watcher.Events:
-				path := event.Name
-				dir := filepath.Dir(path)
+				path := filepath.ToSlash(event.Name)
+				dir := filepath.ToSlash(filepath.Dir(path))
 
 				ch = SessionWS[sid]
 				if nil == ch {
@@ -467,14 +467,23 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 						logger.Warn(err, path)
 					}
 
-					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "create-file"}
+					fileType := "f"
+
+					if util.File.IsDir(path) {
+						fileType = "d"
+					}
+
+					cmd := map[string]interface{}{"path": path, "dir": dir,
+						"cmd": "create-file", "type": fileType}
 					ch.WriteJSON(&cmd)
 				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
-					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "remove-file"}
+					cmd := map[string]interface{}{"path": path, "dir": dir,
+						"cmd": "remove-file", "type": ""}
 					ch.WriteJSON(&cmd)
 
 				} else if event.Op&fsnotify.Rename == fsnotify.Rename {
-					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "rename-file"}
+					cmd := map[string]interface{}{"path": path, "dir": dir,
+						"cmd": "rename-file", "type": ""}
 					ch.WriteJSON(&cmd)
 				}
 			case err := <-watcher.Errors:

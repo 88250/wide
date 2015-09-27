@@ -170,7 +170,7 @@ var session = {
                             mode = CodeMirror.findModeByFileName(name),
                             iconSkin = wide.getClassBySuffix(name.split(".")[1]);
 
-                    if (data.type && data.type === 'file') {
+                    if (data.type && data.type === 'f') {
                         tree.fileTree.addNodes(dirNode, [{
                                 "name": name,
                                 "iconSkin": iconSkin,
@@ -193,7 +193,8 @@ var session = {
 
                     break;
                 case 'remove-file':
-                    var dirNode = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.dir));
+                case 'rename-file':
+                    var dirNode = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.path));
                     tree.fileTree.removeNode(dirNode);
                     break;
             }

@@ -525,7 +525,7 @@ var tree = {
                         request = newWideRequest();
 
                 request.oldPath = wide.curNode.path;
-                request.newPath = wide.curNode.path.substring(0, wide.curNode.path.lastIndexOf("/")) + name;
+                request.newPath = wide.curNode.path.substring(0, wide.curNode.path.lastIndexOf("/") +1) + name;
 
                 $.ajax({
                     type: 'POST',

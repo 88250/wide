@@ -180,20 +180,8 @@ var wide = {
                             $(".bottom-window-group .notification").focus();
                             return false;
                         }
-
-                        var mode = CodeMirror.findModeByFileName(name);
-
+                        
                         $("#dialogNewFilePrompt").dialog("close");
-                        var iconSkin = wide.getClassBySuffix(name.split(".")[1]);
-
-                        tree.fileTree.addNodes(wide.curNode, [{
-                                "name": name,
-                                "iconSkin": iconSkin,
-                                "path": request.path,
-                                "mode": mode,
-                                "removable": true,
-                                "creatable": true
-                            }]);
                     }
                 });
             }
@@ -232,15 +220,6 @@ var wide = {
                         }
 
                         $("#dialogNewDirPrompt").dialog("close");
-
-                        tree.fileTree.addNodes(wide.curNode, [{
-                                "name": name,
-                                "iconSkin": "ico-ztree-dir ",
-                                "path": request.path,
-                                "removable": true,
-                                "creatable": true,
-                                "isParent": true
-                            }]);
                     }
                 });
             }
