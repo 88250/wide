@@ -165,8 +165,36 @@ var session = {
 
             switch (data.cmd) {
                 case 'create-file':
+                    var dirNode = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.dir)),
+                            name = data.path.replace(data.dir + '/', ''),
+                            mode = CodeMirror.findModeByFileName(name),
+                            iconSkin = wide.getClassBySuffix(name.split(".")[1]);
+
+                    if (data.type && data.type === 'file') {
+                        tree.fileTree.addNodes(dirNode, [{
+                                "name": name,
+                                "iconSkin": iconSkin,
+                                "path": data.path,
+                                "mode": mode,
+                                "removable": true,
+                                "creatable": true
+                            }]);
+
+                    } else {
+                        tree.fileTree.addNodes(dirNode, [{
+                                "name": name,
+                                "iconSkin": "ico-ztree-dir ",
+                                "path": data.path,
+                                "removable": true,
+                                "creatable": true,
+                                "isParent": true
+                            }]);
+                    }
+
                     break;
                 case 'remove-file':
+                    var dirNode = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.dir));
+                    tree.fileTree.removeNode(dirNode);
                     break;
             }
         };
