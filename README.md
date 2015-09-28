@@ -67,6 +67,8 @@ A <b>W</b>eb-based <b>IDE</b> for Teams using Go programming language/Golang.
   ![Build Error Info](https://cloud.githubusercontent.com/assets/873584/5450632/3e51cccc-8543-11e4-8ca8-8d2427aa16b8.png)
 * **Git Clone**  
   ![Git Clone](https://cloud.githubusercontent.com/assets/873584/6545235/2284f230-c5b7-11e4-985e-7e04367921b1.png)
+* **Cross-Compilation**
+  ![Cross-Compilation](https://cloud.githubusercontent.com/assets/873584/10130037/226d75fc-65f7-11e5-94e4-25ee579ca175.png)
 
 ## Architecture 
 
