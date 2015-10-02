@@ -165,13 +165,13 @@ var session = {
 
             switch (data.cmd) {
                 case 'create-file':
-                    var dirNode = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.dir)),
+                    var node = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.dir)),
                             name = data.path.replace(data.dir + '/', ''),
                             mode = CodeMirror.findModeByFileName(name),
                             iconSkin = wide.getClassBySuffix(name.split(".")[1]);
 
                     if (data.type && data.type === 'f') {
-                        tree.fileTree.addNodes(dirNode, [{
+                        tree.fileTree.addNodes(node, [{
                                 "id": data.path,
                                 "name": name,
                                 "iconSkin": iconSkin,
@@ -182,7 +182,7 @@ var session = {
                             }]);
 
                     } else {
-                        tree.fileTree.addNodes(dirNode, [{
+                        tree.fileTree.addNodes(node, [{
                                 "id": data.path,
                                 "name": name,
                                 "iconSkin": "ico-ztree-dir ",
@@ -196,8 +196,9 @@ var session = {
                     break;
                 case 'remove-file':
                 case 'rename-file':
-                    var dirNode = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.path));
-                    tree.fileTree.removeNode(dirNode);
+                    var node = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.path));
+                    tree.fileTree.removeNode(node);
+
                     break;
             }
         };

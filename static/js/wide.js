@@ -125,25 +125,6 @@ var wide = {
                         }
 
                         $("#dialogRemoveConfirm").dialog("close");
-                        tree.fileTree.removeNode(wide.curNode);
-
-                        if (!tree.isDir()) {
-                            // 是文件的话，查看 editor 中是否被打开，如打开则移除
-                            for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                                if (editors.data[i].id === wide.curNode.path) {
-                                    $('.edit-panel .tabs > div[data-index="' + wide.curNode.path + '"]').find(".ico-close").click();
-                                    break;
-                                }
-                            }
-                        } else {
-                            for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                                if (tree.isParents(editors.data[i].id, wide.curNode.path)) {
-                                    $('.edit-panel .tabs > div[data-index="' + editors.data[i].id + '"]').find(".ico-close").click();
-                                    i--;
-                                    ii--;
-                                }
-                            }
-                        }
                     }
                 });
             }
