@@ -172,6 +172,7 @@ var session = {
 
                     if (data.type && data.type === 'f') {
                         tree.fileTree.addNodes(dirNode, [{
+                                "id": data.path,
                                 "name": name,
                                 "iconSkin": iconSkin,
                                 "path": data.path,
@@ -182,6 +183,7 @@ var session = {
 
                     } else {
                         tree.fileTree.addNodes(dirNode, [{
+                                "id": data.path,
                                 "name": name,
                                 "iconSkin": "ico-ztree-dir ",
                                 "path": data.path,
