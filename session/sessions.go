@@ -236,10 +236,11 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Tracef("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
 
 	input := map[string]interface{}{}
-	
-	wsChan.Conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+
+	wsChan.Conn.SetReadDeadline(time.Now().Add(pongWait))
 	wsChan.Conn.SetPongHandler(func(string) error { wsChan.Conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	ticker := time.NewTicker(pingPeriod)
+
 	defer func() {
 		WideSessions.Remove(sid)
 		ticker.Stop()
@@ -260,7 +261,6 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	}(ticker, wsChan)
 
 	for {
-
 		if err := wsChan.ReadJSON(&input); err != nil {
 			logger.Tracef("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]", sid, wSession.Username)
 
@@ -277,7 +277,6 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		wsChan.Time = time.Now()
 	}
-
 }
 
 // SaveContentHandler handles request of session content string.
