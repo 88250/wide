@@ -25,7 +25,6 @@ package session
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"math/rand"
 	"net/http"
 	"os"
