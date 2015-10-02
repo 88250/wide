@@ -189,6 +189,17 @@ func (f userReports) Len() int           { return len(f) }
 func (f userReports) Swap(i, j int)      { f[i], f[j] = f[j], f[i] }
 func (f userReports) Less(i, j int) bool { return f[i].processCnt > f[j].processCnt }
 
+const (
+	// Time allowed to write a message to the peer.
+	writeWait = 10 * time.Second
+
+	// Time allowed to read the next pong message from the peer.
+	pongWait = 60 * time.Second
+
+	// Send pings to peer with this period. Must be less than pongWait.
+	pingPeriod = (pongWait * 9) / 10
+)
+
 // WSHandler handles request of creating session channel.
 //
 // When a channel closed, releases all resources associated with it.
@@ -225,12 +236,33 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Tracef("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
 
 	input := map[string]interface{}{}
+	
+	wsChan.Conn.SetReadDeadline(time.Now().Add(60 * time.Second))
+	wsChan.Conn.SetPongHandler(func(string) error { wsChan.Conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+	ticker := time.NewTicker(pingPeriod)
+	defer func() {
+		WideSessions.Remove(sid)
+		ticker.Stop()
+		wsChan.Close()
+	}()
+
+	// send websocket ping message.
+	go func(t *time.Ticker, channel util.WSChannel) {
+		for {
+			select {
+			case <-t.C:
+				if err := channel.Conn.WriteMessage(websocket.PingMessage, []byte{}); err != nil {
+					return
+				}
+			}
+		}
+
+	}(ticker, wsChan)
 
 	for {
+
 		if err := wsChan.ReadJSON(&input); err != nil {
 			logger.Tracef("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]", sid, wSession.Username)
-
-			WideSessions.Remove(sid)
 
 			return
 		}
@@ -245,6 +277,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		wsChan.Time = time.Now()
 	}
+
 }
 
 // SaveContentHandler handles request of session content string.
