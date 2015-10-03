@@ -145,6 +145,7 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 ## Known Issues
 
 * [Shell is not available on Windows](https://github.com/b3log/wide/issues/32)
+* [Rename directory](https://github.com/b3log/wide/issues/251)
 
 ## Terms
 
