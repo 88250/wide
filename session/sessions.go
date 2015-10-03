@@ -495,14 +495,14 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 				logger.Trace(event)
 
 				if event.Op&fsnotify.Create == fsnotify.Create {
-					if err = watcher.Add(path); nil != err {
-						logger.Warn(err, path)
-					}
-
 					fileType := "f"
 
 					if util.File.IsDir(path) {
 						fileType = "d"
+
+						if err = watcher.Add(path); nil != err {
+							logger.Warn(err, path)
+						}
 					}
 
 					cmd := map[string]interface{}{"path": path, "dir": dir,

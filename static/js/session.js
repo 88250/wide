@@ -199,6 +199,11 @@ var session = {
                     var node = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.path));
                     tree.fileTree.removeNode(node);
 
+                    var nodes = tree.fileTree.transformToArray(node);
+                    for (var i = 0, ii = nodes.length; i < ii; i++) {
+                        editors.tabs.del(nodes[i].path);
+                    }
+
                     break;
             }
         };
