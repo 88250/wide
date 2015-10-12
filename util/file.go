@@ -15,7 +15,9 @@
 package util
 
 import (
+	"io"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/b3log/wide/log"
@@ -79,4 +81,68 @@ func (*myfile) IsDir(path string) bool {
 	}
 
 	return fio.IsDir()
+}
+
+// CopyFile copies the source file to the dest file.
+func (*myfile) CopyFile(source string, dest string) (err error) {
+	sourcefile, err := os.Open(source)
+	if err != nil {
+		return err
+	}
+
+	defer sourcefile.Close()
+
+	destfile, err := os.Create(dest)
+	if err != nil {
+		return err
+	}
+
+	defer destfile.Close()
+
+	_, err = io.Copy(destfile, sourcefile)
+	if err == nil {
+		sourceinfo, err := os.Stat(source)
+		if err != nil {
+			err = os.Chmod(dest, sourceinfo.Mode())
+		}
+	}
+
+	return nil
+}
+
+// CopyDir copies the source directory to the dest directory.
+func (*myfile) CopyDir(source string, dest string) (err error) {
+	sourceinfo, err := os.Stat(source)
+	if err != nil {
+		return err
+	}
+
+	// create dest dir
+	err = os.MkdirAll(dest, sourceinfo.Mode())
+	if err != nil {
+		return err
+	}
+
+	directory, _ := os.Open(source)
+	objects, err := directory.Readdir(-1)
+
+	for _, obj := range objects {
+		srcFilePath := filepath.Join(source, obj.Name())
+		destFilePath := filepath.Join(dest, obj.Name())
+
+		if obj.IsDir() {
+			// create sub-directories - recursively
+			err = File.CopyDir(srcFilePath, destFilePath)
+			if err != nil {
+				fileLogger.Error(err)
+			}
+		} else {
+			err = File.CopyFile(srcFilePath, destFilePath)
+			if err != nil {
+				fileLogger.Error(err)
+			}
+		}
+	}
+
+	return nil
 }

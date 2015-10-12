@@ -15,6 +15,8 @@
 package util
 
 import (
+	"os"
+	"path/filepath"
 	"strconv"
 	"testing"
 )
@@ -52,6 +54,38 @@ func TestIsImg(t *testing.T) {
 func TestIsDir(t *testing.T) {
 	if !File.IsDir(".") {
 		t.Error(". should be a directory")
+
+		return
+	}
+}
+
+func TestCopyDir(t *testing.T) {
+	home, _ := OS.Home()
+
+	testDir := filepath.Join(home, "wide-test")
+	os.Mkdir(testDir, 0644)
+
+	dest := filepath.Join(testDir, "util")
+
+	err := File.CopyDir(".", dest)
+	if nil != err {
+		t.Error("Copy dir error: ", err)
+
+		return
+	}
+}
+
+func TestCopyFile(t *testing.T) {
+	home, _ := OS.Home()
+
+	testDir := filepath.Join(home, "wide-test")
+	os.Mkdir(testDir, 0644)
+
+	dest := filepath.Join(testDir, "file.go")
+
+	err := File.CopyFile("./file.go", dest)
+	if nil != err {
+		t.Error("Copy file error: ", err)
 
 		return
 	}
