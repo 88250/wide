@@ -38,7 +38,7 @@ const (
 	// PathListSeparator holds the OS-specific path list separator.
 	PathListSeparator = string(os.PathListSeparator)
 
-	// WideVersion holds the current wide version.
+	// WideVersion holds the current Wide's version.
 	WideVersion = "1.4.0"
 	// CodeMirrorVer holds the current editor version.
 	CodeMirrorVer = "5.1"
