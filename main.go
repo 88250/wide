@@ -65,7 +65,7 @@ func init() {
 
 	wd := util.OS.Pwd()
 	if strings.HasPrefix(wd, os.TempDir()) {
-		logger.Error("Don't run wide in OS' temp directory or with `go run`")
+		logger.Error("Don't run Wide in OS' temp directory or with `go run`")
 
 		os.Exit(-1)
 	}
