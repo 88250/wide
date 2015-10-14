@@ -237,7 +237,9 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 		Wide.Context = confContext
 	}
 
-	Wide.StaticResourceVersion = strings.Replace(Wide.StaticResourceVersion, "${time}", strconv.FormatInt(time.Now().UnixNano(), 10), 1)
+	time := strconv.FormatInt(time.Now().UnixNano(), 10)
+	logger.Debugf("${time} [%s]", time)
+	Wide.StaticResourceVersion = strings.Replace(Wide.StaticResourceVersion, "${time}", time, 1)
 
 	// Channel
 	Wide.Channel = strings.Replace(Wide.Channel, "{IP}", Wide.IP, 1)
