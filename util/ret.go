@@ -51,10 +51,32 @@ func RetResult(w http.ResponseWriter, r *http.Request, res *Result) {
 	data, err := json.Marshal(res)
 	if err != nil {
 		retLogger.Error(err)
+
 		return
 	}
 
 	w.Write(data)
+}
+
+// RetGzResult writes HTTP response with "Content-Type, application/json" and "Content-Encoding, gzip".
+func RetGzResult(w http.ResponseWriter, r *http.Request, res *Result) {
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Encoding", "gzip")
+
+	gz := gzip.NewWriter(w)
+	err := json.NewEncoder(gz).Encode(res)
+	if nil != err {
+		retLogger.Error(err)
+
+		return
+	}
+
+	err = gz.Close()
+	if nil != err {
+		retLogger.Error(err)
+
+		return
+	}
 }
 
 // RetJSON writes HTTP response with "Content-Type, application/json".
@@ -64,13 +86,14 @@ func RetJSON(w http.ResponseWriter, r *http.Request, res map[string]interface{})
 	data, err := json.Marshal(res)
 	if err != nil {
 		retLogger.Error(err)
+
 		return
 	}
 
 	w.Write(data)
 }
 
-// RetGzJSON writes HTTP response with "Content-Type, application/json".
+// RetGzJSON writes HTTP response with "Content-Type, application/json" and "Content-Encoding, gzip".
 func RetGzJSON(w http.ResponseWriter, r *http.Request, res map[string]interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.Header().Set("Content-Encoding", "gzip")
@@ -79,6 +102,7 @@ func RetGzJSON(w http.ResponseWriter, r *http.Request, res map[string]interface{
 	err := json.NewEncoder(gz).Encode(res)
 	if nil != err {
 		retLogger.Error(err)
+
 		return
 	}
 

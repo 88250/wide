@@ -82,8 +82,8 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	username := httpSession.Values["username"].(string)
 
-	data := map[string]interface{}{"succ": true}
-	defer util.RetGzJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetGzResult(w, r, result)
 
 	userWorkspace := conf.GetUserWorkspace(username)
 	workspaces := filepath.SplitList(userWorkspace)
@@ -118,7 +118,7 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 	// add Go API node
 	root.Children = append(root.Children, apiNode)
 
-	data["root"] = root
+	result.Data = root
 }
 
 // RefreshDirectoryHandler handles request of refresh a directory of file tree.

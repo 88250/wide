@@ -367,7 +367,7 @@ var tree = {
                             }
                         }
                     };
-                    tree.fileTree = $.fn.zTree.init($("#files"), setting, data.root.children);
+                    tree.fileTree = $.fn.zTree.init($("#files"), setting, data.data.children);
 
                     session.restore();
                 }
