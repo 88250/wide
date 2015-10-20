@@ -172,10 +172,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// non-GET request as login request
-
-	succ := true
-	data := map[string]interface{}{"succ": &succ}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	args := struct {
 		Username string
@@ -185,16 +183,16 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	args.Username = r.FormValue("username")
 	args.Password = r.FormValue("password")
 
-	succ = false
+	result.Succ = false
 	for _, user := range conf.Users {
 		if user.Name == args.Username && user.Password == conf.Salt(args.Password, user.Salt) {
-			succ = true
+			result.Succ = true
 
 			break
 		}
 	}
 
-	if !succ {
+	if !result.Succ {
 		return
 	}
 

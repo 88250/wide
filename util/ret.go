@@ -26,6 +26,37 @@ import (
 // Logger.
 var retLogger = log.NewLogger(os.Stdout)
 
+// Result.
+type Result struct {
+	Succ bool        `json:"succ"` // successful or not
+	Code string      `json:"code"` // return code
+	Msg  string      `json:"msg"`  // message
+	Data interface{} `json:"data"` // data object
+}
+
+// NewResult creates a result with Succ=true, Code="0", Msg="", Data=nil.
+func NewResult() *Result {
+	return &Result{
+		Succ: true,
+		Code: "0",
+		Msg:  "",
+		Data: nil,
+	}
+}
+
+// RetResult writes HTTP response with "Content-Type, application/json".
+func RetResult(w http.ResponseWriter, r *http.Request, res *Result) {
+	w.Header().Set("Content-Type", "application/json")
+
+	data, err := json.Marshal(res)
+	if err != nil {
+		retLogger.Error(err)
+		return
+	}
+
+	w.Write(data)
+}
+
 // RetJSON writes HTTP response with "Content-Type, application/json".
 func RetJSON(w http.ResponseWriter, r *http.Request, res map[string]interface{}) {
 	w.Header().Set("Content-Type", "application/json")
