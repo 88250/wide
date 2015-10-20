@@ -259,8 +259,8 @@ var tree = {
             url: config.context + '/files',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                if (data.succ) {
+            success: function (result) {
+                if (result.succ) {
                     var $dirRMenu = $("#dirRMenu");
                     var $fileRMenu = $("#fileRMenu");
                     var setting = {
@@ -367,7 +367,7 @@ var tree = {
                             }
                         }
                     };
-                    tree.fileTree = $.fn.zTree.init($("#files"), setting, data.data.children);
+                    tree.fileTree = $.fn.zTree.init($("#files"), setting, result.data.children);
 
                     session.restore();
                 }
