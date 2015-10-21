@@ -20,8 +20,7 @@ import (
 	"testing"
 )
 
-var tempDir = "../"
-var testDir = filepath.Join(tempDir, "wide-test")
+var testDir = "../tmp"
 var packageName = filepath.Join(testDir, "test_zip")
 
 func TestCreate(t *testing.T) {
@@ -57,19 +56,15 @@ func TestUnzip(t *testing.T) {
 }
 
 func TestMain(m *testing.M) {
-	err := os.Mkdir(testDir, 0644)
-	if err != nil {
-		logger.Error(err)
-
-		os.Exit(-1)
-	}
-
 	logger.Info(testDir)
 
 	retCode := m.Run()
 
 	// clean test data
-	os.RemoveAll(testDir)
+	os.RemoveAll(testDir + "/test_zip")
+	os.RemoveAll(testDir + "/util")
+	os.RemoveAll(testDir + "/file.go")
+	os.RemoveAll(testDir + "/test_zip.zip")
 
 	os.Exit(retCode)
 }
