@@ -20,7 +20,7 @@ import (
 	"testing"
 )
 
-var tempDir = os.TempDir()
+var tempDir = "../"
 var testDir = filepath.Join(tempDir, "wide-test")
 var packageName = filepath.Join(testDir, "test_zip")
 
