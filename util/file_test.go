@@ -15,7 +15,6 @@
 package util
 
 import (
-	"os"
 	"path/filepath"
 	"strconv"
 	"testing"
@@ -60,11 +59,6 @@ func TestIsDir(t *testing.T) {
 }
 
 func TestCopyDir(t *testing.T) {
-	home, _ := OS.Home()
-
-	testDir := filepath.Join(home, "wide-test")
-	os.Mkdir(testDir, 0644)
-
 	dest := filepath.Join(testDir, "util")
 
 	err := File.CopyDir(".", dest)
@@ -76,11 +70,6 @@ func TestCopyDir(t *testing.T) {
 }
 
 func TestCopyFile(t *testing.T) {
-	home, _ := OS.Home()
-
-	testDir := filepath.Join(home, "wide-test")
-	os.Mkdir(testDir, 0644)
-
 	dest := filepath.Join(testDir, "file.go")
 
 	err := File.CopyFile("./file.go", dest)
