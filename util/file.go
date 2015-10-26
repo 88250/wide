@@ -123,8 +123,17 @@ func (*myfile) CopyDir(source string, dest string) (err error) {
 		return err
 	}
 
-	directory, _ := os.Open(source)
+	directory, err := os.Open(source)
+	if err != nil {
+		return err
+	}
+
+	defer directory.Close()
+
 	objects, err := directory.Readdir(-1)
+	if err != nil {
+		return err
+	}
 
 	for _, obj := range objects {
 		srcFilePath := filepath.Join(source, obj.Name())
