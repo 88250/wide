@@ -56,21 +56,24 @@ func TestUnzip(t *testing.T) {
 }
 
 func TestEmptyDir(t *testing.T) {
-	err := os.MkdirAll(packageName+"/dir/subDir1", 644)
+	dir1 := "/dir/subDir1"
+	dir2 := "/dir/subDir2"
+
+	err := os.MkdirAll(packageName+dir1, 644)
 	if nil != err {
 		t.Error(err)
 
 		return
 	}
 
-	err = os.MkdirAll(packageName+"/dir/subDir2", 644)
+	err = os.MkdirAll(packageName+dir2, 644)
 	if nil != err {
 		t.Error(err)
 
 		return
 	}
 
-	f, err := os.Create(packageName + "/dir/subDir2/file")
+	f, err := os.Create(packageName + dir2 + "/file")
 	if nil != err {
 		t.Error(err)
 
@@ -95,6 +98,37 @@ func TestEmptyDir(t *testing.T) {
 	err = zipFile.Close()
 	if nil != err {
 		t.Error(err)
+
+		return
+	}
+
+	err = Zip.Unzip(packageName+"/dir.zip", packageName+"/unzipDir")
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+
+	if !File.IsExist(packageName+"/unzipDir") || !File.IsDir(packageName+"/unzipDir") {
+		t.Error("Unzip failed")
+
+		return
+	}
+
+	if !File.IsExist(packageName+"/unzipDir"+dir1) || !File.IsDir(packageName+"/unzipDir"+dir1) {
+		t.Error("Unzip failed")
+
+		return
+	}
+
+	if !File.IsExist(packageName+"/unzipDir"+dir2) || !File.IsDir(packageName+"/unzipDir"+dir2) {
+		t.Error("Unzip failed")
+
+		return
+	}
+
+	if !File.IsExist(packageName+"/unzipDir"+dir2+"/file") || File.IsDir(packageName+"/unzipDir"+dir2+"/file") {
+		t.Error("Unzip failed")
 
 		return
 	}

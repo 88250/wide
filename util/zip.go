@@ -176,6 +176,11 @@ func cloneZipItem(f *zip.File, dest string) error {
 	}
 
 	if f.FileInfo().IsDir() {
+		err = os.Mkdir(path, os.ModeDir|os.ModePerm)
+		if nil != err {
+			return err
+		}
+
 		return nil
 	}
 
@@ -188,7 +193,7 @@ func cloneZipItem(f *zip.File, dest string) error {
 
 	defer rc.Close()
 
-	// use os.Create() since Zip don't store file permissions.
+	// use os.Create() since Zip don't store file permissions
 	fileCopy, err := os.Create(path)
 	if nil != err {
 		return err
