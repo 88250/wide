@@ -55,7 +55,7 @@ func TestUnzip(t *testing.T) {
 	}
 }
 
-func TestEmptyDir(t *testing.T) {
+func _TestEmptyDir(t *testing.T) {
 	dir1 := "/dir/subDir1"
 	dir2 := "/dir/subDir2"
 
