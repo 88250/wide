@@ -59,14 +59,14 @@ func TestEmptyDir(t *testing.T) {
 	dir1 := "/dir/subDir1"
 	dir2 := "/dir/subDir2"
 
-	err := os.MkdirAll(packageName+dir1, 644)
+	err := os.MkdirAll(packageName+dir1, os.ModeDir)
 	if nil != err {
 		t.Error(err)
 
 		return
 	}
 
-	err = os.MkdirAll(packageName+dir2, 644)
+	err = os.MkdirAll(packageName+dir2, os.ModeDir)
 	if nil != err {
 		t.Error(err)
 
