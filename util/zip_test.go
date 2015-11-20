@@ -55,6 +55,51 @@ func TestUnzip(t *testing.T) {
 	}
 }
 
+func TestEmptyDir(t *testing.T) {
+	err := os.MkdirAll(packageName+"/dir/subDir1", 644)
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+
+	err = os.MkdirAll(packageName+"/dir/subDir2", 644)
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+
+	f, err := os.Create(packageName + "/dir/subDir2/file")
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+	f.Close()
+
+	zipFile, err := Zip.Create(packageName + "/dir.zip")
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+
+	zipFile.AddDirectoryN("dir", packageName+"/dir")
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+
+	err = zipFile.Close()
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+}
+
 func TestMain(m *testing.M) {
 	logger.Info(testDir)
 

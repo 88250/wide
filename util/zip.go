@@ -41,7 +41,7 @@ type ZipFile struct {
 // Create creates a zip file with the specified filename.
 func (*myzip) Create(filename string) (*ZipFile, error) {
 	file, err := os.Create(filename)
-	if err != nil {
+	if nil != err {
 		return nil, err
 	}
 
@@ -63,7 +63,7 @@ func (z *ZipFile) AddEntryN(path string, names ...string) error {
 	for _, name := range names {
 		zipPath := filepath.Join(path, name)
 		err := z.AddEntry(zipPath, name)
-		if err != nil {
+		if nil != err {
 			return err
 		}
 	}
@@ -73,12 +73,12 @@ func (z *ZipFile) AddEntryN(path string, names ...string) error {
 // AddEntry adds a entry.
 func (z *ZipFile) AddEntry(path, name string) error {
 	fi, err := os.Stat(name)
-	if err != nil {
+	if nil != err {
 		return err
 	}
 
 	fh, err := zip.FileInfoHeader(fi)
-	if err != nil {
+	if nil != err {
 		return err
 	}
 
@@ -90,7 +90,7 @@ func (z *ZipFile) AddEntry(path, name string) error {
 	}
 
 	entry, err := z.writer.CreateHeader(fh)
-	if err != nil {
+	if nil != err {
 		return err
 	}
 
@@ -99,7 +99,7 @@ func (z *ZipFile) AddEntry(path, name string) error {
 	}
 
 	file, err := os.Open(name)
-	if err != nil {
+	if nil != err {
 		return err
 	}
 	defer file.Close()
@@ -113,7 +113,7 @@ func (z *ZipFile) AddEntry(path, name string) error {
 func (z *ZipFile) AddDirectoryN(path string, names ...string) error {
 	for _, name := range names {
 		err := z.AddDirectory(path, name)
-		if err != nil {
+		if nil != err {
 			return err
 		}
 	}
@@ -123,8 +123,17 @@ func (z *ZipFile) AddDirectoryN(path string, names ...string) error {
 // AddDirectory adds a directory.
 func (z *ZipFile) AddDirectory(path, dirName string) error {
 	files, err := ioutil.ReadDir(dirName)
-	if err != nil {
+	if nil != err {
 		return err
+	}
+
+	if 0 == len(files) {
+		err := z.AddEntry(path, dirName)
+		if nil != err {
+			return err
+		}
+
+		return nil
 	}
 
 	for _, file := range files {
@@ -133,13 +142,12 @@ func (z *ZipFile) AddDirectory(path, dirName string) error {
 
 		err = nil
 		if file.IsDir() {
-			z.AddEntry(path, dirName)
-
 			err = z.AddDirectory(zipPath, localPath)
 		} else {
 			err = z.AddEntry(zipPath, localPath)
 		}
-		if err != nil {
+
+		if nil != err {
 			return err
 		}
 	}
