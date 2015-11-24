@@ -304,10 +304,10 @@ var menu = {
             url: config.context + '/build',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function (result) {
                 bottomGroup.resetOutput();
             },
-            success: function (data) {
+            success: function (result) {
                 $("#buildRun").addClass("ico-stop")
                         .removeClass("ico-buildrun").attr("title", config.label.stop);
             }
@@ -336,10 +336,10 @@ var menu = {
             url: config.context + '/build',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function (result) {
                 bottomGroup.resetOutput();
             },
-            success: function (data) {
+            success: function (result) {
             }
         });
     },

@@ -164,14 +164,14 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	username := httpSession.Values["username"].(string)
 
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -186,11 +186,13 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	size := util.File.GetFileSize(path)
 	if size > 5242880 { // 5M
-		data["succ"] = false
-		data["msg"] = "This file is too large to open :("
+		result.Succ = false
+		result.Msg = "This file is too large to open :("
 
 		return
 	}
+
+	data := map[string]interface{}{}
 
 	buf, _ := ioutil.ReadFile(path)
 
@@ -219,12 +221,14 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	content := string(buf)
 
 	if util.File.IsBinary(content) {
-		data["succ"] = false
-		data["msg"] = "Can't open a binary file :("
+		result.Succ = false
+		result.Msg = "Can't open a binary file :("
 	} else {
 		data["content"] = content
 		data["path"] = path
 	}
+
+	result.Data = data
 }
 
 // SaveFileHandler handles request of saving file.
@@ -237,14 +241,14 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	username := httpSession.Values["username"].(string)
 
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -262,7 +266,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -273,7 +277,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		wSession := session.WideSessions.Get(sid)
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
@@ -293,14 +297,14 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	username := httpSession.Values["username"].(string)
 
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -319,7 +323,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	wSession := session.WideSessions.Get(sid)
 
 	if !createFile(path, fileType) {
-		data["succ"] = false
+		result.Succ = false
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't create file " + path}
@@ -345,14 +349,14 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	username := httpSession.Values["username"].(string)
 
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -370,7 +374,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	wSession := session.WideSessions.Get(sid)
 
 	if !removeFile(path) {
-		data["succ"] = false
+		result.Succ = false
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't remove file " + path}
@@ -391,14 +395,14 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	username := httpSession.Values["username"].(string)
 
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -423,7 +427,7 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 	wSession := session.WideSessions.Get(sid)
 
 	if !renameFile(oldPath, newPath) {
-		data["succ"] = false
+		result.Succ = false
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't rename file " + oldPath}
@@ -456,13 +460,13 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	username := httpSession.Values["username"].(string)
 
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -497,7 +501,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 
 	sort.Sort(founds)
 
-	data["founds"] = founds
+	result.Data = founds
 }
 
 // SearchTextHandler handles request of searching files under the specified directory with the specified keyword.
@@ -509,14 +513,14 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -524,7 +528,7 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 	wSession := session.WideSessions.Get(sid)
 	if nil == wSession {
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -548,7 +552,7 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 		founds = searchInFile(dir, text)
 	}
 
-	data["founds"] = founds
+	result.Data = founds
 }
 
 // walk traverses the specified path to build a file tree.

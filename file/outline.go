@@ -34,14 +34,14 @@ type element struct {
 
 // GetOutlineHandler gets outfile of a go file.
 func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -51,11 +51,12 @@ func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, "", code, 0)
 	if err != nil {
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
 
+	data := map[string]interface{}{}
 	// ast.Print(fset, f)
 
 	line, ch := getCursor(code, int(f.Name.Pos()))
@@ -128,6 +129,8 @@ func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
 	data["structDecls"] = structDecls
 	data["interfaceDecls"] = interfaceDecls
 	data["typeDecls"] = typeDecls
+
+	result.Data = data
 }
 
 // getCursor calculates the cursor position (line, ch) by the specified offset.

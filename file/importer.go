@@ -67,11 +67,11 @@ func handleUploads(r *http.Request, dir string) (fileInfos []*fileInfo) {
 
 // UploadHandler handles request of file upload.
 func UploadHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	q := r.URL.Query()
 	dir := q["path"][0]
 
-	data["files"] = handleUploads(r, dir)
+	result.Data = handleUploads(r, dir)
 }

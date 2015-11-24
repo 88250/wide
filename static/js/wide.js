@@ -34,10 +34,12 @@ var wide = {
             url: config.context + '/outline',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                if (!data.succ) {
+            success: function (result) {
+                if (!result.succ) {
                     return;
                 }
+
+                var data = result.data;
 
                 var outlineHTML = '<ul class="list">',
                         decls = ['constDecls', 'varDecls', 'funcDecls',
@@ -258,14 +260,16 @@ var wide = {
                         url: config.context + '/file/find/name',
                         data: JSON.stringify(request),
                         dataType: "json",
-                        success: function (data) {
-                            if (!data.succ) {
+                        success: function (result) {
+                            if (!result.succ) {
                                 return;
                             }
 
+                            var data = result.data;
+
                             var goFileHTML = '';
-                            for (var i = 0, max = data.founds.length; i < max; i++) {
-                                var path = data.founds[i].path,
+                            for (var i = 0, max = data.length; i < max; i++) {
+                                var path = data[i].path,
                                         name = path.substr(path.lastIndexOf("/") + 1),
                                         icoSkin = wide.getClassBySuffix(name.split(".")[1]);
                                 if (i === 0) {
@@ -577,7 +581,7 @@ var wide = {
             url: config.context + '/file/save',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
+            success: function (result) {
                 // reset the save state
                 editor.doc.markClean();
                 $(".edit-panel .tabs > div").each(function () {
@@ -613,10 +617,10 @@ var wide = {
                 url: config.context + '/build',
                 data: JSON.stringify(request),
                 dataType: "json",
-                beforeSend: function (data) {
+                beforeSend: function (result) {
                     bottomGroup.resetOutput();
                 },
-                success: function (data) {
+                success: function (result) {
                 }
             });
 

@@ -239,7 +239,7 @@ var tree = {
             url: "/file/upload?path=" + request.path,
             dataType: 'json',
             formData: request,
-            done: function (e, data) {
+            done: function (e, result) {
                 tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
             },
             fail: function () {
@@ -413,12 +413,14 @@ var tree = {
                 url: config.context + '/file',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function (data) {
-                    if (!data.succ) {
-                        $("#dialogAlert").dialog("open", data.msg);
+                success: function (result) {
+                    if (!result.succ) {
+                        $("#dialogAlert").dialog("open", result.msg);
 
                         return false;
                     }
+                    
+                    var data = result.data;
 
                     if (!data.mode) {
                         var mode = CodeMirror.findModeByFileName(treeNode.path);
@@ -496,13 +498,13 @@ var tree = {
                     url: config.context + '/file/search/text',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
-                        if (!data.succ) {
+                    success: function (result) {
+                        if (!result.succ) {
                             return;
                         }
 
                         $("#dialogSearchForm").dialog("close");
-                        editors.appendSearch(data.founds, 'founds', request.text);
+                        editors.appendSearch(result.data, 'founds', request.text);
                     }
                 });
             }
