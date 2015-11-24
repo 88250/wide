@@ -31,8 +31,8 @@ import (
 //  1. gofmt
 //  2. goimports
 func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	if session.IsNew {
@@ -46,7 +46,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -54,7 +54,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 
 	if util.Go.IsAPI(filePath) {
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -63,7 +63,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -73,7 +73,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -87,20 +87,20 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	output := string(bytes)
 	if "" == output {
 		// format error, returns the original content
-		data["succ"] = true
-		data["code"] = code
+		result.Succ = true
+		result.Code = code
 
 		return
 	}
 
 	code = string(output)
-	data["code"] = code
+	result.Code = code
 
 	fout, err = os.Create(filePath)
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}

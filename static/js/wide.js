@@ -476,7 +476,7 @@ var wide = {
                     } else {
                         if ('cross-build' === data.cmd) {
                             var request = newWideRequest(),
-                                    isSucc = false;
+                                    path = null;
                             request.path = data.executable;
                             request.name = data.name;
 
@@ -486,16 +486,20 @@ var wide = {
                                 url: config.context + '/file/zip/new',
                                 data: JSON.stringify(request),
                                 dataType: "json",
-                                success: function (data) {
-                                    if (!data.succ) {
-                                        $("#dialogAlert").dialog("open", data.msg);
+                                success: function (result) {
+                                    if (!result.succ) {
+                                        $("#dialogAlert").dialog("open", result.msg);
 
                                         return false;
                                     }
 
-                                    window.open(config.context + '/file/zip?path=' + data.path + ".zip");
+                                    path = result.data;
                                 }
                             });
+
+                            if (path) {
+                                window.open(config.context + '/file/zip?path=' + path + ".zip");
+                            }
                         }
                     }
 

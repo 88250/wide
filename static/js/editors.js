@@ -474,14 +474,15 @@ var editors = {
                 url: config.context + '/exprinfo',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function (data) {
-                    if (!data.succ) {
+                success: function (result) {
+                    if (!result.succ) {
                         return;
                     }
+                    
                     var position = wide.curEditor.cursorCoords();
                     $("body").append('<div style="top:'
                             + (position.top + 15) + 'px;left:' + position.left
-                            + 'px" class="edit-exprinfo">' + data.info + '</div>');
+                            + 'px" class="edit-exprinfo">' + result.data + '</div>');
                 }
             });
         };
@@ -621,10 +622,12 @@ var editors = {
                 url: config.context + '/find/decl',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function (data) {
-                    if (!data.succ) {
+                success: function (result) {
+                    if (!result.succ) {
                         return;
                     }
+                    
+                    var data = result.data;
 
                     var tId = tree.getTIdByPath(data.path);
                     wide.curNode = tree.fileTree.getNodeByTId(tId);
@@ -649,12 +652,12 @@ var editors = {
                 url: config.context + '/find/usages',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function (data) {
-                    if (!data.succ) {
+                success: function (result) {
+                    if (!result.succ) {
                         return;
                     }
 
-                    editors.appendSearch(data.founds, 'usages', '');
+                    editors.appendSearch(result.data, 'usages', '');
                 }
             });
         };

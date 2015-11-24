@@ -24,13 +24,13 @@ import (
 
 // DecompressHandler handles request of decompressing zip/tar.gz.
 func DecompressHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -40,8 +40,8 @@ func DecompressHandler(w http.ResponseWriter, r *http.Request) {
 	dir := filepath.Dir(path)
 
 	if !util.File.IsExist(path) {
-		data["succ"] = false
-		data["msg"] = "Can't find file [" + path + "] to descompress"
+		result.Succ = false
+		result.Msg = "Can't find file [" + path + "] to descompress"
 
 		return
 	}
@@ -49,7 +49,7 @@ func DecompressHandler(w http.ResponseWriter, r *http.Request) {
 	err := util.Zip.Unzip(path, dir)
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}

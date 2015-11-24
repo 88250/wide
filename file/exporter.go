@@ -51,13 +51,13 @@ func GetZipHandler(w http.ResponseWriter, r *http.Request) {
 
 // CreateZipHandler handles request of creating zip.
 func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	data := util.NewResult()
+	defer util.RetResult(w, r, data)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		data.Succ = false
 
 		return
 	}
@@ -76,8 +76,8 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	dir := filepath.Dir(path)
 
 	if !util.File.IsExist(path) {
-		data["succ"] = false
-		data["msg"] = "Can't find file [" + path + "]"
+		data.Succ = false
+		data.Msg = "Can't find file [" + path + "]"
 
 		return
 	}
@@ -86,7 +86,7 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	zipFile, err := util.Zip.Create(zipPath + ".zip")
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		data.Succ = false
 
 		return
 	}
@@ -98,5 +98,5 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 		zipFile.AddEntry(base, path)
 	}
 
-	data["path"] = zipPath
+	data.Data = zipPath
 }

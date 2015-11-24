@@ -156,9 +156,9 @@ var tree = {
             url: config.context + '/file/zip/new',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                if (!data.succ) {
-                    $("#dialogAlert").dialog("open", data.msg);
+            success: function (result) {
+                if (!result.succ) {
+                    $("#dialogAlert").dialog("open", result.msg);
 
                     return false;
                 }

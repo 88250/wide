@@ -179,8 +179,8 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetExprInfoHandler handles request of getting expression infomation.
 func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	username := session.Values["username"].(string)
@@ -201,7 +201,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -211,7 +211,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -240,18 +240,18 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	exprInfo := strings.TrimSpace(string(output))
 	if "" == exprInfo {
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
 
-	data["info"] = exprInfo
+	result.Data = exprInfo
 }
 
 // FindDeclarationHandler handles request of finding declaration.
 func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	if session.IsNew {
@@ -277,7 +277,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -287,7 +287,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -316,7 +316,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	found := strings.TrimSpace(string(output))
 	if "" == found {
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -328,15 +328,19 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	cursorLine, _ := strconv.Atoi(found[cursorSep+1 : strings.LastIndex(found, ":")])
 	cursorCh, _ := strconv.Atoi(found[strings.LastIndex(found, ":")+1:])
 
+	data := map[string]interface{}{}
+
 	data["path"] = filepath.ToSlash(path)
 	data["cursorLine"] = cursorLine
 	data["cursorCh"] = cursorCh
+
+	result.Data = data
 }
 
 // FindUsagesHandler handles request of finding usages.
 func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	if session.IsNew {
@@ -363,7 +367,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -373,7 +377,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -399,14 +403,14 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := strings.TrimSpace(string(output))
-	if "" == result {
-		data["succ"] = false
+	out := strings.TrimSpace(string(output))
+	if "" == out {
+		result.Succ = false
 
 		return
 	}
 
-	founds := strings.Split(result, "\n")
+	founds := strings.Split(out, "\n")
 	usages := []*file.Snippet{}
 	for _, found := range founds {
 		found = strings.TrimSpace(found)
@@ -421,7 +425,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 		usages = append(usages, usage)
 	}
 
-	data["founds"] = usages
+	result.Data = usages
 }
 
 // getCursorOffset calculates the cursor offset.
