@@ -161,8 +161,14 @@ var wide = {
                             $(".bottom-window-group .notification").focus();
                             return false;
                         }
-                        
+
                         $("#dialogNewFilePrompt").dialog("close");
+
+                        setTimeout(function () { // Delay, waiting the file change notified and then open it
+                            var tId = tree.getTIdByPath(request.path);
+                            tree.openFile(tree.fileTree.getNodeByTId(tId));
+                            tree.fileTree.selectNode(wide.curNode);
+                        }, 100);
                     }
                 });
             }
