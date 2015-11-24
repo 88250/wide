@@ -186,10 +186,10 @@ var menu = {
             url: config.context + '/go/get',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function () {
                 bottomGroup.resetOutput();
             },
-            success: function (data) {
+            success: function (result) {
             }
         });
     },
@@ -213,10 +213,10 @@ var menu = {
             url: config.context + '/go/install',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function () {
                 bottomGroup.resetOutput();
             },
-            success: function (data) {
+            success: function (result) {
             }
         });
     },
@@ -241,10 +241,10 @@ var menu = {
             url: config.context + '/go/test',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function () {
                 bottomGroup.resetOutput();
             },
-            success: function (data) {
+            success: function (result) {
             }
         });
     },
@@ -269,10 +269,10 @@ var menu = {
             url: config.context + '/go/vet',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (data) {
+            beforeSend: function () {
                 bottomGroup.resetOutput();
             },
-            success: function (data) {
+            success: function (result) {
             }
         });
     },
@@ -304,7 +304,7 @@ var menu = {
             url: config.context + '/build',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (result) {
+            beforeSend: function () {
                 bottomGroup.resetOutput();
             },
             success: function (result) {
@@ -336,7 +336,7 @@ var menu = {
             url: config.context + '/build',
             data: JSON.stringify(request),
             dataType: "json",
-            beforeSend: function (result) {
+            beforeSend: function () {
                 bottomGroup.resetOutput();
             },
             success: function (result) {
@@ -445,7 +445,7 @@ var menu = {
                         "editorTabSize": $editorTabSize.val(),
                         "keymap": $keymap.val()
                     });
-                    
+
                     if (config.keymap !== $keymap.val()) {
                         window.location.reload();
                     }
@@ -473,7 +473,7 @@ var menu = {
                             $editorTheme.data("value", $editorTheme.val());
                             $editorTabSize.data("value", $editorTabSize.val());
                             $keymap.data("value", $keymap.val());
-                            
+
                             // update the config
                             config.keymap = $keymap.val();
 

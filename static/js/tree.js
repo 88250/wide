@@ -182,9 +182,9 @@ var tree = {
             url: config.context + '/cross',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                if (!data.succ) {
-                    $("#dialogAlert").dialog("open", data.msg);
+            success: function (result) {
+                if (!result.succ) {
+                    $("#dialogAlert").dialog("open", result.msg);
 
                     return false;
                 }

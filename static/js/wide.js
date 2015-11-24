@@ -617,7 +617,7 @@ var wide = {
                 url: config.context + '/build',
                 data: JSON.stringify(request),
                 dataType: "json",
-                beforeSend: function (result) {
+                beforeSend: function () {
                     bottomGroup.resetOutput();
                 },
                 success: function (result) {
@@ -650,7 +650,7 @@ var wide = {
             url: config.context + '/stop',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
+            success: function (result) {
                 $("#buildRun").removeClass("ico-stop")
                         .addClass("ico-buildrun").attr("title", config.label.build_n_run);
             }
