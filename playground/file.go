@@ -32,8 +32,8 @@ import (
 
 // SaveHandler handles request of Playground code save.
 func SaveHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	if session.IsNew {
@@ -45,7 +45,7 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -58,7 +58,7 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	stdin, err := cmd.StdinPipe()
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -71,6 +71,8 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	if "" != output {
 		code = string(output)
 	}
+
+	data := map[string]interface{}{}
 
 	data["code"] = code
 
@@ -87,16 +89,18 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
+
+	result.Data = data
 }
 
 // ShortURLHandler handles request of short URL.
 func ShortURLHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
 	if session.IsNew {
@@ -108,7 +112,7 @@ func ShortURLHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -121,7 +125,7 @@ func ShortURLHandler(w http.ResponseWriter, r *http.Request) {
 	var response map[string]interface{}
 	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -131,5 +135,5 @@ func ShortURLHandler(w http.ResponseWriter, r *http.Request) {
 		shortURL = response["tinyurl"].(string)
 	}
 
-	data["shortURL"] = shortURL
+	result.Data = shortURL
 }

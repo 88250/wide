@@ -281,8 +281,8 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 // SaveContentHandler handles request of session content string.
 func SaveContentHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	args := struct {
 		Sid string
@@ -291,14 +291,14 @@ func SaveContentHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
 
 	wSession := WideSessions.Get(args.Sid)
 	if nil == wSession {
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}

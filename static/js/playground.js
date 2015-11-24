@@ -334,10 +334,12 @@ var playground = {
             url: config.context + '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
+            success: function (result) {
+                var data = result.data;
+                
                 playground.editor.setValue(data.code);
 
-                if (!data.succ) {
+                if (!result.succ) {
                     console.log(data);
                     return;
                 }
@@ -351,9 +353,9 @@ var playground = {
                     url: config.context + '/playground/short-url',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
-                        if (!data.succ) {
-                            console.log(data);
+                    success: function (result) {
+                        if (!result.succ) {
+                            console.log(result);
                             return;
                         }
 
@@ -361,8 +363,8 @@ var playground = {
                                 + config.label.colon + '</label><a href="'
                                 + url + '" target="_blank">' + url + "</a><br/>";
                         html += '<label>' + config.label.short_url + config.label.colon
-                                + '</label><a href="' + data.shortURL + '" target="_blank">'
-                                + data.shortURL + '</a><br/>';
+                                + '</label><a href="' + result.data + '" target="_blank">'
+                                + result.data + '</a><br/>';
                         html += '<label>' + config.label.embeded + config.label.colon
                                 + '</label><br/><textarea rows="5" style="width:100%" readonly><iframe style="border:1px solid" src="'
                                 + url + '?embed=true" width="99%" height="600"></iframe></textarea>';
@@ -434,12 +436,13 @@ var playground = {
             url: config.context + '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                // console.log(data);
+            success: function (result) {
+                var data = result.data;
+                
                 playground.editor.setValue(data.code);
                 playground.editor.setCursor(cursor);
 
-                if (!data.succ) {
+                if (!result.succ) {
                     return;
                 }
 
@@ -452,12 +455,14 @@ var playground = {
                     url: config.context + '/playground/build',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
+                    success: function (result) {
                         // console.log(data);
+                        
+                        var data = result.data;
 
                         $("#output").val(data.output);
 
-                        if (!data.succ) {
+                        if (!result.succ) {
                             return;
                         }
 
@@ -470,7 +475,7 @@ var playground = {
                             url: config.context + '/playground/run',
                             data: JSON.stringify(request),
                             dataType: "json",
-                            success: function (data) {
+                            success: function (result) {
                                 // console.log(data);
                             }
                         });
@@ -497,8 +502,8 @@ var playground = {
             url: config.context + '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                playground.editor.setValue(data.code);
+            success: function (result) {
+                playground.editor.setValue(result.data.code);
                 playground.editor.setCursor(cursor);
             }
         });

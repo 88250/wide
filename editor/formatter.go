@@ -78,6 +78,11 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	data := map[string]interface{}{}
+	data["code"] = code
+
+	result.Data = data
+
 	fmt := conf.GetGoFmt(username)
 
 	argv := []string{filePath}
@@ -88,13 +93,14 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	if "" == output {
 		// format error, returns the original content
 		result.Succ = true
-		result.Code = code
 
 		return
 	}
 
 	code = string(output)
-	result.Code = code
+	data["code"] = code
+
+	result.Data = data
 
 	fout, err = os.Create(filePath)
 	fout.WriteString(code)

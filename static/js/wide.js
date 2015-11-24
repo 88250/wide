@@ -117,8 +117,8 @@ var wide = {
                     url: config.context + '/file/remove',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
-                        if (!data.succ) {
+                    success: function (result) {
+                        if (!result.succ) {
                             $("#dialogRemoveConfirm").dialog("close");
                             bottomGroup.tabs.setCurrent("notification");
                             windows.flowBottom();
@@ -155,8 +155,8 @@ var wide = {
                     url: config.context + '/file/new',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
-                        if (!data.succ) {
+                    success: function (result) {
+                        if (!result.succ) {
                             $("#dialogNewFilePrompt").dialog("close");
                             bottomGroup.tabs.setCurrent("notification");
                             windows.flowBottom();
@@ -199,8 +199,8 @@ var wide = {
                     url: config.context + '/file/new',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
-                        if (!data.succ) {
+                    success: function (result) {
+                        if (!result.succ) {
                             $("#dialogNewDirPrompt").dialog("close");
                             bottomGroup.tabs.setCurrent("notification");
                             windows.flowBottom();
@@ -356,8 +356,7 @@ var wide = {
                     url: config.context + '/git/clone',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
-
+                    success: function (result) {
                     }
                 });
             }
@@ -672,9 +671,9 @@ var wide = {
             url: config.context + '/go/fmt',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                if (data.succ) {
-                    editor.setValue(data.code);
+            success: function (result) {
+                if (result.succ) {
+                    editor.setValue(result.data.code);
                     editor.setCursor(cursor);
                     editor.scrollTo(null, scrollInfo.top);
 
@@ -705,9 +704,9 @@ var wide = {
                     url: config.context + '/go/fmt',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
-                        if (data.succ) {
-                            formatted = data.code;
+                    success: function (result) {
+                        if (result.succ) {
+                            formatted = result.data.code;
                         }
                     }
                 });

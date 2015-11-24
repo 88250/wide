@@ -88,9 +88,8 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	// non-GET request as save request
 
-	succ := true
-	data := map[string]interface{}{"succ": &succ}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	args := struct {
 		FontFamily       string
@@ -112,7 +111,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		succ = false
+		result.Succ = false
 
 		return
 	}
@@ -146,7 +145,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.Lived = now
 	user.Updated = now
 
-	succ = user.Save()
+	result.Succ = user.Save()
 }
 
 // LoginHandler handles request of user login.
@@ -211,8 +210,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // LogoutHandler handles request of user logout (exit).
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	httpSession, _ := HTTPSession.Get(r, "wide-session")
 
@@ -248,15 +247,14 @@ func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	// non-GET request as add user request
 
-	succ := true
-	data := map[string]interface{}{"succ": &succ}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		succ = false
+		result.Succ = false
 
 		return
 	}
@@ -267,8 +265,8 @@ func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	msg := addUser(username, password, email)
 	if userCreated != msg {
-		succ = false
-		data["msg"] = msg
+		result.Succ = false
+		result.Msg = msg
 
 		return
 	}

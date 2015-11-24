@@ -81,8 +81,8 @@
                                             return false;
                                         }
                                     },
-                                    success: function (data) {
-                                        if (!data.succ) {
+                                    success: function (result) {
+                                        if (!result.succ) {
                                             $("#msg").text('{{.i18n.login_error}}').show();
                                             return;
                                         }

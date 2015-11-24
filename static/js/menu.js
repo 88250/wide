@@ -156,8 +156,8 @@ var menu = {
             url: config.context + '/logout',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                if (data.succ) {
+            success: function (result) {
+                if (result.succ) {
                     window.location.href = "/login";
                 }
             }
@@ -454,8 +454,8 @@ var menu = {
                         type: 'POST',
                         url: config.context + '/preference',
                         data: JSON.stringify(request),
-                        success: function (data, textStatus, jqXHR) {
-                            if (!data.succ) {
+                        success: function (result, textStatus, jqXHR) {
+                            if (!result.succ) {
                                 return false;
                             }
 

@@ -40,20 +40,20 @@ type outputBuf struct {
 
 // RunHandler handles request of executing a binary file.
 func RunHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 	}
 
 	sid := args["sid"].(string)
 	wSession := session.WideSessions.Get(sid)
 	if nil == wSession {
-		data["succ"] = false
+		result.Succ = false
 	}
 
 	filePath := args["executable"].(string)
@@ -67,13 +67,13 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 	}
 
 	outReader := bufio.NewReader(stdout)
@@ -81,14 +81,14 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := cmd.Start(); nil != err {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 	}
 
 	wsChannel := session.PlaygroundWS[sid]
 
 	channelRet := map[string]interface{}{}
 
-	if !data["succ"].(bool) {
+	if !result.Succ {
 		if nil != wsChannel {
 			channelRet["cmd"] = "run-done"
 			channelRet["output"] = ""
@@ -227,13 +227,13 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 // StopHandler handles request of stoping a running process.
 func StopHandler(w http.ResponseWriter, r *http.Request) {
-	data := map[string]interface{}{"succ": true}
-	defer util.RetJSON(w, r, data)
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}
@@ -243,7 +243,7 @@ func StopHandler(w http.ResponseWriter, r *http.Request) {
 
 	wSession := session.WideSessions.Get(sid)
 	if nil == wSession {
-		data["succ"] = false
+		result.Succ = false
 
 		return
 	}

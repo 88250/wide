@@ -96,9 +96,9 @@
                                     url: '/signup',
                                     data: JSON.stringify(request),
                                     dataType: "json",
-                                    success: function (data) {
-                                        if (!data.succ) {
-                                            $("#msg").text(data.msg).show();
+                                    success: function (result) {
+                                        if (!result.succ) {
+                                            $("#msg").text(result.msg).show();
                                             return;
                                         }
 

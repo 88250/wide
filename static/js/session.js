@@ -44,7 +44,7 @@ var session = {
                 url: config.context + '/session/save',
                 data: JSON.stringify(request),
                 dataType: "json",
-                success: function (data) {
+                success: function (result) {
                 }
             });
         }, 30000);

@@ -201,9 +201,9 @@ var tree = {
             url: config.context + '/file/decompress',
             data: JSON.stringify(request),
             dataType: "json",
-            success: function (data) {
-                if (!data.succ) {
-                    $("#dialogAlert").dialog("open", data.msg);
+            success: function (result) {
+                if (!result.succ) {
+                    $("#dialogAlert").dialog("open", result.msg);
 
                     return false;
                 }
@@ -534,8 +534,8 @@ var tree = {
                     url: config.context + '/file/rename',
                     data: JSON.stringify(request),
                     dataType: "json",
-                    success: function (data) {
-                        if (!data.succ) {
+                    success: function (result) {
+                        if (!result.succ) {
                             $("#dialogRenamePrompt").dialog("close");
                             bottomGroup.tabs.setCurrent("notification");
                             windows.flowBottom();
