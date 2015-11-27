@@ -57,6 +57,8 @@ func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := map[string]interface{}{}
+	result.Data = &data
+
 	// ast.Print(fset, f)
 
 	line, ch := getCursor(code, int(f.Name.Pos()))
@@ -129,8 +131,6 @@ func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
 	data["structDecls"] = structDecls
 	data["interfaceDecls"] = interfaceDecls
 	data["typeDecls"] = typeDecls
-
-	result.Data = data
 }
 
 // getCursor calculates the cursor position (line, ch) by the specified offset.

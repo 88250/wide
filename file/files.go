@@ -193,6 +193,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := map[string]interface{}{}
+	result.Data = &data
 
 	buf, _ := ioutil.ReadFile(path)
 
@@ -227,8 +228,6 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 		data["content"] = content
 		data["path"] = path
 	}
-
-	result.Data = data
 }
 
 // SaveFileHandler handles request of saving file.

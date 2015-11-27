@@ -73,6 +73,7 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := map[string]interface{}{}
+	result.Data = &data
 
 	data["code"] = code
 
@@ -93,8 +94,6 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-
-	result.Data = data
 }
 
 // ShortURLHandler handles request of short URL.

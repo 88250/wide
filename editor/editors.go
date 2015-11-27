@@ -329,12 +329,11 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	cursorCh, _ := strconv.Atoi(found[strings.LastIndex(found, ":")+1:])
 
 	data := map[string]interface{}{}
+	result.Data = &data
 
 	data["path"] = filepath.ToSlash(path)
 	data["cursorLine"] = cursorLine
 	data["cursorCh"] = cursorCh
-
-	result.Data = data
 }
 
 // FindUsagesHandler handles request of finding usages.

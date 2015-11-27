@@ -56,6 +56,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := map[string]interface{}{}
+	result.Data = &data
 
 	executable := filepath.Clean(conf.Wide.Playground + "/" + strings.Replace(fileName, ".go", suffix, -1))
 
@@ -71,6 +72,4 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data["executable"] = executable
-
-	result.Data = data
 }

@@ -79,6 +79,8 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	data := map[string]interface{}{}
+	result.Data = &data
+
 	data["code"] = code
 
 	result.Data = data
@@ -99,8 +101,6 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	code = string(output)
 	data["code"] = code
-
-	result.Data = data
 
 	fout, err = os.Create(filePath)
 	fout.WriteString(code)

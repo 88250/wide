@@ -456,7 +456,7 @@ var playground = {
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
-                        // console.log(data);
+                        console.log(result);
                         
                         var data = result.data;
 
