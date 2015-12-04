@@ -130,28 +130,9 @@ var editors = {
                     wide.curEditor = undefined;
                     $(".footer .cursor").text('');
                     wide.refreshOutline();
+                    
                     return false;
                 }
-
-                // set tree node selected
-                var tId = tree.getTIdByPath(id);
-                var node = tree.fileTree.getNodeByTId(tId);
-                tree.fileTree.selectNode(node);
-                wide.curNode = node;
-
-                for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                    if (editors.data[i].id === id) {
-                        wide.curEditor = editors.data[i].editor;
-                        break;
-                    }
-                }
-
-                var cursor = wide.curEditor.getCursor();
-                wide.curEditor.setCursor(cursor);
-                wide.curEditor.focus();
-                wide.refreshOutline();
-
-                $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             },
             removeBefore: function (id) {
                 if (id === 'startPage') { // 当前关闭的 tab 是起始页
@@ -219,23 +200,6 @@ var editors = {
                     // 关闭的不是当前编辑器
                     return false;
                 }
-
-                // set tree node selected
-                var tId = tree.getTIdByPath(id);
-                var node = tree.fileTree.getNodeByTId(tId);
-                tree.fileTree.selectNode(node);
-                wide.curNode = node;
-
-                for (var i = 0, ii = editors.data.length; i < ii; i++) {
-                    if (editors.data[i].id === nextId) {
-                        wide.curEditor = editors.data[i].editor;
-                        break;
-                    }
-                }
-
-                wide.refreshOutline();
-                var cursor = wide.curEditor.getCursor();
-                $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
             }
         });
 
@@ -320,11 +284,12 @@ var editors = {
         });
     },
     getCurrentId: function () {
-        var currentId = editors.tabs.getCurrentId();
-        if (currentId === 'startPage') {
-            currentId = null;
+        var ret = editors.tabs.getCurrentId();
+        if (ret === 'startPage') {
+            ret = null;
         }
-        return currentId;
+        
+        return ret;
     },
     getCurrentPath: function () {
         var currentPath = $(".edit-panel .tabs .current span:eq(0)").attr("title");

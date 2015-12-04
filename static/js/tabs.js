@@ -46,7 +46,7 @@ $.extend(Tabs.prototype, {
             if ($(this).hasClass('current')) {
                 return false;
             }
-            
+
             var id = $(this).data("index");
             _that.setCurrent(id);
             if (typeof (obj.clickAfter) === "function") {
@@ -160,6 +160,33 @@ $.extend(Tabs.prototype, {
 
         if (typeof this.obj.setAfter === 'function') {
             this.obj.setAfter();
+        }
+
+        var id = this.getCurrentId();
+        if ("startPage" === id) {
+            return;
+        }
+
+        // set tree node selected
+        var tId = tree.getTIdByPath(id);
+        var node = tree.fileTree.getNodeByTId(tId);
+        tree.fileTree.selectNode(node);
+        wide.curNode = node;
+
+        for (var i = 0, ii = editors.data.length; i < ii; i++) {
+            if (editors.data[i].id === id) {
+                wide.curEditor = editors.data[i].editor;
+                break;
+            }
+        }
+
+        if (wide.curEditor) {
+            var cursor = wide.curEditor.getCursor();
+            wide.curEditor.setCursor(cursor);
+            wide.curEditor.focus();
+            wide.refreshOutline();
+
+            $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
         }
     }
 });
