@@ -14,14 +14,19 @@
  * limitations under the License.
  */
 
+/*
+ * themes for default.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.0, Dec 6, 2015
+ */
+
 .side {
     background-color: #FFF;
-    border-right: 1px solid #919191;
 }
 
 .side-right {
     background-color: #FFF;
-    border-left: 1px solid #919191;
 }
 
 .footer {
@@ -120,10 +125,6 @@
 
 .dialog-main {
     background-color: #F0F0F0;
-}
-
-.bottom-window-group {
-    border-top: 1px solid #919191;
 }
 
 #dialogPreference .preference {

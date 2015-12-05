@@ -14,312 +14,241 @@
  * limitations under the License.
  */
 
+/*
+ * @file windows.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.0, Dec 6, 2015
+ */
 var windows = {
     isMaxEditor: false,
+    outerLayout: {},
+    innerLayout: {},
     init: function () {
-        // bottom windows
-        $(".footer .ico-restore:eq(1)").click(function () {
-            windows.restoreBottom();
-            if ($(".footer .ico-restore:eq(0)").css("display") === "none"
-                    && $(".footer .ico-restore:eq(2)").css("display") === "none") {
-                $(".toolbars .ico-restore").removeClass("ico-restore").addClass("ico-max")
-                        .attr({
-                            "title": config.label.max_editor,
-                            "onclick": "windows.maxEditor()"
-                        });
+        this.outerLayout = $('body').layout({
+            north__paneSelector: ".menu",
+            center__paneSelector: ".content",
+            south__paneSelector: ".footer",
+            north__size: 22,
+            south__size: 19,
+            spacing_open: 3,
+            spacing_closed: 4,
+            north__spacing_open: 0,
+            south__spacing_open: 0,
+            defaults: {
+                fxSpeed_open: 300,
+                fxSpeed_close: 100,
+                fxSettings_close: {
+                    easing: "easeOutQuint"
+                },
+                fxSettings_open: {
+                    easing: "easeInQuint"
+                }
+            },
+            west: {
+                paneSelector: ".side",
+                togglerLength_open: 0,
+                togglerLength_closed: 15,
+                togglerAlign_closed: "top",
+                slideTrigger_open: "mouseover",
+                spacing_closed: 15,
+                minSize: 100,
+                togglerClass: "ico-restore",
+                togglerTip_open: config.label.min,
+                togglerTip_closed: config.label.restore_side,
+                resizerTip: config.label.resize
             }
         });
 
-        $(".bottom-window-group .ico-min").click(function () {
-            windows.minBottom();
-            if ($(".footer .ico-restore:eq(0)").css("display") === "inline"
-                    && $(".footer .ico-restore:eq(2)").css("display") === "inline") {
-                $(".toolbars .ico-max").removeClass("ico-max").addClass("ico-restore")
-                        .attr({
-                            "title": config.label.restore_editor,
-                            "onclick": "windows.restoreEditor()"
-                        });
+        this.innerLayout = $('div.content').layout({
+            spacing_open: 3,
+            spacing_closed: 4,
+            defaults: {
+                fxSpeed_open: 300,
+                fxSpeed_close: 100,
+                fxSettings_close: {
+                    easing: "easeOutQuint"
+                },
+                fxSettings_open: {
+                    easing: "easeInQuint"
+                }
+            },
+            center: {
+                paneSelector: ".edit-panel"
+            },
+            east: {
+                paneSelector: ".side-right",
+                togglerLength_open: 0,
+                togglerLength_closed: 15,
+                togglerAlign_closed: "top",
+                slideTrigger_open: "mouseover",
+                spacing_closed: 15,
+                minSize: 100,
+                togglerClass: "ico-restore",
+                togglerTip_open: config.label.min,
+                togglerTip_closed: config.label.restore_outline,
+                resizerTip: config.label.resize
+            },
+            south: {
+                paneSelector: ".bottom-window-group",
+                togglerLength_open: 0,
+                togglerLength_closed: 15,
+                togglerAlign_closed: "top",
+                slideTrigger_open: "mouseover",
+                spacing_closed: 16,
+                minSize: 100,
+                togglerClass: "ico-restore",
+                togglerTip_open: config.label.min,
+                togglerTip_closed: config.label.restore_bottom,
+                resizerTip: config.label.resize,
+                ondrag_end: function (type, pane) {
+                    windows.refreshEditor(pane, 'drag');
+                },
+                onresize_end: function (type, pane) {
+                    windows.refreshEditor(pane, 'resize');
+                },
+                onclose_end: function (type, pane) {
+                    windows.refreshEditor(pane, 'close');
+                },
+                onopen_end: function (type, pane) {
+                    windows.refreshEditor(pane, 'open');
+                },
+                onshow_end: function (type, pane) {
+                    windows.refreshEditor(pane, 'show');
+                }
             }
+        });
+
+        this.outerLayout.addCloseBtn(".side .ico-min", "west");
+        this.innerLayout.addCloseBtn(".side-right .ico-min", "east");
+        this.innerLayout.addCloseBtn(".bottom-window-group .ico-min", "south");
+
+        $(".toolbars .ico-max").click(function () {
+            windows.toggleEditor();
+        });
+
+        $(".edit-panel .tabs").on("dblclick", function () {
+            windows.toggleEditor();
         });
 
         $(".bottom-window-group .tabs").dblclick(function () {
-            windows.maxBottom();
-        });
-
-        // side
-        $(".footer .ico-restore:eq(0)").click(function () {
-            windows.restoreSide();
-            if ($(".footer .ico-restore:eq(1)").css("display") === "none"
-                    && $(".footer .ico-restore:eq(2)").css("display") === "none") {
-                $(".toolbars .ico-restore").removeClass("ico-restore").addClass("ico-max")
-                        .attr({
-                            "title": config.label.max_editor,
-                            "onclick": "windows.maxEditor()"
-                        });
-            }
-        });
-
-        $(".side .ico-min").click(function () {
-            windows.minSide();
-            if ($(".footer .ico-restore:eq(1)").css("display") === "inline"
-                    && $(".footer .ico-restore:eq(2)").css("display") === "inline") {
-                $(".toolbars .ico-max").removeClass("ico-max").addClass("ico-restore")
-                        .attr({
-                            "title": config.label.restore_editor,
-                            "onclick": "windows.restoreEditor()"
-                        });
-            }
+            windows.toggleBottom();
         });
 
         $(".side .tabs").dblclick(function () {
-            windows.maxSide();
-        });
-
-        // side right
-        $(".footer .ico-restore:eq(2)").click(function () {
-            windows.restoreSideRight();
-            if ($(".footer .ico-restore:eq(1)").css("display") === "none"
-                    && $(".footer .ico-restore:eq(0)").css("display") === "none") {
-                $(".toolbars .ico-restore").removeClass("ico-restore").addClass("ico-max")
-                        .attr({
-                            "title": config.label.max_editor,
-                            "onclick": "windows.maxEditor()"
-                        });
-            }
-        });
-
-        $(".side-right .ico-min").click(function () {
-            windows.minSideRight();
-            if ($(".footer .ico-restore:eq(1)").css("display") === "inline"
-                    && $(".footer .ico-restore:eq(0)").css("display") === "inline") {
-                $(".toolbars .ico-max").removeClass("ico-max").addClass("ico-restore")
-                        .attr({
-                            "title": config.label.restore_editor,
-                            "onclick": "windows.restoreEditor()"
-                        });
-            }
+            windows.toggleSide();
         });
 
         $(".side-right .tabs").dblclick(function () {
-            windows.maxSideRight();
+            windows.toggleSideRight();
         });
 
-        $(window).click(function (event) {
-            if ($(event.target).closest(".footer").length === 1
-                    || $(event.target).closest(".bottom-window-group").length === 1
-                    || $(event.target).closest(".toolbars").length === 1
-                    || $(event.target).closest(".side").length === 1
-                    || $(event.target).closest(".side-right").length === 1) {
-            } else {
-                windows.clearFloat();
-            }
+        $('.bottom-window-group .search').height($('.bottom-window-group .tabs-panel').height());
+        $(window).resize(function () {
+            windows.refreshEditor($('.bottom-window-group'));
         });
+
     },
-    maxBottom: function () {
+    toggleBottom: function () {
         var $it = $(".bottom-window-group");
 
         if ($it.hasClass("bottom-window-group-max")) {
             windows.restoreBottom();
-            if ($(".side").css("left") !== "0px" && $(".side").css("left") !== "auto") {
-                $it.css({
-                    "left": "0px",
-                    "width": "100%"
-                });
-            }
         } else {
-            $it.attr("style", "");
-
-            var bottomH = $(".content").height();
-            $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - $it.children(".tabs").height());
-
-            $it.addClass("bottom-window-group-max");
+            $it.data('height', $it.height()).addClass("bottom-window-group-max").find('.ico-min').hide();
+            windows.outerLayout.hide('west');
+            windows.innerLayout.hide('east');
+            windows.innerLayout.sizePane('south', $('.content').height());
         }
     },
-    maxSide: function () {
+    toggleSide: function () {
         var $it = $(".side");
         if ($it.hasClass("side-max")) {
             windows.restoreSide();
         } else {
-            $it.addClass("side-max");
+            $it.data('width', $it.width()).addClass("side-max").find('.ico-min').hide();
+            $('.content').hide();
+            windows.outerLayout.sizePane('west', $('body').width());
         }
     },
-    maxSideRight: function () {
+    toggleSideRight: function () {
         var $it = $(".side-right");
         if ($it.hasClass("side-right-max")) {
             windows.restoreSideRight();
         } else {
-            $it.addClass("side-right-max");
-            $(".side-right > .tabs-panel > div").height($(".content").height() - $it.children(".tabs").height());
+            $it.addClass("side-right-max").data('width', $it.width()).find('.ico-min').hide();
+            windows.outerLayout.hide('west');
+            windows.innerLayout.hide('south');
+            windows.innerLayout.sizePane('east', $('body').width());
+        }
+    },
+    toggleEditor: function () {
+        var $it = $(".toolbars .font-ico");
+        if ($it.hasClass('ico-restore')) {
+            windows.restoreEditor();
+        } else {
+            windows.outerLayout.close('west');
+            windows.innerLayout.close('south');
+            windows.innerLayout.close('east');
+            $it.removeClass('ico-max').addClass('ico-restore').attr('title', config.label.min);
+            windows.isMaxEditor = true;
         }
     },
     restoreBottom: function () {
         var $it = $(".bottom-window-group");
-        $it.removeClass("bottom-window-group-max").attr("style", "");
-        var bottomH = $it.height();
-
-        $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - $it.children(".tabs").height());
-
-        $it.animate({
-            "top": "70%"
-        }, function () {
-            $(".edit-panel, .side-right").css("height", "70%");
-
-            var editorDatas = editors.data,
-                    height = $(".edit-panel").height() - $(".edit-panel .tabs").height();
-            for (var i = 0, ii = editorDatas.length; i < ii; i++) {
-                editorDatas[i].editor.setSize("100%", height);
-            }
-
-            $("#startPage").height(height - 100);
-            $it.show();
-            $(".footer .ico-restore:eq(1)").hide();
-        });
-
-        if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
-            // 当文件树最小化时
-            $it.css({
-                "width": "100%",
-                "left": "0"
-            });
-        }
+        $it.removeClass("bottom-window-group-max").find('.ico-min').show();
+        windows.outerLayout.show('west');
+        windows.innerLayout.show('east');
+        windows.innerLayout.sizePane('south', $it.data('height'));
     },
     restoreSide: function () {
-        $(".side").animate({
-            "left": "0"
-        }, function () {
-            $(".edit-panel, .bottom-window-group").css({
-                "left": "20%",
-                "width": "80%"
-            });
-
-            if ($(".footer .ico-restore:eq(2)").css("display") === "inline") {
-                // 当outline最小化时
-                $(".edit-panel").css("width", "80%");
-            } else {
-                $(".edit-panel").css("width", "60%");
-            }
-
-            $(".footer .ico-restore:eq(0)").hide();
-        }).removeClass("side-max");
+        var $it = $(".side");
+        $it.removeClass("side-max").find('.ico-min').show();
+        $('.content').show();
+        windows.outerLayout.sizePane('west', $it.data('width'));
     },
     restoreSideRight: function () {
-        $(".side-right").animate({
-            "right": "0"
-        }, function () {
-            if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
-                // 当文件树最小化时
-                $(".edit-panel").css("width", "80%");
-            } else {
-                $(".edit-panel").css("width", "60%");
-            }
-
-            $(".footer .ico-restore:eq(2)").hide();
-            $(".side-right > .tabs-panel > div").height($('.side-right').height()
-                    - $(this).children(".tabs").height());
-        }).removeClass("side-right-max");
+        var $it = $(".side-right");
+        $it.removeClass("side-right-max").find('.ico-min').show();
+        windows.outerLayout.show('west');
+        windows.innerLayout.show('south');
+        windows.innerLayout.sizePane('east', $it.data('width'));
+    },
+    restoreEditor: function () {
+        windows.outerLayout.open('west');
+        windows.innerLayout.open('south');
+        windows.innerLayout.open('east');
+        windows.isMaxEditor = false;
+        $(".toolbars .font-ico").addClass('ico-max').removeClass('ico-restore').attr('title', config.label.max_editor);
     },
     minBottom: function () {
-        $(".edit-panel, .side-right").css("height", "100%");
-
+        windows.innerLayout.close('south');
+    },
+    minSide: function () {
+        windows.outerLayout.close('west');
+    },
+    minSideRight: function () {
+        windows.innerLayout.close('east');
+    },
+    refreshEditor: function (pane, type) {
+        console.log(type)
         var editorDatas = editors.data,
-                height = $(".content").height() - $(".edit-panel .tabs").height();
+                height = $('.content').height() - pane.height() - 24;
+        switch (type) {
+            case 'close':
+                height = $('.content').height() - 40;
+                break;
+            default:
+                break;
+        }
         for (var i = 0, ii = editorDatas.length; i < ii; i++) {
             editorDatas[i].editor.setSize("100%", height);
         }
-        $("#startPage").height(height - 100);
-        $(".bottom-window-group").css("top", "100%").hide();
-        $(".footer .ico-restore:eq(1)").show();
-    },
-    minSide: function () {
-        $(".side").css("left", "-20%").removeClass("side-max");
 
-        var width = '80%';
-        if ($(".footer .ico-restore:eq(2)").css("display") === "inline") {
-            // 当 outline 最小化时
-            width = '100%';
-        }
-
-        $(".edit-panel, .bottom-window-group").css({
-            "left": "0",
-            "width": width
-        });
-
-        $(".bottom-window-group").css({
-            "left": "0",
-            "width": '100%'
-        });
-
-
-        $(".footer .ico-restore:eq(0)").show();
-    },
-    minSideRight: function () {
-        $(".side-right").css("right", "-20%");
-        $(".footer .ico-restore:eq(2)").show();
-
-        if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
-            // 当文件树最小化时
-            $(".edit-panel").css("width", "100%");
-        } else {
-            $(".edit-panel").css("width", "80%");
-        }
-    },
-    maxEditor: function () {
-        $(".toolbars .ico-max").removeClass("ico-max").addClass("ico-restore")
-                .attr({
-                    "title": config.label.restore_editor,
-                    "onclick": "windows.restoreEditor()"
-                });
-
-        windows.minBottom();
-        windows.minSide();
-        windows.minSideRight();
-        if (wide.curEditor) {
-            wide.curEditor.focus();
-        }
-
-        windows.isMaxEditor = true;
-    },
-    restoreEditor: function () {
-        $(".toolbars .ico-restore").removeClass("ico-restore").addClass("ico-max")
-                .attr({
-                    "title": config.label.max_editor,
-                    "onclick": "windows.maxEditor()"
-                });
-
-        windows.restoreBottom();
-        windows.restoreSide();
-        windows.restoreSideRight();
-        if (wide.curEditor) {
-            wide.curEditor.focus();
-        }
-
-        windows.isMaxEditor = false;
-    },
-    clearFloat: function () {
-        if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
-            // 当文件树最小化时
-            windows.minSide();
-        }
-
-        if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
-            // 当底部最小化时
-            windows.minBottom();
-        }
-
-        if ($(".footer .ico-restore:eq(2)").css("display") === "inline") {
-            // 当 outline 最小化时
-            windows.minSideRight();
-        }
+        $('.bottom-window-group .search').height($('.bottom-window-group .tabs-panel').height());
     },
     flowBottom: function () {
-        if ($(".footer .ico-restore:eq(1)").css("display") === "inline") {
-            // 当底部树最小化时
-            $(".bottom-window-group").css({
-                "top": "70%",
-                "left": "0px",
-                "width": "100%",
-                "z-index": "8"
-            }).show();
-        }
+        windows.innerLayout.open('south');
+        windows.innerLayout.slideOpen('south');
     }
 };

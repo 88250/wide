@@ -14,14 +14,18 @@
  * limitations under the License.
  */
 
+/*
+ * themes for dark.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.0, Dec 6, 2015
+ */
 .side {
     background-color: #303130;
-    border-right: 1px solid #000;
 }
 
 .side-right {
     background-color: #303130;
-    border-left: 1px solid #000;
     color: #999;
 }
 
@@ -139,10 +143,6 @@
 
 .ztree li a {
     color: #e1e1e1;
-}
-
-.bottom-window-group {
-    border-top: 1px solid #000;
 }
 
 .bottom-window-group .tabs-panel > div{

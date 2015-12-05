@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*
+ * themes for wide.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.0, Dec 6, 2015
+ */
 /* start frame */
 .frame {
     position: absolute;
@@ -77,9 +83,19 @@
 .tabs > div > span.changed {
     font-weight: bold;
 }
+
+
+.tabs-panel {
+    overflow: auto;
+    flex: 1;
+}
 /* end tabs */
 
 /* start menu */
+.menu {
+    display: block !important;
+}
+
 .menu > ul > li {
     float: left;
 }
@@ -122,6 +138,7 @@
     width: 226px;
     padding: 5px 0;
     right: 0px;
+    top: 21px;
 }
 
 .share-panel .font-ico {
@@ -143,6 +160,8 @@
     width: 60%;
     height: 70%;
     overflow: hidden;
+    flex-flow: column;
+    display: flex;
 }
 
 .toolbars {
@@ -219,27 +238,8 @@
 
 /* start bottom-window-group */
 .bottom-window-group {
-    width: 80%;
-    position: absolute;
-    left: 20%;
-    width: 80%;
-    height: 30%;
-    top: 70%;
-    z-index: 7;
     background-color: #fff;
-}
-
-.bottom-window-group-max {
-    height: 100%;
-    left: 0;
-    top: 0;
-    width: 100%;
-    z-index: 11;
-    border-top-width: 0 !important;
-}
-
-.bottom-window-group > div > div {
-    overflow: auto;
+    flex-flow: column;
 }
 
 .bottom-window-group .output {
@@ -301,6 +301,11 @@
     width: 50px;
     padding: 0 5px;
 }
+
+.bottom-window-group .search {
+    display: flex;
+    flex-flow: column;
+}
 /* end bottom-window-group */
 
 /* start footer */
@@ -308,11 +313,8 @@
     box-shadow: 0 1px 0 0 rgba(255, 255, 255, 0.06) inset;
     text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.57);
     padding-left: 5px;
-    height: 19px;
     line-height: 18px;
-    bottom: 0;
-    z-index: 11;
-    width: 100%;
+    display: block !important;
 }
 
 .footer .cursor {

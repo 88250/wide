@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*
+ * @file wide.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.0, Dec 6, 2015
+ */
 var wide = {
     curNode: undefined,
     curEditor: undefined,
@@ -362,28 +368,6 @@ var wide = {
             }
         });
     },
-    _initLayout: function () {
-        var mainH = $(window).height() - $(".menu").height() - $(".footer").height() - 2,
-                bottomH = Math.floor(mainH * 0.3);
-        // 减小初始化界面抖动
-        $(".content").height(mainH).css("position", "relative");
-        $(".side .tabs-panel").height(mainH - 20);
-
-        var $bottomGroup = $(".bottom-window-group");
-        if ($bottomGroup.hasClass("bottom-window-group-max")) {
-            $(".bottom-window-group > .tabs-panel > div > div").height(mainH - $bottomGroup.children(".tabs").height());
-        } else {
-            $(".bottom-window-group > .tabs-panel > div > div").height(bottomH - $bottomGroup.children(".tabs").height());
-        }
-
-        if ($(".side-right").hasClass("side-right-max")) {
-            $(".side-right > .tabs-panel > div").height(mainH - $bottomGroup.children(".tabs").height());
-        } else {
-            $(".side-right > .tabs-panel > div").height($('.side-right').height() - $bottomGroup.children(".tabs").height());
-        }
-
-        $("#startPage").height($('.side-right').height() - $bottomGroup.children(".tabs").height() - 100);
-    },
     _initWS: function () {
         var outputWS = new ReconnectingWebSocket(config.channel + '/output/ws?sid=' + config.wideSessionId);
         outputWS.onopen = function () {
@@ -554,17 +538,6 @@ var wide = {
         };
 
         this._initDialog();
-
-        this._initLayout();
-
-        $(window).resize(function () {
-            wide._initLayout();
-            var editorDatas = editors.data,
-                    height = $(".edit-panel").height() - $(".edit-panel .tabs").height();
-            for (var i = 0, ii = editorDatas.length; i < ii; i++) {
-                editorDatas[i].editor.setSize("100%", height);
-            }
-        });
     },
     _save: function (path, editor) {
         if (!path) {

@@ -9,6 +9,8 @@
         <meta name="author" content="B3log">
         <meta property="og:description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
 
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/jquery-layout/layout-default-latest.css">
+  
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/lint.css">
@@ -394,92 +396,104 @@
             </div>
         </div>
 
-        <div class="content">
-            <div class="side">
-                <span title="{{.i18n.min}}" class="font-ico ico-min"></span>
-                <div class="tabs">
-                    <div class="current" data-index="fileTree">
-                        <span title="{{.i18n.file}}">{{.i18n.file}}</span>
+        <div class="side">
+            <span title="{{.i18n.min}}" class="font-ico ico-min"></span>
+            <div class="tabs">
+                <div class="current" data-index="fileTree">
+                    <span title="{{.i18n.file}}">{{.i18n.file}}</span>
+                </div>
+            </div> 
+            <div class="tabs-panel">
+                <div data-index="fileTree">
+                    <ul id="files" tabindex="-1" class="ztree"></ul>
+                    <input id="importFileupload" class="fn-none" type="file"
+                           name="files[]" onclick="tree.import();" multiple>
+                    <!-- directory context menu -->
+                    <div id="dirRMenu" class="frame">
+                        <ul>
+                            <li class="create" onclick="tree.newFile(this);">
+                                <span class="space"></span> {{.i18n.create_file}}
+                            </li>
+                            <li class="create" onclick="tree.newDir(this);">
+                                <span class="space"></span> {{.i18n.create_dir}}
+                            </li>
+                            <li class="remove" onclick="tree.removeIt(this);">
+                                <span class="ico-remove font-ico"></span> {{.i18n.delete}}
+                            </li>
+                            <li class="remove" onclick="tree.rename(this);">
+                                <span class="space"></span> {{.i18n.rename}}
+                            </li>
+                            <li class="hr"></li>
+                            <li class="find" onclick="$('#dialogSearchForm').dialog('open');">
+                                <span class="font-ico ico-findfiles"></span> {{.i18n.find_in_files}}
+                            </li>
+                            <li class="hr"></li>
+                            <li onclick="tree.refresh(this);">
+                                <span class="ico-refresh font-ico"></span> {{.i18n.refresh}}
+                            </li>
+                            <li class="hr"></li>
+                            <li onclick="tree.gitClone(this);">
+                                <span class="ico-git font-ico"></span> {{.i18n.git_clone}}
+                            </li>
+                            <li class="hr"></li>
+                            <li onclick="$('#importFileupload').click();">
+                                <span class="ico-import font-ico"></span> {{.i18n.import}}
+                            </li>
+                            <li onclick="tree.export();">
+                                <span class="ico-export font-ico"></span> {{.i18n.export}}
+                            </li>
+                        </ul>
                     </div>
-                </div> 
-                <div class="tabs-panel">
-                    <div data-index="fileTree">
-                        <ul id="files" tabindex="-1" class="ztree"></ul>
-                        <input id="importFileupload" class="fn-none" type="file"
-                               name="files[]" onclick="tree.import();" multiple>
-                        <!-- directory context menu -->
-                        <div id="dirRMenu" class="frame">
-                            <ul>
-                                <li class="create" onclick="tree.newFile(this);">
-                                    <span class="space"></span> {{.i18n.create_file}}
-                                </li>
-                                <li class="create" onclick="tree.newDir(this);">
-                                    <span class="space"></span> {{.i18n.create_dir}}
-                                </li>
-                                <li class="remove" onclick="tree.removeIt(this);">
-                                    <span class="ico-remove font-ico"></span> {{.i18n.delete}}
-                                </li>
-                                <li class="remove" onclick="tree.rename(this);">
-                                    <span class="space"></span> {{.i18n.rename}}
-                                </li>
-                                <li class="hr"></li>
-                                <li class="find" onclick="$('#dialogSearchForm').dialog('open');">
-                                    <span class="font-ico ico-findfiles"></span> {{.i18n.find_in_files}}
-                                </li>
-                                <li class="hr"></li>
-                                <li onclick="tree.refresh(this);">
-                                    <span class="ico-refresh font-ico"></span> {{.i18n.refresh}}
-                                </li>
-                                <li class="hr"></li>
-                                <li onclick="tree.gitClone(this);">
-                                    <span class="ico-git font-ico"></span> {{.i18n.git_clone}}
-                                </li>
-                                <li class="hr"></li>
-                                <li onclick="$('#importFileupload').click();">
-                                    <span class="ico-import font-ico"></span> {{.i18n.import}}
-                                </li>
-                                <li onclick="tree.export();">
-                                    <span class="ico-export font-ico"></span> {{.i18n.export}}
-                                </li>
-                            </ul>
-                        </div>
 
-                        <!-- file context menu -->
-                        <div id="fileRMenu" class="frame">
-                            <ul>
-                                <li class="open" onclick="tree.openFile(wide.curNode);">
-                                    <span class="space"></span> {{.i18n.open}}
-                                </li>
-                                <li class="remove" onclick="tree.removeIt(this);">
-                                    <span class="ico-remove font-ico"></span> {{.i18n.delete}}
-                                </li>
-                                <li class="remove" onclick="tree.rename(this);">
-                                    <span class="space"></span> {{.i18n.rename}}
-                                </li>
-                                <li class="hr"></li>
-                                {{range .crossPlatforms}}
-                                {{if eq . "darwin_amd64" "linux_amd64" "windows_amd64" "linux_arm"}}
-                                <li class="{{.}}" onclick="tree.crossCompile('{{.}}');">
-                                    <span class="space"></span> {{.}}
-                                </li>
-                                {{end}}                                
-                                {{end}}
-                                <li class="hr"></li>
-                                <li class="export" onclick="tree.export(this);">
-                                    <span class="ico-export font-ico"></span> {{.i18n.export}}
-                                </li>
-                                <li class="decompress" onclick="tree.decompress(this);">
-                                    <span class="space"></span> {{.i18n.decompress}}
-                                </li>
-                            </ul>
-                        </div>
+                    <!-- file context menu -->
+                    <div id="fileRMenu" class="frame">
+                        <ul>
+                            <li class="open" onclick="tree.openFile(wide.curNode);">
+                                <span class="space"></span> {{.i18n.open}}
+                            </li>
+                            <li class="remove" onclick="tree.removeIt(this);">
+                                <span class="ico-remove font-ico"></span> {{.i18n.delete}}
+                            </li>
+                            <li class="remove" onclick="tree.rename(this);">
+                                <span class="space"></span> {{.i18n.rename}}
+                            </li>
+                            <li class="hr"></li>
+                            {{range .crossPlatforms}}
+                            {{if eq . "darwin_amd64" "linux_amd64" "windows_amd64" "linux_arm"}}
+                            <li class="{{.}}" onclick="tree.crossCompile('{{.}}');">
+                                <span class="space"></span> {{.}}
+                            </li>
+                            {{end}}                                
+                            {{end}}
+                            <li class="hr"></li>
+                            <li class="export" onclick="tree.export(this);">
+                                <span class="ico-export font-ico"></span> {{.i18n.export}}
+                            </li>
+                            <li class="decompress" onclick="tree.decompress(this);">
+                                <span class="space"></span> {{.i18n.decompress}}
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
+        </div>
 
+        <div class="content">
+            <div class="side-right">
+                <span title="{{.i18n.min}}" class="font-ico ico-min"></span>
+                <div class="tabs">
+                    <div class="current" data-index="outline">
+                        <span title="{{.i18n.outline}}">{{.i18n.outline}}</span>
+                    </div>
+                </div> 
+                <div class="tabs-panel">
+                    <div id="outline" tabindex="-1" data-index="outline"></div>
+                </div>
+            </div>
+            
             <div class="edit-panel">
                 <div class="toolbars">
-                    <span class="font-ico ico-max" onclick="windows.maxEditor()" title="{{.i18n.max_editor}}"></span>
+                    <span class="font-ico ico-max" title="{{.i18n.max_editor}}"></span>
                 </div>
                 <div class="frame">
                     <ul>
@@ -500,18 +514,6 @@
                 </div>
                 <div class="tabs"></div>
                 <div class="tabs-panel"></div>
-            </div>
-
-            <div class="side-right">
-                <span title="{{.i18n.min}}" class="font-ico ico-min"></span>
-                <div class="tabs">
-                    <div class="current" data-index="outline">
-                        <span title="{{.i18n.outline}}">{{.i18n.outline}}</span>
-                    </div>
-                </div> 
-                <div class="tabs-panel">
-                    <div id="outline" tabindex="-1" data-index="outline"></div>
-                </div>
             </div>
 
             <div class="bottom-window-group">
@@ -558,11 +560,6 @@
         </div>
 
         <div class="footer fn-clear">
-            <div class="fn-left">
-                <span title="{{.i18n.restore_side}}" class="font-ico ico-restore fn-none"></span>
-                <span title="{{.i18n.restore_bottom}}" class="font-ico ico-restore fn-none"></span>
-                <span title="{{.i18n.restore_outline}}" class="font-ico ico-restore fn-none"></span>
-            </div>
             <div class="fn-right">
                 <span class="cursor"></span>
                 <span class="notification-count" title="{{.i18n.unread_notification}}">{{.i18n.notification}}</span>
@@ -630,6 +627,8 @@
 
         </script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-layout/jquery.layout-latest.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>    
         <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/Autolinker.min.js"></script>    

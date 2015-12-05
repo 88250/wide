@@ -14,41 +14,35 @@
  * limitations under the License.
  */
 
+/*
+ * themes for side
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.0, Dec 6, 2015
+ */
 /* start side */
 .side {
     width: 20%;
     position: absolute;
     height: 100%;
     z-index: 8;
+    flex-flow: column;
+    display: flex;
 }
 
 .side-max {
     width: 100%;
     z-index: 11;
 }
-
-.side .tabs-panel {
-    overflow: auto;
-}
 /* end side */
 
 /* start side right */
-.side-right {
-    height: 70%;
-    position: absolute;
-    right: 0;
-    width: 20%;
-    z-index: 8;
-}
-
-.side-right-max {
-    width: 100%;
-    height: 100%;
-    z-index: 11;
-}
-
 .side-right .tabs-panel > div {
     overflow: auto;
+}
+
+.side-right {
+    flex-flow: column;
 }
 
 #outline .ico {

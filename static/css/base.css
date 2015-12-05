@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*
+ * themes for base.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.0, Dec 6, 2015
+ */
 /* start reset & function */
 ::-webkit-scrollbar {
     background: none;
@@ -143,7 +149,8 @@ button {
     font-style: normal;
 }
 
-.font-ico {
+.font-ico,
+[class^="ico-"] {
     font-family: 'icomoon';
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;

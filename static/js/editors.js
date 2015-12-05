@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*
+ * @file editor.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.0, Dec 6, 2015
+ */
 var editors = {
     autocompleteMutex: false,
     data: [],
@@ -203,14 +209,6 @@ var editors = {
             }
         });
 
-        $(".edit-panel .tabs").on("dblclick", function () {
-            if ($(".toolbars .ico-max").length === 1) {
-                windows.maxEditor();
-            } else {
-                windows.restoreEditor();
-            }
-        });
-
         this._initCodeMirrorHotKeys();
         this.openStartPage();
         this._initClose();
@@ -247,7 +245,6 @@ var editors = {
                     + '"><span class="ico-start font-ico"></span> ' + config.label.start_page + '</span>',
             content: '<div id="startPage"></div>',
             after: function () {
-                $("#startPage").height($('.side-right').height() - $(".bottom-window-group").children(".tabs").height() - 100);
                 $("#startPage").load(config.context + '/start?sid=' + config.wideSessionId);
                 $.ajax({
                     url: "https://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=20",
@@ -805,10 +802,6 @@ var editors = {
             var cursor = cm.getCursor();
 
             $(".footer .cursor").text('|   ' + (cursor.line + 1) + ':' + (cursor.ch + 1) + '   |');
-        });
-
-        editor.on('focus', function (cm) {
-            windows.clearFloat();
         });
 
         editor.on('blur', function (cm) {
