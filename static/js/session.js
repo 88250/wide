@@ -160,9 +160,7 @@ var session = {
         };
 
         sessionWS.onmessage = function (e) {
-            console.log('[session onmessage]' + e.data);
             var data = JSON.parse(e.data);
-
             switch (data.cmd) {
                 case 'create-file':
                     var node = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.dir)),
@@ -192,11 +190,10 @@ var session = {
                                 "isParent": true
                             }]);
                     }
-
                     break;
                 case 'remove-file':
                 case 'rename-file':
-                    var node = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.path));
+                      var node = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.path));
                     tree.fileTree.removeNode(node);
 
                     var nodes = tree.fileTree.transformToArray(node);
