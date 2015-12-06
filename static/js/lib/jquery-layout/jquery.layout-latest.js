@@ -4718,7 +4718,7 @@
                             width: width  // account for borders & padding
                             , height: cssH($T, spacing) // ditto
                             , left: offset // TODO: VERIFY that toggler  positions correctly for ALL values
-                            , top: 0
+                            , top: -1
                         });
                         // CENTER the toggler content SPAN
                         $T.children(".content").each(function () {
@@ -4731,7 +4731,7 @@
                             height: height // account for borders & padding
                             , width: cssW($T, spacing) // ditto
                             , top: offset // POSITION the toggler
-                            , left: 0
+                            , left: 1
                         });
                         // CENTER the toggler content SPAN
                         $T.children(".content").each(function () {

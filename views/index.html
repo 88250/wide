@@ -405,7 +405,7 @@
             </div> 
             <div class="tabs-panel">
                 <div data-index="fileTree">
-                    <ul id="files" tabindex="-1" class="ztree"></ul>
+                    <ul id="files" class="ztree"></ul>
                     <input id="importFileupload" class="fn-none" type="file"
                            name="files[]" onclick="tree.import();" multiple>
                     <!-- directory context menu -->
@@ -487,7 +487,7 @@
                     </div>
                 </div> 
                 <div class="tabs-panel">
-                    <div id="outline" tabindex="-1" data-index="outline"></div>
+                    <div id="outline" data-index="outline"></div>
                 </div>
             </div>
             
@@ -538,10 +538,10 @@
                 </div>
                 <div class="tabs-panel">
                     <div data-index="output">
-                        <div class="output" tabindex="-1"><div></div></div>
+                        <div class="output"><div></div></div>
                     </div>
                     <div class="fn-none" data-index="search">
-                        <div tabindex="-1" class="search">
+                        <div class="search">
                             <div class="tabs fn-none">
                                 <div class="current" data-index="first">
                                     <span class="first"></span><span class="ico-close font-ico"></span>
@@ -553,7 +553,7 @@
                         </div>
                     </div>
                     <div class="fn-none" data-index="notification">
-                        <div tabindex="-1" class="notification"><table cellpadding="0" cellspacing="0"></table></div>
+                        <div class="notification"><table cellpadding="0" cellspacing="0"></table></div>
                     </div>
                 </div>
             </div>
@@ -589,7 +589,7 @@
         </div>
         <div id="dialogGoFilePrompt" class="dialog-prompt fn-none">
             <input/>
-            <ul class="list" tabindex="-1"></ul>
+            <ul class="list"></ul>
         </div>
         <div id="dialogSearchForm" class="dialog-form fn-none">
             <input placeholder="{{.i18n.keyword}}" />
