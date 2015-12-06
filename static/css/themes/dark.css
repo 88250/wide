@@ -145,7 +145,7 @@
     color: #e1e1e1;
 }
 
-.bottom-window-group .tabs-panel > div{
+.bottom-window-group .tabs-panel {
     background-color: #181818;
     color: #ebebeb;
 }

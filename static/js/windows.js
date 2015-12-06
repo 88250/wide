@@ -221,15 +221,6 @@ var windows = {
         windows.isMaxEditor = false;
         $(".toolbars .font-ico").addClass('ico-max').removeClass('ico-restore').attr('title', config.label.max_editor);
     },
-    minBottom: function () {
-        windows.innerLayout.close('south');
-    },
-    minSide: function () {
-        windows.outerLayout.close('west');
-    },
-    minSideRight: function () {
-        windows.innerLayout.close('east');
-    },
     refreshEditor: function (pane, type) {
         console.log(type)
         var editorDatas = editors.data,
@@ -248,7 +239,7 @@ var windows = {
         $('.bottom-window-group .search').height($('.bottom-window-group .tabs-panel').height());
     },
     flowBottom: function () {
-        windows.innerLayout.open('south');
-        windows.innerLayout.slideOpen('south');
+        // windows.innerLayout.open('south');
+        // windows.innerLayout.slideOpen('south');
     }
 };
