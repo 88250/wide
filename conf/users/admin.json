@@ -13,7 +13,7 @@
     "Keymap": "wide",
     "Created": 1414080000000000000,
     "Updated": 1414080000000000000,
-    "Lived": 1443837436994469575,
+    "Lived": 1414080000000000000,
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "13px",
@@ -23,10 +23,9 @@
     },
     "LatestSessionContent": {
         "FileTree": [
-            "/Users/Vanessa/Work/GoGoGo/src",
-            "/Users/Vanessa/Work/GoGoGo/src/2"
         ],
-        "Files": [],
+        "Files": [
+        ],
         "CurrentFile": "",
         "FileTreeLayout": null,
         "EditorLayout": null,
