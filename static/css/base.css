@@ -156,9 +156,8 @@ button {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     cursor: pointer;
-    font-size: 13px !important;
+    font-size: 13px;
     line-height: 20px;
-    display: block !important;
 }
 
 .ico-book:before {
