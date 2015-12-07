@@ -32,7 +32,6 @@ var windows = {
             north__size: 22,
             south__size: 19,
             spacing_open: 2,
-            spacing_closed: 4,
             north__spacing_open: 0,
             south__spacing_open: 0,
             defaults: {
@@ -62,7 +61,6 @@ var windows = {
 
         this.innerLayout = $('div.content').layout({
             spacing_open: 2,
-            spacing_closed: 4,
             defaults: {
                 fxSpeed_open: 300,
                 fxSpeed_close: 100,

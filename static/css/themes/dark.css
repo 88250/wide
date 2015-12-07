@@ -40,11 +40,13 @@
     color: #EBEBEB;
 }
 
-.font-ico {
+.font-ico,
+.ico-restore {
     color: rgba(255, 255, 255, 0.5);
 }
 
 .font-ico:hover,
+.ico-restore:hover,
 .frame li:hover .font-ico {
     color: #e1e1e1;
 }
@@ -152,4 +154,26 @@
 
 #dialogPreference .preference {
     border: 1px solid #000;
+}
+/* start layout resize */
+.ui-layout-resizer,
+.ui-layout-resizer-dragging,
+.ui-layout-resizer-open-hover,
+.ui-layout-resizer-dragging { 
+    background: #000;
+}
+.ui-layout-resizer-closed {
+    background-color: #555555;
+}
+.ui-layout-resizer-west-closed {
+    border-right: 1px solid #000;
+}
+.ui-layout-resizer-south-closed {
+    border-top: 1px solid #000;
+}
+.ui-layout-resizer-east-closed {
+    border-left: 1px solid #000;
+}
+.ui-layout-resizer-closed-hover	{ /* hover-color to 'slide open' */
+    background: #000;
 }

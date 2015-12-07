@@ -39,11 +39,13 @@
     background-color: #FFF;
 }
 
-.font-ico {
+.font-ico,
+.ico-restore {
     color: #666;
 }
 
 .font-ico:hover,
+.ico-restore:hover,
 .frame li:hover .font-ico {
     color: #333;
 }
@@ -129,4 +131,25 @@
 
 #dialogPreference .preference {
     border: 1px solid #A4A4A4;
+}
+/* start layout resize */
+.ui-layout-resizer,
+.ui-layout-resizer-dragging { 
+    background: #bbb;
+}
+.ui-layout-resizer-open-hover ,	/* hover-color to 'resize' */
+.ui-layout-resizer-dragging {	/* resizer beging 'dragging' */
+    background: #919191;
+}
+.ui-layout-resizer-west-closed {
+    border-right: 1px solid #919191;
+}
+.ui-layout-resizer-south-closed {
+    border-top: 1px solid #919191;
+}
+.ui-layout-resizer-east-closed {
+    border-left: 1px solid #919191;
+}
+.ui-layout-resizer-closed-hover	{ /* hover-color to 'slide open' */
+    background: #919191;
 }
