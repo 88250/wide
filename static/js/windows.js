@@ -15,19 +15,19 @@
  */
 
 /*
- * @file windows.
+ * @file windows.js
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 0.1.1.0, Dec 8, 2015
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.1.1.1, Dec 8, 2015
  */
 var windows = {
     isMaxEditor: false,
     outerLayout: {},
     innerLayout: {},
     init: function () {
-        var layout = {};
-        if (!config.latestSessionContent) {
-            config.latestSessionContent.Layout = {
+        if (!config.latestSessionContent.layout) {
+            config.latestSessionContent.layout = {
                 "side": {
                     "size": 200,
                     "state": 'normal'
@@ -42,8 +42,8 @@ var windows = {
                 }
             };
         }
-        layout = config.latestSessionContent.Layout;
 
+        var layout = config.latestSessionContent.layout;
 
         this.outerLayout = $('body').layout({
             north__paneSelector: ".menu",

@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*
+ * @file dialog.js
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 1.0.0.1, Dec 8, 2015
+ */
 (function ($) {
     $.fn.extend({
         dialog: {

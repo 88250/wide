@@ -14,6 +14,13 @@
  * limitations under the License.
  */
 
+/*
+ * @file bottomGroup.js
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.1.0.1, Dec 8, 2015
+ */
 var bottomGroup = {
     tabs: undefined,
     searchTab: undefined,

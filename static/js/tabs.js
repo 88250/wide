@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*
+ * @file tabs.js
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 1.0.0.1, Dec 8, 2015
+ */
 var Tabs = function (obj) {
     obj._$tabsPanel = $(obj.id + " > .tabs-panel");
     obj._$tabs = $(obj.id + " > .tabs");

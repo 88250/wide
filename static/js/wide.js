@@ -15,10 +15,11 @@
  */
 
 /*
- * @file wide.
+ * @file wide.js
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 0.1.0.0, Dec 6, 2015
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Dec 8, 2015
  */
 var wide = {
     curNode: undefined,

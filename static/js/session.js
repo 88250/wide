@@ -15,10 +15,10 @@
  */
 
 /*
- * @file session.
+ * @file session.js
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 0.1.0.1, Dec 8, 2015
+ * @version 1.1.0.1, Dec 8, 2015
  */
 var session = {
     init: function () {
@@ -87,9 +87,9 @@ var session = {
             return;
         }
 
-        var fileTree = config.latestSessionContent.FileTree,
-                files = config.latestSessionContent.Files,
-                currentFile = config.latestSessionContent.CurrentFile,
+        var fileTree = config.latestSessionContent.fileTree,
+                files = config.latestSessionContent.files,
+                currentFile = config.latestSessionContent.currentFile,
                 id = "",
                 nodesToOpen = [];
 

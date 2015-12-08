@@ -28,22 +28,25 @@ import (
 	"github.com/b3log/wide/util"
 )
 
-// Layout represents the layot of a panel.
+// Panel represents a UI panel.
+type Panel struct {
+	State string `json:"state"` // panel state, "min"/"max"/"normal"
+	Size  uint16 `json:"size"`  // panel size
+}
+
+// Layout represents the UI layout.
 type Layout struct {
-	State string // panel state, "min"/"max"/"normal"
-	Size  uint16 // panel size
+	Side      *Panel `json:"side"`      // Side panel
+	SideRight *Panel `json:"sideRight"` // Right-Side panel
+	Bottom    *Panel `json:"bottom"`    // Bottom panel
 }
 
 // LatestSessionContent represents the latest session content.
 type LatestSessionContent struct {
-	FileTree    []string // paths of expanding nodes of file tree
-	Files       []string // paths of files of opening editor tabs
-	CurrentFile string   // path of file of the current focused editor tab
-
-	SideLayout      *Layout // Left side panel layout
-	EditorLayout    *Layout // Editor panel layout
-	SideRightLayout *Layout // Right side panel layout
-	BottomLayout    *Layout // Bottom panel layout
+	FileTree    []string `json:"fileTree"`    // paths of expanding nodes of file tree
+	Files       []string `json:"files"`       // paths of files of opening editor tabs
+	CurrentFile string   `json:"currentFile"` // path of file of the current focused editor tab
+	Layout      *Layout  `json:"layout"`      // UI Layout
 }
 
 // User configuration.

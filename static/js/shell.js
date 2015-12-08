@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+/*
+ * @file shell.js
+ *
+ * @author <a href="http://88250.b3log.org">Liang Ding</a>
+ * @version 1.0.0.1, Dec 8, 2015
+ */
 var shell = {
     _shellWS: undefined,
     _initWS: function () {
