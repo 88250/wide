@@ -18,7 +18,7 @@ var session = {
     init: function () {
         this._initWS();
 
-        // save session content per 30 seconds
+        // save session content every 30 seconds
         setInterval(function () {
             var request = newWideRequest(),
                     filse = [],

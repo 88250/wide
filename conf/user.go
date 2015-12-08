@@ -28,9 +28,10 @@ import (
 	"github.com/b3log/wide/util"
 )
 
-// Layout represents the layot of a window.
+// Layout represents the layot of a panel.
 type Layout struct {
-	State string // min/max/normal
+	State string // panel state, "min"/"max"/"normal"
+	Size  uint16 // panel size
 }
 
 // LatestSessionContent represents the latest session content.
@@ -39,10 +40,10 @@ type LatestSessionContent struct {
 	Files       []string // paths of files of opening editor tabs
 	CurrentFile string   // path of file of the current focused editor tab
 
-	FileTreeLayout *Layout // TODO: https://github.com/b3log/wide/issues/205
-	EditorLayout   *Layout // TODO: https://github.com/b3log/wide/issues/205
-	OutlineLayout  *Layout // TODO: https://github.com/b3log/wide/issues/205
-	BottomLayout   *Layout // TODO: https://github.com/b3log/wide/issues/205
+	SideLayout      *Layout // Left side panel layout
+	EditorLayout    *Layout // Editor panel layout
+	SideRightLayout *Layout // Right side panel layout
+	BottomLayout    *Layout // Bottom panel layout
 }
 
 // User configuration.
