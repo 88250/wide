@@ -14,9 +14,26 @@
  * limitations under the License.
  */
 
+/*
+ * @file session.
+ *
+ * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
+ * @version 0.1.0.1, Dec 8, 2015
+ */
 var session = {
     init: function () {
         this._initWS();
+
+        var getLayoutState = function (paneState) {
+            var state = 'normal';
+            if (paneState.isClosed) {
+                state = 'min';
+            } else if (paneState.size >= $('body').width()) {
+                state = 'max';
+            }
+
+            return state;
+        };
 
         // save session content every 30 seconds
         setInterval(function () {
@@ -38,6 +55,22 @@ var session = {
             request.currentFile = currentFile; // current editor file
             request.fileTree = fileTree; // file tree expansion state
             request.files = filse; // editor tabs
+
+
+            request.layout = {
+                "side": {
+                    "size": windows.outerLayout.west.state.size,
+                    "state": getLayoutState(windows.outerLayout.west.state)
+                },
+                "sideRight": {
+                    "size": windows.innerLayout.east.state.size,
+                    "state": getLayoutState(windows.innerLayout.east.state)
+                },
+                "bottom": {
+                    "size": windows.innerLayout.south.state.size,
+                    "state": getLayoutState(windows.innerLayout.south.state)
+                }
+            };
 
             $.ajax({
                 type: 'POST',
@@ -118,7 +151,7 @@ var session = {
                 wide.curEditor = editors.data[c].editor;
                 break;
             }
-        }
+        }        
     },
     _initWS: function () {
         // Used for session retention, server will release all resources of the session if this channel closed
@@ -193,7 +226,7 @@ var session = {
                     break;
                 case 'remove-file':
                 case 'rename-file':
-                      var node = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.path));
+                    var node = tree.fileTree.getNodeByTId(tree.getTIdByPath(data.path));
                     tree.fileTree.removeNode(node);
 
                     var nodes = tree.fileTree.transformToArray(node);

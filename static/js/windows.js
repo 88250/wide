@@ -18,13 +18,33 @@
  * @file windows.
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 0.1.0.0, Dec 6, 2015
+ * @version 0.1.1.0, Dec 8, 2015
  */
 var windows = {
     isMaxEditor: false,
     outerLayout: {},
     innerLayout: {},
     init: function () {
+        var layout = {};
+        if (!config.latestSessionContent) {
+            config.latestSessionContent.Layout = {
+                "side": {
+                    "size": 200,
+                    "state": 'normal'
+                },
+                "sideRight": {
+                    "size": 200,
+                    "state": 'normal'
+                },
+                "bottom": {
+                    "size": 100,
+                    "state": 'normal'
+                }
+            };
+        }
+        layout = config.latestSessionContent.Layout;
+
+
         this.outerLayout = $('body').layout({
             north__paneSelector: ".menu",
             center__paneSelector: ".content",
@@ -45,6 +65,7 @@ var windows = {
                 }
             },
             west: {
+                size: layout.side.size,
                 paneSelector: ".side",
                 togglerLength_open: 0,
                 togglerLength_closed: 15,
@@ -55,7 +76,8 @@ var windows = {
                 togglerClass: "ico-restore",
                 togglerTip_open: config.label.min,
                 togglerTip_closed: config.label.restore_side,
-                resizerTip: config.label.resize
+                resizerTip: config.label.resize,
+                initClosed: (layout.side.state === 'min')
             }
         });
 
@@ -75,6 +97,7 @@ var windows = {
                 paneSelector: ".edit-panel"
             },
             east: {
+                size: layout.sideRight.size,
                 paneSelector: ".side-right",
                 togglerLength_open: 0,
                 togglerLength_closed: 15,
@@ -85,9 +108,11 @@ var windows = {
                 togglerClass: "ico-restore",
                 togglerTip_open: config.label.min,
                 togglerTip_closed: config.label.restore_outline,
-                resizerTip: config.label.resize
+                resizerTip: config.label.resize,
+                initClosed: (layout.sideRight.state === 'min')
             },
             south: {
+                size: layout.bottom.size,
                 paneSelector: ".bottom-window-group",
                 togglerLength_open: 0,
                 togglerLength_closed: 15,
@@ -99,6 +124,7 @@ var windows = {
                 togglerTip_open: config.label.min,
                 togglerTip_closed: config.label.restore_bottom,
                 resizerTip: config.label.resize,
+                initClosed: (layout.bottom.state === 'min'),
                 ondrag_end: function (type, pane) {
                     windows.refreshEditor(pane, 'drag');
                 },
@@ -121,6 +147,16 @@ var windows = {
         this.innerLayout.addCloseBtn(".side-right .ico-min", "east");
         this.innerLayout.addCloseBtn(".bottom-window-group .ico-min", "south");
 
+        if (layout.side.state === 'max') {
+            windows.maxSide();
+        }
+        if (layout.sideRight.state === 'max') {
+            windows.maxSideRight();
+        }
+        if (layout.bottom.state === 'max') {
+            windows.maxBottom();
+        }
+
         $(".toolbars .ico-max").click(function () {
             windows.toggleEditor();
         });
@@ -130,15 +166,30 @@ var windows = {
         });
 
         $(".bottom-window-group .tabs").dblclick(function () {
-            windows.toggleBottom();
+            var $it = $(".bottom-window-group");
+            if ($it.hasClass("bottom-window-group-max")) {
+                windows.restoreBottom();
+            } else {
+                windows.maxBottom($it);
+            }
         });
 
         $(".side .tabs").dblclick(function () {
-            windows.toggleSide();
+            var $it = $(".side");
+            if ($it.hasClass("side-max")) {
+                windows.restoreSide();
+            } else {
+                windows.restoreSide($it);
+            }
         });
 
         $(".side-right .tabs").dblclick(function () {
-            windows.toggleSideRight();
+            var $it = $(".side-right");
+            if ($it.hasClass("side-right-max")) {
+                windows.restoreSideRight();
+            } else {
+                windows.maxSideRight($it);
+            }
         });
 
         $('.bottom-window-group .search').height($('.bottom-window-group .tabs-panel').height());
@@ -147,38 +198,22 @@ var windows = {
         });
 
     },
-    toggleBottom: function () {
-        var $it = $(".bottom-window-group");
-
-        if ($it.hasClass("bottom-window-group-max")) {
-            windows.restoreBottom();
-        } else {
-            $it.data('height', $it.height()).addClass("bottom-window-group-max").find('.ico-min').hide();
-            windows.outerLayout.hide('west');
-            windows.innerLayout.hide('east');
-            windows.innerLayout.sizePane('south', $('.content').height());
-        }
+    maxBottom: function ($it) {
+        $it.data('height', $it.height()).addClass("bottom-window-group-max").find('.ico-min').hide();
+        windows.outerLayout.hide('west');
+        windows.innerLayout.hide('east');
+        windows.innerLayout.sizePane('south', $('.content').height());
     },
-    toggleSide: function () {
-        var $it = $(".side");
-        if ($it.hasClass("side-max")) {
-            windows.restoreSide();
-        } else {
-            $it.data('width', $it.width()).addClass("side-max").find('.ico-min').hide();
-            $('.content').hide();
-            windows.outerLayout.sizePane('west', $('body').width());
-        }
+    maxSide: function ($it) {
+        $it.data('width', $it.width()).addClass("side-max").find('.ico-min').hide();
+        $('.content').hide();
+        windows.outerLayout.sizePane('west', $('body').width());
     },
-    toggleSideRight: function () {
-        var $it = $(".side-right");
-        if ($it.hasClass("side-right-max")) {
-            windows.restoreSideRight();
-        } else {
-            $it.addClass("side-right-max").data('width', $it.width()).find('.ico-min').hide();
-            windows.outerLayout.hide('west');
-            windows.innerLayout.hide('south');
-            windows.innerLayout.sizePane('east', $('body').width());
-        }
+    maxSideRight: function ($it) {
+        $it.addClass("side-right-max").data('width', $it.width()).find('.ico-min').hide();
+        windows.outerLayout.hide('west');
+        windows.innerLayout.hide('south');
+        windows.innerLayout.sizePane('east', $('body').width());
     },
     toggleEditor: function () {
         var $it = $(".toolbars .font-ico");
@@ -220,7 +255,6 @@ var windows = {
         $(".toolbars .font-ico").addClass('ico-max').removeClass('ico-restore').attr('title', config.label.max_editor);
     },
     refreshEditor: function (pane, type) {
-        console.log(type)
         var editorDatas = editors.data,
                 height = $('.content').height() - pane.height() - 24;
         switch (type) {
