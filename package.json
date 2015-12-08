@@ -1,0 +1,31 @@
+{
+    "name": "wide",
+    "version": "1.4.0",
+    "description": "A Web-based IDE for Teams using Go programming language/Golang.",
+    "homepage": "https://wide.b3log.org",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/b3log/wide.git"
+    },
+    "bugs": {
+        "url": "https://github.com/b3log/wide/issues"
+    },
+    "license": "Apache License",
+    "private": true,
+    "author": "Daniel <dl882509@gmail.com> (http://88250.b3log.org) & Vanessa <lly219@gmail.com> (http://vanessa.b3log.org)",
+    "maintainers": [
+        {
+            "name": "Daniel",
+            "email": "dl88250@gmail.com"
+        },
+        {
+            "name": "Vanessa",
+            "email": "lly219@gmail.com"
+        }
+    ],
+    "devDependencies": {
+        "gulp": "3.9.0",
+        "gulp-util": "3.0.7",
+        "gulp-clean": "0.3.1"
+    }
+}
