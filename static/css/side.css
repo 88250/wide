@@ -82,6 +82,8 @@
 .ztree {
     width: 100%;
     padding: 0;
+    outline: 0px;
+    border: 0px;
 }
 
 .ztree li a.curSelectedNode {

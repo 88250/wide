@@ -271,7 +271,8 @@ var windows = {
         $('.bottom-window-group .search').height($('.bottom-window-group .tabs-panel').height());
     },
     flowBottom: function () {
-        // windows.innerLayout.open('south');
-        // windows.innerLayout.slideOpen('south');
+        if (windows.innerLayout.south.state.isClosed) {
+            windows.innerLayout.slideOpen('south');
+        }
     }
 };

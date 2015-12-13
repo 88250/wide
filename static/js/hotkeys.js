@@ -43,13 +43,9 @@ var hotkeys = {
             which: 49,
             fun: function () {
                 // 有些元素需设置 tabindex 为 -1 时才可以 focus
-                if ($(".footer .ico-restore:eq(0)").css("display") === "inline") {
-                    // 当文件树最小化时
-                    $(".side").css({
-                        "left": "0"
-                    });
+                if (windows.outerLayout.west.state.isClosed) {
+                    windows.outerLayout.slideOpen('west');
                 }
-
                 $("#files").focus();
             }
         },
@@ -60,11 +56,8 @@ var hotkeys = {
             shiftKey: false,
             which: 50,
             fun: function () {
-                if ($(".footer .ico-restore:eq(2)").css("display") === "inline") {
-                    // 当文件树最小化时
-                    $(".side-right").css({
-                        "right": "0"
-                    });
+                if (windows.innerLayout.east.state.isClosed) {
+                    windows.innerLayout.slideOpen('east');
                 }
 
                 $("#outline").focus();
@@ -223,9 +216,9 @@ var hotkeys = {
             if (event.altKey === hotKeys.clearWindow.altKey
                     && event.which === hotKeys.clearWindow.which) {  // Alt-C clear output
                 bottomGroup.clear('output');
-                
+
                 event.preventDefault();
-                
+
                 return;
             }
         });
@@ -452,7 +445,7 @@ var hotkeys = {
                     return false;
                 }
 
-                if (editors.data.length > 1) {
+                if (editors.data.length >= 1) {
                     var nextPath = "";
                     for (var i = 0, ii = editors.data.length; i < ii; i++) {
                         var currentId = editors.getCurrentId();
@@ -473,7 +466,7 @@ var hotkeys = {
                     editors.tabs.setCurrent(nextPath);
                     var nextTId = tree.getTIdByPath(nextPath);
                     wide.curNode = tree.fileTree.getNodeByTId(nextTId);
-                    
+
                     tree.fileTree.selectNode(wide.curNode);
                     wide.refreshOutline();
                     var cursor = wide.curEditor.getCursor();
