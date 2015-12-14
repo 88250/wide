@@ -18,7 +18,7 @@
  * themes for wide.
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 0.1.0.0, Dec 6, 2015
+ * @version 0.1.0.1, Dec 15, 2015
  */
 /* start frame */
 .frame {
@@ -88,6 +88,7 @@
 .tabs-panel {
     overflow: auto;
     flex: 1;
+    height: 100%;
 }
 /* end tabs */
 
@@ -248,6 +249,7 @@
     line-height: 16px;
     font-size: 12px;
     overflow-x: scroll;
+    outline: 0;
 }
 
 .bottom-window-group .output pre {
@@ -296,6 +298,10 @@
     line-height: 19px;
 }
 
+.bottom-window-group .notification {
+    outline: 0;
+}
+
 .bottom-window-group .notification .type,
 .bottom-window-group .notification .severity {
     width: 50px;
@@ -305,6 +311,7 @@
 .bottom-window-group .search {
     display: flex;
     flex-flow: column;
+    outline: 0;
 }
 /* end bottom-window-group */
 

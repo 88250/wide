@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.1, Dec 8, 2015
+ * @version 1.1.1.2, Dec 15, 2015
  */
 var windows = {
     isMaxEditor: false,
@@ -198,6 +198,14 @@ var windows = {
         });
 
     },
+    maxEditor: function () {
+        var $it = $(".toolbars .font-ico");
+        windows.outerLayout.close('west');
+        windows.innerLayout.close('south');
+        windows.innerLayout.close('east');
+        $it.removeClass('ico-max').addClass('ico-restore').attr('title', config.label.min);
+        windows.isMaxEditor = true;
+    },
     maxBottom: function ($it) {
         $it.data('height', $it.height()).addClass("bottom-window-group-max").find('.ico-min').hide();
         windows.outerLayout.hide('west');
@@ -220,11 +228,7 @@ var windows = {
         if ($it.hasClass('ico-restore')) {
             windows.restoreEditor();
         } else {
-            windows.outerLayout.close('west');
-            windows.innerLayout.close('south');
-            windows.innerLayout.close('east');
-            $it.removeClass('ico-max').addClass('ico-restore').attr('title', config.label.min);
-            windows.isMaxEditor = true;
+            windows.maxEditor();
         }
     },
     restoreBottom: function () {

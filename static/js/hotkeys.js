@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Dec 8, 2015
+ * @version 1.0.0.2, Dec 15, 2015
  */
 var hotkeys = {
     defaultKeyMap: {
@@ -428,7 +428,7 @@ var hotkeys = {
                     var tabs = ["output", "search", "notification"],
                             nextPath = "";
                     for (var i = 0, ii = tabs.length; i < ii; i++) {
-                        if (document.activeElement.className === tabs[i]) {
+                        if (bottomGroup.tabs.getCurrentId() === tabs[i]) {
                             if (i < ii - 1) {
                                 nextPath = tabs[i + 1];
                             } else {
@@ -445,7 +445,7 @@ var hotkeys = {
                     return false;
                 }
 
-                if (editors.data.length >= 1) {
+                if (editors.data.length > 1) {
                     var nextPath = "";
                     for (var i = 0, ii = editors.data.length; i < ii; i++) {
                         var currentId = editors.getCurrentId();
