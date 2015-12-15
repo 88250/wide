@@ -13,7 +13,7 @@
     "Keymap": "wide",
     "Created": 1414080000000000000,
     "Updated": 1414080000000000000,
-    "Lived": 1450160714578458400,
+    "Lived": 1414080000000000000,
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "13px",
@@ -23,15 +23,6 @@
     },
     "LatestSessionContent": {
         "fileTree": [
-            "D:/Code/GoGoGo/src",
-            "D:/Code/GoGoGo/src/github.com",
-            "D:/Code/GoGoGo/src/github.com/b3log",
-            "D:/Code/GoGoGo/src/github.com/b3log/wide",
-            "D:/Code/GoGoGo/src/github.com/b3log/wide/static",
-            "D:/Code/GoGoGo/src/github.com/b3log/wide/static/css",
-            "D:/Code/GoGoGo/src/github.com/b3log/wide/static/css/fonts",
-            "D:/Code/GoGoGo/src/github.com/b3log/wide/static/css/themes",
-            "D:/Code/GoGoGo/src/github.com/go-fsnotify"
         ],
         "files": [],
         "currentFile": "",
