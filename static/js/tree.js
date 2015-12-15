@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Dec 8, 2015
+ * @version 1.0.1.1, Dec 15, 2015
  */
 var tree = {
     fileTree: undefined,
@@ -426,12 +426,16 @@ var tree = {
 
                         return false;
                     }
-                    
+
                     var data = result.data;
 
                     if (!data.mode) {
                         var mode = CodeMirror.findModeByFileName(treeNode.path);
-                        data.mode = mode.mime;
+                        if (mode) {
+                            data.mode = mode.mime;
+                        } else {
+                            data.mode = 'text/plain';
+                        }
                     }
 
                     if (!data.mode) {
@@ -534,7 +538,7 @@ var tree = {
                         request = newWideRequest();
 
                 request.oldPath = wide.curNode.path;
-                request.newPath = wide.curNode.path.substring(0, wide.curNode.path.lastIndexOf("/") +1) + name;
+                request.newPath = wide.curNode.path.substring(0, wide.curNode.path.lastIndexOf("/") + 1) + name;
 
                 $.ajax({
                     type: 'POST',
