@@ -35,6 +35,8 @@ var File = myfile{}
 func (*myfile) GetFileSize(path string) int64 {
 	fi, err := os.Stat(path)
 	if nil != err {
+		fileLogger.Error(err)
+
 		return -1
 	}
 
