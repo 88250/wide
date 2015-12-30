@@ -122,9 +122,9 @@ func initUsers() {
 
 		err := json.Unmarshal(bytes, user)
 		if err != nil {
-			logger.Errorf("Parses [%s] error: %v", name, err)
+			logger.Errorf("Parses [%s] error: %v, skip loading this user", name, err)
 
-			os.Exit(-1)
+			continue
 		}
 
 		// Compatibility upgrade (1.3.0): https://github.com/b3log/wide/issues/83
