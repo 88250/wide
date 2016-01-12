@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.0, Dec 6, 2015
+ * @version 1.1.1.0, Jan 12, 2016
  */
 var editors = {
     autocompleteMutex: false,
@@ -268,7 +268,7 @@ var editors = {
                         for (var i = 0; i < length; i++) {
                             var article = articles[i];
                             listHTML += "<li>"
-                                    + "<a target='_blank' href='http://hacpai.com"
+                                    + "<a target='_blank' href='"
                                     + article.articlePermalink + "'>"
                                     + article.articleTitle + "</a>&nbsp; <span class='date'>"
                                     + dateFormat(article.articleCreateTime, 'yyyy-MM-dd');
