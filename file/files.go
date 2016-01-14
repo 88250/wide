@@ -621,8 +621,8 @@ func listFiles(dirname string) []string {
 		}
 
 		if fio.IsDir() {
-			// exclude the .git direcitory
-			if ".git" == fio.Name() {
+			// exclude the .git, .svn, .hg direcitory
+			if ".git" == fio.Name() || ".svn" == fio.Name() || ".hg" == fio.Name() {
 				continue
 			}
 
