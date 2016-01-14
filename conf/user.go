@@ -108,6 +108,12 @@ func (u *User) Save() bool {
 		return false
 	}
 
+	if "" == string(bytes) {
+		logger.Error("Truncated user [" + u.Name + "]")
+
+		return false
+	}
+
 	if err = ioutil.WriteFile("conf/users/"+u.Name+".json", bytes, 0644); nil != err {
 		logger.Error(err)
 
