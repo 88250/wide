@@ -27,42 +27,19 @@ var Net = mynet{}
 
 // LocalIP gets the first NIC's IP address.
 func (*mynet) LocalIP() (string, error) {
-	tt, err := net.Interfaces()
+	addrs, err := net.InterfaceAddrs()
 
-	if err != nil {
+	if nil != err {
 		return "", err
 	}
 
-	for _, t := range tt {
-		aa, err := t.Addrs()
-
-		if err != nil {
-			return "", err
-		}
-
-		for _, a := range aa {
-			switch ip := a.(type) {
-			case *net.IPAddr:
-				v4 := ip.IP.To4()
-
-				if v4 == nil || v4.IsLoopback() || v4.IsUnspecified() {
-					continue
-				}
-
-				return v4.String(), nil
-			case *net.IPNet:
-				v4 := ip.IP.To4()
-
-				if v4 == nil || v4.IsLoopback() || v4.IsUnspecified() {
-					continue
-				}
-
-				return v4.String(), nil
-			default:
-				return "", errors.New("cannot find local IP address")
+	for _, address := range addrs {
+		if ipnet, ok := address.(*net.IPNet); ok && !ipnet.IP.IsLoopback() {
+			if nil != ipnet.IP.To4() {
+				return ipnet.IP.String(), nil
 			}
 		}
 	}
 
-	return "", errors.New("cannot find local IP address")
+	return "", errors.New("can't get local IP")
 }
