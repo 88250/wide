@@ -19,13 +19,21 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.1.2, Dec 15, 2015
+ * @version 1.1.2.2, Feb 16, 2016
  */
 var windows = {
     isMaxEditor: false,
     outerLayout: {},
     innerLayout: {},
     init: function () {
+        if (!config.latestSessionContent) {
+            config.latestSessionContent = {
+                "fileTree": [],
+                "files": [],
+                "currentFile": "",
+            };
+        }
+        
         if (!config.latestSessionContent.layout) {
             config.latestSessionContent.layout = {
                 "side": {
