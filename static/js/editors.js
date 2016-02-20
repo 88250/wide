@@ -248,7 +248,7 @@ var editors = {
             after: function () {
                 $("#startPage").load(config.context + '/start?sid=' + config.wideSessionId);
                 $.ajax({
-                    url: "https://symphony.b3log.org/apis/articles?tags=wide,golang&p=1&size=20",
+                    url: "https://hacpai.com/apis/articles?tags=wide,golang&p=1&size=20",
                     type: "GET",
                     dataType: "jsonp",
                     jsonp: "callback",
