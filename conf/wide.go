@@ -116,6 +116,10 @@ func initUsers() {
 			continue
 		}
 
+		if ".json" != filepath.Ext(name) { // such as backup (*.json~) not be created by Wide
+			continue
+		}
+
 		user := &User{}
 
 		bytes, _ := ioutil.ReadFile("conf/users/" + name)
