@@ -165,7 +165,7 @@ var menu = {
             dataType: "json",
             success: function (result) {
                 if (result.succ) {
-                    window.location.href = "/login";
+                    window.location.href = config.context + "/login";
                 }
             }
         });

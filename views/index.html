@@ -312,7 +312,7 @@
                     <span>{{.i18n.team}}</span>
                     <div class="frame">
                         <ul>
-                            <li class="signup" onclick="window.open('/signup')">
+                            <li class="signup" onclick="window.open('{{.conf.Context}}/signup')">
                                 <span class="ico-signup font-ico"></span>
                                 <span>{{.i18n.sign_up}}</span>
                             </li>
@@ -340,12 +340,12 @@
                                 {{.i18n.issues}}
                             </li>
                             <li class="hr"></li>
-                            <li onclick="window.open('/keyboard_shortcuts')">
+                            <li onclick="window.open('{{.conf.Context}}/keyboard_shortcuts')">
                                 <span class="ico-keyboard font-ico"></span>
                                 {{.i18n.keyboard_shortcuts}}
                             </li>
                             <li class="hr"></li>
-                            <li onclick="window.open('/playground')">
+                            <li onclick="window.open('{{.conf.Context}}/playground')">
                                 <span class="space"></span>
                                 Playground
                             </li>
@@ -375,7 +375,7 @@
 
             <div class="fn-right">
                 <img class="gravatar"
-                     onerror="this.src='/static/images/user-thumbnail.png'"
+                     onerror="this.src='{{.conf.StaticServer}}/static/images/user-thumbnail.png'"
                      src="https://secure.gravatar.com/avatar/{{.user.Gravatar}}?s=17&d=https://hacpai.com/images/user-thumbnail.png" 
                      title="{{.user.Name}}"/>
                 <span class="font-ico ico-share"></span> &nbsp;
