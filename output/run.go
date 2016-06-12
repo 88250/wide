@@ -32,7 +32,7 @@ import (
 const (
 	outputBufMax   = 1024 // 1024 string(rune)
 	outputTimeout  = 100  // 100ms
-	outputCountMax = 10   // 10 reads
+	outputCountMax = 30   // 30 reads
 )
 
 type outputBuf struct {

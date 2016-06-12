@@ -29,8 +29,9 @@ import (
 )
 
 const (
-	outputBufMax  = 128 // 128 string(rune)
-	outputTimeout = 100 // 100ms
+	outputBufMax   = 1024 // 1024 string(rune)
+	outputTimeout  = 100  // 100ms
+	outputCountMax = 30   // 30 reads
 )
 
 type outputBuf struct {
@@ -133,6 +134,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			defer util.Recover()
 
 			buf := outputBuf{}
+			count := 0
 
 			for {
 				wsChannel := session.PlaygroundWS[sid]
@@ -141,6 +143,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				r, _, err := outReader.ReadRune()
+				count++
 
 				if nil != err {
 					// remove the exited process from user process set
@@ -171,11 +174,14 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					buf.millisecond = now
 				}
 
-				if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax || oneRuneStr == "\n" {
+				flood := count > outputCountMax
+
+				if "\n" == oneRuneStr && !flood {
 					channelRet["cmd"] = "run"
 					channelRet["output"] = buf.content
 
 					buf = outputBuf{} // a new buffer
+					count = 0         // clear count
 
 					err = wsChannel.WriteJSON(&channelRet)
 					if nil != err {
@@ -184,6 +190,26 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 					}
 
 					wsChannel.Refresh()
+
+					continue
+				}
+
+				if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax {
+					channelRet["cmd"] = "run"
+					channelRet["output"] = buf.content
+
+					buf = outputBuf{} // a new buffer
+					count = 0         // clear count
+
+					err = wsChannel.WriteJSON(&channelRet)
+					if nil != err {
+						logger.Warn(err)
+						break
+					}
+
+					wsChannel.Refresh()
+
+					continue
 				}
 			}
 		}()
