@@ -21,7 +21,7 @@
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground{{if .embed}}-embed{{end}}.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/playground.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
@@ -43,9 +43,6 @@
                     <button class="btn btn-red" id="stop" onclick="playground.stop();">{{.i18n.stop}}</button>
                 </li>
                 <li>
-                    <button class="btn-white btn" id="disqus" onclick="playground.disqus();">Disqus</button>
-                </li>
-                <li>
                     <button class="btn-white btn" id="share" onclick="playground.share();">{{.i18n.share}}</button>
                 </li>
             </ul>
@@ -65,24 +62,14 @@
             </div>
         </div>
         <div class="fn-clear">
-            <div id="editorDiv">
-                <textarea rows="20" id='editor' class="fn-none">{{.code}}</textarea>
+            <div class="fn-left" id="editorDivWrap">
+                <div id="editorDiv">
+                    <textarea rows="20" id='editor' class="fn-none">{{.code}}</textarea>
+                </div>
+                <textarea id="output" rows="20" readonly="readonly" ></textarea>
             </div>
-            <textarea id="output" rows="20" readonly="readonly" ></textarea>
+            <div class="fn-right" id="goNews"></div>
         </div>
-        {{if .disqus}}
-        <div id="disqus_thread"></div>
-        <script type="text/javascript">
-                    var disqus_shortname = 'wide-playground';
-                    var disqus_identifier = {{.fileName}};
-                    var disqus_url = window.location.protocol + "//" + window.location.host + {{.conf.Context}} + "/playground/" + {{.fileName}};
-                    (function() {
-                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-                            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-                            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-                    })();</script>
-        <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-        {{end}}
         <div class="footer">
             <span class="wrapper">
                 Ver {{.ver}}, &copy; {{.year}} <a rel="copyright" href="http://b3log.org" target="_blank">B3LOG.ORG</a>, <a href="https://github.com/b3log/wide/blob/master/TERMS.md" target="_blank">{{.i18n.terms}}</a>
@@ -101,14 +88,12 @@
                             "channel": "{{.conf.Channel}}",
                             "wideSessionId": "{{.sid}}",
                             "label": {{.i18n}},
-                            "autocomplete": {{.conf.Autocomplete}},
-                            "embed": {{.embed}},
-                            "disqus": {{.disqus}}
+                            "autocomplete": {{.conf.Autocomplete}}
                     };
                     function newWideRequest() {
-                    var ret = {
-                    sid: config.wideSessionId
-                    };
+                        var ret = {
+                            sid: config.wideSessionId
+                        };
                             return ret;
                     }
 

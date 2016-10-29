@@ -1,3 +1,4 @@
+@@ -1,100 +0,0 @@
 /*
  * Copyright (c) 2014-2016, b3log.org & hacpai.com
  *
@@ -14,17 +15,18 @@
  * limitations under the License.
  */
 
-body {
+body{ 
     overflow: auto;
 }
 
 .header {
     margin: 0;
-    padding: 10px;
+    padding: 5px;
 }
 
-.font-ico {
-    font-size: 26px;
+.header li {
+    margin-left: 0;
+    margin-right: 20px;
 }
 
 .header .gravatar {
@@ -32,23 +34,25 @@ body {
     border-radius: 13px;
 }
 
-.header > .fn-right {
-    margin-top: 10px;
+.header .logo {
+    height: 28px;
+    margin-top: -6px;
 }
 
-.header .logo {
-    height: 36px;
-    margin-top: -4px;
+.font-ico {
+    font-size: 18px;
+    line-height: 28px;
 }
 
 .share-panel {
     position: absolute;
     z-index: 20;
-    width: 258px;
-    padding: 10px 10px;
+    width: 226px;
+    padding: 5px 0px;
     right: 0px;
     line-height: normal;
-    top: 57px;
+    top: 38px;
+    border-color: #999;
 }
 
 .share-panel .font-ico {
@@ -67,18 +71,17 @@ body {
 }
 
 #editorDiv {
-    width: 60%;
-    float: left;
+    width: 100%;
+    height: 70%;
 }
 
 #output {
-    width: 40%;
-    float: right;
+    height: 30%;
+    width: 100%;
     border-width: 0;
     margin: 0;
-    padding: 0;
-    border-left: 1px solid #919191;
-    font-family: Consolas, 'Courier New', monospace;
+    padding: 2px 5px;
+    border-top: 1px solid #919191;
 }
 
 #dialogShare {
@@ -91,7 +94,44 @@ body {
     word-wrap: break-word;
 }
 
-#disqus_thread {
-    border-top: 1px solid #919191;
-    padding: 0 30px;
+.wrapper {
+    width: auto;
+}
+
+.btn {
+    padding: 3px 8px;
+    font-size: 13px;
+    line-height: 20px;
+    height: 28px;
+}
+
+#editorDivWrap {
+    width: 70%;
+}
+
+#goNews {
+    width: 30%;
+    overflow: auto;
+    border-left: 1px solid #919191;
+}
+
+#goNews li a {
+    display: block;
+    padding: 8px 10px;
+    text-shadow: 0 1px 0 #fff;
+    border-bottom: 1px solid #eee;
+    color: #666;
+}
+
+#goNews li a:hover {
+    text-decoration: none;
+    background-color: #f9f9f9;
+}
+
+#goNews li.title {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 10px;
+    font-size: 14px;
+    line-height: 18px;
+    background-color: #f9fafb;
 }

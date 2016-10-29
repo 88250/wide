@@ -26,16 +26,8 @@ var playground = {
     editor: undefined,
     pid: undefined,
     _resize: function () {
-        if (config.disqus) {
-            return false;
-        }
-        if (config.embed) {
-            $("#editorDiv").parent().height($(window).height() - 33 - $(".footer").height());
-            playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
-        } else {
-            $("#editor, #output").height($(window).height() - 60 - $(".footer").height());
-            playground.editor.setSize("auto", $("#editor").height() + "px");
-        }
+        $('#goNews, #editorDivWrap').height($(window).height() - 40 - $(".footer").height());
+        playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
     },
     _initShare: function () {
         $("#dialogShare").dialog({
@@ -210,11 +202,8 @@ var playground = {
             playground._resize();
         });
 
-        if (config.embed) {
-            playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
-        } else {
-            playground.editor.setSize("auto", $("#editor").height() + "px");
-        }
+        playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
+        
 
         var hovered = false;
         $(".menu .ico-share").hover(function () {
@@ -280,6 +269,7 @@ var playground = {
         this._initWideShare();
         this._initShare();
         menu._initAbout();
+        this._initGoNews();
     },
     _initWS: function () {
         // Used for session retention, server will release all resources of the session if this channel closed
@@ -325,6 +315,34 @@ var playground = {
         playgroundWS.onerror = function (e) {
             console.log('[playground onerror] ' + JSON.parse(e));
         };
+    },
+    _initGoNews: function () {
+        $.ajax({
+            url: "https://hacpai.com/apis/articles?tags=wide,golang&p=1&size=20",
+            type: "GET",
+            dataType: "jsonp",
+            jsonp: "callback",
+            success: function (data, textStatus) {
+                var articles = data.articles;
+                if (0 === articles.length) {
+                    return;
+                }
+
+                var length = articles.length;
+
+                var listHTML = "<ul><li class='title'>" + config.label.community + "</li>";
+                for (var i = 0; i < length; i++) {
+                    var article = articles[i];
+                    listHTML += "<li>"
+                            + "<a target='_blank' href='"
+                            + article.articlePermalink + "'>"
+                            + article.articleTitle + "</a>"
+                    +"</span></li>";
+                }
+
+                $("#goNews").html(listHTML + "</ul>");
+            }
+        });
     },
     share: function () {
         if (!playground.editor) {
@@ -374,7 +392,7 @@ var playground = {
                                 + result.data + '</a><br/>';
                         html += '<label>' + config.label.embeded + config.label.colon
                                 + '</label><br/><textarea rows="5" style="width:100%" readonly><iframe style="border:1px solid" src="'
-                                + url + '?embed=true" width="99%" height="600"></iframe></textarea>';
+                                + url + '" width="99%" height="600"></iframe></textarea>';
                         html += '</div>';
 
                         $("#dialogShare").html(html);
@@ -382,21 +400,6 @@ var playground = {
                     }});
             }
         });
-    },
-    disqus: function () {
-        var url = window.location.href;
-        if (url.indexOf("?") >= 0) {
-            if (url.indexOf("disqus=") >= 0) {
-                url = url.replace("disqus=false", "disqus=true");
-                console.log(url);
-            } else {
-                url += "&disqus=true";
-            }
-        } else {
-            url += "?disqus=true";
-        }
-
-        window.location.href = url;
     },
     stop: function () {
         if (!playground.editor) {

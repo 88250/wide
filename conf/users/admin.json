@@ -9,11 +9,11 @@
     "GoFormat": "gofmt",
     "FontFamily": "Helvetica",
     "FontSize": "13px",
-    "Theme": "dark",
+    "Theme": "default",
     "Keymap": "wide",
     "Created": 1414080000000000000,
-    "Updated": 1414080000000000000,
-    "Lived": 1414080000000000000,
+    "Updated": 1477750918395543731,
+    "Lived": 1477751527252541554,
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "13px",
@@ -23,10 +23,15 @@
     },
     "LatestSessionContent": {
         "fileTree": [
+            "/Users/Vanessa/Work/GoGoGo/src",
+            "/Users/Vanessa/Work/GoGoGo/src/github.com",
+            "/Users/Vanessa/Work/GoGoGo/src/github.com/b3log",
+            "/Users/Vanessa/Work/GoGoGo/src/github.com/b3log/wide"
         ],
         "files": [
+            "/Users/Vanessa/Work/GoGoGo/src/github.com/b3log/wide/.gitignore"
         ],
-        "currentFile": "",
+        "currentFile": "/Users/Vanessa/Work/GoGoGo/src/github.com/b3log/wide/.gitignore",
         "layout": {
             "side": {
                 "state": "normal",
