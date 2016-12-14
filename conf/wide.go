@@ -192,8 +192,6 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	}
 
 	// Users' workspaces Directory
-	logger.Debug(Wide.UsersWorkspaces)
-
 	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${WD}", Wide.WD, 1)
 	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${home}", home, 1)
 	if "" != confUsersWorkspaces {
