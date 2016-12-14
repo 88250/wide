@@ -224,11 +224,8 @@ func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
 	if "GET" == r.Method {
 		// show the user sign up page
 
-		firstUserWorkspace := conf.GetUserWorkspace(conf.Users[0].Name)
-		dir := filepath.Dir(firstUserWorkspace)
-
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
-			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "dir": dir,
+			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "dir": conf.Wide.UsersWorkspaces,
 			"pathSeparator": conf.PathSeparator, "year": time.Now().Year()}
 
 		t, err := template.ParseFiles("views/sign_up.html")
@@ -374,9 +371,7 @@ func addUser(username, password, email string) string {
 		}
 	}
 
-	firstUserWorkspace := conf.GetUserWorkspace(conf.Users[0].Name)
-	dir := filepath.Dir(firstUserWorkspace)
-	workspace := filepath.Join(dir, username)
+	workspace := filepath.Join(conf.Wide.UsersWorkspaces, username)
 
 	newUser := conf.NewUser(username, password, email, workspace)
 	conf.Users = append(conf.Users, newUser)

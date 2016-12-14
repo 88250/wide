@@ -13,6 +13,7 @@
     "WD": "${pwd}",
     "Locale": "en_US",
     "Playground": "${home}/playground",
+	"UsersWorkspaces": "${WD}/workspaces",
     "AllowRegister": true,
     "Autocomplete": true
 }

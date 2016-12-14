@@ -69,6 +69,7 @@ type conf struct {
 	WD                    string // current working direcitory, ${pwd}
 	Locale                string // default locale
 	Playground            string // playground directory
+	UsersWorkspaces       string // users' workspaces directory (admin defaults to ${GOPATH}, others using this)
 	AllowRegister         bool   // allow register or not
 	Autocomplete          bool   // default autocomplete
 }
@@ -87,11 +88,11 @@ var Docker bool
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
 func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confDocker bool) {
+	confPlayground string, confDocker bool, confUsersWorkspaces string) {
 	// XXX: ugly args list....
 
 	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-		confPlayground, confDocker)
+		confPlayground, confDocker, confUsersWorkspaces)
 	initUsers()
 }
 
@@ -144,7 +145,7 @@ func initUsers() {
 }
 
 func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confDocker bool) {
+	confPlayground string, confDocker bool, confUsersWorkspaces string) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -189,6 +190,16 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	if "" != confPlayground {
 		Wide.Playground = confPlayground
 	}
+
+	// Users' workspaces Directory
+	logger.Debug(Wide.UsersWorkspaces)
+
+	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${WD}", Wide.WD, 1)
+	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${home}", home, 1)
+	if "" != confUsersWorkspaces {
+		Wide.UsersWorkspaces = confUsersWorkspaces
+	}
+	Wide.UsersWorkspaces = filepath.Clean(Wide.UsersWorkspaces)
 
 	if !util.File.IsExist(Wide.Playground) {
 		if err := os.Mkdir(Wide.Playground, 0775); nil != err {

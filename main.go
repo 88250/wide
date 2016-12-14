@@ -57,6 +57,7 @@ func init() {
 	confStat := flag.Bool("stat", false, "whether report statistics periodically")
 	confDocker := flag.Bool("docker", false, "whether run in a docker container")
 	confPlayground := flag.String("playground", "", "this will overwrite Wide.Playground if specified")
+	confUsersWorkspaces := flag.String("users_workspaces", "", "this will overwrite Wide.UsersWorkspaces if specified")
 
 	flag.Parse()
 
@@ -75,7 +76,7 @@ func init() {
 	event.Load()
 
 	conf.Load(*confPath, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel,
-		*confPlayground, *confDocker)
+		*confPlayground, *confDocker, *confUsersWorkspaces)
 
 	conf.FixedTimeCheckEnv()
 
