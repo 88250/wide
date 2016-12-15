@@ -84,6 +84,9 @@ Wide 的主要作者是 [Daniel](https://github.com/88250) 与 [Vanessa](https:/
   
   ![Cross-Compilation](https://cloud.githubusercontent.com/assets/873584/10130037/226d75fc-65f7-11e5-94e4-25ee579ca175.png)
 
+* **Playground**
+  ![Playground](https://cloud.githubusercontent.com/assets/873584/21209772/449ecfd2-c2b1-11e6-9aa6-a83477d9f269.gif)
+  
 ## Architecture 
 
 ### Build & Run
