@@ -1,5 +1,26 @@
-FROM golang:cross
+FROM golang:1.7.4
 MAINTAINER Liang Ding <dl88250@gmail.com>
+
+ENV GOLANG_CROSSPLATFORMS \
+	darwin/386 darwin/amd64 \
+	dragonfly/386 dragonfly/amd64 \
+	freebsd/386 freebsd/amd64 freebsd/arm \
+	linux/386 linux/amd64 linux/arm \
+	nacl/386 nacl/amd64p32 nacl/arm \
+	netbsd/386 netbsd/amd64 netbsd/arm \
+	openbsd/386 openbsd/amd64 \
+	plan9/386 plan9/amd64 \
+	solaris/amd64 \
+	windows/386 windows/amd64
+ENV GOARM 5
+
+RUN cd /usr/local/go/src \
+	&& set -ex \
+	&& for platform in $GOLANG_CROSSPLATFORMS; do \
+		GOOS=${platform%/*} \
+		GOARCH=${platform##*/} \
+		./make.bash --no-clean 2>&1; \
+	done
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
 
