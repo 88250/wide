@@ -13,7 +13,7 @@ RUN cd /usr/local/go/src && export GOOS=windows && export GOARCH=amd64 && ./make
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
 
-RUN unzip /wide/gogogo/src/github.com/b3log/wide/deps/golang.org.zip-d /wide/gogogo/src/
+RUN unzip /wide/gogogo/src/github.com/b3log/wide/deps/golang.org.zip -d /wide/gogogo/src/
 RUN unzip /wide/gogogo/src/github.com/b3log/wide/deps/github.com.zip -d /wide/gogogo/src/
 
 RUN useradd wide && useradd runner
