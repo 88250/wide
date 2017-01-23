@@ -4,11 +4,12 @@ MAINTAINER Liang Ding <dl88250@gmail.com>
 RUN apt-get update &&  apt-get install bzip2
 
 ENV GOROOT /usr/local/go
-ENV GOROOT_BOOTSTRAP=$GOROOT
+RUN cp -r /usr/local/go /usr/local/gobt
+ENV GOROOT_BOOTSTRAP=/usr/local/gobt
 
-RUN cd /usr/local/go/src && export GOOS=darwin && export GOARCH=amd64 && ./bootstrap.bash --no-clean
-RUN cd /usr/local/go/src && export GOOS=linux && export GOARCH=arm && ./bootstrap.bash --no-clean
-RUN cd /usr/local/go/src && export GOOS=windows && export GOARCH=amd64 && ./bootstrap.bash --no-clean
+RUN cd /usr/local/go/src && export GOOS=darwin && export GOARCH=amd64 && ./make.bash --no-clean
+RUN cd /usr/local/go/src && export GOOS=linux && export GOARCH=arm && ./make.bash --no-clean
+RUN cd /usr/local/go/src && export GOOS=windows && export GOARCH=amd64 && ./make.bash --no-clean
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
 
