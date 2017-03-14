@@ -45,7 +45,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	user := conf.GetUser(username)
+	locale := user.Locale
 
 	var args map[string]interface{}
 
@@ -93,7 +94,11 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		suffix = ".exe"
 	}
 
-	cmd := exec.Command("go", "build")
+	goBuildArgs := []string{}
+	goBuildArgs = append(goBuildArgs, "build")
+	goBuildArgs = append(goBuildArgs, strings.Split(user.GoBuildArgs, " ")...)
+
+	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)
@@ -126,7 +131,10 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != session.OutputWS[sid] {
 		// display "START [go build]" in front-end browser
 
-		channelRet["output"] = "<span class='start-build'>" + i18n.Get(locale, "start-build").(string) + "</span>\n"
+		msg := i18n.Get(locale, "start-build").(string)
+		msg = strings.Replace(msg, "build]", "build "+user.GoBuildArgs+"]", 1)
+
+		channelRet["output"] = "<span class='start-build'>" + msg + "</span>\n"
 		channelRet["cmd"] = "start-build"
 
 		wsChannel := session.OutputWS[sid]
@@ -161,6 +169,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "build"
 		channelRet["executable"] = executable
+
+		// FIXME: Daniel, build output process, should check stdout/stderr rather than length of output
 
 		if 0 == len(buf) { // build success
 			channelRet["nextCmd"] = args["nextCmd"]

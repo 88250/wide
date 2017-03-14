@@ -424,6 +424,7 @@ var menu = {
                             $fontFamily = $dialogPreference.find("input[name=fontFamily]"),
                             $fontSize = $dialogPreference.find("input[name=fontSize]"),
                             $goFmt = $dialogPreference.find("select[name=goFmt]"),
+                            $goBuildArgs = $dialogPreference.find("input[name=goBuildArgs]"),
                             $workspace = $dialogPreference.find("input[name=workspace]"),
                             $password = $dialogPreference.find("input[name=password]"),
                             $email = $dialogPreference.find("input[name=email]"),
@@ -440,6 +441,7 @@ var menu = {
                         "fontFamily": $fontFamily.val(),
                         "fontSize": $fontSize.val(),
                         "goFmt": $goFmt.val(),
+                        "goBuildArgs": $goBuildArgs.val(),
                         "workspace": $workspace.val(),
                         "password": $password.val(),
                         "email": $email.val(),
@@ -469,6 +471,7 @@ var menu = {
                             $fontFamily.data("value", $fontFamily.val());
                             $fontSize.data("value", $fontSize.val());
                             $goFmt.data("value", $goFmt.val());
+                            $goBuildArgs.data("value", $goBuildArgs.val());
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
                             $email.data("value", $email.val());
