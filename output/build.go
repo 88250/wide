@@ -22,6 +22,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	"github.com/b3log/wide/conf"
@@ -193,6 +194,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	errReader := bufio.NewReader(stderr)
+	lines := []string{}
 	for {
 		wsChannel := session.OutputWS[sid]
 		if nil == wsChannel {
@@ -204,6 +206,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			break
 		}
 
+		lines = append(lines, line)
+
 		if nil != err {
 			logger.Warn(err)
 
@@ -212,59 +216,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 		// path process
 		errOutWithPath := parsePath(curDir, line)
-
 		channelRet["output"] = "<span class='stderr'>" + errOutWithPath + "</span>"
-
-		// lint process
-
-		//		if lines[0][0] == '#' {
-		//			lines = lines[1:] // skip the first line
-		//		}
-
-		//		lints := []*Lint{}
-
-		//		for _, line := range lines {
-		//			if len(line) < 1 {
-		//				continue
-		//			}
-
-		//			if line[0] == '\t' {
-		//				// append to the last lint
-		//				last := len(lints)
-		//				msg := lints[last-1].Msg
-		//				msg += line
-
-		//				lints[last-1].Msg = msg
-
-		//				continue
-		//			}
-
-		//			file := line[:strings.Index(line, ":")]
-		//			left := line[strings.Index(line, ":")+1:]
-		//			index := strings.Index(left, ":")
-		//			lineNo := 0
-		//			msg := left
-		//			if index >= 0 {
-		//				lineNo, err = strconv.Atoi(left[:index])
-
-		//				if nil != err {
-		//					continue
-		//				}
-
-		//				msg = left[index+2:]
-		//			}
-
-		//			lint := &Lint{
-		//				File:     filepath.Join(curDir, file),
-		//				LineNo:   lineNo - 1,
-		//				Severity: lintSeverityError,
-		//				Msg:      msg,
-		//			}
-
-		//			lints = append(lints, lint)
-		//		}
-
-		//		channelRet["lints"] = lints
 
 		err = wsChannel.WriteJSON(&channelRet)
 		if nil != err {
@@ -274,17 +226,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 		wsChannel.Refresh()
 	}
-
-	/////////////
-
-	//		if 0 < len(stderrBuf) { // build error
-	//			// build gutter lint
-
-	//			errOut := string(stderrBuf)
-	//			lines := strings.Split(errOut, "\n")
-
-	//
-	//		}
 
 	if nil == cmd.Wait() {
 		channelRet["nextCmd"] = args["nextCmd"]
@@ -305,6 +246,57 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		}()
 	} else {
 		channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n"
+
+		logger.Info(lines)
+		// lint process
+		if lines[0][0] == '#' {
+			lines = lines[1:] // skip the first line
+		}
+
+		lints := []*Lint{}
+
+		for _, line := range lines {
+			if len(line) < 1 || !strings.Contains(line, ":") {
+				continue
+			}
+
+			if line[0] == '\t' {
+				// append to the last lint
+				last := len(lints)
+				msg := lints[last-1].Msg
+				msg += line
+
+				lints[last-1].Msg = msg
+
+				continue
+			}
+
+			file := line[:strings.Index(line, ":")]
+			left := line[strings.Index(line, ":")+1:]
+			index := strings.Index(left, ":")
+			lineNo := 0
+			msg := left
+			if index >= 0 {
+				lineNo, err = strconv.Atoi(left[:index])
+
+				if nil != err {
+					continue
+				}
+
+				msg = left[index+2:]
+			}
+
+			lint := &Lint{
+				File:     filepath.ToSlash(filepath.Join(curDir, file)),
+				LineNo:   lineNo - 1,
+				Severity: lintSeverityError,
+				Msg:      msg,
+			}
+
+			lints = append(lints, lint)
+		}
+
+		channelRet["lints"] = lints
 	}
 
 	wsChannel := session.OutputWS[sid]

@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Dec 8, 2015
+ * @version 1.0.1.1, Mar 15, 2017
  */
 var menu = {
     init: function () {
@@ -313,10 +313,11 @@ var menu = {
             dataType: "json",
             beforeSend: function () {
                 bottomGroup.resetOutput();
-            },
-            success: function (result) {
+                
                 $("#buildRun").addClass("ico-stop")
                         .removeClass("ico-buildrun").attr("title", config.label.stop);
+            },
+            success: function (result) {
             }
         });
     },
