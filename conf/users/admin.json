@@ -7,6 +7,7 @@
     "Workspace": "${GOPATH}",
     "Locale": "en_US",
     "GoFormat": "gofmt",
+    "GoBuildArgs": "-i",
     "FontFamily": "Helvetica",
     "FontSize": "13px",
     "Theme": "default",
@@ -18,20 +19,15 @@
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "13px",
         "LineHeight": "17px",
-        "Theme": "lesser-dark",
+        "Theme": "wide",
         "TabSize": "4"
     },
     "LatestSessionContent": {
         "fileTree": [
-            "/Users/Vanessa/Work/GoGoGo/src",
-            "/Users/Vanessa/Work/GoGoGo/src/github.com",
-            "/Users/Vanessa/Work/GoGoGo/src/github.com/b3log",
-            "/Users/Vanessa/Work/GoGoGo/src/github.com/b3log/wide"
         ],
         "files": [
-            "/Users/Vanessa/Work/GoGoGo/src/github.com/b3log/wide/.gitignore"
         ],
-        "currentFile": "/Users/Vanessa/Work/GoGoGo/src/github.com/b3log/wide/.gitignore",
+        "currentFile": "",
         "layout": {
             "side": {
                 "state": "normal",
