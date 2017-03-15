@@ -18,8 +18,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"io"
-	"io/ioutil"
-	"math/rand"
 	"net/http"
 	"os"
 	"os/exec"
@@ -45,7 +43,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	user := conf.GetUser(username)
+	locale := user.Locale
 
 	var args map[string]interface{}
 
@@ -93,7 +92,11 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		suffix = ".exe"
 	}
 
-	cmd := exec.Command("go", "build")
+	goBuildArgs := []string{}
+	goBuildArgs = append(goBuildArgs, "build")
+	goBuildArgs = append(goBuildArgs, strings.Split(user.GoBuildArgs, " ")...)
+
+	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)
@@ -126,7 +129,10 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != session.OutputWS[sid] {
 		// display "START [go build]" in front-end browser
 
-		channelRet["output"] = "<span class='start-build'>" + i18n.Get(locale, "start-build").(string) + "</span>\n"
+		msg := i18n.Get(locale, "start-build").(string)
+		msg = strings.Replace(msg, "build]", "build "+user.GoBuildArgs+"]", 1)
+
+		channelRet["output"] = "<span class='start-build'>" + msg + "</span>\n"
 		channelRet["cmd"] = "start-build"
 
 		wsChannel := session.OutputWS[sid]
@@ -140,8 +146,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		wsChannel.Refresh()
 	}
 
-	reader := bufio.NewReader(io.MultiReader(stdout, stderr))
-
 	if err := cmd.Start(); nil != err {
 		logger.Error(err)
 		result.Succ = false
@@ -149,114 +153,160 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	go func(runningId int) {
+	// logger.Debugf("User [%s, %s] is building [id=%d, dir=%s]", username, sid, runningId, curDir)
+
+	channelRet["cmd"] = "build"
+	channelRet["executable"] = executable
+
+	outReader := bufio.NewReader(stdout)
+
+	/////////
+	go func() {
 		defer util.Recover()
-		defer cmd.Wait()
 
-		// logger.Debugf("User [%s, %s] is building [id=%d, dir=%s]", username, sid, runningId, curDir)
-
-		// read all
-		buf, _ := ioutil.ReadAll(reader)
-
-		channelRet := map[string]interface{}{}
-		channelRet["cmd"] = "build"
-		channelRet["executable"] = executable
-
-		if 0 == len(buf) { // build success
-			channelRet["nextCmd"] = args["nextCmd"]
-			channelRet["output"] = "<span class='build-succ'>" + i18n.Get(locale, "build-succ").(string) + "</span>\n"
-
-			go func() { // go install, for subsequent gocode lib-path
-				defer util.Recover()
-
-				cmd := exec.Command("go", "install")
-				cmd.Dir = curDir
-
-				setCmdEnv(cmd, username)
-
-				out, _ := cmd.CombinedOutput()
-				if len(out) > 0 {
-					logger.Warn(string(out))
-				}
-			}()
-		} else { // build error
-			// build gutter lint
-
-			errOut := string(buf)
-			lines := strings.Split(errOut, "\n")
-
-			// path process
-			var errOutWithPath string
-			for _, line := range lines {
-				errOutWithPath += parsePath(curDir, line) + "\n"
-			}
-
-			channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n" +
-				"<span class='stderr'>" + errOutWithPath + "</span>"
-
-			// lint process
-
-			if lines[0][0] == '#' {
-				lines = lines[1:] // skip the first line
-			}
-
-			lints := []*Lint{}
-
-			for _, line := range lines {
-				if len(line) < 1 {
-					continue
-				}
-
-				if line[0] == '\t' {
-					// append to the last lint
-					last := len(lints)
-					msg := lints[last-1].Msg
-					msg += line
-
-					lints[last-1].Msg = msg
-
-					continue
-				}
-
-				file := line[:strings.Index(line, ":")]
-				left := line[strings.Index(line, ":")+1:]
-				index := strings.Index(left, ":")
-				lineNo := 0
-				msg := left
-				if index >= 0 {
-					lineNo, err = strconv.Atoi(left[:index])
-
-					if nil != err {
-						continue
-					}
-
-					msg = left[index+2:]
-				}
-
-				lint := &Lint{
-					File:     filepath.Join(curDir, file),
-					LineNo:   lineNo - 1,
-					Severity: lintSeverityError,
-					Msg:      msg,
-				}
-
-				lints = append(lints, lint)
-			}
-
-			channelRet["lints"] = lints
-		}
-
-		if nil != session.OutputWS[sid] {
-			// logger.Debugf("User [%s, %s] 's build [id=%d, dir=%s] has done", username, sid, runningId, curDir)
-
+		for {
 			wsChannel := session.OutputWS[sid]
-			err := wsChannel.WriteJSON(&channelRet)
+			if nil == wsChannel {
+				break
+			}
+
+			line, err := outReader.ReadString('\n')
+			if io.EOF == err {
+				break
+			}
+
 			if nil != err {
 				logger.Warn(err)
+
+				break
+			}
+
+			channelRet["output"] = line
+
+			err = wsChannel.WriteJSON(&channelRet)
+			if nil != err {
+				logger.Warn(err)
+				break
 			}
 
 			wsChannel.Refresh()
 		}
+	}()
 
-	}(rand.Int())
+	errReader := bufio.NewReader(stderr)
+	lines := []string{}
+	for {
+		wsChannel := session.OutputWS[sid]
+		if nil == wsChannel {
+			break
+		}
+
+		line, err := errReader.ReadString('\n')
+		if io.EOF == err {
+			break
+		}
+
+		lines = append(lines, line)
+
+		if nil != err {
+			logger.Warn(err)
+
+			break
+		}
+
+		// path process
+		errOutWithPath := parsePath(curDir, line)
+		channelRet["output"] = "<span class='stderr'>" + errOutWithPath + "</span>"
+
+		err = wsChannel.WriteJSON(&channelRet)
+		if nil != err {
+			logger.Warn(err)
+			break
+		}
+
+		wsChannel.Refresh()
+	}
+
+	if nil == cmd.Wait() {
+		channelRet["nextCmd"] = args["nextCmd"]
+		channelRet["output"] = "<span class='build-succ'>" + i18n.Get(locale, "build-succ").(string) + "</span>\n"
+
+		go func() { // go install, for subsequent gocode lib-path
+			defer util.Recover()
+
+			cmd := exec.Command("go", "install")
+			cmd.Dir = curDir
+
+			setCmdEnv(cmd, username)
+
+			out, _ := cmd.CombinedOutput()
+			if len(out) > 0 {
+				logger.Warn(string(out))
+			}
+		}()
+	} else {
+		channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n"
+
+		logger.Info(lines)
+		// lint process
+		if lines[0][0] == '#' {
+			lines = lines[1:] // skip the first line
+		}
+
+		lints := []*Lint{}
+
+		for _, line := range lines {
+			if len(line) < 1 || !strings.Contains(line, ":") {
+				continue
+			}
+
+			if line[0] == '\t' {
+				// append to the last lint
+				last := len(lints)
+				msg := lints[last-1].Msg
+				msg += line
+
+				lints[last-1].Msg = msg
+
+				continue
+			}
+
+			file := line[:strings.Index(line, ":")]
+			left := line[strings.Index(line, ":")+1:]
+			index := strings.Index(left, ":")
+			lineNo := 0
+			msg := left
+			if index >= 0 {
+				lineNo, err = strconv.Atoi(left[:index])
+
+				if nil != err {
+					continue
+				}
+
+				msg = left[index+2:]
+			}
+
+			lint := &Lint{
+				File:     filepath.ToSlash(filepath.Join(curDir, file)),
+				LineNo:   lineNo - 1,
+				Severity: lintSeverityError,
+				Msg:      msg,
+			}
+
+			lints = append(lints, lint)
+		}
+
+		channelRet["lints"] = lints
+	}
+
+	wsChannel := session.OutputWS[sid]
+	if nil == wsChannel {
+		return
+	}
+	err = wsChannel.WriteJSON(&channelRet)
+	if nil != err {
+		logger.Warn(err)
+	}
+
+	wsChannel.Refresh()
 }

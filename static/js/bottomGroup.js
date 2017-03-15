@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.1.0.1, Dec 8, 2015
+ * @version 1.1.1.1, Mar 15, 2017
  */
 var bottomGroup = {
     tabs: undefined,
@@ -82,6 +82,7 @@ var bottomGroup = {
     fillOutput: function (data) {
         var $output = $('.bottom-window-group .output');
 
+        data = data.replace(/\r/g, '');
         data = data.replace(/\n/g, '<br/>');
 
         if (-1 !== data.indexOf("<br/>")) {

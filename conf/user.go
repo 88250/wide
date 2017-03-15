@@ -59,6 +59,7 @@ type User struct {
 	Workspace            string // the GOPATH of this user (maybe contain several paths splitted by os.PathListSeparator)
 	Locale               string
 	GoFormat             string
+	GoBuildArgs          string
 	FontFamily           string
 	FontSize             string
 	Theme                string
@@ -91,7 +92,7 @@ func NewUser(username, password, email, workspace string) *User {
 	now := time.Now().UnixNano()
 
 	return &User{Name: username, Password: password, Salt: salt, Email: email, Gravatar: gravatar, Workspace: workspace,
-		Locale: Wide.Locale, GoFormat: "gofmt", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
+		Locale: Wide.Locale, GoFormat: "gofmt", GoBuildArgs: "-i", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
 		Keymap:  "wide",
 		Created: now, Updated: now, Lived: now,
 		Editor: &editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",

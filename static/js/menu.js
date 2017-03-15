@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Dec 8, 2015
+ * @version 1.0.1.1, Mar 15, 2017
  */
 var menu = {
     init: function () {
@@ -313,10 +313,11 @@ var menu = {
             dataType: "json",
             beforeSend: function () {
                 bottomGroup.resetOutput();
-            },
-            success: function (result) {
+                
                 $("#buildRun").addClass("ico-stop")
                         .removeClass("ico-buildrun").attr("title", config.label.stop);
+            },
+            success: function (result) {
             }
         });
     },
@@ -424,6 +425,7 @@ var menu = {
                             $fontFamily = $dialogPreference.find("input[name=fontFamily]"),
                             $fontSize = $dialogPreference.find("input[name=fontSize]"),
                             $goFmt = $dialogPreference.find("select[name=goFmt]"),
+                            $goBuildArgs = $dialogPreference.find("input[name=goBuildArgs]"),
                             $workspace = $dialogPreference.find("input[name=workspace]"),
                             $password = $dialogPreference.find("input[name=password]"),
                             $email = $dialogPreference.find("input[name=email]"),
@@ -440,6 +442,7 @@ var menu = {
                         "fontFamily": $fontFamily.val(),
                         "fontSize": $fontSize.val(),
                         "goFmt": $goFmt.val(),
+                        "goBuildArgs": $goBuildArgs.val(),
                         "workspace": $workspace.val(),
                         "password": $password.val(),
                         "email": $email.val(),
@@ -469,6 +472,7 @@ var menu = {
                             $fontFamily.data("value", $fontFamily.val());
                             $fontSize.data("value", $fontSize.val());
                             $goFmt.data("value", $goFmt.val());
+                            $goBuildArgs.data("value", $goBuildArgs.val());
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
                             $email.data("value", $email.val());

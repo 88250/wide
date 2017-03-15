@@ -137,6 +137,11 @@ func initUsers() {
 			user.Keymap = "wide"
 		}
 
+		// Compatibility upgrade (1.5.3): https://github.com/b3log/wide/issues/308
+		if "" == user.GoBuildArgs {
+			user.GoBuildArgs = "-i"
+		}
+
 		Users = append(Users, user)
 	}
 
