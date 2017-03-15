@@ -247,7 +247,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	} else {
 		channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n"
 
-		logger.Info(lines)
 		// lint process
 		if lines[0][0] == '#' {
 			lines = lines[1:] // skip the first line
