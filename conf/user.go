@@ -24,7 +24,7 @@ import (
 	"path/filepath"
 	"strings"
 	"time"
-
+	"regexp"
 	"github.com/b3log/wide/util"
 )
 
