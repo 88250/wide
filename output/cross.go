@@ -25,7 +25,6 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
-
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/session"
@@ -75,7 +74,12 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 		suffix = ".exe"
 	}
 
-	cmd := exec.Command("go", "build")
+	user := conf.GetUser(username)
+	goBuildArgs := []string{}
+	goBuildArgs = append(goBuildArgs, "build")
+	goBuildArgs = append(goBuildArgs, user.GetBuildArgs(goos)...)
+	
+	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, username)

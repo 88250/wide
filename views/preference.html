@@ -71,8 +71,16 @@
                 </select>
             </label>
             <label>
-                Go Build Args{{.i18n.colon}}
-                <input data-value="{{.user.GoBuildArgs}}" value="{{.user.GoBuildArgs}}" name="goBuildArgs"/>
+                Go Build Args Linux{{.i18n.colon}}
+                <input data-value="{{.user.GoBuildArgsforLinux}}" value="{{.user.GoBuildArgsforLinux}}" name="GoBuildArgsforLinux"/>
+            </label>
+			<label>
+                Go Build Args Windows{{.i18n.colon}}
+                <input data-value="{{.user.GoBuildArgsforWindows}}" value="{{.user.GoBuildArgsforWindows}}" name="GoBuildArgsforWindows"/>
+            </label>
+			<label>
+                Go Build Args Darwin{{.i18n.colon}}
+                <input data-value="{{.user.GoBuildArgsforDarwin}}" value="{{.user.GoBuildArgsforDarwin}}" name="GoBuildArgsforDarwin"/>
             </label>
         </div>
         <div class="fn-none" data-index="keymap">
