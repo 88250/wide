@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.1, Mar 15, 2017
+ * @version 1.0.1.2, Mar 27, 2017
  */
 var menu = {
     init: function () {
@@ -313,7 +313,7 @@ var menu = {
             dataType: "json",
             beforeSend: function () {
                 bottomGroup.resetOutput();
-                
+
                 $("#buildRun").addClass("ico-stop")
                         .removeClass("ico-buildrun").attr("title", config.label.stop);
             },
@@ -425,9 +425,9 @@ var menu = {
                             $fontFamily = $dialogPreference.find("input[name=fontFamily]"),
                             $fontSize = $dialogPreference.find("input[name=fontSize]"),
                             $goFmt = $dialogPreference.find("select[name=goFmt]"),
-                            $GoBuildArgsforLinux = $dialogPreference.find("input[name=GoBuildArgsforLinux]"),
-							$GoBuildArgsforWindows = $dialogPreference.find("input[name=GoBuildArgsforWindows]"),
-							$GoBuildArgsforDarwin = $dialogPreference.find("input[name=GoBuildArgsforDarwin]"),
+                            $GoBuildArgsForLinux = $dialogPreference.find("input[name=GoBuildArgsForLinux]"),
+                            $GoBuildArgsForWindows = $dialogPreference.find("input[name=GoBuildArgsForWindows]"),
+                            $GoBuildArgsForDarwin = $dialogPreference.find("input[name=GoBuildArgsForDarwin]"),
                             $workspace = $dialogPreference.find("input[name=workspace]"),
                             $password = $dialogPreference.find("input[name=password]"),
                             $email = $dialogPreference.find("input[name=email]"),
@@ -444,9 +444,9 @@ var menu = {
                         "fontFamily": $fontFamily.val(),
                         "fontSize": $fontSize.val(),
                         "goFmt": $goFmt.val(),
-                        "GoBuildArgsforLinux": $GoBuildArgsforLinux.val(),
-						"GoBuildArgsforWindows": $GoBuildArgsforWindows.val(), 
-						"GoBuildArgsforDarwin": $GoBuildArgsforDarwin.val(),
+                        "GoBuildArgsForLinux": $GoBuildArgsForLinux.val(),
+                        "GoBuildArgsForWindows": $GoBuildArgsForWindows.val(),
+                        "GoBuildArgsForDarwin": $GoBuildArgsForDarwin.val(),
                         "workspace": $workspace.val(),
                         "password": $password.val(),
                         "email": $email.val(),
@@ -476,9 +476,9 @@ var menu = {
                             $fontFamily.data("value", $fontFamily.val());
                             $fontSize.data("value", $fontSize.val());
                             $goFmt.data("value", $goFmt.val());
-                            $goBuildArgs.data("value", $GoBuildArgsforLinux.val());
-							$goBuildArgs.data("value", $GoBuildArgsforWindows.val());
-							$goBuildArgs.data("value", $GoBuildArgsforDarwin.val());
+                            $GoBuildArgsForLinux.data("value", $GoBuildArgsForLinux.val());
+                            $GoBuildArgsForWindows.data("value", $GoBuildArgsForWindows.val());
+                            $GoBuildArgsForDarwin.data("value", $GoBuildArgsForDarwin.val());
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
                             $email.data("value", $email.val());

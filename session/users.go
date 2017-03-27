@@ -92,24 +92,24 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetResult(w, r, result)
 
 	args := struct {
-		FontFamily       string
-		FontSize         string
-		GoFmt            string
-		GoBuildArgsforLinux   string 
-		GoBuildArgsforWindows string 
-		GoBuildArgsforDarwin  string 
-		Keymap           string
-		Workspace        string
-		Username         string
-		Password         string
-		Email            string
-		Locale           string
-		Theme            string
-		EditorFontFamily string
-		EditorFontSize   string
-		EditorLineHeight string
-		EditorTheme      string
-		EditorTabSize    string
+		FontFamily            string
+		FontSize              string
+		GoFmt                 string
+		GoBuildArgsForLinux   string
+		GoBuildArgsForWindows string
+		GoBuildArgsForDarwin  string
+		Keymap                string
+		Workspace             string
+		Username              string
+		Password              string
+		Email                 string
+		Locale                string
+		Theme                 string
+		EditorFontFamily      string
+		EditorFontSize        string
+		EditorLineHeight      string
+		EditorTheme           string
+		EditorTabSize         string
 	}{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -122,9 +122,9 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.FontFamily = args.FontFamily
 	user.FontSize = args.FontSize
 	user.GoFormat = args.GoFmt
-	user.GoBuildArgsforLinux = args.GoBuildArgsforLinux
-	user.GoBuildArgsforWindows = args.GoBuildArgsforWindows
-	user.GoBuildArgsforDarwin = args.GoBuildArgsforDarwin
+	user.GoBuildArgsForLinux = args.GoBuildArgsForLinux
+	user.GoBuildArgsForWindows = args.GoBuildArgsForWindows
+	user.GoBuildArgsForDarwin = args.GoBuildArgsForDarwin
 	user.Keymap = args.Keymap
 	// XXX: disallow change workspace at present
 	// user.Workspace = args.Workspace
