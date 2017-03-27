@@ -22,9 +22,10 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 	"time"
-	"regexp"
+
 	"github.com/b3log/wide/util"
 )
 
@@ -51,26 +52,26 @@ type LatestSessionContent struct {
 
 // User configuration.
 type User struct {
-	Name                 string
-	Password             string
-	Salt                 string
-	Email                string
-	Gravatar             string // see http://gravatar.com
-	Workspace            string // the GOPATH of this user (maybe contain several paths splitted by os.PathListSeparator)
-	Locale               string
-	GoFormat             string
-	GoBuildArgsforLinux   string
-	GoBuildArgsforWindows string
-	GoBuildArgsforDarwin  string
-	FontFamily           string
-	FontSize             string
-	Theme                string
-	Keymap               string // wide/vim
-	Created              int64  // user create time in unix nano
-	Updated              int64  // preference update time in unix nano
-	Lived                int64  // the latest session activity in unix nano
-	Editor               *editor
-	LatestSessionContent *LatestSessionContent
+	Name                  string
+	Password              string
+	Salt                  string
+	Email                 string
+	Gravatar              string // see http://gravatar.com
+	Workspace             string // the GOPATH of this user (maybe contain several paths splitted by os.PathListSeparator)
+	Locale                string
+	GoFormat              string
+	GoBuildArgsForLinux   string
+	GoBuildArgsForWindows string
+	GoBuildArgsForDarwin  string
+	FontFamily            string
+	FontSize              string
+	Theme                 string
+	Keymap                string // wide/vim
+	Created               int64  // user create time in unix nano
+	Updated               int64  // preference update time in unix nano
+	Lived                 int64  // the latest session activity in unix nano
+	Editor                *editor
+	LatestSessionContent  *LatestSessionContent
 }
 
 // Editor configuration of a user.
@@ -94,7 +95,9 @@ func NewUser(username, password, email, workspace string) *User {
 	now := time.Now().UnixNano()
 
 	return &User{Name: username, Password: password, Salt: salt, Email: email, Gravatar: gravatar, Workspace: workspace,
-		Locale: Wide.Locale, GoFormat: "gofmt",  GoBuildArgsforLinux: "-i", GoBuildArgsforWindows: "-i", GoBuildArgsforDarwin: "-i", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
+		Locale: Wide.Locale, GoFormat: "gofmt",
+		GoBuildArgsForLinux: "-i", GoBuildArgsForWindows: "-i", GoBuildArgsForDarwin: "-i",
+		FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
 		Keymap:  "wide",
 		Created: now, Updated: now, Lived: now,
 		Editor: &editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",
@@ -158,22 +161,24 @@ func Salt(password, salt string) string {
 	return hex.EncodeToString(sha1hash.Sum(nil))
 }
 
+// GetBuildArgs get build args with the specified os.
 func (u *User) GetBuildArgs(os string) []string {
 	var tmp string
 	if os == "windows" {
-		tmp = u.GoBuildArgsforWindows
+		tmp = u.GoBuildArgsForWindows
 	}
 	if os == "linux" {
-		tmp = u.GoBuildArgsforLinux
+		tmp = u.GoBuildArgsForLinux
 	}
 	if os == "darwin" {
-		tmp = u.GoBuildArgsforDarwin
+		tmp = u.GoBuildArgsForDarwin
 	}
-	exp := regexp.MustCompile(`[^\s"']+|"([^"]*)"|'([^']*)'`)
-	words := exp.FindAllString(tmp, -1)
-	for idx := range words {
-		words[idx] = strings.Replace(words[idx], "\"", "", -1)
-	}
-	return words
-}
 
+	exp := regexp.MustCompile(`[^\s"']+|"([^"]*)"|'([^']*)'`)
+	ret := exp.FindAllString(tmp, -1)
+	for idx := range ret {
+		ret[idx] = strings.Replace(ret[idx], "\"", "", -1)
+	}
+
+	return ret
+}

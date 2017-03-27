@@ -23,9 +23,9 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
-	"runtime"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
