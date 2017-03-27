@@ -95,7 +95,9 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		FontFamily       string
 		FontSize         string
 		GoFmt            string
-		GoBuildArgs      string
+		GoBuildArgsforLinux   string 
+		GoBuildArgsforWindows string 
+		GoBuildArgsforDarwin  string 
 		Keymap           string
 		Workspace        string
 		Username         string
@@ -120,7 +122,9 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.FontFamily = args.FontFamily
 	user.FontSize = args.FontSize
 	user.GoFormat = args.GoFmt
-	user.GoBuildArgs = args.GoBuildArgs
+	user.GoBuildArgsforLinux = args.GoBuildArgsforLinux
+	user.GoBuildArgsforWindows = args.GoBuildArgsforWindows
+	user.GoBuildArgsforDarwin = args.GoBuildArgsforDarwin
 	user.Keymap = args.Keymap
 	// XXX: disallow change workspace at present
 	// user.Workspace = args.Workspace
