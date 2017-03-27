@@ -59,7 +59,9 @@ type User struct {
 	Workspace            string // the GOPATH of this user (maybe contain several paths splitted by os.PathListSeparator)
 	Locale               string
 	GoFormat             string
-	GoBuildArgs          string
+	GoBuildArgsforLinux   string
+	GoBuildArgsforWindows string
+	GoBuildArgsforDarwin  string
 	FontFamily           string
 	FontSize             string
 	Theme                string
@@ -92,7 +94,7 @@ func NewUser(username, password, email, workspace string) *User {
 	now := time.Now().UnixNano()
 
 	return &User{Name: username, Password: password, Salt: salt, Email: email, Gravatar: gravatar, Workspace: workspace,
-		Locale: Wide.Locale, GoFormat: "gofmt", GoBuildArgs: "-i", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
+		Locale: Wide.Locale, GoFormat: "gofmt",  GoBuildArgsforLinux: "-i", GoBuildArgsforWindows: "-i", GoBuildArgsforDarwin: "-i", FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
 		Keymap:  "wide",
 		Created: now, Updated: now, Lived: now,
 		Editor: &editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",
@@ -155,3 +157,23 @@ func Salt(password, salt string) string {
 
 	return hex.EncodeToString(sha1hash.Sum(nil))
 }
+
+func (u *User) GetBuildArgs(os string) []string {
+	var tmp string
+	if os == "windows" {
+		tmp = u.GoBuildArgsforWindows
+	}
+	if os == "linux" {
+		tmp = u.GoBuildArgsforLinux
+	}
+	if os == "darwin" {
+		tmp = u.GoBuildArgsforDarwin
+	}
+	exp := regexp.MustCompile(`[^\s"']+|"([^"]*)"|'([^']*)'`)
+	words := exp.FindAllString(tmp, -1)
+	for idx := range words {
+		words[idx] = strings.Replace(words[idx], "\"", "", -1)
+	}
+	return words
+}
+
