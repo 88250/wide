@@ -425,7 +425,9 @@ var menu = {
                             $fontFamily = $dialogPreference.find("input[name=fontFamily]"),
                             $fontSize = $dialogPreference.find("input[name=fontSize]"),
                             $goFmt = $dialogPreference.find("select[name=goFmt]"),
-                            $goBuildArgs = $dialogPreference.find("input[name=goBuildArgs]"),
+                            $GoBuildArgsforLinux = $dialogPreference.find("input[name=GoBuildArgsforLinux]"),
+							$GoBuildArgsforWindows = $dialogPreference.find("input[name=GoBuildArgsforWindows]"),
+							$GoBuildArgsforDarwin = $dialogPreference.find("input[name=GoBuildArgsforDarwin]"),
                             $workspace = $dialogPreference.find("input[name=workspace]"),
                             $password = $dialogPreference.find("input[name=password]"),
                             $email = $dialogPreference.find("input[name=email]"),
@@ -442,7 +444,9 @@ var menu = {
                         "fontFamily": $fontFamily.val(),
                         "fontSize": $fontSize.val(),
                         "goFmt": $goFmt.val(),
-                        "goBuildArgs": $goBuildArgs.val(),
+                        "GoBuildArgsforLinux": $GoBuildArgsforLinux.val(),
+						"GoBuildArgsforWindows": $GoBuildArgsforWindows.val(), 
+						"GoBuildArgsforDarwin": $GoBuildArgsforDarwin.val(),
                         "workspace": $workspace.val(),
                         "password": $password.val(),
                         "email": $email.val(),
@@ -472,7 +476,9 @@ var menu = {
                             $fontFamily.data("value", $fontFamily.val());
                             $fontSize.data("value", $fontSize.val());
                             $goFmt.data("value", $goFmt.val());
-                            $goBuildArgs.data("value", $goBuildArgs.val());
+                            $goBuildArgs.data("value", $GoBuildArgsforLinux.val());
+							$goBuildArgs.data("value", $GoBuildArgsforWindows.val());
+							$goBuildArgs.data("value", $GoBuildArgsforDarwin.val());
                             $workspace.data("value", $workspace.val());
                             $password.data("value", $password.val());
                             $email.data("value", $email.val());

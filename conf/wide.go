@@ -138,8 +138,14 @@ func initUsers() {
 		}
 
 		// Compatibility upgrade (1.5.3): https://github.com/b3log/wide/issues/308
-		if "" == user.GoBuildArgs {
-			user.GoBuildArgs = "-i"
+		if "" == user.GoBuildArgsforLinux {
+			user.GoBuildArgsforLinux = "-i"
+		}
+		if "" == user.GoBuildArgsforWindows {
+			user.GoBuildArgsforWindows = "-i"
+		}
+		if "" == user.GoBuildArgsforDarwin {
+			user.GoBuildArgsforDarwin = "-i"
 		}
 
 		Users = append(Users, user)
