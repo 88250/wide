@@ -67,6 +67,10 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user := conf.GetUser(username)
 
 	if "GET" == r.Method {
+		user.GoBuildArgsForLinux = strings.Replace(user.GoBuildArgsForLinux, `"`, `&quot;`, -1)
+		user.GoBuildArgsForWindows = strings.Replace(user.GoBuildArgsForWindows, `"`, `&quot;`, -1)
+		user.GoBuildArgsForDarwin = strings.Replace(user.GoBuildArgsForDarwin, `"`, `&quot;`, -1)
+		
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
 			"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version(),
 			"locales": i18n.GetLocalesNames(), "gofmts": util.Go.GetGoFormats(),
