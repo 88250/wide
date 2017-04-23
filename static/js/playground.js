@@ -330,7 +330,8 @@ var playground = {
 
                 var length = articles.length;
 
-                var listHTML = "<ul><li class='title'>" + config.label.community + "</li>";
+                var listHTML = "<ul><li class='title'>" + config.label.community +
+                    "<a href='https://hacpai.com/article/1437497122181' target='_blank' class='fn-right'>边看边练</li>";
                 for (var i = 0; i < length; i++) {
                     var article = articles[i];
                     listHTML += "<li>"
