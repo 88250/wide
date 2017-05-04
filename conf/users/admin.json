@@ -12,7 +12,7 @@
     "GoBuildArgsForDarwin": "-i",
     "FontFamily": "Helvetica",
     "FontSize": "13px",
-    "Theme": "dark",
+    "Theme": "default",
     "Keymap": "wide",
     "Created": 1414080000000000000,
     "Updated": 1492963306222604966,
