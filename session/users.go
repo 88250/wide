@@ -70,11 +70,11 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		tmpLinux := user.GoBuildArgsForLinux
 		tmpWindows := user.GoBuildArgsForWindows
 		tmpDarwin := user.GoBuildArgsForDarwin
-		
+
 		user.GoBuildArgsForLinux = strings.Replace(user.GoBuildArgsForLinux, `"`, `&quot;`, -1)
 		user.GoBuildArgsForWindows = strings.Replace(user.GoBuildArgsForWindows, `"`, `&quot;`, -1)
 		user.GoBuildArgsForDarwin = strings.Replace(user.GoBuildArgsForDarwin, `"`, `&quot;`, -1)
-		
+
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
 			"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version(),
 			"locales": i18n.GetLocalesNames(), "gofmts": util.Go.GetGoFormats(),
@@ -85,7 +85,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		if nil != err {
 			logger.Error(err)
 			http.Error(w, err.Error(), 500)
-			
+
 			user.GoBuildArgsForLinux = tmpLinux
 			user.GoBuildArgsForWindows = tmpWindows
 			user.GoBuildArgsForDarwin = tmpDarwin
@@ -93,7 +93,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		t.Execute(w, model)
-		
+
 		user.GoBuildArgsForLinux = tmpLinux
 		user.GoBuildArgsForWindows = tmpWindows
 		user.GoBuildArgsForDarwin = tmpDarwin
@@ -308,13 +308,7 @@ func FixedTimeSave() {
 		defer util.Recover()
 
 		for _ = range time.Tick(time.Minute) {
-			users := getOnlineUsers()
-
-			for _, u := range users {
-				if u.Save() {
-					logger.Tracef("Saved online user [%s]'s configurations", u.Name)
-				}
-			}
+			SaveOnlineUsers()
 		}
 	}()
 }
@@ -333,6 +327,16 @@ func CanAccess(username, path string) bool {
 	}
 
 	return false
+}
+
+// SaveOnlineUsers saves online users' configurations at once.
+func SaveOnlineUsers() {
+	users := getOnlineUsers()
+	for _, u := range users {
+		if u.Save() {
+			logger.Tracef("Saved online user [%s]'s configurations", u.Name)
+		}
+	}
 }
 
 func getOnlineUsers() []*conf.User {

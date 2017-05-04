@@ -23,8 +23,10 @@ import (
 	"net/http"
 	_ "net/http/pprof"
 	"os"
+	"os/signal"
 	"runtime"
 	"strings"
+	"syscall"
 	"time"
 
 	"github.com/b3log/wide/conf"
@@ -72,14 +74,11 @@ func init() {
 	}
 
 	i18n.Load()
-
 	event.Load()
-
 	conf.Load(*confPath, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel,
 		*confPlayground, *confDocker, *confUsersWorkspaces)
 
 	conf.FixedTimeCheckEnv()
-
 	session.FixedTimeSave()
 	session.FixedTimeRelease()
 
@@ -96,6 +95,7 @@ func main() {
 	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
 
 	initMime()
+	handleSignal()
 
 	// IDE
 	http.HandleFunc(conf.Wide.Context+"/", handlerGzWrapper(indexHandler))
@@ -242,7 +242,6 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
 
 	t, err := template.ParseFiles("views/index.html")
-
 	if nil != err {
 		logger.Error(err)
 		http.Error(w, err.Error(), 500)
@@ -251,6 +250,22 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	t.Execute(w, model)
+}
+
+// handleSignal handles system signal for graceful shutdown.
+func handleSignal() {
+	go func() {
+		c := make(chan os.Signal)
+
+		signal.Notify(c, syscall.SIGINT, syscall.SIGQUIT, syscall.SIGTERM)
+		s := <-c
+		logger.Tracef("Got signal [%s]", s)
+
+		session.SaveOnlineUsers()
+		logger.Tracef("Saved all online user, exit")
+
+		os.Exit(0)
+	}()
 }
 
 // serveSingle registers the handler function for the given pattern and filename.
