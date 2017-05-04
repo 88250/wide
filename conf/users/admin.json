@@ -15,8 +15,8 @@
     "Theme": "default",
     "Keymap": "wide",
     "Created": 1414080000000000000,
-    "Updated": 1477750918395543731,
-    "Lived": 1477756867409471881,
+    "Updated": 1492963306222604966,
+    "Lived": 1492963306222604966,
     "Editor": {
         "FontFamily": "Consolas, 'Courier New', monospace",
         "FontSize": "13px",
@@ -26,9 +26,16 @@
     },
     "LatestSessionContent": {
         "fileTree": [
+            "/Users/Vanessa/Work/Code/GoGoGo/src",
+            "/Users/Vanessa/Work/Code/GoGoGo/src/github.com",
+            "/Users/Vanessa/Work/Code/GoGoGo/src/github.com/b3log",
+            "/Users/Vanessa/Work/Code/GoGoGo/src/github.com/b3log/wide",
+            "/Users/Vanessa/Work/Code/GoGoGo/src/github.com/b3log/wide/.idea",
+            "/Users/Vanessa/Work/Code/GoGoGo/src/github.com/b3log/wide/static",
+            "/Users/Vanessa/Work/Code/GoGoGo/src/github.com/b3log/wide/static/css",
+            "/Users/Vanessa/Work/Code/GoGoGo/src/github.com/b3log/wide/static/js"
         ],
-        "files": [
-        ],
+        "files": [],
         "currentFile": "",
         "layout": {
             "side": {
