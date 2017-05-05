@@ -214,7 +214,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		user := conf.GetUser(username)
 
-		data["path"] = "/workspace/" + user.Name + "/" + strings.Replace(path, user.GetWorkspace(), "", 1)
+		data["path"] = "/workspace/" + user.Name + "/" + strings.Replace(path, user.WorkspacePath(), "", 1)
 
 		return
 	}

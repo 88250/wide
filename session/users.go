@@ -410,7 +410,7 @@ func addUser(username, password, email string) string {
 	conf.UpdateCustomizedConf(username)
 
 	http.Handle("/workspace/"+username+"/",
-		http.StripPrefix("/workspace/"+username+"/", http.FileServer(http.Dir(newUser.GetWorkspace()))))
+		http.StripPrefix("/workspace/"+username+"/", http.FileServer(http.Dir(newUser.WorkspacePath()))))
 
 	logger.Infof("Created a user [%s]", username)
 

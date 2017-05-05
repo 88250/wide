@@ -96,7 +96,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	goBuildArgs := []string{}
 	goBuildArgs = append(goBuildArgs, "build")
-	goBuildArgs = append(goBuildArgs, user.GetBuildArgs(runtime.GOOS)...)
+	goBuildArgs = append(goBuildArgs, user.BuildArgs(runtime.GOOS)...)
 
 	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
@@ -132,7 +132,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		// display "START [go build]" in front-end browser
 
 		msg := i18n.Get(locale, "start-build").(string)
-		msg = strings.Replace(msg, "build]", "build "+fmt.Sprint(user.GetBuildArgs(runtime.GOOS))+"]", 1)
+		msg = strings.Replace(msg, "build]", "build "+fmt.Sprint(user.BuildArgs(runtime.GOOS))+"]", 1)
 
 		channelRet["output"] = "<span class='start-build'>" + msg + "</span>\n"
 		channelRet["cmd"] = "start-build"

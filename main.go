@@ -110,7 +110,7 @@ func main() {
 	// workspaces
 	for _, user := range conf.Users {
 		http.Handle(conf.Wide.Context+"/workspace/"+user.Name+"/",
-			http.StripPrefix(conf.Wide.Context+"/workspace/"+user.Name+"/", http.FileServer(http.Dir(user.GetWorkspace()))))
+			http.StripPrefix(conf.Wide.Context+"/workspace/"+user.Name+"/", http.FileServer(http.Dir(user.WorkspacePath()))))
 	}
 
 	// session
