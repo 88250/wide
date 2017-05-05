@@ -78,7 +78,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	user := conf.GetUser(username)
 	goBuildArgs := []string{}
 	goBuildArgs = append(goBuildArgs, "build")
-	goBuildArgs = append(goBuildArgs, user.GetBuildArgs(goos)...)
+	goBuildArgs = append(goBuildArgs, user.BuildArgs(goos)...)
 
 	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir

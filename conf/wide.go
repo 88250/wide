@@ -326,7 +326,7 @@ func checkEnv() {
 func GetUserWorkspace(username string) string {
 	for _, user := range Users {
 		if user.Name == username {
-			return user.GetWorkspace()
+			return user.WorkspacePath()
 		}
 	}
 
@@ -430,7 +430,7 @@ func initWorkspaceDirs() {
 	paths := []string{}
 
 	for _, user := range Users {
-		paths = append(paths, filepath.SplitList(user.GetWorkspace())...)
+		paths = append(paths, filepath.SplitList(user.WorkspacePath())...)
 	}
 
 	for _, path := range paths {

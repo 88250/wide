@@ -129,40 +129,21 @@ func (u *User) Save() bool {
 	return true
 }
 
-// GetWorkspace gets workspace path of the user.
+// WorkspacePath gets workspace path of the user.
 //
 // Compared to the use of Wide.Workspace, this function will be processed as follows:
 //  1. Replace {WD} variable with the actual directory path
 //  2. Replace ${GOPATH} with enviorment variable GOPATH
 //  3. Replace "/" with "\\" (Windows)
-func (u *User) GetWorkspace() string {
+func (u *User) WorkspacePath() string {
 	w := strings.Replace(u.Workspace, "{WD}", Wide.WD, 1)
 	w = strings.Replace(w, "${GOPATH}", os.Getenv("GOPATH"), 1)
 
 	return filepath.FromSlash(w)
 }
 
-// GetOwner gets the user the specified path belongs to. Returns "" if not found.
-func GetOwner(path string) string {
-	for _, user := range Users {
-		if strings.HasPrefix(path, user.GetWorkspace()) {
-			return user.Name
-		}
-	}
-
-	return ""
-}
-
-// Salt salts the specified password with the specified salt.
-func Salt(password, salt string) string {
-	sha1hash := sha1.New()
-	sha1hash.Write([]byte(password + salt))
-
-	return hex.EncodeToString(sha1hash.Sum(nil))
-}
-
-// GetBuildArgs get build args with the specified os.
-func (u *User) GetBuildArgs(os string) []string {
+// BuildArgs get build args with the specified os.
+func (u *User) BuildArgs(os string) []string {
 	var tmp string
 	if os == "windows" {
 		tmp = u.GoBuildArgsForWindows
@@ -181,4 +162,23 @@ func (u *User) GetBuildArgs(os string) []string {
 	}
 
 	return ret
+}
+
+// GetOwner gets the user the specified path belongs to. Returns "" if not found.
+func GetOwner(path string) string {
+	for _, user := range Users {
+		if strings.HasPrefix(path, user.WorkspacePath()) {
+			return user.Name
+		}
+	}
+
+	return ""
+}
+
+// Salt salts the specified password with the specified salt.
+func Salt(password, salt string) string {
+	sha1hash := sha1.New()
+	sha1hash.Write([]byte(password + salt))
+
+	return hex.EncodeToString(sha1hash.Sum(nil))
 }
