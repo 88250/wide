@@ -1,4 +1,4 @@
-FROM golang:1.7.4
+FROM golang:1.8.3
 MAINTAINER Liang Ding <dl88250@gmail.com>
 
 ENV GOROOT /usr/local/go
