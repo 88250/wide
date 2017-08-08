@@ -34,24 +34,9 @@ type mygo struct{}
 var Go = mygo{}
 
 func (*mygo) GetCrossPlatforms() []string {
-	ret := []string{}
-
-	toolDir := runtime.GOROOT() + "/pkg/tool"
-	f, _ := os.Open(toolDir)
-	names, _ := f.Readdirnames(-1)
-	f.Close()
-
-	for _, name := range names {
-		subDir, _ := os.Open(toolDir + "/" + name)
-		tools, _ := subDir.Readdirnames(10)
-		subDir.Close()
-
-		if len(tools) > 5 {
-			ret = append(ret, name)
-		}
-	}
-
-	return ret
+	return []string{
+		"darwin_amd64", "linux_amd64", "windows_amd64",
+		"linux_arm", "darwin_386", "linux_386", "windows_386"}
 }
 
 // GetAPIPath gets the Go source code path.
