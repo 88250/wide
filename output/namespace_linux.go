@@ -20,16 +20,13 @@ import (
 )
 
 func SetNamespace(cmd *exec.Cmd) {
-	// XXX: keep move with Go 1.4 and later's
-
 	cmd.SysProcAttr = &syscall.SysProcAttr{}
-	//cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER | syscall.CLONE_NEWNS | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC | syscall.CLONE_NEWNET
-	cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER /*| syscall.CLONE_NEWNS*/ | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC /*| syscall.CLONE_NEWNET*/
+	// cmd.SysProcAttr.Cloneflags = syscall.CLONE_NEWUSER /*| syscall.CLONE_NEWNS*/ | syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWIPC /*| syscall.CLONE_NEWNET*/
 	cmd.SysProcAttr.Credential = &syscall.Credential{
-		Uid: 0,
-		Gid: 0,
+		Uid: 1001,
+		Gid: 1001,
 	}
 
-	cmd.SysProcAttr.UidMappings = []syscall.SysProcIDMap{{ContainerID: 0, HostID: 1001, Size: 1}}
-	cmd.SysProcAttr.GidMappings = []syscall.SysProcIDMap{{ContainerID: 0, HostID: 1001, Size: 1}}
+	// cmd.SysProcAttr.UidMappings = []syscall.SysProcIDMap{{ContainerID: 0, HostID: 1001, Size: 1}}
+	// cmd.SysProcAttr.GidMappings = []syscall.SysProcIDMap{{ContainerID: 0, HostID: 1001, Size: 1}}
 }
