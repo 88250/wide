@@ -10,7 +10,8 @@
     ],
     "Excludes": [
         "static/js/lib/*",
-        "static/user/*"
+        "static/user/*",
+	"vendor/**"
     ],
     "UseDefaultExcludes": true,
     "Properties": {
