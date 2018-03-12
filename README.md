@@ -1,11 +1,11 @@
-# [Wide](https://github.com/b3log/wide) [![Build Status](https://img.shields.io/travis/b3log/wide.svg?style=flat)](https://travis-ci.org/b3log/wide) [![Go Report Card](https://goreportcard.com/badge/github.com/b3log/wide)](https://goreportcard.com/report/github.com/b3log/wide) [![Coverage Status](https://img.shields.io/coveralls/b3log/wide.svg?style=flat)](https://coveralls.io/r/b3log/wide) [![Apache License](http://img.shields.io/badge/license-apache2-orange.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0) [![API Documentation](http://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](http://godoc.org/github.com/b3log/wide) [![Download](http://img.shields.io/badge/download-~4.3K-red.svg?style=flat)](http://pan.baidu.com/s/1dD3XwOT)
+# [Wide](https://github.com/b3log/wide) [![Build Status](https://img.shields.io/travis/b3log/wide.svg?style=flat)](https://travis-ci.org/b3log/wide) [![Go Report Card](https://goreportcard.com/badge/github.com/b3log/wide)](https://goreportcard.com/report/github.com/b3log/wide) [![Coverage Status](https://img.shields.io/coveralls/b3log/wide.svg?style=flat)](https://coveralls.io/r/b3log/wide) [![Apache License](https://img.shields.io/badge/license-apache2-orange.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0) [![API Documentation](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/b3log/wide) [![Download](https://img.shields.io/badge/download-~4.3K-red.svg?style=flat)](https://pan.baidu.com/s/1dD3XwOT)
 
-_Have a [try](http://wide.b3log.org/signup) first, then [download](http://pan.baidu.com/s/1dD3XwOT) and setup it on your local area network, enjoy yourself!_
+_Have a [try](https://wide.b3log.org/signup) first, then [download](https://pan.baidu.com/s/1dD3XwOT) and setup it on your local area network, enjoy yourself!_
 
-先试试我们搭建好的[在线服务](http://wide.b3log.org/signup)，你可以在这里[下载](http://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
+先试试我们搭建好的[在线服务](https://wide.b3log.org/signup)，你可以在这里[下载](https://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
 
-> * 关于 Wide 的产品定位，请看[这里](http://hacpai.com/article/1438407961481)，并欢迎参与讨论~
-> * 加入[**黑客派**](http://hacpai.com/register)，与其他程序员、设计师共同成长！
+> * 关于 Wide 的产品定位，请看[这里](https://hacpai.com/article/1438407961481)，并欢迎参与讨论~
+> * 加入[**黑客派**](https://hacpai.com/register)，与其他程序员、设计师共同成长！
 
 ## Introduction
 
@@ -49,7 +49,7 @@ Wide 的主要作者是 [Daniel](https://github.com/88250) 与 [Vanessa](https:/
 * [X] Multiplayer: a real team development experience
 * [X] Navigation, Jump to declaration, Find usages, File search etc.
 * [X] Shell: run command on the server
-* [X] Web development: HTML/JS/CSS editor with [Emmet](http://emmet.io) integrated
+* [X] Web development: HTML/JS/CSS editor with [Emmet](https://emmet.io) integrated
 * [X] Go tool: go get/install/fmt etc.
 * [X] File Import & Export
 * [X] Themes: editor and UI adjust, respectively
@@ -135,7 +135,7 @@ We have provided OS-specific executable binary as follows:
 * windows-amd64/386
 * darwin-amd64/386
 
-Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
+Download [HERE](https://pan.baidu.com/s/1dD3XwOT)!
 
 ### Build Wide for yourself
 
@@ -159,7 +159,7 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 ## Terms
 
 * This software is open sourced under the Apache License 2.0
-* You can not get rid of the "Powered by [B3log](http://b3log.org)" from any page, even which you made
+* You can not get rid of the "Powered by [B3log](https://b3log.org)" from any page, even which you made
 * If you want to use this software for commercial purpose, please mail to support@liuyun.io for a commercial license request
 * Copyright &copy; b3log.org, all rights reserved
 
@@ -167,7 +167,7 @@ Download [HERE](http://pan.baidu.com/s/1dD3XwOT)!
 
 Wide is made possible by the following open source projects.
 
-* [golang](http://golang.org)
+* [golang](https://golang.org)
 * [CodeMirror](https://github.com/marijnh/CodeMirror)
 * [zTree](https://github.com/zTree/zTree_v3) 
 * [LiteIDE](https://github.com/visualfc/liteide)

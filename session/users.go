@@ -4,7 +4,7 @@
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -478,7 +478,7 @@ func main() {
 	port := getPort()
 
 	// you may need to change the address
-	fmt.Println("Open http://wide.b3log.org:" + port + " in your browser to see the result") 
+	fmt.Println("Open https://wide.b3log.org:" + port + " in your browser to see the result") 
 
 	if err := http.ListenAndServe(":"+port, nil); nil != err {
 		fmt.Println(err)
