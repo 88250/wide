@@ -1,5 +1,5 @@
 FROM golang:1.8.3
-MAINTAINER Liang Ding <dl88250@gmail.com>
+MAINTAINER Liang Ding <d@b3log.org>
 
 ENV GOROOT /usr/local/go
 
