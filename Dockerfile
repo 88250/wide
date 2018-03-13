@@ -1,4 +1,4 @@
-FROM golang:1.8.3
+FROM golang:latest
 MAINTAINER Liang Ding <d@b3log.org>
 
 ENV GOROOT /usr/local/go
@@ -8,9 +8,7 @@ ENV GOROOT_BOOTSTRAP=/usr/local/gobt
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
 
-RUN unzip /wide/gogogo/src/github.com/b3log/wide/deps/golang.org.zip -d /wide/gogogo/src/\
- && unzip /wide/gogogo/src/github.com/b3log/wide/deps/github.com.zip -d /wide/gogogo/src/\
- && useradd wide && useradd runner
+RUN useradd wide && useradd runner
 
 ENV GOPATH /wide/gogogo
 
