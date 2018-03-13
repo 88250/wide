@@ -7,7 +7,7 @@ RUN apt-get update && apt-get install bzip2 zip unzip && cp -r /usr/local/go /us
 ENV GOROOT_BOOTSTRAP=/usr/local/gobt
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
-ADD vendor/* /go/src/
+ADD vendor/ /go/src/
 RUN go install github.com/visualfc/gotools github.com/nsf/gocode github.com/bradfitz/goimports
 
 RUN useradd wide && useradd runner
