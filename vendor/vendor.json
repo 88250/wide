@@ -1,6 +1,86 @@
 {
 	"comment": "",
 	"ignore": "test",
-	"package": [],
+	"package": [
+		{
+			"checksumSHA1": "7NpGLW+EOhRLs5cDvi1S+LqUNQ8=",
+			"path": "github.com/b3log/wide",
+			"revision": "f96c8befdf3484ad4d3abdf7a11c7a3d6182d018",
+			"revisionTime": "2018-03-13T04:09:30Z"
+		},
+		{
+			"checksumSHA1": "83iEp3SqOoIkZUYyR7BOVP4vaGE=",
+			"path": "github.com/bradfitz/goimports",
+			"revision": "919f4f2bcea0744d4da4ae851fbf818ae11cba87",
+			"revisionTime": "2014-12-11T23:42:42Z"
+		},
+		{
+			"checksumSHA1": "GpJ9pCFYAiIZb68dQcGjpbXIKOs=",
+			"path": "github.com/go-fsnotify/fsnotify",
+			"revision": "6549b98005f3e4026ad9f50ef7d5011f40ba1397",
+			"revisionTime": "2015-04-08T17:51:48Z"
+		},
+		{
+			"checksumSHA1": "rk/QFSfmdW9TPNUWU6p5FUBIL3U=",
+			"path": "github.com/gorilla/context",
+			"revision": "215affda49addc4c8ef7e2534915df2c8c35c6cd",
+			"revisionTime": "2014-12-17T16:02:51Z"
+		},
+		{
+			"checksumSHA1": "h+XyrpEalNAO8hzMdYwYeYMpP6Y=",
+			"path": "github.com/gorilla/securecookie",
+			"revision": "8e98dd730fc43f1383f19615db6f2e702c9738e8",
+			"revisionTime": "2015-03-27T15:58:05Z"
+		},
+		{
+			"checksumSHA1": "lTK2wUc2cNL4G2ZGkYQa+RsB4l8=",
+			"path": "github.com/gorilla/sessions",
+			"revision": "f61c3ec2cf65d69e7efedfd4d060fe128882c951",
+			"revisionTime": "2015-04-17T17:47:05Z"
+		},
+		{
+			"checksumSHA1": "PtUilL8i32Zi0T4i/DpxMvLva7w=",
+			"path": "github.com/gorilla/websocket",
+			"revision": "a3ec486e6a7a41858210b0fc5d7b5df593b3c4a3",
+			"revisionTime": "2015-05-30T03:03:52Z"
+		},
+		{
+			"checksumSHA1": "5i+5zScV0FNuG3cmRzRPn6PFsfo=",
+			"path": "github.com/nsf/gocode",
+			"revision": "5070dacabf2a80deeaf4ddb0be3761d06fce7be5",
+			"revisionTime": "2016-11-22T21:38:51Z"
+		},
+		{
+			"checksumSHA1": "4fp/TH5nX7seO5p4qJfIj/BokbI=",
+			"path": "github.com/visualfc/gotools",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "xe5hMqClV1HmKZ4GVg4bmSsVRE8=",
+			"path": "golang.org/x/text/encoding",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "d4g160kDwJesjZxpevi5Q41OG7o=",
+			"path": "golang.org/x/text/encoding/internal",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "wvwBoRLwt0iQqBP7tu0/M4vQCQo=",
+			"path": "golang.org/x/text/encoding/internal/identifier",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "YY+9reJJZdiidVtCfOGV2iWsXSw=",
+			"path": "golang.org/x/text/encoding/simplifiedchinese",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "baiYjEQuZN5kEgOBJPSsZCecTE8=",
+			"path": "golang.org/x/text/transform",
+			"revision": ""
+		}
+	],
 	"rootPath": "github.com/b3log/wide"
 }
