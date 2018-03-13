@@ -3,10 +3,10 @@
 	"ignore": "test",
 	"package": [
 		{
-			"checksumSHA1": "7NpGLW+EOhRLs5cDvi1S+LqUNQ8=",
+			"checksumSHA1": "ZesPb1w0u5/uv/fdVc+G6wOee30=",
 			"path": "github.com/b3log/wide",
-			"revision": "f96c8befdf3484ad4d3abdf7a11c7a3d6182d018",
-			"revisionTime": "2018-03-13T04:09:30Z"
+			"revision": "bfd836c6fc8fbc007ce437db1406455493cd532f",
+			"revisionTime": "2018-03-13T04:57:02Z"
 		},
 		{
 			"checksumSHA1": "83iEp3SqOoIkZUYyR7BOVP4vaGE=",
@@ -45,10 +45,10 @@
 			"revisionTime": "2015-05-30T03:03:52Z"
 		},
 		{
-			"checksumSHA1": "5i+5zScV0FNuG3cmRzRPn6PFsfo=",
+			"checksumSHA1": "gKm38IQHqLfYHwS7B6JDTJzXYYI=",
 			"path": "github.com/nsf/gocode",
-			"revision": "5070dacabf2a80deeaf4ddb0be3761d06fce7be5",
-			"revisionTime": "2016-11-22T21:38:51Z"
+			"revision": "416643789f088aa5077f667cecde7f966131f6be",
+			"revisionTime": "2018-01-07T08:36:41Z"
 		},
 		{
 			"checksumSHA1": "4fp/TH5nX7seO5p4qJfIj/BokbI=",

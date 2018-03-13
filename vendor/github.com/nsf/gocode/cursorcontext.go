@@ -35,10 +35,8 @@ type token_item struct {
 func (i token_item) literal() string {
 	if i.tok.IsLiteral() {
 		return i.lit
-	} else {
-		return i.tok.String()
 	}
-	return ""
+	return i.tok.String()
 }
 
 func new_token_iterator(src []byte, cursor int) token_iterator {
@@ -116,6 +114,28 @@ func (this *token_iterator) skip_to_left_curly() bool {
 	return this.skip_to_left(token.LBRACE, token.RBRACE)
 }
 
+func (ti *token_iterator) extract_type_alike() string {
+	if ti.token().tok != token.IDENT { // not Foo, return nothing
+		return ""
+	}
+	b := ti.token().literal()
+	if !ti.go_back() { // just Foo
+		return b
+	}
+	if ti.token().tok != token.PERIOD { // not .Foo, return Foo
+		return b
+	}
+	if !ti.go_back() { // just .Foo, return Foo (best choice recovery)
+		return b
+	}
+	if ti.token().tok != token.IDENT { // not lib.Foo, return Foo
+		return b
+	}
+	out := ti.token().literal() + "." + b // lib.Foo
+	ti.go_back()
+	return out
+}
+
 // Extract the type expression right before the enclosing curly bracket block.
 // Examples (# - the cursor):
 //   &lib.Struct{Whatever: 1, Hel#} // returns "lib.Struct"
@@ -130,23 +150,21 @@ func (ti *token_iterator) extract_struct_type() string {
 	if !ti.go_back() {
 		return ""
 	}
-	if ti.token().tok != token.IDENT {
+	if ti.token().tok == token.LBRACE { // Foo{#{}}
+		if !ti.go_back() {
+			return ""
+		}
+	} else if ti.token().tok == token.COMMA { // Foo{abc,#{}}
+		return ti.extract_struct_type()
+	}
+	typ := ti.extract_type_alike()
+	if typ == "" {
 		return ""
 	}
-	b := ti.token().literal()
-	if !ti.go_back() {
-		return b
+	if ti.token().tok == token.RPAREN || ti.token().tok == token.MUL {
+		return ""
 	}
-	if ti.token().tok != token.PERIOD {
-		return b
-	}
-	if !ti.go_back() {
-		return b
-	}
-	if ti.token().tok != token.IDENT {
-		return b
-	}
-	return ti.token().literal() + "." + b
+	return typ
 }
 
 // Starting from the token under the cursor move back and extract something
@@ -266,7 +284,14 @@ func (c *auto_complete_context) deduce_struct_type_decl(iter *token_iterator) *d
 	if decl == nil {
 		return nil
 	}
-	if _, ok := decl.typ.(*ast.StructType); !ok {
+
+	// we allow only struct types here, but also support type aliases
+	if decl.is_alias() {
+		dd := decl.type_dealias()
+		if _, ok := dd.typ.(*ast.StructType); !ok {
+			return nil
+		}
+	} else if _, ok := decl.typ.(*ast.StructType); !ok {
 		return nil
 	}
 	return decl
@@ -395,7 +420,7 @@ func (c *auto_complete_context) deduce_cursor_context(file []byte, cursor int) (
 // package name has nothing to do with package file name, that's why we need to
 // scan the packages. And many of them will have conflicts. Can we make a smart
 // prediction algorithm which will prefer certain packages over another ones?
-func resolveKnownPackageIdent(ident string, filename string, context *package_lookup_context) *decl {
+func resolveKnownPackageIdent(ident string, filename string, context *package_lookup_context) *package_file_cache {
 	importPath, ok := knownPackageIdents[ident]
 	if !ok {
 		return nil
@@ -406,9 +431,9 @@ func resolveKnownPackageIdent(ident string, filename string, context *package_lo
 		return nil
 	}
 
-	p := new_package_file_cache(path)
+	p := new_package_file_cache(path, importPath)
 	p.update_cache()
-	return p.main
+	return p
 }
 
 var knownPackageIdents = map[string]string{
