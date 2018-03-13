@@ -162,7 +162,6 @@
     "no_empty": "不能為空",
     "change_avatar": "修改頭像請到",
     "open": "開啟",
-    "pricing": "價格",
     "search_no_match": "沒有發現匹配的文件。",
     "outline": "大綱",
     "govet": "go vet",
