@@ -22,9 +22,9 @@ import (
 	"bytes"
 	"fmt"
 	"go/token"
+	"go/types"
 
 	"golang.org/x/tools/go/ssa"
-	"golang.org/x/tools/go/types"
 )
 
 // A ConstCase represents a single constant comparison.

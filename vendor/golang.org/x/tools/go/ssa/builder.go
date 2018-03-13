@@ -32,13 +32,11 @@ package ssa
 import (
 	"fmt"
 	"go/ast"
+	exact "go/constant"
 	"go/token"
+	"go/types"
 	"os"
 	"sync"
-	"sync/atomic"
-
-	"golang.org/x/tools/go/exact"
-	"golang.org/x/tools/go/types"
 )
 
 type opaqueType struct {
@@ -60,7 +58,7 @@ var (
 	tString     = types.Typ[types.String]
 	tUntypedNil = types.Typ[types.UntypedNil]
 	tRangeIter  = &opaqueType{nil, "iter"} // the type of all "range" iterators
-	tEface      = new(types.Interface)
+	tEface      = types.NewInterface(nil, nil).Complete()
 
 	// SSA Value constants.
 	vZero = intConst(0)
@@ -156,7 +154,7 @@ func (b *builder) logicalBinop(fn *Function, e *ast.BinaryExpr) Value {
 
 	// All edges from e.X to done carry the short-circuit value.
 	var edges []Value
-	for _ = range done.Preds {
+	for range done.Preds {
 		edges = append(edges, short)
 	}
 
@@ -243,7 +241,7 @@ func (b *builder) builtin(fn *Function, obj *types.Builtin, args []ast.Expr, typ
 			}
 			if m, ok := m.(*Const); ok {
 				// treat make([]T, n, m) as new([m]T)[:n]
-				cap, _ := exact.Int64Val(m.Value)
+				cap := m.Int64()
 				at := types.NewArray(typ.Underlying().(*types.Slice).Elem(), cap)
 				alloc := emitNew(fn, at, pos)
 				alloc.Comment = "makeslice"
@@ -1055,6 +1053,7 @@ func (b *builder) assignStmt(fn *Function, lhss, rhss []ast.Expr, isDef bool) {
 	} else {
 		// e.g. x, y = pos()
 		tuple := b.exprN(fn, rhss[0])
+		emitDebugRef(fn, rhss[0], tuple, false)
 		for i, lval := range lvals {
 			lval.store(fn, emitExtract(fn, tuple, i))
 		}
@@ -1194,9 +1193,26 @@ func (b *builder) compLit(fn *Function, addr Value, e *ast.CompositeLit, isZero 
 		fn.emit(m)
 		for _, e := range e.Elts {
 			e := e.(*ast.KeyValueExpr)
+
+			// If a key expression in a map literal is  itself a
+			// composite literal, the type may be omitted.
+			// For example:
+			//	map[*struct{}]bool{{}: true}
+			// An &-operation may be implied:
+			//	map[*struct{}]bool{&struct{}{}: true}
+			var key Value
+			if _, ok := unparen(e.Key).(*ast.CompositeLit); ok && isPointer(t.Key()) {
+				// A CompositeLit never evaluates to a pointer,
+				// so if the type of the location is a pointer,
+				// an &-operation is implied.
+				key = b.addr(fn, e.Key, true).address(fn)
+			} else {
+				key = b.expr(fn, e.Key)
+			}
+
 			loc := element{
 				m:   m,
-				k:   emitConv(fn, b.expr(fn, e.Key), t.Key()),
+				k:   emitConv(fn, key, t.Key()),
 				t:   t.Elem(),
 				pos: e.Colon,
 			}
@@ -2209,17 +2225,15 @@ func (b *builder) buildFuncDecl(pkg *Package, decl *ast.FuncDecl) {
 	b.buildFunction(fn)
 }
 
-// BuildAll calls Package.Build() for each package in prog.
+// Build calls Package.Build for each package in prog.
 // Building occurs in parallel unless the BuildSerially mode flag was set.
 //
-// BuildAll is intended for whole-program analysis; a typical compiler
+// Build is intended for whole-program analysis; a typical compiler
 // need only build a single package.
 //
-// BuildAll is idempotent and thread-safe.
+// Build is idempotent and thread-safe.
 //
-// TODO(adonovan): rename to Build.
-//
-func (prog *Program) BuildAll() {
+func (prog *Program) Build() {
 	var wg sync.WaitGroup
 	for _, p := range prog.packages {
 		if prog.mode&BuildSerially != 0 {
@@ -2243,16 +2257,11 @@ func (prog *Program) BuildAll() {
 //
 // Build is idempotent and thread-safe.
 //
-func (p *Package) Build() {
-	if !atomic.CompareAndSwapInt32(&p.started, 0, 1) {
-		return // already started
-	}
+func (p *Package) Build() { p.buildOnce.Do(p.build) }
+
+func (p *Package) build() {
 	if p.info == nil {
 		return // synthetic package, e.g. "testmain"
-	}
-	if p.files == nil {
-		p.info = nil
-		return // package loaded from export data
 	}
 
 	// Ensure we have runtime type info for all exported members.
@@ -2281,10 +2290,10 @@ func (p *Package) Build() {
 		emitStore(init, initguard, vTrue, token.NoPos)
 
 		// Call the init() function of each package we import.
-		for _, pkg := range p.Object.Imports() {
+		for _, pkg := range p.Pkg.Imports() {
 			prereq := p.Prog.packages[pkg]
 			if prereq == nil {
-				panic(fmt.Sprintf("Package(%q).Build(): unsatisfied import: Program.CreatePackage(%q) was not called", p.Object.Path(), pkg.Path()))
+				panic(fmt.Sprintf("Package(%q).Build(): unsatisfied import: Program.CreatePackage(%q) was not called", p.Pkg.Path(), pkg.Path()))
 			}
 			var v Call
 			v.Call.Value = prereq.init

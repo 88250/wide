@@ -9,17 +9,17 @@ package ssautil
 import (
 	"go/ast"
 	"go/token"
+	"go/types"
 
 	"golang.org/x/tools/go/loader"
 	"golang.org/x/tools/go/ssa"
-	"golang.org/x/tools/go/types"
 )
 
 // CreateProgram returns a new program in SSA form, given a program
 // loaded from source.  An SSA package is created for each transitively
 // error-free package of lprog.
 //
-// Code for bodies of functions is not built until BuildAll() is called
+// Code for bodies of functions is not built until Build is called
 // on the result.
 //
 // mode controls diagnostics and checking during SSA construction.

@@ -10,8 +10,7 @@ import (
 	"fmt"
 	"go/ast"
 	"go/token"
-
-	"golang.org/x/tools/go/types"
+	"go/types"
 )
 
 // emitNew emits to f a new (heap Alloc) instruction allocating an
@@ -148,7 +147,7 @@ func emitCompare(f *Function, op token.Token, x, y Value, pos token.Pos) Value {
 //
 func isValuePreserving(ut_src, ut_dst types.Type) bool {
 	// Identical underlying types?
-	if types.Identical(ut_dst, ut_src) {
+	if structTypesIdentical(ut_dst, ut_src) {
 		return true
 	}
 

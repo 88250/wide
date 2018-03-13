@@ -13,10 +13,10 @@ package pointer
 import (
 	"fmt"
 	"go/token"
+	"go/types"
 
 	"golang.org/x/tools/go/callgraph"
 	"golang.org/x/tools/go/ssa"
-	"golang.org/x/tools/go/types"
 )
 
 var (
@@ -107,6 +107,16 @@ func (a *analysis) setValueNode(v ssa.Value, id nodeid, cgn *cgnode) {
 			a.result.IndirectQueries[v] = ptr
 		}
 		a.genLoad(cgn, ptr.n, v, 0, a.sizeof(t))
+	}
+
+	for _, query := range a.config.extendedQueries[v] {
+		t, nid := a.evalExtendedQuery(v.Type().Underlying(), id, query.ops)
+
+		if query.ptr.a == nil {
+			query.ptr.a = a
+			query.ptr.n = a.addNodes(t, "query.extended")
+		}
+		a.copy(query.ptr.n, nid, a.sizeof(t))
 	}
 }
 
@@ -1050,11 +1060,32 @@ func (a *analysis) genInstr(cgn *cgnode, instr ssa.Instruction) {
 			// Assumes that Next is always directly applied to a Range result.
 			theMap := instr.Iter.(*ssa.Range).X
 			tMap := theMap.Type().Underlying().(*types.Map)
+
 			ksize := a.sizeof(tMap.Key())
 			vsize := a.sizeof(tMap.Elem())
 
+			// The k/v components of the Next tuple may each be invalid.
+			tTuple := instr.Type().(*types.Tuple)
+
 			// Load from the map's (k,v) into the tuple's (ok, k, v).
-			a.genLoad(cgn, a.valueNode(instr)+1, theMap, 0, ksize+vsize)
+			osrc := uint32(0) // offset within map object
+			odst := uint32(1) // offset within tuple (initially just after 'ok bool')
+			sz := uint32(0)   // amount to copy
+
+			// Is key valid?
+			if tTuple.At(1).Type() != tInvalid {
+				sz += ksize
+			} else {
+				odst += ksize
+				osrc += ksize
+			}
+
+			// Is value valid?
+			if tTuple.At(2).Type() != tInvalid {
+				sz += vsize
+			}
+
+			a.genLoad(cgn, a.valueNode(instr)+nodeid(odst), theMap, osrc, sz)
 		}
 
 	case *ssa.Lookup:
@@ -1223,7 +1254,7 @@ func (a *analysis) genMethodsOf(T types.Type) {
 	// I think so, but the answer may depend on reflection.
 	mset := a.prog.MethodSets.MethodSet(T)
 	for i, n := 0, mset.Len(); i < n; i++ {
-		m := a.prog.Method(mset.At(i))
+		m := a.prog.MethodValue(mset.At(i))
 		a.valueNode(m)
 
 		if !itf {
@@ -1266,7 +1297,9 @@ func (a *analysis) generate() {
 		a.genMethodsOf(T)
 	}
 
-	// Generate constraints for entire program.
+	// Generate constraints for functions as they become reachable
+	// from the roots.  (No constraints are generated for functions
+	// that are dead in this analysis scope.)
 	for len(a.genq) > 0 {
 		cgn := a.genq[0]
 		a.genq = a.genq[1:]

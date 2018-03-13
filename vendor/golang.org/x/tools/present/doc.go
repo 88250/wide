@@ -58,10 +58,11 @@ After that come slides/sections, each after a blank line:
 	.code x.go /^func main/,/^}/
 	.play y.go
 	.image image.jpg
+	.background image.jpg
 	.iframe http://foo
 	.link http://foo label
 	.html file.html
-	.caption _Gopher_ by [[http://www.reneefrench.com][Renée French]]
+	.caption _Gopher_ by [[https://www.instagram.com/reneefrench/][Renée French]]
 
 	Again, more text
 
@@ -76,14 +77,18 @@ Fonts:
 Within the input for plain text or lists, text bracketed by font
 markers will be presented in italic, bold, or program font.
 Marker characters are _ (italic), * (bold) and ` (program font).
-Unmatched markers appear as plain text.
-Within marked text, a single marker character becomes a space
-and a doubled single marker quotes the marker character.
+An opening marker must be preceded by a space or punctuation
+character or else be at start of a line; similarly, a closing
+marker must be followed by a space or punctuation character or
+else be at the end of a line. Unmatched markers appear as plain text.
+There must be no spaces between markers. Within marked text,
+a single marker character becomes a space and a doubled single
+marker quotes the marker character.
 
 	_italic_
 	*bold*
 	`program`
-	_this_is_all_italic_
+	Markup—_especially_italic_text_—can easily be overused.
 	_Why_use_scoped__ptr_? Use plain ***ptr* instead.
 
 Inline links:
@@ -112,7 +117,7 @@ a file name followed by an optional address that specifies what
 section of the file to display. The address syntax is similar in
 its simplest form to that of ed, but comes from sam and is more
 general. See
-	http://plan9.bell-labs.com/sys/doc/sam/sam.html Table II
+	https://plan9.io/sys/doc/sam/sam.html Table II
 for full details. The displayed block is always rounded out to a
 full line at both ends.
 
@@ -177,6 +182,28 @@ preserves the aspect ratio of the image when scaling.
 
 	.image images/janet.jpg _ 300
 
+video:
+
+The template uses the function "video" to inject video files.
+
+The syntax is simple: 2 or 4 space-separated arguments.
+The first argument is always the file name.
+The second argument is always the file content-type.
+If there are more arguments, they are the height and width;
+both must be present, or substituted with an underscore.
+Replacing a dimension argument with the underscore parameter
+preserves the aspect ratio of the video when scaling.
+
+	.video videos/evangeline.mp4 video/mp4 400 600
+
+	.video videos/mabel.ogg video/ogg 500 _
+
+background:
+
+The template uses the function "background" to set the background image for
+a slide.  The only argument is the file name of the image.
+
+	.background images/susan.jpg
 
 caption:
 
@@ -200,6 +227,36 @@ that cannot be created using only the slide format.
 It is your responsibilty to make sure the included HTML is valid and safe.
 
 	.html file.html
+
+Presenter notes:
+
+Presenter notes may be enabled by appending the "-notes" flag when you run
+your "present" binary.
+
+This will allow you to open a second window by pressing 'N' from your browser
+displaying your slides. The second window is completely synced with your main
+window, except that presenter notes are only visible on the second window.
+
+Lines that begin with ": " are treated as presenter notes.
+
+	* Title of slide
+
+	Some Text
+
+	: Presenter notes (first paragraph)
+	: Presenter notes (subsequent paragraph(s))
+
+Notes may appear anywhere within the slide text. For example:
+
+	* Title of slide
+
+	: Presenter notes (first paragraph)
+
+	Some Text
+
+	: Presenter notes (subsequent paragraph(s))
+
+This has the same result as the example above.
 
 */
 package present // import "golang.org/x/tools/present"

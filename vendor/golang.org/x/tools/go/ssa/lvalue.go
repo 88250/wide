@@ -10,8 +10,7 @@ package ssa
 import (
 	"go/ast"
 	"go/token"
-
-	"golang.org/x/tools/go/types"
+	"go/types"
 )
 
 // An lvalue represents an assignable location that may appear on the

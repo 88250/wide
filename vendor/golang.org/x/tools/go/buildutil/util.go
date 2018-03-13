@@ -52,8 +52,6 @@ func ParseFile(fset *token.FileSet, ctxt *build.Context, displayPath func(string
 // The '...Files []string' fields of the resulting build.Package are not
 // populated (build.FindOnly mode).
 //
-// TODO(adonovan): call this from oracle when the tree thaws.
-//
 func ContainingPackage(ctxt *build.Context, dir, filename string) (*build.Package, error) {
 	if !IsAbsPath(ctxt, filename) {
 		filename = JoinPath(ctxt, dir, filename)
@@ -72,8 +70,7 @@ func ContainingPackage(ctxt *build.Context, dir, filename string) (*build.Packag
 	// We assume that no source root (GOPATH[i] or GOROOT) contains any other.
 	for _, srcdir := range ctxt.SrcDirs() {
 		srcdirSlash := filepath.ToSlash(srcdir) + "/"
-		if strings.HasPrefix(dirSlash, srcdirSlash) {
-			importPath := dirSlash[len(srcdirSlash) : len(dirSlash)-len("/")]
+		if importPath, ok := HasSubdir(ctxt, srcdirSlash, dirSlash); ok {
 			return ctxt.Import(importPath, dir, build.FindOnly)
 		}
 	}
@@ -85,7 +82,47 @@ func ContainingPackage(ctxt *build.Context, dir, filename string) (*build.Packag
 
 // (go/build.Context defines these as methods, but does not export them.)
 
-// TODO(adonovan): HasSubdir?
+// hasSubdir calls ctxt.HasSubdir (if not nil) or else uses
+// the local file system to answer the question.
+func HasSubdir(ctxt *build.Context, root, dir string) (rel string, ok bool) {
+	if f := ctxt.HasSubdir; f != nil {
+		return f(root, dir)
+	}
+
+	// Try using paths we received.
+	if rel, ok = hasSubdir(root, dir); ok {
+		return
+	}
+
+	// Try expanding symlinks and comparing
+	// expanded against unexpanded and
+	// expanded against expanded.
+	rootSym, _ := filepath.EvalSymlinks(root)
+	dirSym, _ := filepath.EvalSymlinks(dir)
+
+	if rel, ok = hasSubdir(rootSym, dir); ok {
+		return
+	}
+	if rel, ok = hasSubdir(root, dirSym); ok {
+		return
+	}
+	return hasSubdir(rootSym, dirSym)
+}
+
+func hasSubdir(root, dir string) (rel string, ok bool) {
+	const sep = string(filepath.Separator)
+	root = filepath.Clean(root)
+	if !strings.HasSuffix(root, sep) {
+		root += sep
+	}
+
+	dir = filepath.Clean(dir)
+	if !strings.HasPrefix(dir, root) {
+		return "", false
+	}
+
+	return filepath.ToSlash(dir[len(root):]), true
+}
 
 // FileExists returns true if the specified file exists,
 // using the build context's file system interface.
@@ -155,4 +192,21 @@ func SplitPathList(ctxt *build.Context, s string) []string {
 		return ctxt.SplitPathList(s)
 	}
 	return filepath.SplitList(s)
+}
+
+// sameFile returns true if x and y have the same basename and denote
+// the same file.
+//
+func sameFile(x, y string) bool {
+	if path.Clean(x) == path.Clean(y) {
+		return true
+	}
+	if filepath.Base(x) == filepath.Base(y) { // (optimisation)
+		if xi, err := os.Stat(x); err == nil {
+			if yi, err := os.Stat(y); err == nil {
+				return os.SameFile(xi, yi)
+			}
+		}
+	}
+	return false
 }

@@ -13,8 +13,7 @@ package ssa
 import (
 	"go/ast"
 	"go/token"
-
-	"golang.org/x/tools/go/types"
+	"go/types"
 )
 
 // EnclosingFunction returns the function that contains the syntax

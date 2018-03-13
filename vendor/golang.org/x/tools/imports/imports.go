@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
+//go:generate go run mkstdlib.go
+
 // Package imports implements a Go pretty-printer (like package "go/format")
 // that also adds or removes import statements as necessary.
 package imports // import "golang.org/x/tools/imports"
@@ -31,10 +33,16 @@ type Options struct {
 	Comments  bool // Print comments (true if nil *Options provided)
 	TabIndent bool // Use tabs for indent (true if nil *Options provided)
 	TabWidth  int  // Tab width (8 if nil *Options provided)
+
+	FormatOnly bool // Disable the insertion and deletion of imports
 }
 
 // Process formats and adjusts imports for the provided file.
 // If opt is nil the defaults are used.
+//
+// Note that filename's directory influences which imports can be chosen,
+// so it is important that filename be accurate.
+// To process data ``as if'' it were in filename, pass the data as a non-nil src.
 func Process(filename string, src []byte, opt *Options) ([]byte, error) {
 	if opt == nil {
 		opt = &Options{Comments: true, TabIndent: true, TabWidth: 8}
@@ -46,14 +54,15 @@ func Process(filename string, src []byte, opt *Options) ([]byte, error) {
 		return nil, err
 	}
 
-	_, err = fixImports(fileSet, file)
-	if err != nil {
-		return nil, err
+	if !opt.FormatOnly {
+		_, err = fixImports(fileSet, file, filename)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	sortImports(fileSet, file)
 	imps := astutil.Imports(fileSet, file)
-
 	var spacesBefore []string // import paths we need spaces before
 	for _, impSection := range imps {
 		// Within each block of contiguous imports, see if any
@@ -88,7 +97,10 @@ func Process(filename string, src []byte, opt *Options) ([]byte, error) {
 		out = adjust(src, out)
 	}
 	if len(spacesBefore) > 0 {
-		out = addImportSpaces(bytes.NewReader(out), spacesBefore)
+		out, err = addImportSpaces(bytes.NewReader(out), spacesBefore)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	out, err = format.Source(out)
@@ -123,11 +135,18 @@ func parse(fset *token.FileSet, filename string, src []byte, opt *Options) (*ast
 
 	// If this is a declaration list, make it a source file
 	// by inserting a package clause.
-	// Insert using a ;, not a newline, so that the line numbers
-	// in psrc match the ones in src.
-	psrc := append([]byte("package main;"), src...)
+	// Insert using a ;, not a newline, so that parse errors are on
+	// the correct line.
+	const prefix = "package main;"
+	psrc := append([]byte(prefix), src...)
 	file, err = parser.ParseFile(fset, filename, psrc, parserMode)
 	if err == nil {
+		// Gofmt will turn the ; into a \n.
+		// Do that ourselves now and update the file contents,
+		// so that positions and line numbers are correct going forward.
+		psrc[len(prefix)-1] = '\n'
+		fset.File(file.Package).SetLinesForContent(psrc)
+
 		// If a main function exists, we will assume this is a main
 		// package and leave the file.
 		if containsMainFunc(file) {
@@ -136,8 +155,7 @@ func parse(fset *token.FileSet, filename string, src []byte, opt *Options) (*ast
 
 		adjust := func(orig, src []byte) []byte {
 			// Remove the package clause.
-			// Gofmt has turned the ; into a \n.
-			src = src[len("package main\n"):]
+			src = src[len(prefix):]
 			return matchSpace(orig, src)
 		}
 		return file, adjust, nil
@@ -246,13 +264,18 @@ func matchSpace(orig []byte, src []byte) []byte {
 
 var impLine = regexp.MustCompile(`^\s+(?:[\w\.]+\s+)?"(.+)"`)
 
-func addImportSpaces(r io.Reader, breaks []string) []byte {
+func addImportSpaces(r io.Reader, breaks []string) ([]byte, error) {
 	var out bytes.Buffer
-	sc := bufio.NewScanner(r)
+	in := bufio.NewReader(r)
 	inImports := false
 	done := false
-	for sc.Scan() {
-		s := sc.Text()
+	for {
+		s, err := in.ReadString('\n')
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			return nil, err
+		}
 
 		if !inImports && !done && strings.HasPrefix(s, "import") {
 			inImports = true
@@ -266,14 +289,14 @@ func addImportSpaces(r io.Reader, breaks []string) []byte {
 		}
 		if inImports && len(breaks) > 0 {
 			if m := impLine.FindStringSubmatch(s); m != nil {
-				if m[1] == string(breaks[0]) {
+				if m[1] == breaks[0] {
 					out.WriteByte('\n')
 					breaks = breaks[1:]
 				}
 			}
 		}
 
-		fmt.Fprintln(&out, s)
+		fmt.Fprint(&out, s)
 	}
-	return out.Bytes()
+	return out.Bytes(), nil
 }

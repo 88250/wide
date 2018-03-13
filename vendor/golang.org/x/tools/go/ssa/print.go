@@ -10,11 +10,11 @@ package ssa
 import (
 	"bytes"
 	"fmt"
+	"go/types"
 	"io"
 	"reflect"
 	"sort"
 
-	"golang.org/x/tools/go/types"
 	"golang.org/x/tools/go/types/typeutil"
 )
 
@@ -27,7 +27,7 @@ import (
 func relName(v Value, i Instruction) string {
 	var from *types.Package
 	if i != nil {
-		from = i.Parent().pkgobj()
+		from = i.Parent().pkg()
 	}
 	switch v := v.(type) {
 	case Member: // *Function or *Global
@@ -45,8 +45,8 @@ func relType(t types.Type, from *types.Package) string {
 func relString(m Member, from *types.Package) string {
 	// NB: not all globals have an Object (e.g. init$guard),
 	// so use Package().Object not Object.Package().
-	if obj := m.Package().Object; obj != nil && obj != from {
-		return fmt.Sprintf("%s.%s", obj.Path(), m.Name())
+	if pkg := m.Package().Pkg; pkg != nil && pkg != from {
+		return fmt.Sprintf("%s.%s", pkg.Path(), m.Name())
 	}
 	return m.Name()
 }
@@ -57,12 +57,12 @@ func relString(m Member, from *types.Package) string {
 // It never appears in disassembly, which uses Value.Name().
 
 func (v *Parameter) String() string {
-	from := v.Parent().pkgobj()
+	from := v.Parent().pkg()
 	return fmt.Sprintf("parameter %s : %s", v.Name(), relType(v.Type(), from))
 }
 
 func (v *FreeVar) String() string {
-	from := v.Parent().pkgobj()
+	from := v.Parent().pkg()
 	return fmt.Sprintf("freevar %s : %s", v.Name(), relType(v.Type(), from))
 }
 
@@ -77,7 +77,7 @@ func (v *Alloc) String() string {
 	if v.Heap {
 		op = "new"
 	}
-	from := v.Parent().pkgobj()
+	from := v.Parent().pkg()
 	return fmt.Sprintf("%s %s (%s)", op, relType(deref(v.Type()), from), v.Comment)
 }
 
@@ -89,8 +89,12 @@ func (v *Phi) String() string {
 			b.WriteString(", ")
 		}
 		// Be robust against malformed CFG.
+		if v.block == nil {
+			b.WriteString("??")
+			continue
+		}
 		block := -1
-		if v.block != nil && i < len(v.block.Preds) {
+		if i < len(v.block.Preds) {
 			block = v.block.Preds[i].Index
 		}
 		fmt.Fprintf(&b, "%d: ", block)
@@ -147,7 +151,7 @@ func (v *UnOp) String() string {
 }
 
 func printConv(prefix string, v, x Value) string {
-	from := v.Parent().pkgobj()
+	from := v.Parent().pkg()
 	return fmt.Sprintf("%s %s <- %s (%s)",
 		prefix,
 		relType(v.Type(), from),
@@ -177,7 +181,7 @@ func (v *MakeClosure) String() string {
 }
 
 func (v *MakeSlice) String() string {
-	from := v.Parent().pkgobj()
+	from := v.Parent().pkg()
 	return fmt.Sprintf("make %s %s %s",
 		relType(v.Type(), from),
 		relName(v.Len, v),
@@ -209,12 +213,12 @@ func (v *MakeMap) String() string {
 	if v.Reserve != nil {
 		res = relName(v.Reserve, v)
 	}
-	from := v.Parent().pkgobj()
+	from := v.Parent().pkg()
 	return fmt.Sprintf("make %s %s", relType(v.Type(), from), res)
 }
 
 func (v *MakeChan) String() string {
-	from := v.Parent().pkgobj()
+	from := v.Parent().pkg()
 	return fmt.Sprintf("make %s %s", relType(v.Type(), from), relName(v.Size, v))
 }
 
@@ -259,7 +263,7 @@ func (v *Next) String() string {
 }
 
 func (v *TypeAssert) String() string {
-	from := v.Parent().pkgobj()
+	from := v.Parent().pkg()
 	return fmt.Sprintf("typeassert%s %s.(%s)", commaOk(v.CommaOk), relName(v.X, v), relType(v.AssertedType, from))
 }
 
@@ -366,7 +370,7 @@ func (s *DebugRef) String() string {
 }
 
 func (p *Package) String() string {
-	return "package " + p.Object.Path()
+	return "package " + p.Pkg.Path()
 }
 
 var _ io.WriterTo = (*Package)(nil) // *Package implements io.Writer
@@ -391,7 +395,7 @@ func WritePackage(buf *bytes.Buffer, p *Package) {
 		names = append(names, name)
 	}
 
-	from := p.Object
+	from := p.Pkg
 	sort.Strings(names)
 	for _, name := range names {
 		switch mem := p.Members[name].(type) {

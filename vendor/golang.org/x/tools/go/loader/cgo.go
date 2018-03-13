@@ -1,3 +1,7 @@
+// Copyright 2013 The Go Authors. All rights reserved.
+// Use of this source code is governed by a BSD-style
+// license that can be found in the LICENSE file.
+
 package loader
 
 // This file handles cgo preprocessing of files containing `import "C"`.
@@ -33,7 +37,7 @@ package loader
 // The benefit of this approach would have been that source-level
 // syntax information would correspond exactly to the original cgo
 // file, with no preprocessing involved, making source tools like
-// godoc, oracle, and eg happy.  However, the approach was rejected
+// godoc, guru, and eg happy.  However, the approach was rejected
 // due to the additional complexity it would impose on go/types.  (It
 // made for a beautiful demo, though.)
 //
@@ -87,9 +91,9 @@ func processCgoFiles(bp *build.Package, fset *token.FileSet, DisplayPath func(pa
 		if err != nil {
 			return nil, err
 		}
-		defer rd.Close()
 		display := filepath.Join(bp.Dir, cgoDisplayFiles[i])
 		f, err := parser.ParseFile(fset, display, rd, mode)
+		rd.Close()
 		if err != nil {
 			return nil, err
 		}
@@ -106,14 +110,18 @@ var cgoRe = regexp.MustCompile(`[/\\:]`)
 //
 // runCgo is adapted from (*builder).cgo in
 // $GOROOT/src/cmd/go/build.go, but these features are unsupported:
-// pkg-config, Objective C, CGOPKGPATH, CGO_FLAGS.
+// Objective C, CGOPKGPATH, CGO_FLAGS.
 //
 func runCgo(bp *build.Package, pkgdir, tmpdir string) (files, displayFiles []string, err error) {
 	cgoCPPFLAGS, _, _, _ := cflags(bp, true)
 	_, cgoexeCFLAGS, _, _ := cflags(bp, false)
 
 	if len(bp.CgoPkgConfig) > 0 {
-		return nil, nil, fmt.Errorf("cgo pkg-config not supported")
+		pcCFLAGS, err := pkgConfigFlags(bp)
+		if err != nil {
+			return nil, nil, err
+		}
+		cgoCPPFLAGS = append(cgoCPPFLAGS, pcCFLAGS...)
 	}
 
 	// Allows including _cgo_export.h from .[ch] files in the package.

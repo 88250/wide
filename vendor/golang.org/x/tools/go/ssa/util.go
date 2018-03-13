@@ -10,11 +10,11 @@ import (
 	"fmt"
 	"go/ast"
 	"go/token"
+	"go/types"
 	"io"
 	"os"
 
 	"golang.org/x/tools/go/ast/astutil"
-	"golang.org/x/tools/go/types"
 )
 
 //// AST utilities
@@ -58,7 +58,7 @@ func recvType(obj *types.Func) types.Type {
 //
 // Exported to ssa/interp.
 //
-// TODO(gri): this is a copy of go/types.defaultType; export that function.
+// TODO(adonovan): use go/types.DefaultType after 1.8.
 //
 func DefaultType(typ types.Type) types.Type {
 	if t, ok := typ.(*types.Basic); ok {
