@@ -8,6 +8,7 @@ ENV GOROOT_BOOTSTRAP=/usr/local/gobt
 
 ADD . /wide/gogogo/src/github.com/b3log/wide
 ADD vendor/* /wide/gogogo/src/
+RUN go install github.com/visualfc/gotools github.com/nsf/gocode github.com/bradfitz/goimports
 
 RUN useradd wide && useradd runner
 
