@@ -3,6 +3,18 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "+dVSWmypRy7k2emKXonbGs4aMC0=",
+			"path": "github.com/b3log/wide",
+			"revision": "a399713787402b6b127ad3ed706f86546007fa50",
+			"revisionTime": "2018-03-13T03:25:58Z"
+		},
+		{
+			"checksumSHA1": "83iEp3SqOoIkZUYyR7BOVP4vaGE=",
+			"path": "github.com/bradfitz/goimports",
+			"revision": "919f4f2bcea0744d4da4ae851fbf818ae11cba87",
+			"revisionTime": "2014-12-11T23:42:42Z"
+		},
+		{
 			"checksumSHA1": "9G8Rchzwv9ERNhD09uy7wvmqBJI=",
 			"path": "github.com/go-fsnotify/fsnotify",
 			"revision": "4da3e2cfbabc9f751898f250b49f2439785783a1",
@@ -31,6 +43,18 @@
 			"path": "github.com/gorilla/websocket",
 			"revision": "a91eba7f97777409bc2c443f5534d41dd20c5720",
 			"revisionTime": "2017-03-19T17:27:27Z"
+		},
+		{
+			"checksumSHA1": "5i+5zScV0FNuG3cmRzRPn6PFsfo=",
+			"path": "github.com/nsf/gocode",
+			"revision": "5070dacabf2a80deeaf4ddb0be3761d06fce7be5",
+			"revisionTime": "2016-11-22T21:38:51Z"
+		},
+		{
+			"checksumSHA1": "4fp/TH5nX7seO5p4qJfIj/BokbI=",
+			"path": "github.com/visualfc/gotools",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
 		},
 		{
 			"checksumSHA1": "Tkb1hBdBWeO7SGjixS2Hm48F6+s=",
