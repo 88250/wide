@@ -12,10 +12,7 @@ RUN useradd wide && useradd runner
 
 ENV GOPATH /wide/gogogo
 
-RUN go build github.com/go-fsnotify/fsnotify\
- && go build github.com/gorilla/sessions\
- && go build github.com/gorilla/websocket\
- && go install github.com/visualfc/gotools github.com/nsf/gocode github.com/bradfitz/goimports
+RUN go install github.com/visualfc/gotools github.com/nsf/gocode github.com/bradfitz/goimports
 
 WORKDIR /wide/gogogo/src/github.com/b3log/wide
 RUN go build -v
