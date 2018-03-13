@@ -57,6 +57,84 @@
 			"revisionTime": "2015-04-09T14:25:36Z"
 		},
 		{
+			"checksumSHA1": "QBwzyczN2ftqO2Vxag5TS79q32E=",
+			"path": "github.com/visualfc/gotools/astview",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "wqPqP7RGlukrSMzGKVk1tvyWh1o=",
+			"path": "github.com/visualfc/gotools/command",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "sA2FN414rFhNEgac/a0IyUR8dMA=",
+			"path": "github.com/visualfc/gotools/docview",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "LvxdwB9kJ77cFS4qiRAh9ts2nz4=",
+			"path": "github.com/visualfc/gotools/finddoc",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "Sxih6vWVTlJNBdVNeyCkxI213yI=",
+			"path": "github.com/visualfc/gotools/goapi",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "RLl3M7ywfbgNYR2HfBywCruQz9c=",
+			"path": "github.com/visualfc/gotools/goimports",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "R6+qmg1mEs4XhihZd5ujddVI+FI=",
+			"path": "github.com/visualfc/gotools/gopresent",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "kyKBo2ux+HflucDj/qzoko5YoMA=",
+			"path": "github.com/visualfc/gotools/jsonfmt",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "QldbuEtO8CONs3q/5mkva+CVeNg=",
+			"path": "github.com/visualfc/gotools/oracle",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "zG4ar8LbudIKQvsfvAgkBSS0k3Q=",
+			"path": "github.com/visualfc/gotools/pkgs",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "RQoGIbxntMsUZvi4Js0WQqDBDYM=",
+			"path": "github.com/visualfc/gotools/runcmd",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "q/EpLJHMTcnbxjLGogryQ6IA7kc=",
+			"path": "github.com/visualfc/gotools/stdlib",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "qlJsyinWZ07PaOyTYyxXOmhDN/I=",
+			"path": "github.com/visualfc/gotools/types",
+			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
+			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
 			"checksumSHA1": "Tkb1hBdBWeO7SGjixS2Hm48F6+s=",
 			"path": "golang.org/x/sys/unix",
 			"revision": "0b25a408a50076fbbcae6b7ac0ea5fbb0b085e79",
@@ -91,6 +169,91 @@
 			"path": "golang.org/x/text/transform",
 			"revision": "506f9d5c962f284575e88337e7d9296d27e729d3",
 			"revisionTime": "2017-01-31T20:38:18Z"
+		},
+		{
+			"checksumSHA1": "jbOdG63FTeIVcvLU5E8XsqK53cc=",
+			"path": "golang.org/x/tools/container/intsets",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "n7QcM+WctJpMsi0d1m4OKSqW4xU=",
+			"path": "golang.org/x/tools/go/ast/astutil",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "cfJyCvDHk2MgII9NxbJ9j4Cg4to=",
+			"path": "golang.org/x/tools/go/buildutil",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "9evbcWFxUJMFmnXQ2ja5765p3iE=",
+			"path": "golang.org/x/tools/go/callgraph",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "p+hK1c9noXGuHDzFlrFQ/uQfzLQ=",
+			"path": "golang.org/x/tools/go/exact",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "zr2p6hYCvjutYYPnk3PNVPNrPuI=",
+			"path": "golang.org/x/tools/go/gcimporter",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "+ZIgPrqQHXeHWYpTf/3M7VmTL84=",
+			"path": "golang.org/x/tools/go/loader",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "6gaftnO6OdA2QQVEEx/A5RgY6vQ=",
+			"path": "golang.org/x/tools/go/pointer",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "j+qDyyAVmxUvkG5KKqei99v251w=",
+			"path": "golang.org/x/tools/go/ssa",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "aSefOysJ8dwgHf8wvL0G5HjI/8I=",
+			"path": "golang.org/x/tools/go/ssa/ssautil",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "kK8f03iydGnjQtYtj+EQHHdPEl4=",
+			"path": "golang.org/x/tools/go/types",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "CYSGwDAcpYRoeD2y59we+Udk6bY=",
+			"path": "golang.org/x/tools/go/types/typeutil",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "p3oUXqh8ecOL76mLRB5h/Qlz9lE=",
+			"path": "golang.org/x/tools/imports",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "wlx0RRzAPyJqCjnAxfnyiyXiqpA=",
+			"path": "golang.org/x/tools/oracle",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "iSBk1u2q0C8EBuH4XSAWo/nYT84=",
+			"path": "golang.org/x/tools/oracle/serial",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "AwIfMW+1I1JYu0RB2/4lSp8c5AU=",
+			"path": "golang.org/x/tools/present",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "iR5P7/QTdZBU43MEh7KrNSyQXhU=",
+			"path": "golang.org/x/tools/refactor/importgraph",
+			"revision": ""
 		}
 	],
 	"rootPath": "github.com/b3log/wide"
