@@ -5,8 +5,8 @@
 		{
 			"checksumSHA1": "ZesPb1w0u5/uv/fdVc+G6wOee30=",
 			"path": "github.com/b3log/wide",
-			"revision": "bfd836c6fc8fbc007ce437db1406455493cd532f",
-			"revisionTime": "2018-03-13T04:57:02Z"
+			"revision": "0a51a03f35a3fa9edbfa790698aa615f4dd49783",
+			"revisionTime": "2018-03-13T05:05:45Z"
 		},
 		{
 			"checksumSHA1": "83iEp3SqOoIkZUYyR7BOVP4vaGE=",
@@ -45,16 +45,30 @@
 			"revisionTime": "2015-05-30T03:03:52Z"
 		},
 		{
+			"checksumSHA1": "8jdAN2n9kJasxFmikoyDZAbv8ig=",
+			"origin": "github.com/visualfc/gotools/vendor/github.com/kr/pty",
+			"path": "github.com/kr/pty",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
+		},
+		{
 			"checksumSHA1": "gKm38IQHqLfYHwS7B6JDTJzXYYI=",
 			"path": "github.com/nsf/gocode",
 			"revision": "416643789f088aa5077f667cecde7f966131f6be",
 			"revisionTime": "2018-01-07T08:36:41Z"
 		},
 		{
-			"checksumSHA1": "4fp/TH5nX7seO5p4qJfIj/BokbI=",
+			"checksumSHA1": "R3yk3OJzuq4MVfVGX5AhkkYv1ko=",
+			"origin": "github.com/visualfc/gotools/vendor/github.com/pmezard/go-difflib/difflib",
+			"path": "github.com/pmezard/go-difflib/difflib",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
+		},
+		{
+			"checksumSHA1": "+1Mo4q3vpSB8ibclS1t/AWeDQ50=",
 			"path": "github.com/visualfc/gotools",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "QBwzyczN2ftqO2Vxag5TS79q32E=",
@@ -63,16 +77,22 @@
 			"revisionTime": "2015-04-09T14:25:36Z"
 		},
 		{
-			"checksumSHA1": "wqPqP7RGlukrSMzGKVk1tvyWh1o=",
+			"checksumSHA1": "02f7N5GTTddWpIDhsRthRKZs4nI=",
 			"path": "github.com/visualfc/gotools/command",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "sA2FN414rFhNEgac/a0IyUR8dMA=",
 			"path": "github.com/visualfc/gotools/docview",
 			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
 			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "5sCU5oJIkeXHHhzNyzusSH+de/8=",
+			"path": "github.com/visualfc/gotools/finddecl",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "LvxdwB9kJ77cFS4qiRAh9ts2nz4=",
@@ -87,6 +107,18 @@
 			"revisionTime": "2015-04-09T14:25:36Z"
 		},
 		{
+			"checksumSHA1": "o0usAkdrTaqufvGTZu++Cc/DVMM=",
+			"path": "github.com/visualfc/gotools/godiff",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
+		},
+		{
+			"checksumSHA1": "Wnc0wf1qEhXNdqLPMlIA3vCPpPY=",
+			"path": "github.com/visualfc/gotools/gofmt",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
+		},
+		{
 			"checksumSHA1": "RLl3M7ywfbgNYR2HfBywCruQz9c=",
 			"path": "github.com/visualfc/gotools/goimports",
 			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
@@ -97,6 +129,12 @@
 			"path": "github.com/visualfc/gotools/gopresent",
 			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
 			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "f8zd5auG22z/GqXqW9giRDYEw6A=",
+			"path": "github.com/visualfc/gotools/gotest",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "kyKBo2ux+HflucDj/qzoko5YoMA=",
@@ -127,6 +165,12 @@
 			"path": "github.com/visualfc/gotools/stdlib",
 			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
 			"revisionTime": "2015-04-09T14:25:36Z"
+		},
+		{
+			"checksumSHA1": "6CSw3Gtu+hJ6QTfhJ+985cualxs=",
+			"path": "github.com/visualfc/gotools/terminal",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "qlJsyinWZ07PaOyTYyxXOmhDN/I=",
@@ -220,7 +264,7 @@
 			"revision": ""
 		},
 		{
-			"checksumSHA1": "p3oUXqh8ecOL76mLRB5h/Qlz9lE=",
+			"checksumSHA1": "TzQP7S5QaE3ipab7SNo/PcFb2bI=",
 			"path": "golang.org/x/tools/imports",
 			"revision": ""
 		},
