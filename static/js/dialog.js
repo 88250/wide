@@ -24,7 +24,7 @@
     $.fn.extend({
         dialog: {
             version: "0.0.1.7",
-            author: "lly219@gmail.com"
+            author: "v@b3log.org"
         }
     });
 
