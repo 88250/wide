@@ -1,2 +1,0 @@
-# gotools
-liteide golang tools
