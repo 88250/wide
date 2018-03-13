@@ -8,11 +8,6 @@ import (
 )
 
 var pkgList = `
-cmd/cgo
-cmd/fix
-cmd/go
-cmd/gofmt
-cmd/yacc
 archive/tar
 archive/zip
 bufio
@@ -25,6 +20,7 @@ compress/zlib
 container/heap
 container/list
 container/ring
+context
 crypto
 crypto/aes
 crypto/cipher
@@ -51,6 +47,7 @@ debug/elf
 debug/gosym
 debug/macho
 debug/pe
+debug/plan9obj
 encoding
 encoding/ascii85
 encoding/asn1
@@ -69,12 +66,15 @@ flag
 fmt
 go/ast
 go/build
+go/constant
 go/doc
 go/format
+go/importer
 go/parser
 go/printer
 go/scanner
 go/token
+go/types
 hash
 hash/adler32
 hash/crc32
@@ -96,16 +96,19 @@ log
 log/syslog
 math
 math/big
+math/bits
 math/cmplx
 math/rand
 mime
 mime/multipart
+mime/quotedprintable
 net
 net/http
 net/http/cgi
 net/http/cookiejar
 net/http/fcgi
 net/http/httptest
+net/http/httptrace
 net/http/httputil
 net/http/pprof
 net/mail
@@ -120,6 +123,7 @@ os/signal
 os/user
 path
 path/filepath
+plugin
 reflect
 regexp
 regexp/syntax
@@ -128,6 +132,7 @@ runtime/cgo
 runtime/debug
 runtime/pprof
 runtime/race
+runtime/trace
 sort
 strconv
 strings

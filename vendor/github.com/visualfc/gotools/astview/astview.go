@@ -9,14 +9,15 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	"go/types"
 	"io"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/visualfc/gotools/command"
-
-	"golang.org/x/tools/go/types"
+	"github.com/visualfc/gotools/pkgutil"
 )
 
 var Command = &command.Command{
@@ -27,9 +28,13 @@ var Command = &command.Command{
 }
 
 var astViewStdin bool
+var astViewShowEndPos bool
+var astViewShowTodo bool
 
 func init() {
 	Command.Flag.BoolVar(&astViewStdin, "stdin", false, "input from stdin")
+	Command.Flag.BoolVar(&astViewShowEndPos, "end", false, "show decl end pos")
+	Command.Flag.BoolVar(&astViewShowTodo, "todo", false, "show todo list")
 }
 
 func runAstView(cmd *command.Command, args []string) error {
@@ -73,6 +78,8 @@ const (
 	tag_type_method    = "tm"
 	tag_type_factor    = "tf"
 	tag_type_value     = "tv"
+	tag_todo           = "b"
+	tag_todo_folder    = "+b"
 )
 
 type PackageView struct {
@@ -99,8 +106,11 @@ func (p *PackageView) posFileIndex(pos token.Position) int {
 	return index
 }
 
-func (p *PackageView) posText(pos token.Position) (s string) {
+func (p *PackageView) posText(pos token.Position, end token.Position) (s string) {
 	index := p.posFileIndex(pos)
+	if astViewShowEndPos {
+		return fmt.Sprintf("%d:%d:%d:%d:%d", index, pos.Line, pos.Column, end.Line, end.Column)
+	}
 	return fmt.Sprintf("%d:%d:%d", index, pos.Line, pos.Column)
 }
 
@@ -156,7 +166,11 @@ func ParseFiles(fset *token.FileSet, filenames []string, mode parser.Mode) (pkgs
 
 func PrintFilesTree(filenames []string, w io.Writer, expr bool) error {
 	fset := token.NewFileSet()
-	pkgs, pkgsfiles, err := ParseFiles(fset, filenames, parser.AllErrors)
+	mode := parser.AllErrors
+	if astViewShowTodo {
+		mode |= parser.ParseComments
+	}
+	pkgs, pkgsfiles, err := ParseFiles(fset, filenames, mode)
 	if err != nil {
 		return err
 	}
@@ -182,7 +196,11 @@ func NewFilePackageSource(filename string, f *os.File, expr bool) (*PackageView,
 	p := new(PackageView)
 	p.fset = token.NewFileSet()
 	p.expr = expr
-	file, err := parser.ParseFile(p.fset, filename, src, 0)
+	mode := parser.AllErrors
+	if astViewShowTodo {
+		mode |= parser.ParseComments
+	}
+	file, err := parser.ParseFile(p.fset, filename, src, mode)
 	if err != nil {
 		return nil, err
 	}
@@ -200,10 +218,11 @@ func NewFilePackageSource(filename string, f *os.File, expr bool) (*PackageView,
 func (p *PackageView) printFuncsHelper(w io.Writer, funcs []*FuncDoc, level int, tag string, tag_folder string) {
 	for _, f := range funcs {
 		pos := p.fset.Position(f.Decl.Pos())
+		end := p.fset.Position(f.Decl.End())
 		if p.expr {
-			fmt.Fprintf(w, "%d,%s,%s,%s@%s\n", level, tag, f.Name, p.posText(pos), types.ExprString(f.Decl.Type))
+			fmt.Fprintf(w, "%d,%s,%s,%s@%s\n", level, tag, f.Name, p.posText(pos, end), types.ExprString(f.Decl.Type))
 		} else {
-			fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag, f.Name, p.posText(pos))
+			fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag, f.Name, p.posText(pos, end))
 		}
 	}
 }
@@ -224,11 +243,12 @@ func (p *PackageView) PrintVars(w io.Writer, vars []*ValueDoc, level int, tag st
 		for _, s := range v.Decl.Specs {
 			if m, ok := s.(*ast.ValueSpec); ok {
 				pos := p.fset.Position(m.Pos())
+				end := p.fset.Position(m.End())
 				for i := 0; i < len(m.Names); i++ {
 					if p.expr && m.Type != nil {
-						fmt.Fprintf(w, "%d,%s,%s,%s@%s\n", level, tag, m.Names[i], p.posText(pos), types.ExprString(m.Type))
+						fmt.Fprintf(w, "%d,%s,%s,%s@%s\n", level, tag, m.Names[i], p.posText(pos, end), types.ExprString(m.Type))
 					} else {
-						fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag, m.Names[i], p.posText(pos))
+						fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag, m.Names[i], p.posText(pos, end))
 					}
 				}
 			}
@@ -248,7 +268,8 @@ func (p *PackageView) PrintTypes(w io.Writer, types []*TypeDoc, level int) {
 			tag = tag_struct
 		}
 		pos := p.fset.Position(d.Decl.Pos())
-		fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag, d.Type.Name, p.posText(pos))
+		end := p.fset.Position(d.Decl.End())
+		fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag, d.Type.Name, p.posText(pos, end))
 		p.printFuncsHelper(w, d.Funcs, level+1, tag_type_factor, "")
 		p.printFuncsHelper(w, d.Methods, level+1, tag_type_method, "")
 		p.PrintTypeFields(w, d.Decl, level+1)
@@ -270,10 +291,11 @@ func (p *PackageView) PrintTypeFields(w io.Writer, decl *ast.GenDecl, level int)
 			}
 			for _, m := range list.Names {
 				pos := p.fset.Position(m.Pos())
+				end := p.fset.Position(m.End())
 				if list.Type != nil {
-					fmt.Fprintf(w, "%d,%s,%s,%s@%s\n", level, tag_type_value, m.Name, p.posText(pos), types.ExprString(list.Type))
+					fmt.Fprintf(w, "%d,%s,%s,%s@%s\n", level, tag_type_value, m.Name, p.posText(pos, end), types.ExprString(list.Type))
 				} else {
-					fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag_type_value, m.Name, p.posText(pos))
+					fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag_type_value, m.Name, p.posText(pos, end))
 				}
 			}
 		}
@@ -284,7 +306,8 @@ func (p *PackageView) PrintTypeFields(w io.Writer, decl *ast.GenDecl, level int)
 			}
 			for _, m := range list.Names {
 				pos := p.fset.Position(m.Pos())
-				fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag_type_method, m.Name, p.posText(pos))
+				end := p.fset.Position(m.End())
+				fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag_type_method, m.Name, p.posText(pos, end))
 			}
 		}
 	}
@@ -299,6 +322,19 @@ func (p *PackageView) PrintImports(w io.Writer, level int, tag, tag_folder strin
 		fmt.Fprintf(w, "%d,%s,%s\n", level, tag_folder, "Imports")
 		level++
 	}
+	var parentPkg *pkgutil.Package
+	if pkgutil.IsVendorExperiment() {
+		for filename, _ := range p.pkg.Files {
+			if !filepath.IsAbs(filename) {
+				name, err := filepath.Abs(filename)
+				if err == nil {
+					filename = name
+				}
+			}
+			parentPkg = pkgutil.ImportFile(filename)
+			break
+		}
+	}
 	for _, name := range p.pdoc.Imports {
 		vname := "\"" + name + "\""
 		var ps []string
@@ -306,9 +342,13 @@ func (p *PackageView) PrintImports(w io.Writer, level int, tag, tag_folder strin
 			for _, v := range file.Imports {
 				if v.Path.Value == vname {
 					pos := p.fset.Position(v.Pos())
-					ps = append(ps, p.posText(pos))
+					end := p.fset.Position(v.End())
+					ps = append(ps, p.posText(pos, end))
 				}
 			}
+		}
+		if parentPkg != nil {
+			name = pkgutil.VendoredImportPath(parentPkg, name)
 		}
 		fmt.Fprintf(w, "%d,%s,%s,%s\n", level, tag, name, strings.Join(ps, ";"))
 	}
@@ -330,6 +370,27 @@ func (p *PackageView) PrintFuncs(w io.Writer, level int, tag_folder string) {
 	p.printFuncsHelper(w, p.pdoc.Funcs, level, tag_func, tag_func_folder)
 }
 
+func (p *PackageView) PrintTodos(w io.Writer, level int, tag, tag_folder string) {
+	hasFolder := false
+	if len(p.pdoc.Todos) > 0 {
+		hasFolder = true
+	}
+	if !hasFolder {
+		return
+	}
+	if len(tag_folder) > 0 {
+		fmt.Fprintf(w, "%d,%s,TodoList\n", level, tag_folder)
+		level++
+	}
+	for _, todo := range p.pdoc.Todos {
+		c := todo.Comments.List[0]
+		pos := p.fset.Position(c.Pos())
+		end := p.fset.Position(c.End())
+		ps := p.posText(pos, end)
+		fmt.Fprintf(w, "%d,%s,%s,%s@%s\n", level, tag, todo.Tag, ps, todo.Text)
+	}
+}
+
 func (p *PackageView) PrintPackage(w io.Writer, level int) {
 	p.PrintHeader(w, level)
 	level++
@@ -338,6 +399,7 @@ func (p *PackageView) PrintPackage(w io.Writer, level int) {
 	p.PrintVars(w, p.pdoc.Consts, level, tag_const, tag_const_folder)
 	p.PrintFuncs(w, level, tag_func_folder)
 	p.PrintTypes(w, p.pdoc.Types, level)
+	p.PrintTodos(w, level, tag_todo, tag_todo_folder)
 }
 
 // level,tag,pos@info

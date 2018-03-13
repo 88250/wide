@@ -5,8 +5,8 @@
 		{
 			"checksumSHA1": "ZesPb1w0u5/uv/fdVc+G6wOee30=",
 			"path": "github.com/b3log/wide",
-			"revision": "0a51a03f35a3fa9edbfa790698aa615f4dd49783",
-			"revisionTime": "2018-03-13T05:05:45Z"
+			"revision": "0b8da631759171441b7c46b78151fbf6345d5bb8",
+			"revisionTime": "2018-03-13T05:11:10Z"
 		},
 		{
 			"checksumSHA1": "83iEp3SqOoIkZUYyR7BOVP4vaGE=",
@@ -71,10 +71,10 @@
 			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
-			"checksumSHA1": "QBwzyczN2ftqO2Vxag5TS79q32E=",
+			"checksumSHA1": "h9/MfYdq0vlJ5n/MszzARxhAY88=",
 			"path": "github.com/visualfc/gotools/astview",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "02f7N5GTTddWpIDhsRthRKZs4nI=",
@@ -85,8 +85,8 @@
 		{
 			"checksumSHA1": "sA2FN414rFhNEgac/a0IyUR8dMA=",
 			"path": "github.com/visualfc/gotools/docview",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "5sCU5oJIkeXHHhzNyzusSH+de/8=",
@@ -95,16 +95,16 @@
 			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
-			"checksumSHA1": "LvxdwB9kJ77cFS4qiRAh9ts2nz4=",
+			"checksumSHA1": "HmZqKNWLGAznshKi6RaoNCfUiX4=",
 			"path": "github.com/visualfc/gotools/finddoc",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "Sxih6vWVTlJNBdVNeyCkxI213yI=",
 			"path": "github.com/visualfc/gotools/goapi",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "o0usAkdrTaqufvGTZu++Cc/DVMM=",
@@ -127,8 +127,8 @@
 		{
 			"checksumSHA1": "R6+qmg1mEs4XhihZd5ujddVI+FI=",
 			"path": "github.com/visualfc/gotools/gopresent",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "f8zd5auG22z/GqXqW9giRDYEw6A=",
@@ -139,32 +139,50 @@
 		{
 			"checksumSHA1": "kyKBo2ux+HflucDj/qzoko5YoMA=",
 			"path": "github.com/visualfc/gotools/jsonfmt",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
-			"checksumSHA1": "QldbuEtO8CONs3q/5mkva+CVeNg=",
+			"checksumSHA1": "1B56213xrQhxQG1+ZILXNK6cuoo=",
 			"path": "github.com/visualfc/gotools/oracle",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
-			"checksumSHA1": "zG4ar8LbudIKQvsfvAgkBSS0k3Q=",
+			"checksumSHA1": "YwA6y+SSXb/JiRGCNowOTrxzP5c=",
+			"path": "github.com/visualfc/gotools/oracle/oracle",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
+		},
+		{
+			"checksumSHA1": "QlJ4yti//o5hoD6w8J6UgLeWjHI=",
+			"path": "github.com/visualfc/gotools/oracle/oracle/serial",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
+		},
+		{
+			"checksumSHA1": "rPh1Qefw9BjwxY/jcpXWePPwYCU=",
 			"path": "github.com/visualfc/gotools/pkgs",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
+		},
+		{
+			"checksumSHA1": "dnnib3Gp6gDR8f1HSd4q2DENHiM=",
+			"path": "github.com/visualfc/gotools/pkgutil",
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "RQoGIbxntMsUZvi4Js0WQqDBDYM=",
 			"path": "github.com/visualfc/gotools/runcmd",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
-			"checksumSHA1": "q/EpLJHMTcnbxjLGogryQ6IA7kc=",
+			"checksumSHA1": "nQZTp19L2U+0vVarHKt+3PcsrJM=",
 			"path": "github.com/visualfc/gotools/stdlib",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "6CSw3Gtu+hJ6QTfhJ+985cualxs=",
@@ -173,10 +191,10 @@
 			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
-			"checksumSHA1": "qlJsyinWZ07PaOyTYyxXOmhDN/I=",
+			"checksumSHA1": "7NOVBr5xAnJIiAGOnIPCvTSxKO4=",
 			"path": "github.com/visualfc/gotools/types",
-			"revision": "b8348693492ca3791bccfa028f3c19634c11c5b5",
-			"revisionTime": "2015-04-09T14:25:36Z"
+			"revision": "a74583d2ad8773983f273657291df981033308a4",
+			"revisionTime": "2018-02-17T01:27:43Z"
 		},
 		{
 			"checksumSHA1": "xe5hMqClV1HmKZ4GVg4bmSsVRE8=",
