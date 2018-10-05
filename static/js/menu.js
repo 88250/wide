@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.1.2, Mar 27, 2017
+ * @version 1.0.1.3, Oct 5, 2018
  */
 var menu = {
     init: function () {
@@ -55,8 +55,7 @@ var menu = {
             var title = encodeURIComponent($('title').text() + '. \n' + $('meta[name=description]').attr('content')
                     + " #golang#");
             urls.weibo = "http://v.t.sina.com.cn/share/share.php?title=" + title + "&url=" + url + "&pic=" + pic;
-            urls.tencent = "http://share.v.t.qq.com/index.php?c=share&a=index&title=" + title +
-                    "&url=" + url + "&pic=" + pic;
+            urls.qqz = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=" + url + "&sharesource=qzone&title=" + title+ "&pics=" + pic;
 
             window.open(urls[key], "_blank", "top=100,left=200,width=648,height=618");
         });

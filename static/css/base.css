@@ -18,7 +18,7 @@
  * themes for base.
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 0.1.0.0, Dec 6, 2015
+ * @version 0.2.0.0, Oct 5, 2018
  */
 /* start reset & function */
 ::-webkit-scrollbar {
@@ -157,11 +157,13 @@ button {
     font-weight: normal;
     font-variant: normal;
     text-transform: none;
-    line-height: 1;
 
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    cursor: pointer;
+    font-size: 13px;
+    line-height: 20px;
 }
 
 .ico-qqz:before {
