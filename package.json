@@ -23,11 +23,14 @@
       "email": "v@b3log.org"
     }
   ],
+  "scripts": {
+    "build": "gulp"
+  },
   "devDependencies": {
-    "gulp": "^3.9.1",
+    "gulp": "^4.0.0",
     "gulp-concat": "^2.6.1",
     "gulp-minify-css": "^1.2.4",
     "gulp-sourcemaps": "^2.6.0",
-    "gulp-uglify": "^2.1.2"
+    "gulp-uglify": "^3.0.1"
   }
 }
