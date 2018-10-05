@@ -31,6 +31,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -532,7 +533,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 		workspaces := filepath.SplitList(conf.GetUserWorkspace(username))
 		for _, workspace := range workspaces {
 			filepath.Walk(filepath.Join(workspace, "src"), func(dirPath string, f os.FileInfo, err error) error {
-				if ".git" == f.Name() { // XXX: discard other unconcered dirs
+				if strings.HasPrefix(f.Name(), ".") || "node_modules" == f.Name() || "vendor" == f.Name() {
 					return filepath.SkipDir
 				}
 
