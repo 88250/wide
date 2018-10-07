@@ -122,7 +122,7 @@ Flow:
 
 ## Documents
 
-* [用户指南](https://www.gitbook.com/book/88250/wide-user-guide)
+* [用户指南](https://hacpai.com/article/1538873544275)
 * [开发指南](https://www.gitbook.com/book/88250/wide-dev-guide)
 
 ## Setup
