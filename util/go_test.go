@@ -34,11 +34,6 @@ func TestGetAPIPath(t *testing.T) {
 	apiPath := Go.GetAPIPath()
 
 	v := runtime.Version()[2:]
-	if 3 < len(v) {
-		v = v[:4]
-	} else {
-		v = v[:3]
-	}
 
 	ver, err := version.NewVersion(v)
 	if nil != err {
