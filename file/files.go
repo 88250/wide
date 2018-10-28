@@ -206,7 +206,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		username := conf.GetOwner(path)
 		if "" == username {
-			logger.Warnf("The path [%s] has no owner")
+			logger.Warnf("The path [%s] has no owner", path)
 			data["path"] = ""
 
 			return
