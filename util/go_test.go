@@ -16,9 +16,10 @@ package util
 
 import (
 	"runtime"
-	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/hashicorp/go-version"
 )
 
 func TestGetCrossPlatforms(t *testing.T) {
@@ -33,17 +34,27 @@ func TestGetAPIPath(t *testing.T) {
 	apiPath := Go.GetAPIPath()
 
 	v := runtime.Version()[2:]
-	v = v[:3]
+	if 3 < len(v) {
+		v = v[:4]
+	} else {
+		v = v[:3]
+	}
 
-	verNum, err := strconv.ParseFloat(v, 64)
-
+	ver, err := version.NewVersion(v)
 	if nil != err {
 		t.Error(err)
 
 		return
 	}
 
-	if verNum >= 1.4 {
+	constraints, err := version.NewConstraint(">= 1.4")
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+
+	if constraints.Check(ver) {
 		if !strings.HasSuffix(apiPath, "src") {
 			t.Error("api path should end with \"src\"")
 
