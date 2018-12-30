@@ -117,5 +117,7 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 	if util.OS.IsWindows() {
 		// FIXME: for some weird issues on Windows, such as: The requested service provider could not be loaded or initialized.
 		cmd.Env = append(cmd.Env, os.Environ()...)
+	} else {
+		cmd.Env = append(cmd.Env, "LD_LIBRARY_PATH="+os.Getenv("LD_LIBRARY_PATH"))
 	}
 }
