@@ -118,6 +118,7 @@ func setCmdEnv(cmd *exec.Cmd, username string) {
 		// FIXME: for some weird issues on Windows, such as: The requested service provider could not be loaded or initialized.
 		cmd.Env = append(cmd.Env, os.Environ()...)
 	} else {
+		// 编译链接时找不到依赖的动态库 https://github.com/b3log/wide/issues/352
 		cmd.Env = append(cmd.Env, "LD_LIBRARY_PATH="+os.Getenv("LD_LIBRARY_PATH"))
 	}
 }
