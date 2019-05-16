@@ -66,7 +66,8 @@ func init() {
 	log.SetLevel("warn")
 	logger = log.NewLogger(os.Stdout)
 
-	logger.Warn(confUsersWorkspaces)
+	logger.Warn(*confUsers)
+	logger.Warn(*confUsersWorkspaces)
 
 	//wd := util.OS.Pwd()
 	//if strings.HasPrefix(wd, os.TempDir()) {
