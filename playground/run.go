@@ -22,7 +22,6 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
@@ -60,10 +59,6 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["executable"].(string)
 
 	cmd := exec.Command(filePath)
-
-	if conf.Docker {
-		output.SetNamespace(cmd)
-	}
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {

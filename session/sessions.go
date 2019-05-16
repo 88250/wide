@@ -39,7 +39,7 @@ import (
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/util"
-	"github.com/go-fsnotify/fsnotify"
+	"github.com/fsnotify/fsnotify"
 	"github.com/gorilla/sessions"
 	"github.com/gorilla/websocket"
 )

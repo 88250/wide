@@ -24,7 +24,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 )
@@ -63,10 +62,6 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	cmd := exec.Command(filePath)
 	cmd.Dir = curDir
-
-	if conf.Docker {
-		SetNamespace(cmd)
-	}
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {

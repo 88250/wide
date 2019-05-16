@@ -57,7 +57,6 @@ func init() {
 	confContext := flag.String("context", "", "this will overwrite Wide.Context if specified")
 	confChannel := flag.String("channel", "", "this will overwrite Wide.Channel if specified")
 	confStat := flag.Bool("stat", false, "whether report statistics periodically")
-	confDocker := flag.Bool("docker", false, "whether run in a docker container")
 	confPlayground := flag.String("playground", "", "this will overwrite Wide.Playground if specified")
 	confUsersWorkspaces := flag.String("users_workspaces", "", "this will overwrite Wide.UsersWorkspaces if specified")
 
@@ -75,8 +74,7 @@ func init() {
 
 	i18n.Load()
 	event.Load()
-	conf.Load(*confPath, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel,
-		*confPlayground, *confDocker, *confUsersWorkspaces)
+	conf.Load(*confPath, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel, *confPlayground, *confUsersWorkspaces)
 
 	conf.FixedTimeCheckEnv()
 	session.FixedTimeSave()

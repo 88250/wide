@@ -83,16 +83,13 @@ var Wide *conf
 // configurations of users.
 var Users []*User
 
-// Indicates whether runs via Docker.
-var Docker bool
-
 // Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
 func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confDocker bool, confUsersWorkspaces string) {
+	confPlayground string, confUsersWorkspaces string) {
 	// XXX: ugly args list....
 
 	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-		confPlayground, confDocker, confUsersWorkspaces)
+		confPlayground, confUsersWorkspaces)
 	initUsers()
 }
 
@@ -156,7 +153,7 @@ func initUsers() {
 }
 
 func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confDocker bool, confUsersWorkspaces string) {
+	confPlayground string, confUsersWorkspaces string) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -236,9 +233,6 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 	if "" != confPort {
 		Wide.Port = confPort
 	}
-
-	// Docker flag
-	Docker = confDocker
 
 	// Server
 	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
