@@ -24,6 +24,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 )
@@ -58,10 +59,16 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["executable"].(string)
-	curDir := filepath.Dir(filePath)
 
-	cmd := exec.Command(filePath)
-	cmd.Dir = curDir
+	var cmd *exec.Cmd
+	if conf.Docker {
+		fileName := filepath.Base(filePath)
+		cmd = exec.Command("docker", "run", "--rm", "-v", filePath+":/"+fileName, "busybox", "timeout", "10", "/"+fileName)
+	} else {
+		cmd = exec.Command(filePath)
+		curDir := filepath.Dir(filePath)
+		cmd.Dir = curDir
+	}
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
