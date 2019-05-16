@@ -92,7 +92,7 @@ var Docker bool
 // Docker image to run user's program
 const DockerImageGo = "golang"
 
-// Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
+// Load loads the Wide configurations from wide.json and users' configurations from users/{userId}.json.
 func Load(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
 	initWide(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground, confUsersWorkspaces)
 	initUsers()
@@ -391,7 +391,7 @@ func initCustomizedConfs() {
 
 // UpdateCustomizedConf creates (if not exists) or updates user customized configuration files.
 //
-//  1. /static/user/{username}/style.css
+//  1. /static/user/{userId}/style.css
 func UpdateCustomizedConf(userId string) {
 	var u *User
 	for _, user := range Users { // maybe it is a beauty of the trade-off of the another world between design and implementation

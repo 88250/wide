@@ -40,7 +40,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
 
@@ -85,7 +85,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	result.Data = data
 
-	fmt := conf.GetGoFmt(username)
+	fmt := conf.GetGoFmt(uid)
 
 	argv := []string{filePath}
 	cmd := exec.Command(fmt, argv...)

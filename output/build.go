@@ -155,8 +155,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// logger.Debugf("User [%s, %s] is building [id=%d, dir=%s]", username, sid, runningId, curDir)
-
 	channelRet["cmd"] = "build"
 	channelRet["executable"] = executable
 

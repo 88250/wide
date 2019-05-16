@@ -155,8 +155,6 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		// logger.Debugf("User [%s, %s] is building [id=%d, dir=%s]", username, sid, runningId, curDir)
-
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
 
@@ -235,8 +233,6 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if nil != session.OutputWS[sid] {
-			// logger.Debugf("User [%s, %s] 's build [id=%d, dir=%s] has done", username, sid, runningId, curDir)
-
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {

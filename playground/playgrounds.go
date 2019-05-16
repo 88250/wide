@@ -43,7 +43,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
 	if httpSession.IsNew {
 		httpSession.Values["id"] = strconv.Itoa(rand.Int())
-		httpSession.Values["username"] = "playground"
+		httpSession.Values["uid"] = "playground"
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge

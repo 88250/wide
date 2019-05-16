@@ -76,7 +76,7 @@ type editor struct {
 	TabSize    string
 }
 
-// Save saves the user's configurations in conf/users/{username}.json.
+// Save saves the user's configurations in conf/users/{userId}.json.
 func (u *User) Save() bool {
 	bytes, err := json.MarshalIndent(u, "", "    ")
 

@@ -204,8 +204,8 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		data["mode"] = "img"
 
-		username := conf.GetOwner(path)
-		if "" == username {
+		userId := conf.GetOwner(path)
+		if "" == userId {
 			logger.Warnf("The path [%s] has no owner", path)
 			data["path"] = ""
 

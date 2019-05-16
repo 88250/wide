@@ -111,7 +111,7 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	// create a HTTP session
 	httpSession, _ := HTTPSession.Get(r, "wide-session")
-	httpSession.Values["username"] = userName
+	httpSession.Values["uid"] = githubId
 
 	httpSession.Values["id"] = strconv.Itoa(rand.Int())
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
@@ -120,7 +120,7 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	logger.Debugf("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), userName)
+	logger.Debugf("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), githubId)
 }
 
 // GitHubUserInfo returns GitHub user info specified by the given access token.

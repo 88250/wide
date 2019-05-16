@@ -122,7 +122,7 @@ func FixedTimeRelease() {
 
 // Online user statistic report.
 type userReport struct {
-	username   string
+	userId     string
 	sessionCnt int
 	processCnt int
 	updated    time.Time
@@ -130,7 +130,7 @@ type userReport struct {
 
 // report returns a online user statistics in pretty format.
 func (u *userReport) report() string {
-	return "[" + u.username + "] has [" + strconv.Itoa(u.sessionCnt) + "] sessions and [" + strconv.Itoa(u.processCnt) +
+	return "[" + u.userId + "] has [" + strconv.Itoa(u.sessionCnt) + "] sessions and [" + strconv.Itoa(u.processCnt) +
 		"] running processes, latest activity [" + u.updated.Format("2006-01-02 15:04:05") + "]"
 }
 
@@ -155,7 +155,7 @@ func FixedTimeReport() {
 					report.sessionCnt++
 					report.processCnt += processCnt
 				} else {
-					users = append(users, &userReport{username: s.UserId, sessionCnt: 1, processCnt: processCnt, updated: s.Updated})
+					users = append(users, &userReport{userId: s.UserId, sessionCnt: 1, processCnt: processCnt, updated: s.Updated})
 				}
 			}
 
@@ -174,9 +174,9 @@ func FixedTimeReport() {
 	}()
 }
 
-func contains(reports []*userReport, username string) (*userReport, bool) {
+func contains(reports []*userReport, userId string) (*userReport, bool) {
 	for _, ur := range reports {
-		if username == ur.username {
+		if userId == ur.userId {
 			return ur, true
 		}
 	}
