@@ -80,22 +80,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	wsChannel := session.PlaygroundWS[sid]
-
 	channelRet := map[string]interface{}{}
-
 	if !result.Succ {
-		if nil != wsChannel {
-			channelRet["cmd"] = "run-done"
-			channelRet["output"] = ""
-
-			err := wsChannel.WriteJSON(&channelRet)
-			if nil != err {
-				logger.Warn(err)
-				return
-			}
-
-			wsChannel.Refresh()
-		}
+		channelRet["cmd"] = "run-done"
+		channelRet["output"] = ""
+		wsChannel.WriteJSON(&channelRet)
+		wsChannel.Refresh()
 
 		return
 	}
