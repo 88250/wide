@@ -260,7 +260,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		cmd.Wait()
-		logger.Warn("process", cmd.ProcessState)
+		if 124 == cmd.ProcessState.ExitCode() {
+			channelRet["cmd"] = "run-done"
+			channelRet["output"] = "run program timeout"
+			wsChannel.WriteJSON(&channelRet)
+			wsChannel.Refresh()
+		}
 	}(rand.Int())
 }
 
