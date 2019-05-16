@@ -106,12 +106,18 @@ func parsePath(curDir, outputLine string) string {
 
 func setCmdEnv(cmd *exec.Cmd, username string) {
 	userWorkspace := conf.GetUserWorkspace(username)
+	cache, err := os.UserCacheDir()
+	if nil != err {
+		logger.Warnf("Get user cache dir failed [" + err.Error() + "]")
+		cache = os.TempDir()
+	}
 
 	cmd.Env = append(cmd.Env,
 		"GOPATH="+userWorkspace,
 		"GOOS="+runtime.GOOS,
 		"GOARCH="+runtime.GOARCH,
 		"GOROOT="+runtime.GOROOT(),
+		"GOCACHE="+cache,
 		"PATH="+os.Getenv("PATH"))
 
 	if util.OS.IsWindows() {
