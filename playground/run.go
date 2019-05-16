@@ -109,8 +109,10 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	if nil != wsChannel {
 		channelRet["cmd"] = "run"
 		channelRet["output"] = ""
-		wsChannel.WriteJSON(&channelRet)
-		wsChannel.Refresh()
+		if nil != wsChannel {
+			wsChannel.WriteJSON(&channelRet)
+			wsChannel.Refresh()
+		}
 	}
 
 	go func(runningId int) {
@@ -129,8 +131,10 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				channelRet["cmd"] = "run"
 				channelRet["output"] = oneRuneStr + "\n"
 				wsChannel := session.OutputWS[sid]
-				wsChannel.WriteJSON(&channelRet)
-				wsChannel.Refresh()
+				if nil != wsChannel {
+					wsChannel.WriteJSON(&channelRet)
+					wsChannel.Refresh()
+				}
 			}
 		}()
 
@@ -142,8 +146,10 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			channelRet["cmd"] = "run"
 			channelRet["output"] = "<span class='stderr'>" + oneRuneStr + "</span>"
 			wsChannel := session.OutputWS[sid]
-			wsChannel.WriteJSON(&channelRet)
-			wsChannel.Refresh()
+			if nil != wsChannel {
+				wsChannel.WriteJSON(&channelRet)
+				wsChannel.Refresh()
+			}
 		}
 
 		cmd.Wait()
@@ -157,8 +163,10 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		} else {
 			channelRet["output"] = "\n<span class='stderr'>run program complete</span>\n"
 		}
-		wsChannel.WriteJSON(&channelRet)
-		wsChannel.Refresh()
+		if nil != wsChannel {
+			wsChannel.WriteJSON(&channelRet)
+			wsChannel.Refresh()
+		}
 	}(rand.Int())
 }
 
