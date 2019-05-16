@@ -87,9 +87,9 @@ var Users []*User
 var Docker bool
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
-func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
+func Load(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
 	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground, confUsersWorkspaces)
-	initUsers()
+	initUsers(confUsers)
 
 	cmd := exec.Command("docker", "version")
 	_, err := cmd.CombinedOutput()
@@ -98,8 +98,8 @@ func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer
 	}
 }
 
-func initUsers() {
-	f, err := os.Open("conf/users")
+func initUsers(confUsers string) {
+	f, err := os.Open(confUsers)
 	if nil != err {
 		logger.Error(err)
 
@@ -278,7 +278,7 @@ func FixedTimeCheckEnv() {
 	checkEnv() // check immediately
 
 	go func() {
-		for _ = range time.Tick(time.Minute * 7) {
+		for _ = range time.Tick(time.Minute*7) {
 			checkEnv()
 		}
 	}()

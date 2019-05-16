@@ -49,6 +49,7 @@ var logger *log.Logger
 // The only one init function in Wide.
 func init() {
 	confPath := flag.String("conf", "conf/wide.json", "path of wide.json")
+	confUsers := flag.String("users", "conf/users", "path of users")
 	confIP := flag.String("ip", "", "this will overwrite Wide.IP if specified")
 	confPort := flag.String("port", "", "this will overwrite Wide.Port if specified")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
@@ -65,16 +66,16 @@ func init() {
 	log.SetLevel("warn")
 	logger = log.NewLogger(os.Stdout)
 
-	wd := util.OS.Pwd()
-	if strings.HasPrefix(wd, os.TempDir()) {
-		logger.Error("Don't run Wide in OS' temp directory or with `go run`")
-
-		os.Exit(-1)
-	}
+	//wd := util.OS.Pwd()
+	//if strings.HasPrefix(wd, os.TempDir()) {
+	//	logger.Error("Don't run Wide in OS' temp directory or with `go run`")
+	//
+	//	os.Exit(-1)
+	//}
 
 	i18n.Load()
 	event.Load()
-	conf.Load(*confPath, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel, *confPlayground, *confUsersWorkspaces)
+	conf.Load(*confPath, *confUsers, *confIP, *confPort, *confServer, *confLogLevel, *confStaticServer, *confContext, *confChannel, *confPlayground, *confUsersWorkspaces)
 
 	conf.FixedTimeCheckEnv()
 	session.FixedTimeSave()
@@ -84,8 +85,7 @@ func init() {
 		session.FixedTimeReport()
 	}
 
-	logger.Debug("host ["+runtime.Version()+", "+runtime.GOOS+"_"+runtime.GOARCH+"], cross-compilation ",
-		util.Go.GetCrossPlatforms())
+	logger.Debug("host ["+runtime.Version()+", "+runtime.GOOS+"_"+runtime.GOARCH+"], cross-compilation ", util.Go.GetCrossPlatforms())
 }
 
 // Main.
