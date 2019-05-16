@@ -111,13 +111,17 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		go func() {
 			defer util.Recover()
 
-			outScanner := bufio.NewScanner(outReader)
-			for outScanner.Scan() {
-				oneRuneStr := outScanner.Text()
+			for {
+				r, _, err := outReader.ReadRune()
+				if nil != err {
+					break
+				}
+
+				oneRuneStr := string(r)
 				oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
 				oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
 				channelRet["cmd"] = "run"
-				channelRet["output"] = oneRuneStr + "\n"
+				channelRet["output"] = oneRuneStr
 				wsChannel := session.OutputWS[sid]
 				if nil != wsChannel {
 					wsChannel.WriteJSON(&channelRet)
@@ -126,9 +130,13 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}()
 
-		errScanner := bufio.NewScanner(errReader)
-		for errScanner.Scan() {
-			oneRuneStr := errScanner.Text()
+		for {
+			r, _, err := errReader.ReadRune()
+			if nil != err {
+				break
+			}
+
+			oneRuneStr := string(r)
 			oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
 			oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
 			channelRet["cmd"] = "run"

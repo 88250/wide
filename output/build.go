@@ -188,6 +188,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			err = wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				logger.Warn(err)
+
 				break
 			}
 

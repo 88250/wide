@@ -174,7 +174,7 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/playground/save", handlerWrapper(playground.SaveHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/short-url", handlerWrapper(playground.ShortURLHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/build", handlerWrapper(playground.BuildHandler))
-	http.HandleFunc(conf.Wide.Context+"/playground/run", handlerWrapper(playground.RunHandler))
+	http.HandleFunc(conf.Wide.Context+"/playground/run", handlerWrapper(output.RunHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/stop", handlerWrapper(playground.StopHandler))
 	http.HandleFunc(conf.Wide.Context+"/playground/autocomplete", handlerWrapper(playground.AutocompleteHandler))
 
