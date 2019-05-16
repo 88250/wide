@@ -35,7 +35,6 @@ const (
 	userExists       = "user exists"
 	userCreated      = "user created"
 	userCreateError  = "user create error"
-	notAllowRegister = "not allow register"
 )
 
 // Exclusive lock for adding user.
@@ -46,7 +45,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := HTTPSession.Get(r, CookieName)
 
 	if httpSession.IsNew {
-		http.Redirect(w, r, "/start", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusFound)
 
 		return
 	}

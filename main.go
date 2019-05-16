@@ -48,12 +48,10 @@ var logger *log.Logger
 // The only one init function in Wide.
 func init() {
 	confPath := flag.String("conf", "conf/wide.json", "path of wide.json")
-	confUsers := flag.String("users", "conf/users", "path of users")
+	confData := flag.String("data", "", "path of data dir")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
 	confLogLevel := flag.String("log_level", "", "this will overwrite Wide.LogLevel if specified")
 	confStat := flag.Bool("stat", false, "whether report statistics periodically")
-	confPlayground := flag.String("playground", "", "this will overwrite Wide.Playground if specified")
-	confUsersWorkspaces := flag.String("users_workspaces", "", "this will overwrite Wide.UsersWorkspaces if specified")
 
 	flag.Parse()
 
@@ -69,7 +67,7 @@ func init() {
 
 	i18n.Load()
 	event.Load()
-	conf.Load(*confPath, *confUsers, *confServer, *confLogLevel, *confPlayground, *confUsersWorkspaces)
+	conf.Load(*confPath, *confData, *confServer, *confLogLevel)
 
 	conf.FixedTimeCheckEnv()
 	session.FixedTimeSave()
@@ -105,8 +103,8 @@ func main() {
 
 	// workspaces
 	for _, user := range conf.Users {
-		http.Handle("/workspace/"+user.Id+"/",
-			http.StripPrefix("/workspace/"+user.Id+"/", http.FileServer(http.Dir(user.WorkspacePath()))))
+		http.Handle("/workspace/"+user.Id+"/", http.StripPrefix("/workspace/"+user.Id+"/", http.FileServer(http.Dir(user.WorkspacePath()))))
+		http.Handle("/static/user/", http.StripPrefix("/workspace/"+user.Id+"/", http.FileServer(http.Dir(conf.Wide.Data + conf.PathSeparator + "static"))))
 	}
 
 	// session
@@ -190,14 +188,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
-		http.Redirect(w, r, "/start", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusFound)
 
 		return
 	}
 
 	uid := httpSession.Values["uid"].(string)
 	if "playground" == uid { // reserved user for Playground
-		http.Redirect(w, r, "/start", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusFound)
 
 		return
 	}
@@ -207,9 +205,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	user := conf.GetUser(uid)
 	if nil == user {
-		logger.Warnf("Not found user [%s]", uid)
-
-		http.Redirect(w, r, "/start", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusFound)
 
 		return
 	}
@@ -263,7 +259,7 @@ func serveSingle(pattern string, filename string) {
 func startHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
-		http.Redirect(w, r, "/login", http.StatusFound)
+		http.Redirect(w, r, "/s", http.StatusFound)
 
 		return
 	}
@@ -300,7 +296,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
-		http.Redirect(w, r, "/start", http.StatusFound)
+		http.Redirect(w, r, "/login", http.StatusFound)
 
 		return
 	}

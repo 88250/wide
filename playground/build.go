@@ -48,7 +48,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fileName := args["fileName"].(string)
-	filePath := filepath.Clean(conf.Wide.Playground + "/" + fileName)
+	filePath := filepath.Clean(conf.Wide.Data + "/playground/" + fileName)
 
 	suffix := ""
 	if util.OS.IsWindows() {
@@ -58,7 +58,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{}
 	result.Data = &data
 
-	executable := filepath.Clean(conf.Wide.Playground + "/" + strings.Replace(fileName, ".go", suffix, -1))
+	executable := filepath.Clean(conf.Wide.Data + "/playground/" + strings.Replace(fileName, ".go", suffix, -1))
 
 	cmd := exec.Command("go", "build", "-o", executable, filePath)
 	out, err := cmd.CombinedOutput()

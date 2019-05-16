@@ -161,10 +161,6 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 //
 // Note: user [playground] is a reserved mock user
 func addUser(userId, userName, userAvatar string) string {
-	if !conf.Wide.AllowRegister {
-		return notAllowRegister
-	}
-
 	if "playground" == userId {
 		return userExists
 	}
@@ -178,7 +174,7 @@ func addUser(userId, userName, userAvatar string) string {
 		}
 	}
 
-	workspace := filepath.Join(conf.Wide.UsersWorkspaces, userId)
+	workspace := filepath.Join(conf.Wide.Data, "workspaces", userId)
 	newUser := conf.NewUser(userId, userName, userAvatar, workspace)
 	conf.Users = append(conf.Users, newUser)
 	if !newUser.Save() {

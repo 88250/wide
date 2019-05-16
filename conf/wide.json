@@ -1,14 +1,11 @@
 {
     "Server": "http://127.0.0.1:7070",
     "LogLevel": "debug",
+    "Data": "${home}/wide",
+    "RuntimeMode": "dev",
     "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "${time}",
     "MaxProcs": 4,
-    "RuntimeMode": "dev",
     "Locale": "en_US",
-    "Playground": "${home}/wide/playground",
-    "Users": "conf/users",
-    "UsersWorkspaces": "${home}/wide/workspaces",
-    "AllowRegister": true,
     "Autocomplete": true
 }

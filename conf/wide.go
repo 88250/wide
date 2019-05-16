@@ -59,15 +59,12 @@ func main() {
 type conf struct {
 	Server                string // server
 	LogLevel              string // logging level: trace/debug/info/warn/error
+	Data                  string // data directory
+	RuntimeMode           string // runtime mode (dev/prod)
 	HTTPSessionMaxAge     int    // HTTP session max age (in seciond)
 	StaticResourceVersion string // version of static resources
 	MaxProcs              int    // Go max procs
-	RuntimeMode           string // runtime mode (dev/prod)
 	Locale                string // default locale
-	Playground            string // playground directory
-	Users                 string // users directory
-	UsersWorkspaces       string // users' workspaces directory
-	AllowRegister         bool   // allow register or not
 	Autocomplete          bool   // default autocomplete
 }
 
@@ -87,8 +84,8 @@ var Docker bool
 const DockerImageGo = "golang"
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{userId}.json.
-func Load(confPath, confUsers, confServer, confLogLevel, confPlayground string, confUsersWorkspaces string) {
-	initWide(confPath, confUsers, confServer, confLogLevel, confPlayground, confUsersWorkspaces)
+func Load(confPath, confData, confServer, confLogLevel string) {
+	initWide(confPath, confData, confServer, confLogLevel)
 	initUsers()
 
 	cmd := exec.Command("docker", "version")
@@ -105,7 +102,9 @@ func Load(confPath, confUsers, confServer, confLogLevel, confPlayground string, 
 }
 
 func initUsers() {
-	f, err := os.Open(Wide.Users)
+	os.MkdirAll(Wide.Data + PathSeparator + "users", 0755)
+
+	f, err := os.Open(Wide.Data + PathSeparator + "users")
 	if nil != err {
 		logger.Error(err)
 
@@ -131,7 +130,7 @@ func initUsers() {
 
 		user := &User{}
 
-		bytes, _ := ioutil.ReadFile(filepath.Join(Wide.Users, name))
+		bytes, _ := ioutil.ReadFile(filepath.Join(Wide.Data, "users", name))
 		err := json.Unmarshal(bytes, user)
 		if err != nil {
 			logger.Errorf("Parses [%s] error: %v, skip loading this user", name, err)
@@ -162,7 +161,7 @@ func initUsers() {
 	initCustomizedConfs()
 }
 
-func initWide(confPath, confUsers, confServer, confLogLevel, confPlayground string, confUsersWorkspaces string) {
+func initWide(confPath, confData, confServer, confLogLevel string) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -195,38 +194,17 @@ func initWide(confPath, confUsers, confServer, confLogLevel, confPlayground stri
 
 		os.Exit(-1)
 	}
-
 	logger.Debugf("${user.home} [%s]", home)
 
-	// Users directory
-	if "" != confUsers {
-		Wide.Users = confUsers
+	// Data directory
+	if "" != confData {
+		Wide.Data = confData
 	}
-	Wide.Users = filepath.Clean(Wide.Users)
-
-	// Playground directory
-	Wide.Playground = strings.Replace(Wide.Playground, "${home}", home, 1)
-	if "" != confPlayground {
-		Wide.Playground = confPlayground
-	}
-	Wide.Playground = filepath.FromSlash(Wide.Playground)
-	if !util.File.IsExist(Wide.Playground) {
-		if err := os.MkdirAll(Wide.Playground, 0775); nil != err {
-			logger.Errorf("Create Playground [%s] error", err)
-
-			os.Exit(-1)
-		}
-	}
-
-	// Users' workspaces directory
-	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${home}", home, 1)
-	if "" != confUsersWorkspaces {
-		Wide.UsersWorkspaces = confUsersWorkspaces
-	}
-	Wide.UsersWorkspaces = filepath.FromSlash(Wide.UsersWorkspaces)
-	if !util.File.IsExist(Wide.UsersWorkspaces) {
-		if err := os.MkdirAll(Wide.UsersWorkspaces, 0775); nil != err {
-			logger.Errorf("Create Workspaces [%s] error", err)
+	Wide.Data = strings.Replace(Wide.Data, "${home}", home, -1)
+	Wide.Data = filepath.Clean(Wide.Data)
+	if !util.File.IsExist(Wide.Data) {
+		if err := os.MkdirAll(Wide.Data, 0775); nil != err {
+			logger.Errorf("Create data directory [%s] error", err)
 
 			os.Exit(-1)
 		}
@@ -369,7 +347,7 @@ func UpdateCustomizedConf(userId string) {
 		os.Exit(-1)
 	}
 
-	dir := filepath.Clean(Wide.UsersWorkspaces + "/" + userId + "/static/")
+	dir := filepath.Clean(Wide.Data + "/static/" + userId)
 	if err := os.MkdirAll(dir, 0755); nil != err {
 		logger.Error(err)
 

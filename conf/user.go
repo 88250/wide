@@ -47,7 +47,7 @@ type LatestSessionContent struct {
 
 // User configuration.
 type User struct {
-	Id string
+	Id                    string
 	Name                  string
 	Avatar                string
 	Workspace             string // the GOPATH of this user (maybe contain several paths splitted by os.PathListSeparator)
@@ -92,7 +92,7 @@ func (u *User) Save() bool {
 		return false
 	}
 
-	if err = ioutil.WriteFile(filepath.Join(Wide.Users, u.Id+".json"), bytes, 0644); nil != err {
+	if err = ioutil.WriteFile(filepath.Join(Wide.Data, "users", u.Id+".json"), bytes, 0644); nil != err {
 		logger.Error(err)
 
 		return false
