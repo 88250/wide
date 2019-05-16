@@ -229,22 +229,6 @@ var tree = {
 
         tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh", true);
     },
-    import: function () {
-        var request = newWideRequest();
-        request.path = wide.curNode.path;
-
-        $('#importFileupload').fileupload({
-            url: "/file/upload?path=" + request.path,
-            dataType: 'json',
-            formData: request,
-            done: function (e, result) {
-                tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
-            },
-            fail: function () {
-                console.log(arguments);
-            }
-        });
-    },
     init: function () {
         $("#file").click(function () {
             $(this).focus();

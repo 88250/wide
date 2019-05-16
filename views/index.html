@@ -50,9 +50,6 @@
                                 <span>{{.i18n.close_all_files}}</span>
                             </li>
                             <li class="hr"></li>
-                            <li class="disabled import" onclick="if (!$(this).hasClass('disabled')){$('#importFileupload').click(); }">
-                                <span class="ico-import font-ico"></span> {{.i18n.import}}
-                            </li>
                             <li class="disabled export" onclick="if (!$(this).hasClass('disabled')){tree.export(this); }">
                                 <span class="ico-export font-ico"></span> {{.i18n.export}}
                             </li>
@@ -381,8 +378,6 @@
             <div class="tabs-panel">
                 <div data-index="fileTree">
                     <ul id="files" class="ztree" tabindex="-1"></ul>
-                    <input id="importFileupload" class="fn-none" type="file"
-                           name="files[]" onclick="tree.import();" multiple>
                     <!-- directory context menu -->
                     <div id="dirRMenu" class="frame">
                         <ul>
@@ -407,9 +402,6 @@
                                 <span class="ico-refresh font-ico"></span> {{.i18n.refresh}}
                             </li>
                             <li class="hr"></li>
-                            <li onclick="$('#importFileupload').click();">
-                                <span class="ico-import font-ico"></span> {{.i18n.import}}
-                            </li>
                             <li onclick="tree.export();">
                                 <span class="ico-export font-ico"></span> {{.i18n.export}}
                             </li>
