@@ -68,6 +68,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
 		cmd.Dir = curDir
+		logger.Warnf("Executing user's program [" + filePath + "] without docker sandbox")
 	}
 
 	stdout, err := cmd.StdoutPipe()
