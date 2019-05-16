@@ -24,7 +24,6 @@ import (
 	"time"
 
 	"github.com/b3log/wide/conf"
-
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
