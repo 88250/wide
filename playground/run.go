@@ -21,24 +21,13 @@ import (
 	"net/http"
 	"os/exec"
 	"path/filepath"
-	"time"
+	"strings"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 )
-
-const (
-	outputBufMax   = 1024 // 1024 string(rune)
-	outputTimeout  = 100  // 100ms
-	outputCountMax = 30   // 30 reads
-)
-
-type outputBuf struct {
-	content     string
-	millisecond int64
-}
 
 // RunHandler handles request of executing a binary file.
 func RunHandler(w http.ResponseWriter, r *http.Request) {
@@ -116,139 +105,60 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	// add the process to user's process set
 	output.Processes.Add(wSession, cmd.Process)
 
+	// push once for front-end to get the 'run' state and pid
+	if nil != wsChannel {
+		channelRet["cmd"] = "run"
+		channelRet["output"] = ""
+		wsChannel.WriteJSON(&channelRet)
+		wsChannel.Refresh()
+	}
+
 	go func(runningId int) {
 		defer util.Recover()
-		defer cmd.Wait()
 
 		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.Username, sid, runningId, filePath)
-
-		// push once for front-end to get the 'run' state and pid
-		if nil != wsChannel {
-			channelRet["cmd"] = "run"
-			channelRet["output"] = ""
-			err := wsChannel.WriteJSON(&channelRet)
-			if nil != err {
-				logger.Warn(err)
-				return
-			}
-
-			wsChannel.Refresh()
-		}
 
 		go func() {
 			defer util.Recover()
 
-			buf := outputBuf{}
-			count := 0
-
-			for {
-				wsChannel := session.PlaygroundWS[sid]
-				if nil == wsChannel {
-					break
-				}
-
-				r, _, err := outReader.ReadRune()
-				count++
-
-				if nil != err {
-					// remove the exited process from user process set
-					output.Processes.Remove(wSession, cmd.Process)
-
-					logger.Debugf("User [%s, %s] 's running [id=%d, file=%s] has done [stdout %v], ", wSession.Username, sid, runningId, filePath, err)
-
-					channelRet["cmd"] = "run-done"
-					channelRet["output"] = buf.content
-					err := wsChannel.WriteJSON(&channelRet)
-					if nil != err {
-						logger.Warn(err)
-						break
-					}
-
-					wsChannel.Refresh()
-
-					break
-				}
-
-				oneRuneStr := string(r)
-				buf.content += oneRuneStr
-				now := time.Now().UnixNano() / int64(time.Millisecond)
-				if 0 == buf.millisecond {
-					buf.millisecond = now
-				}
-
-				flood := count > outputCountMax
-
-				if "\n" == oneRuneStr && !flood {
-					channelRet["cmd"] = "run"
-					channelRet["output"] = buf.content
-					buf = outputBuf{} // a new buffer
-					count = 0         // clear count
-					err = wsChannel.WriteJSON(&channelRet)
-					if nil != err {
-						logger.Warn(err)
-						break
-					}
-
-					wsChannel.Refresh()
-
-					continue
-				}
-
-				if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax {
-					channelRet["cmd"] = "run"
-					channelRet["output"] = buf.content
-					buf = outputBuf{} // a new buffer
-					count = 0         // clear count
-					err = wsChannel.WriteJSON(&channelRet)
-					if nil != err {
-						logger.Warn(err)
-						break
-					}
-
-					wsChannel.Refresh()
-
-					continue
-				}
+			outScanner := bufio.NewScanner(outReader)
+			for outScanner.Scan() {
+				oneRuneStr := outScanner.Text()
+				oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
+				oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
+				channelRet["cmd"] = "run"
+				channelRet["output"] = oneRuneStr + "\n"
+				wsChannel := session.OutputWS[sid]
+				wsChannel.WriteJSON(&channelRet)
+				wsChannel.Refresh()
 			}
 		}()
 
-		buf := outputBuf{}
-		for {
-			r, _, err := errReader.ReadRune()
-
-			wsChannel := session.PlaygroundWS[sid]
-			if nil != err || nil == wsChannel {
-				break
-			}
-
-			oneRuneStr := string(r)
-			buf.content += oneRuneStr
-			now := time.Now().UnixNano() / int64(time.Millisecond)
-			if 0 == buf.millisecond {
-				buf.millisecond = now
-			}
-
-			if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax || oneRuneStr == "\n" {
-				channelRet["cmd"] = "run"
-				channelRet["output"] = buf.content
-				buf = outputBuf{} // a new buffer
-				err = wsChannel.WriteJSON(&channelRet)
-				if nil != err {
-					logger.Warn(err)
-					break
-				}
-
-				wsChannel.Refresh()
-			}
-		}
-
-		cmd.Wait()
-		if 124 == cmd.ProcessState.ExitCode() {
-			channelRet["cmd"] = "run-done"
-			channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
+		errScanner := bufio.NewScanner(errReader)
+		for errScanner.Scan() {
+			oneRuneStr := errScanner.Text()
+			oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
+			oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
+			channelRet["cmd"] = "run"
+			channelRet["output"] = "<span class='stderr'>" + oneRuneStr + "</span>"
+			wsChannel := session.OutputWS[sid]
 			wsChannel.WriteJSON(&channelRet)
 			wsChannel.Refresh()
 		}
+
+		cmd.Wait()
+
+		// remove the exited process from user's process set
+		output.Processes.Remove(wSession, cmd.Process)
+
+		channelRet["cmd"] = "run-done"
+		if 124 == cmd.ProcessState.ExitCode() {
+			channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
+		} else {
+			channelRet["output"] = "\n<span class='stderr'>run program complete</span>\n"
+		}
+		wsChannel.WriteJSON(&channelRet)
+		wsChannel.Refresh()
 	}(rand.Int())
 }
 
