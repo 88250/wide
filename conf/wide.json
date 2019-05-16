@@ -1,11 +1,6 @@
 {
-    "IP": "${ip}",
-    "Port": "7070",
-    "Context": "",
-    "Server": "{IP}:{Port}",
-    "StaticServer": "",
+    "Server": "http://127.0.0.1:7070",
     "LogLevel": "debug",
-    "Channel": "ws://{IP}:{Port}",
     "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "${time}",
     "MaxProcs": 4,

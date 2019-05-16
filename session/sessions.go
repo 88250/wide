@@ -47,6 +47,8 @@ import (
 const (
 	sessionStateActive = iota
 	sessionStateClosed  // (not used so far)
+
+	CookieName = "wide-sess"
 )
 
 // Logger.
@@ -220,7 +222,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	wSession := WideSessions.Get(sid)
 	if nil == wSession {
-		httpSession, _ := HTTPSession.Get(r, "wide-session")
+		httpSession, _ := HTTPSession.Get(r, CookieName)
 
 		if httpSession.IsNew {
 			return

@@ -8,15 +8,15 @@
         <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
         <meta name="author" content="B3log">
 
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
     <body>
         <div class="header">
             <div class="wrapper fn-clear">
                 <a href="/login" rel="login">
-                    <img title="Wide, a Web-based IDE for Teams using Golang." src="{{.conf.StaticServer}}/static/images/wide-logo.png" 
+                    <img title="Wide, a Web-based IDE for Teams using Golang." src="{{.conf.Server}}/static/images/wide-logo.png" 
                          class="logo"/></a>
                 <ul class="fn-right">
                     <li><a href="/playground" target="_blank" style="color: #cd504a">Play</a></li>
@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/jquery-2.1.1.min.js"></script>
         <script>
                         (function () {
                             var contentH = $(window).height() - $(".footer").height() - $(".header").height() - 18;

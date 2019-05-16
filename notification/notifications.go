@@ -62,7 +62,7 @@ func event2Notification(e *event.Event) {
 		return
 	}
 
-	httpSession, _ := session.HTTPSession.Get(wsChannel.Request, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(wsChannel.Request, session.CookieName)
 	uid := httpSession.Values["uid"].(string)
 	locale := conf.GetUser(uid).Locale
 

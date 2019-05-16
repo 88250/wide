@@ -16,13 +16,15 @@ package session
 
 import (
 	"crypto/tls"
-	"github.com/b3log/wide/conf"
 	"math/rand"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/util"
 	"github.com/parnurzeal/gorequest"
 )
@@ -58,6 +60,7 @@ func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
 	if strings.HasSuffix(referer, "/") {
 		referer = referer[:len(referer)-1]
 	}
+	referer += "__1"
 	state := util.Rand.String(16) + referer
 	states[state] = state
 	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state + "&scope=public_repo,read:user,user:follow"
@@ -93,7 +96,7 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	githubId := githubUser["userId"].(string)
 	userName := githubUser["userName"].(string)
-	avatar := githubUser["userAvatar"].(string)
+	avatar := githubUser["userAvatarURL"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -110,14 +113,10 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// create a HTTP session
-	httpSession, _ := HTTPSession.Get(r, "wide-session")
+	httpSession, _ := HTTPSession.Get(r, CookieName)
 	httpSession.Values["uid"] = githubId
-
 	httpSession.Values["id"] = strconv.Itoa(rand.Int())
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
-	if "" != conf.Wide.Context {
-		httpSession.Options.Path = conf.Wide.Context
-	}
 	httpSession.Save(r, w)
 
 	logger.Debugf("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), githubId)
@@ -140,4 +139,141 @@ func GitHubUserInfo(accessToken string) (ret map[string]interface{}) {
 	}
 
 	return result["data"].(map[string]interface{})
+}
+
+// LogoutHandler handles request of user logout (exit).
+func LogoutHandler(w http.ResponseWriter, r *http.Request) {
+	result := util.NewResult()
+	defer util.RetResult(w, r, result)
+
+	httpSession, _ := HTTPSession.Get(r, CookieName)
+
+	httpSession.Options.MaxAge = -1
+	httpSession.Save(r, w)
+}
+
+// addUser add a user with the specified user id, username and avatar.
+//
+//  1. create the user's workspace
+//  2. generate 'Hello, 世界' demo code in the workspace (a console version and a HTTP version)
+//  3. update the user customized configurations, such as style.css
+//  4. serve files of the user's workspace via HTTP
+//
+// Note: user [playground] is a reserved mock user
+func addUser(userId, userName, userAvatar string) string {
+	if !conf.Wide.AllowRegister {
+		return notAllowRegister
+	}
+
+	if "playground" == userId {
+		return userExists
+	}
+
+	addUserMutex.Lock()
+	defer addUserMutex.Unlock()
+
+	for _, user := range conf.Users {
+		if strings.ToLower(user.Id) == strings.ToLower(userId) {
+			return userExists
+		}
+	}
+
+	workspace := filepath.Join(conf.Wide.UsersWorkspaces, userId)
+	newUser := conf.NewUser(userId, userName, userAvatar, workspace)
+	conf.Users = append(conf.Users, newUser)
+	if !newUser.Save() {
+		return userCreateError
+	}
+
+	conf.CreateWorkspaceDir(workspace)
+	helloWorld(workspace)
+	conf.UpdateCustomizedConf(userId)
+
+	http.Handle("/workspace/"+userId+"/",
+		http.StripPrefix("/workspace/"+userId+"/", http.FileServer(http.Dir(newUser.WorkspacePath()))))
+
+	logger.Infof("Created a user [%s]", userId)
+
+	return userCreated
+}
+
+// helloWorld generates the 'Hello, 世界' source code.
+//  1. src/hello/main.go
+//  2. src/web/main.go
+func helloWorld(workspace string) {
+	consoleHello(workspace)
+	webHello(workspace)
+}
+
+func consoleHello(workspace string) {
+	dir := workspace + conf.PathSeparator + "src" + conf.PathSeparator + "hello"
+	if err := os.MkdirAll(dir, 0755); nil != err {
+		logger.Error(err)
+
+		return
+	}
+
+	fout, err := os.Create(dir + conf.PathSeparator + "main.go")
+	if nil != err {
+		logger.Error(err)
+
+		return
+	}
+
+	fout.WriteString(conf.HelloWorld)
+
+	fout.Close()
+}
+
+func webHello(workspace string) {
+	dir := workspace + conf.PathSeparator + "src" + conf.PathSeparator + "web"
+	if err := os.MkdirAll(dir, 0755); nil != err {
+		logger.Error(err)
+
+		return
+	}
+
+	fout, err := os.Create(dir + conf.PathSeparator + "main.go")
+	if nil != err {
+		logger.Error(err)
+
+		return
+	}
+
+	code := `package main
+
+import (
+	"fmt"
+	"math/rand"
+	"net/http"
+	"strconv"
+	"time"
+)
+
+func main() {
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("Hello, 世界"))
+	})
+
+	port := getPort()
+
+	// you may need to change the address
+	fmt.Println("Open https://wide.b3log.org:" + port + " in your browser to see the result") 
+
+	if err := http.ListenAndServe(":"+port, nil); nil != err {
+		fmt.Println(err)
+	}
+}
+
+func getPort() string {
+	rand.Seed(time.Now().UnixNano())
+
+	return strconv.Itoa(7000 + rand.Intn(8000-7000))
+}
+
+`
+
+	fout.WriteString(code)
+
+	fout.Close()
 }

@@ -57,13 +57,8 @@ func main() {
 
 // Configuration.
 type conf struct {
-	IP                    string // server ip, ${ip}
-	Port                  string // server port
-	Context               string // server context
-	Server                string // server host and port ({IP}:{Port})
-	StaticServer          string // static resources server scheme, host and port (http://{IP}:{Port})
+	Server                string // server
 	LogLevel              string // logging level: trace/debug/info/warn/error
-	Channel               string // channel (ws://{IP}:{Port})
 	HTTPSessionMaxAge     int    // HTTP session max age (in seciond)
 	StaticResourceVersion string // version of static resources
 	MaxProcs              int    // Go max procs
@@ -93,8 +88,8 @@ var Docker bool
 const DockerImageGo = "golang"
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{userId}.json.
-func Load(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
-	initWide(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground, confUsersWorkspaces)
+func Load(confPath, confUsers, confServer, confLogLevel, confPlayground string, confUsersWorkspaces string) {
+	initWide(confPath, confUsers, confServer, confLogLevel, confPlayground, confUsersWorkspaces)
 	initUsers()
 
 	cmd := exec.Command("docker", "version")
@@ -168,7 +163,7 @@ func initUsers() {
 	initCustomizedConfs()
 }
 
-func initWide(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
+func initWide(confPath, confUsers, confServer, confLogLevel, confPlayground string, confUsersWorkspaces string) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -236,54 +231,14 @@ func initWide(confPath, confUsers, confIP, confPort, confServer, confLogLevel, c
 		}
 	}
 
-	// IP
-	if "" != confIP {
-		Wide.IP = confIP
-	} else {
-		ip, err := util.Net.LocalIP()
-		if nil != err {
-			logger.Error(err)
-
-			os.Exit(-1)
-		}
-
-		logger.Debugf("${ip} [%s]", ip)
-		Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
-	}
-
-	if "" != confPort {
-		Wide.Port = confPort
-	}
-
 	// Server
-	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
-	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
 	if "" != confServer {
 		Wide.Server = confServer
-	}
-
-	// Static Server
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
-	if "" != confStaticServer {
-		Wide.StaticServer = confStaticServer
-	}
-
-	// Context
-	if "" != confContext {
-		Wide.Context = confContext
 	}
 
 	time := strconv.FormatInt(time.Now().UnixNano(), 10)
 	logger.Debugf("${time} [%s]", time)
 	Wide.StaticResourceVersion = strings.Replace(Wide.StaticResourceVersion, "${time}", time, 1)
-
-	// Channel
-	Wide.Channel = strings.Replace(Wide.Channel, "{IP}", Wide.IP, 1)
-	Wide.Channel = strings.Replace(Wide.Channel, "{Port}", Wide.Port, 1)
-	if "" != confChannel {
-		Wide.Channel = confChannel
-	}
 }
 
 // FixedTimeCheckEnv checks Wide runtime enviorment periodically (7 minutes).

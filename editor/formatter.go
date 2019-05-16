@@ -34,7 +34,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 

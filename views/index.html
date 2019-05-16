@@ -8,27 +8,27 @@
         <meta name="author" content="B3log">
         <meta property="og:description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
         {{if eq $.conf.RuntimeMode "dev"}}
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/jquery-layout/layout-default-latest.css">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/lint.css">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/jquery-layout/layout-default-latest.css">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/lint.css">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
         {{range $index, $theme := .editorThemes}}
-        <link rel="stylesheet" href="{{$.conf.StaticServer}}/static/js/overwrite/codemirror/theme/{{$theme}}.css">{{end}}
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/wide.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/start.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{$.conf.Server}}/static/js/overwrite/codemirror/theme/{{$theme}}.css">{{end}}
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/wide.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/start.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
         {{else}}
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/lib.min.css">        
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/wide.min.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/lib.min.css">        
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/wide.min.css?{{.conf.StaticResourceVersion}}">
         {{end}}
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/js/lib/ztree/zTreeStyle.min.css">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/user/{{.username}}/style.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/themes/{{.user.Theme}}.css?{{.conf.StaticResourceVersion}}" id="themesLink">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/ztree/zTreeStyle.min.css">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/user/{{.uid}}/style.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="{{.conf.Server}}/static/css/themes/{{.user.Theme}}.css?{{.conf.StaticResourceVersion}}" id="themesLink">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
@@ -347,7 +347,7 @@
 
             <div class="fn-right">
                 <img class="gravatar"
-                     onerror="this.src='{{.conf.StaticServer}}/static/images/user-thumbnail.png'"
+                     onerror="this.src='{{.conf.Server}}/static/images/user-thumbnail.png'"
                      src="https://secure.gravatar.com/avatar/{{.user.Gravatar}}?s=17&d=https://hacpai.com/images/user-thumbnail.png" 
                      title="{{.user.Name}}"/>
                 <span class="font-ico ico-share"></span> &nbsp;
@@ -560,7 +560,7 @@
         <script>
             var config = {
             "context": {{.conf.Context}},
-                    "staticServer": '{{.conf.StaticServer}}',
+                    "staticServer": '{{.conf.Server}}',
                     "pathSeparator": '{{.pathSeparator}}',
                     "label": {{.i18n}},
                     "channel": {{.conf.Channel}},
@@ -581,71 +581,71 @@
 
         </script>
         {{if eq $.conf.RuntimeMode "dev"}}
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-layout/jquery.layout-latest.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/reconnecting-websocket.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>    
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/Autolinker.min.js"></script>    
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.min.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/lint.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/json-lint.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/selection/active-line.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/overwrite/codemirror/addon/hint/show-hint.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/anyword-hint.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/display/rulers.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closebrackets.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/matchbrackets.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closetag.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/searchcursor.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/search.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/match-highlighter.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldcode.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/brace-fold.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/xml-fold.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/markdown-fold.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/comment-fold.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/mode/loadmode.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/comment/comment.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/meta.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/go/go.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/clike/clike.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/xml/xml.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/htmlmixed/htmlmixed.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/javascript/javascript.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/markdown/markdown.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/css/css.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/shell/shell.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/sql/sql.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/codemirror-{{.codeMirrorVer}}/keymap/vim.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/lint/json-lint.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/lint/go-lint.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/emmet.js?{{.conf.StaticResourceVersion}}"></script>            
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify-html.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/js-beautify-1.5.4/beautify-css.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/vendor/jquery.ui.widget.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.iframe-transport.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-file-upload-9.8.0/jquery.fileupload.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/jquery-2.1.1.min.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/jquery-layout/jquery.layout-latest.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/reconnecting-websocket.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script>    
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/Autolinker.min.js"></script>    
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.min.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/lint.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/json-lint.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/selection/active-line.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/overwrite/codemirror/addon/hint/show-hint.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/anyword-hint.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/display/rulers.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closebrackets.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/matchbrackets.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closetag.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/searchcursor.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/search.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/match-highlighter.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldcode.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/brace-fold.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/xml-fold.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/markdown-fold.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/comment-fold.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/mode/loadmode.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/comment/comment.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/meta.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/go/go.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/clike/clike.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/xml/xml.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/htmlmixed/htmlmixed.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/javascript/javascript.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/markdown/markdown.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/css/css.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/shell/shell.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/sql/sql.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/keymap/vim.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/lint/json-lint.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/lint/go-lint.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/emmet.js?{{.conf.StaticResourceVersion}}"></script>            
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/js-beautify-1.5.4/beautify.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/js-beautify-1.5.4/beautify-html.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/js-beautify-1.5.4/beautify-css.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/jquery-file-upload-9.8.0/vendor/jquery.ui.widget.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/jquery-file-upload-9.8.0/jquery.iframe-transport.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/jquery-file-upload-9.8.0/jquery.fileupload.js?{{.conf.StaticResourceVersion}}"></script>
 
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/tabs.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/dialog.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/editors.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/notification.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/tree.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/wide.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/session.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/menu.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/windows.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/hotkeys.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/bottomGroup.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/tabs.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/dialog.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/editors.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/notification.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/tree.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/wide.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/session.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/menu.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/windows.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/hotkeys.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/bottomGroup.js?{{.conf.StaticResourceVersion}}"></script>
         {{else}}
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib.min.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/wide.min.js?{{.conf.StaticResourceVersion}}"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib.min.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/wide.min.js?{{.conf.StaticResourceVersion}}"></script>
         {{end}}
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script> 
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/zeroclipboard/ZeroClipboard.min.js"></script>
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/ztree/jquery.ztree.all-3.5.min.js"></script> 
+        <script type="text/javascript" src="{{.conf.Server}}/static/js/lib/zeroclipboard/ZeroClipboard.min.js"></script>
     </body>
 </html>

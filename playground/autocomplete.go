@@ -37,7 +37,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 

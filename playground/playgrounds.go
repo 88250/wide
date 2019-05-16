@@ -40,16 +40,13 @@ var logger = log.NewLogger(os.Stdout)
 // IndexHandler handles request of Playground index.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	// create a HTTP session
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		httpSession.Values["id"] = strconv.Itoa(rand.Int())
 		httpSession.Values["uid"] = "playground"
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
-	if "" != conf.Wide.Context {
-		httpSession.Options.Path = conf.Wide.Context
-	}
 	httpSession.Save(r, w)
 
 	uid := httpSession.Values["uid"].(string)

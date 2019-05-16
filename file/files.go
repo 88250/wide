@@ -74,7 +74,7 @@ func initAPINode() {
 // The Go API source code package also as a child node,
 // so that users can easily view the Go API source code in file tree.
 func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -123,7 +123,7 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 
 // RefreshDirectoryHandler handles request of refresh a directory of file tree.
 func RefreshDirectoryHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -156,7 +156,7 @@ func RefreshDirectoryHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetFileHandler handles request of opening file by editor.
 func GetFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -232,7 +232,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 // SaveFileHandler handles request of saving file.
 func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -288,7 +288,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 // NewFileHandler handles request of creating file or directory.
 func NewFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -340,7 +340,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 
 // RemoveFileHandler handles request of removing file or directory.
 func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -386,7 +386,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 // RenameFileHandler handles request of renaming file or directory.
 func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -451,7 +451,7 @@ func (f foundPaths) Less(i, j int) bool { return f[i].score > f[j].score }
 
 // FindHandler handles request of find files under the specified directory with the specified filename pattern.
 func FindHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -505,7 +505,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 
 // SearchTextHandler handles request of searching files under the specified directory with the specified keyword.
 func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 

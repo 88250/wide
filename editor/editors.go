@@ -41,7 +41,7 @@ var logger = log.NewLogger(os.Stdout)
 // WSHandler handles request of creating editor channel.
 // XXX: NOT used at present
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -111,7 +111,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -182,7 +182,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
@@ -253,7 +253,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -341,7 +341,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
