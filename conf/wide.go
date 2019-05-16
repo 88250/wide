@@ -87,6 +87,9 @@ var Users []*User
 // Indicates whether Docker is available.
 var Docker bool
 
+// Docker image to run user's program
+const DockerImageGo = "golang"
+
 // Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
 func Load(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
 	initWide(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground, confUsersWorkspaces)

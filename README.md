@@ -34,17 +34,13 @@ Wide 是一个基于 **W**eb 的 Go 语言 **IDE**。
 * 自动完成：Go/HTML 等
 * 编译检查：编辑器提示编译错误
 * 格式化：Go/HTML/JSON 等
-* 运行：支持同时运行多个程序，方便联调
-* 多用户：团队开发，方便协作
+* 运行：支持同时运行多个程序
 * 代码导航：跳转到声明，查找使用，文件搜索等
 * Web 开发：前端（HTML/JS/CSS）开发支持
 * go tool：go get/install/fmt 等
-* 项目导入/导出
+* 项目文件导出
 * UI/编辑器多主题
 * 支持交叉编译
-* 调试：基于 gdb 的调试系统（TBD）
-* Git 整合：常用 git 命令可视化操作（TBD）
-* Shell：连接到服务器执行命令（TBD）
 
 ## 界面
 
@@ -71,10 +67,6 @@ Wide 是一个基于 **W**eb 的 Go 语言 **IDE**。
 ### 构建报错提示
   
 ![Build Error Info](https://cloud.githubusercontent.com/assets/873584/5450632/3e51cccc-8543-11e4-8ca8-8d2427aa16b8.png)
-
-### Git 克隆
-
-![Git Clone](https://cloud.githubusercontent.com/assets/873584/6545235/2284f230-c5b7-11e4-985e-7e04367921b1.png)
 
 ### 交叉编译
 
