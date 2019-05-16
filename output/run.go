@@ -259,6 +259,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 
+		cmd.Wait()
 		logger.Warn("process", cmd.ProcessState)
 	}(rand.Int())
 }
