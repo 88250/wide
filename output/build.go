@@ -95,7 +95,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	goBuildArgs := []string{}
-	goBuildArgs = append(goBuildArgs, "build")
+	goBuildArgs = append(goBuildArgs, "build", "-i")
 	goBuildArgs = append(goBuildArgs, user.BuildArgs(runtime.GOOS)...)
 
 	cmd := exec.Command("go", goBuildArgs...)
@@ -196,7 +196,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	errReader := bufio.NewReader(stderr)
-	lines := []string{}
+	var lines []string
 	for {
 		wsChannel := session.OutputWS[sid]
 		if nil == wsChannel {
@@ -232,20 +232,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if nil == cmd.Wait() {
 		channelRet["nextCmd"] = args["nextCmd"]
 		channelRet["output"] = "<span class='build-succ'>" + i18n.Get(locale, "build-succ").(string) + "</span>\n"
-
-		go func() { // go install, for subsequent gocode lib-path
-			defer util.Recover()
-
-			cmd := exec.Command("go", "install")
-			cmd.Dir = curDir
-
-			setCmdEnv(cmd, username)
-
-			out, _ := cmd.CombinedOutput()
-			if len(out) > 0 {
-				logger.Warn(string(out))
-			}
-		}()
 	} else {
 		channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n"
 
