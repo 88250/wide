@@ -125,8 +125,7 @@ func initUsers(confUsers string) {
 
 		user := &User{}
 
-		bytes, _ := ioutil.ReadFile("conf/users/" + name)
-
+		bytes, _ := ioutil.ReadFile(filepath.Join(confUsers, name))
 		err := json.Unmarshal(bytes, user)
 		if err != nil {
 			logger.Errorf("Parses [%s] error: %v, skip loading this user", name, err)
