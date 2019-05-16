@@ -296,18 +296,6 @@
                         </ul>
                     </div>
                 </li>
-                <!--
-                <li>
-                    <span>{{.i18n.debug}}</span>
-                    <div class="frame">
-                        <ul>
-                            <li>
-                                <span>{{.i18n.debug}}</span>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                -->
                 <li>
                     <span>{{.i18n.team}}</span>
                     <div class="frame">
@@ -315,11 +303,6 @@
                             <li class="signup" onclick="window.open('{{.conf.Context}}/signup')">
                                 <span class="ico-signup font-ico"></span>
                                 <span>{{.i18n.sign_up}}</span>
-                            </li>
-                            <li class="hr"></li>
-                            <li class="git-clone disabled" onclick="if (!$(this).hasClass('disabled')){tree.gitClone(this)}">
-                                <span class="ico-git font-ico"></span>
-                                <span>{{.i18n.git_clone}}</span>
                             </li>
                         </ul>
                     </div>
@@ -422,10 +405,6 @@
                             <li class="hr"></li>
                             <li onclick="tree.refresh(this);">
                                 <span class="ico-refresh font-ico"></span> {{.i18n.refresh}}
-                            </li>
-                            <li class="hr"></li>
-                            <li onclick="tree.gitClone(this);">
-                                <span class="ico-git font-ico"></span> {{.i18n.git_clone}}
                             </li>
                             <li class="hr"></li>
                             <li onclick="$('#importFileupload').click();">
@@ -573,9 +552,6 @@
         </div>
         <div id="dialogGoLinePrompt" class="dialog-prompt fn-none">
             <input/>
-        </div>
-        <div id="dialogGitClonePrompt" class="dialog-prompt fn-none">
-            <input placeholder="https://github.com/b3log/wide.git"/>
         </div>
         <div id="dialogGoFilePrompt" class="dialog-prompt fn-none">
             <input/>

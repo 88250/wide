@@ -339,35 +339,6 @@ var wide = {
                 editor.focus();
             }
         });
-
-        $("#dialogGitClonePrompt").dialog({
-            "modal": true,
-            "height": 52,
-            "width": 360,
-            "title": config.label.git_clone,
-            "okText": config.label.confirm,
-            "cancelText": config.label.cancel,
-            "afterOpen": function () {
-                $("#dialogGitClonePrompt > input").val('').focus();
-                $("#dialogGitClonePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
-            },
-            "ok": function () {
-                $("#dialogGitClonePrompt").dialog("close");
-
-                var request = newWideRequest();
-                request.path = wide.curNode.path;
-                request.repository = $("#dialogGitClonePrompt > input").val();
-
-                $.ajax({
-                    type: 'POST',
-                    url: config.context + '/git/clone',
-                    data: JSON.stringify(request),
-                    dataType: "json",
-                    success: function (result) {
-                    }
-                });
-            }
-        });
     },
     _initWS: function () {
         var outputWS = new ReconnectingWebSocket(config.channel + '/output/ws?sid=' + config.wideSessionId);
@@ -420,7 +391,6 @@ var wide = {
                 case 'start-vet':
                 case 'start-install':
                 case 'start-get':
-                case 'start-git_clone':
                     bottomGroup.fillOutput(data.output);
 
                     break;
