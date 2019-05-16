@@ -170,11 +170,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				}
 
 				oneRuneStr := string(r)
-
 				buf.content += oneRuneStr
-
 				now := time.Now().UnixNano() / int64(time.Millisecond)
-
 				if 0 == buf.millisecond {
 					buf.millisecond = now
 				}
@@ -184,10 +181,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				if "\n" == oneRuneStr && !flood {
 					channelRet["cmd"] = "run"
 					channelRet["output"] = buf.content
-
 					buf = outputBuf{} // a new buffer
 					count = 0         // clear count
-
 					err = wsChannel.WriteJSON(&channelRet)
 					if nil != err {
 						logger.Warn(err)
@@ -202,10 +197,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax {
 					channelRet["cmd"] = "run"
 					channelRet["output"] = buf.content
-
 					buf = outputBuf{} // a new buffer
 					count = 0         // clear count
-
 					err = wsChannel.WriteJSON(&channelRet)
 					if nil != err {
 						logger.Warn(err)
@@ -229,11 +222,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			oneRuneStr := string(r)
-
 			buf.content += oneRuneStr
-
 			now := time.Now().UnixNano() / int64(time.Millisecond)
-
 			if 0 == buf.millisecond {
 				buf.millisecond = now
 			}
@@ -241,9 +231,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax || oneRuneStr == "\n" {
 				channelRet["cmd"] = "run"
 				channelRet["output"] = buf.content
-
 				buf = outputBuf{} // a new buffer
-
 				err = wsChannel.WriteJSON(&channelRet)
 				if nil != err {
 					logger.Warn(err)
@@ -252,6 +240,14 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 				wsChannel.Refresh()
 			}
+		}
+
+		cmd.Wait()
+		if 124 == cmd.ProcessState.ExitCode() {
+			channelRet["cmd"] = "run-done"
+			channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
+			wsChannel.WriteJSON(&channelRet)
+			wsChannel.Refresh()
 		}
 	}(rand.Int())
 }
