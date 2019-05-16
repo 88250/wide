@@ -158,9 +158,7 @@ func main() {
 	http.HandleFunc(conf.Wide.Context+"/notification/ws", handlerWrapper(notification.WSHandler))
 
 	// user
-	http.HandleFunc(conf.Wide.Context+"/login", handlerWrapper(session.LoginHandler))
 	http.HandleFunc(conf.Wide.Context+"/logout", handlerWrapper(session.LogoutHandler))
-	http.HandleFunc(conf.Wide.Context+"/signup", handlerWrapper(session.SignUpUserHandler))
 	http.HandleFunc(conf.Wide.Context+"/preference", handlerWrapper(session.PreferenceHandler))
 
 	// playground
@@ -197,8 +195,8 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	username := httpSession.Values["username"].(string)
-	if "playground" == username { // reserved user for Playground
+	uid := httpSession.Values["uid"].(string)
+	if "playground" == uid { // reserved user for Playground
 		http.Redirect(w, r, conf.Wide.Context+"/login", http.StatusFound)
 
 		return
@@ -210,9 +208,9 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	user := conf.GetUser(username)
+	user := conf.GetUser(uid)
 	if nil == user {
-		logger.Warnf("Not found user [%s]", username)
+		logger.Warnf("Not found user [%s]", uid)
 
 		http.Redirect(w, r, conf.Wide.Context+"/login", http.StatusFound)
 
@@ -221,14 +219,14 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 	locale := user.Locale
 
-	wideSessions := session.WideSessions.GetByUsername(username)
+	wideSessions := session.WideSessions.GetByUserId(uid)
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"username": username, "sid": session.WideSessions.GenId(), "latestSessionContent": user.LatestSessionContent,
+		"uid": uid, "sid": session.WideSessions.GenId(), "latestSessionContent": user.LatestSessionContent,
 		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
 		"user": user, "editorThemes": conf.GetEditorThemes(), "crossPlatforms": util.Go.GetCrossPlatforms()}
 
-	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
+	logger.Debugf("User [%s] has [%d] sessions", uid, len(wideSessions))
 
 	t, err := template.ParseFiles("views/index.html")
 	if nil != err {
@@ -279,9 +277,9 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
-	userWorkspace := conf.GetUserWorkspace(username)
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
+	userWorkspace := conf.GetUserWorkspace(uid)
 
 	sid := r.URL.Query()["sid"][0]
 	wSession := session.WideSessions.Get(sid)
@@ -290,7 +288,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"username": username, "workspace": userWorkspace, "ver": conf.WideVersion, "sid": sid}
+		"uid": uid, "workspace": userWorkspace, "ver": conf.WideVersion, "sid": sid}
 
 	t, err := template.ParseFiles("views/start.html")
 
@@ -319,8 +317,8 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale}
 
@@ -351,8 +349,8 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version()}

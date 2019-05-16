@@ -117,7 +117,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	path := args["path"].(string)
 
@@ -147,7 +147,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	logger.Tracef("offset: %d", offset)
 
-	userWorkspace := conf.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(uid)
 	workspaces := filepath.SplitList(userWorkspace)
 	libPath := ""
 	for _, workspace := range workspaces {
@@ -183,7 +183,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	defer util.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, "wide-session")
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -228,7 +228,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
@@ -259,7 +259,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -304,7 +304,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
@@ -347,7 +347,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
 
@@ -392,7 +392,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
@@ -453,8 +453,8 @@ func getCursorOffset(code string, line, ch int) (offset int) {
 	return offset
 }
 
-func setCmdEnv(cmd *exec.Cmd, username string) {
-	userWorkspace := conf.GetUserWorkspace(username)
+func setCmdEnv(cmd *exec.Cmd, userId string) {
+	userWorkspace := conf.GetUserWorkspace(userId)
 
 	cmd.Env = append(cmd.Env,
 		"GOPATH="+userWorkspace,

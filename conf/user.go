@@ -15,9 +15,6 @@
 package conf
 
 import (
-	"crypto/md5"
-	"crypto/sha1"
-	"encoding/hex"
 	"encoding/json"
 	"io/ioutil"
 	"os"
@@ -25,8 +22,6 @@ import (
 	"regexp"
 	"strings"
 	"time"
-
-	"github.com/b3log/wide/util"
 )
 
 // Panel represents a UI panel.
@@ -52,11 +47,9 @@ type LatestSessionContent struct {
 
 // User configuration.
 type User struct {
+	Id string
 	Name                  string
-	Password              string
-	Salt                  string
-	Email                 string
-	Gravatar              string // see http://gravatar.com
+	Avatar                string
 	Workspace             string // the GOPATH of this user (maybe contain several paths splitted by os.PathListSeparator)
 	Locale                string
 	GoFormat              string
@@ -83,27 +76,6 @@ type editor struct {
 	TabSize    string
 }
 
-// NewUser creates a user with the specified username, password, email and workspace.
-func NewUser(username, password, email, workspace string) *User {
-	md5hash := md5.New()
-	md5hash.Write([]byte(email))
-	gravatar := hex.EncodeToString(md5hash.Sum(nil))
-
-	salt := util.Rand.String(16)
-	password = Salt(password, salt)
-
-	now := time.Now().UnixNano()
-
-	return &User{Name: username, Password: password, Salt: salt, Email: email, Gravatar: gravatar, Workspace: workspace,
-		Locale: Wide.Locale, GoFormat: "gofmt",
-		GoBuildArgsForLinux: "-i", GoBuildArgsForWindows: "-i", GoBuildArgsForDarwin: "-i",
-		FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
-		Keymap:  "wide",
-		Created: now, Updated: now, Lived: now,
-		Editor: &editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",
-			Theme: "wide", TabSize: "4"}}
-}
-
 // Save saves the user's configurations in conf/users/{username}.json.
 func (u *User) Save() bool {
 	bytes, err := json.MarshalIndent(u, "", "    ")
@@ -115,18 +87,32 @@ func (u *User) Save() bool {
 	}
 
 	if "" == string(bytes) {
-		logger.Error("Truncated user [" + u.Name + "]")
+		logger.Error("Truncated user [" + u.Id + "]")
 
 		return false
 	}
 
-	if err = ioutil.WriteFile(filepath.Join(Wide.Users, u.Name+".json"), bytes, 0644); nil != err {
+	if err = ioutil.WriteFile(filepath.Join(Wide.Users, u.Id+".json"), bytes, 0644); nil != err {
 		logger.Error(err)
 
 		return false
 	}
 
 	return true
+}
+
+// NewUser creates a user with the specified username and workspace.
+func NewUser(id, name, avatar, workspace string) *User {
+	now := time.Now().UnixNano()
+
+	return &User{Id: id, Name: name, Avatar: avatar, Workspace: workspace,
+		Locale: Wide.Locale, GoFormat: "gofmt",
+		GoBuildArgsForLinux: "-i", GoBuildArgsForWindows: "-i", GoBuildArgsForDarwin: "-i",
+		FontFamily: "Helvetica", FontSize: "13px", Theme: "default",
+		Keymap:  "wide",
+		Created: now, Updated: now, Lived: now,
+		Editor: &editor{FontFamily: "Consolas, 'Courier New', monospace", FontSize: "inherit", LineHeight: "17px",
+			Theme: "wide", TabSize: "4"}}
 }
 
 // WorkspacePath gets workspace path of the user.
@@ -168,17 +154,9 @@ func (u *User) BuildArgs(os string) []string {
 func GetOwner(path string) string {
 	for _, user := range Users {
 		if strings.HasPrefix(path, user.WorkspacePath()) {
-			return user.Name
+			return user.Id
 		}
 	}
 
 	return ""
-}
-
-// Salt salts the specified password with the specified salt.
-func Salt(password, salt string) string {
-	sha1hash := sha1.New()
-	sha1hash.Write([]byte(password + salt))
-
-	return hex.EncodeToString(sha1hash.Sum(nil))
 }

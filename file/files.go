@@ -80,12 +80,12 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetGzResult(w, r, result)
 
-	userWorkspace := conf.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(uid)
 	workspaces := filepath.SplitList(userWorkspace)
 
 	root := Node{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", IsParent: true, Children: []*Node{}}
@@ -129,12 +129,12 @@ func RefreshDirectoryHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	r.ParseForm()
 	path := r.FormValue("path")
 
-	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -162,7 +162,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -178,7 +178,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -212,7 +212,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		user := conf.GetUser(username)
+		user := conf.GetUser(uid)
 
 		data["path"] = "/workspace/" + user.Name + "/" + strings.Replace(path, user.WorkspacePath(), "", 1)
 
@@ -238,7 +238,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -255,7 +255,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 	sid := args["sid"].(string)
 
-	if util.Go.IsAPI(filePath) || !session.CanAccess(username, filePath) {
+	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -294,7 +294,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -310,7 +310,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if util.Go.IsAPI(path) || !session.CanAccess(username, path) {
+	if util.Go.IsAPI(path) || !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -331,9 +331,9 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if "f" == fileType {
-		logger.Debugf("Created a file [%s] by user [%s]", path, wSession.Username)
+		logger.Debugf("Created a file [%s] by user [%s]", path, wSession.UserId)
 	} else {
-		logger.Debugf("Created a dir [%s] by user [%s]", path, wSession.Username)
+		logger.Debugf("Created a dir [%s] by user [%s]", path, wSession.UserId)
 	}
 
 }
@@ -346,7 +346,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -362,7 +362,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if util.Go.IsAPI(path) || !session.CanAccess(username, path) {
+	if util.Go.IsAPI(path) || !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -381,7 +381,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logger.Debugf("Removed a file [%s] by user [%s]", path, wSession.Username)
+	logger.Debugf("Removed a file [%s] by user [%s]", path, wSession.UserId)
 }
 
 // RenameFileHandler handles request of renaming file or directory.
@@ -392,7 +392,7 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -408,14 +408,14 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	oldPath := args["oldPath"].(string)
 	if util.Go.IsAPI(oldPath) ||
-		!session.CanAccess(username, oldPath) {
+		!session.CanAccess(uid, oldPath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
 
 	newPath := args["newPath"].(string)
-	if util.Go.IsAPI(newPath) || !session.CanAccess(username, newPath) {
+	if util.Go.IsAPI(newPath) || !session.CanAccess(uid, newPath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -434,7 +434,7 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logger.Debugf("Renamed a file [%s] to [%s] by user [%s]", oldPath, newPath, wSession.Username)
+	logger.Debugf("Renamed a file [%s] to [%s] by user [%s]", oldPath, newPath, wSession.UserId)
 }
 
 // Use to find results sorting.
@@ -457,7 +457,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -471,7 +471,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string) // path of selected file in file tree
-	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -479,7 +479,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 
 	name := args["name"].(string)
 
-	userWorkspace := conf.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(uid)
 	workspaces := filepath.SplitList(userWorkspace)
 
 	if "" != path && !util.File.IsDir(path) {
@@ -536,7 +536,7 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 
 	dir := args["dir"].(string)
 	if "" == dir {
-		userWorkspace := conf.GetUserWorkspace(wSession.Username)
+		userWorkspace := conf.GetUserWorkspace(wSession.UserId)
 		workspaces := filepath.SplitList(userWorkspace)
 		dir = workspaces[0]
 	}

@@ -104,8 +104,8 @@ func parsePath(curDir, outputLine string) string {
 	return tagStart + text + tagEnd + msgPart
 }
 
-func setCmdEnv(cmd *exec.Cmd, username string) {
-	userWorkspace := conf.GetUserWorkspace(username)
+func setCmdEnv(cmd *exec.Cmd, uid string) {
+	userWorkspace := conf.GetUserWorkspace(uid)
 	cache, err := os.UserCacheDir()
 	if nil != err {
 		logger.Warnf("Get user cache dir failed [" + err.Error() + "]")

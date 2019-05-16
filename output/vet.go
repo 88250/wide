@@ -41,8 +41,8 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	var args map[string]interface{}
 
@@ -61,7 +61,7 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", "vet", ".")
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
@@ -114,7 +114,7 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 	go func(runningId int) {
 		defer util.Recover()
 
-		logger.Debugf("User [%s, %s] is running [go vet] [runningId=%d]", username, sid, runningId)
+		logger.Debugf("User [%s, %s] is running [go vet] [runningId=%d]", uid, sid, runningId)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go vet"
@@ -126,11 +126,11 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 		cmd.Wait()
 
 		if !cmd.ProcessState.Success() {
-			logger.Debugf("User [%s, %s] 's running [go vet] [runningId=%d] has done (with error)", username, sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go vet] [runningId=%d] has done (with error)", uid, sid, runningId)
 
 			channelRet["output"] = "<span class='vet-error'>" + i18n.Get(locale, "vet-error").(string) + "</span>\n" + string(buf)
 		} else {
-			logger.Debugf("User [%s, %s] 's running [go vet] [runningId=%d] has done", username, sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go vet] [runningId=%d] has done", uid, sid, runningId)
 
 			channelRet["output"] = "<span class='vet-succ'>" + i18n.Get(locale, "vet-succ").(string) + "</span>\n" + string(buf)
 		}

@@ -41,8 +41,8 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -60,7 +60,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", "get")
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
@@ -114,7 +114,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		logger.Debugf("User [%s, %s] is running [go get] [runningId=%d]", username, sid, runningId)
+		logger.Debugf("User [%s, %s] is running [go get] [runningId=%d]", uid, sid, runningId)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go get"
@@ -123,11 +123,11 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		buf, _ := ioutil.ReadAll(reader)
 
 		if 0 != len(buf) {
-			logger.Debugf("User [%s, %s] 's [go get] [runningId=%d] has done (with error)", username, sid, runningId)
+			logger.Debugf("User [%s, %s] 's [go get] [runningId=%d] has done (with error)", uid, sid, runningId)
 
 			channelRet["output"] = "<span class='get-error'>" + i18n.Get(locale, "get-error").(string) + "</span>\n" + string(buf)
 		} else {
-			logger.Debugf("User [%s, %s] 's running [go get] [runningId=%d] has done", username, sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go get] [runningId=%d] has done", uid, sid, runningId)
 
 			channelRet["output"] = "<span class='get-succ'>" + i18n.Get(locale, "get-succ").(string) + "</span>\n"
 		}

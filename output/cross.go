@@ -43,8 +43,8 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	var args map[string]interface{}
 
@@ -58,7 +58,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 	filePath := args["path"].(string)
 
-	if util.Go.IsAPI(filePath) || !session.CanAccess(username, filePath) {
+	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -75,7 +75,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 		suffix = ".exe"
 	}
 
-	user := conf.GetUser(username)
+	user := conf.GetUser(uid)
 	goBuildArgs := []string{}
 	goBuildArgs = append(goBuildArgs, "build")
 	goBuildArgs = append(goBuildArgs, user.BuildArgs(goos)...)
@@ -83,7 +83,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	for i, env := range cmd.Env {
 		if strings.HasPrefix(env, "GOOS=") {

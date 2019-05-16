@@ -42,6 +42,8 @@ const (
 	WideVersion = "1.5.3"
 	// CodeMirrorVer holds the current editor version.
 	CodeMirrorVer = "5.1"
+	// UserAgent represents HTTP client user agent.
+	UserAgent = "Wide/" + WideVersion + "; +https://github.com/b3log/wide"
 
 	HelloWorld = `package main
 
@@ -70,7 +72,7 @@ type conf struct {
 	Locale                string // default locale
 	Playground            string // playground directory
 	Users                 string // users directory
-	UsersWorkspaces       string // users' workspaces directory (admin defaults to ${GOPATH}, others using this)
+	UsersWorkspaces       string // users' workspaces directory
 	AllowRegister         bool   // allow register or not
 	Autocomplete          bool   // default autocomplete
 }
@@ -335,10 +337,10 @@ func checkEnv() {
 	}
 }
 
-// GetUserWorkspace gets workspace path with the specified username, returns "" if not found.
-func GetUserWorkspace(username string) string {
+// GetUserWorkspace gets workspace path with the specified user id, returns "" if not found.
+func GetUserWorkspace(userId string) string {
 	for _, user := range Users {
-		if user.Name == username {
+		if user.Id == userId {
 			return user.WorkspacePath()
 		}
 	}
@@ -347,9 +349,9 @@ func GetUserWorkspace(username string) string {
 }
 
 // GetGoFmt gets the path of Go format tool, returns "gofmt" if not found "goimports".
-func GetGoFmt(username string) string {
+func GetGoFmt(userId string) string {
 	for _, user := range Users {
-		if user.Name == username {
+		if user.Id == userId {
 			switch user.GoFormat {
 			case "gofmt":
 				return "gofmt"
@@ -365,15 +367,14 @@ func GetGoFmt(username string) string {
 	return "gofmt"
 }
 
-// GetUser gets configuration of the user specified by the given username, returns nil if not found.
-func GetUser(username string) *User {
-	if "playground" == username { // reserved user for Playground
-		// mock it
-		return NewUser("playground", "", "", "")
+// GetUser gets configuration of the user specified by the given user id, returns nil if not found.
+func GetUser(id string) *User {
+	if "playground" == id { // reserved user for Playground
+		return NewUser("playground", "playground", "", "")
 	}
 
 	for _, user := range Users {
-		if user.Name == username {
+		if user.Id == id {
 			return user
 		}
 	}
@@ -384,17 +385,17 @@ func GetUser(username string) *User {
 // initCustomizedConfs initializes the user customized configurations.
 func initCustomizedConfs() {
 	for _, user := range Users {
-		UpdateCustomizedConf(user.Name)
+		UpdateCustomizedConf(user.Id)
 	}
 }
 
 // UpdateCustomizedConf creates (if not exists) or updates user customized configuration files.
 //
 //  1. /static/user/{username}/style.css
-func UpdateCustomizedConf(username string) {
+func UpdateCustomizedConf(userId string) {
 	var u *User
 	for _, user := range Users { // maybe it is a beauty of the trade-off of the another world between design and implementation
-		if user.Name == username {
+		if user.Id == userId {
 			u = user
 		}
 	}
@@ -413,7 +414,7 @@ func UpdateCustomizedConf(username string) {
 	}
 
 	wd := util.OS.Pwd()
-	dir := filepath.Clean(wd + "/static/user/" + u.Name)
+	dir := filepath.Clean(wd + "/static/user/" + u.Id)
 	if err := os.MkdirAll(dir, 0755); nil != err {
 		logger.Error(err)
 

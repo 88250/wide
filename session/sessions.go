@@ -46,7 +46,7 @@ import (
 
 const (
 	sessionStateActive = iota
-	sessionStateClosed // (not used so far)
+	sessionStateClosed  // (not used so far)
 )
 
 // Logger.
@@ -75,7 +75,7 @@ var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
 // WideSession represents a session associated with a browser tab.
 type WideSession struct {
 	ID          string                     // id
-	Username    string                     // username
+	UserId      string                     // user id
 	HTTPSession *sessions.Session          // HTTP session related
 	Processes   []*os.Process              // process set
 	EventQueue  *event.UserEventQueue      // event queue
@@ -111,7 +111,7 @@ func FixedTimeRelease() {
 
 			for _, s := range WideSessions {
 				if s.Updated.Before(threshold) {
-					logger.Debugf("Removes a invalid session [%s], user [%s]", s.ID, s.Username)
+					logger.Debugf("Removes a invalid session [%s], user [%s]", s.ID, s.UserId)
 
 					WideSessions.Remove(s.ID)
 				}
@@ -139,7 +139,7 @@ func FixedTimeReport() {
 	go func() {
 		defer util.Recover()
 
-		for _ = range time.Tick(10 * time.Minute) {
+		for _ = range time.Tick(10*time.Minute) {
 			users := userReports{}
 			processSum := 0
 
@@ -147,7 +147,7 @@ func FixedTimeReport() {
 				processCnt := len(s.Processes)
 				processSum += processCnt
 
-				if report, exists := contains(users, s.Username); exists {
+				if report, exists := contains(users, s.UserId); exists {
 					if s.Updated.After(report.updated) {
 						report.updated = s.Updated
 					}
@@ -155,7 +155,7 @@ func FixedTimeReport() {
 					report.sessionCnt++
 					report.processCnt += processCnt
 				} else {
-					users = append(users, &userReport{username: s.Username, sessionCnt: 1, processCnt: processCnt, updated: s.Updated})
+					users = append(users, &userReport{username: s.UserId, sessionCnt: 1, processCnt: processCnt, updated: s.Updated})
 				}
 			}
 
@@ -231,7 +231,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		wSession = WideSessions.new(httpSession, sid)
 
-		logger.Tracef("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
+		logger.Tracef("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.UserId)
 	}
 
 	logger.Tracef("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
@@ -263,7 +263,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		if err := wsChan.ReadJSON(&input); err != nil {
-			logger.Tracef("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]", sid, wSession.Username)
+			logger.Tracef("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]", sid, wSession.UserId)
 
 			return
 		}
@@ -307,7 +307,7 @@ func SaveContentHandler(w http.ResponseWriter, r *http.Request) {
 	wSession.Content = args.LatestSessionContent
 
 	for _, user := range conf.Users {
-		if user.Name == wSession.Username {
+		if user.Id == wSession.UserId {
 			// update the variable in-memory, session.FixedTimeSave() function will persist it periodically
 			user.LatestSessionContent = wSession.Content
 
@@ -376,9 +376,9 @@ func (sessions *wSessions) Remove(sid string) {
 			// kill processes
 			for _, p := range s.Processes {
 				if err := p.Kill(); nil != err {
-					logger.Errorf("Can't kill process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
+					logger.Errorf("Can't kill process [%d] of session [%s], user [%s]", p.Pid, sid, s.UserId)
 				} else {
-					logger.Debugf("Killed a process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
+					logger.Debugf("Killed a process [%d] of session [%s], user [%s]", p.Pid, sid, s.UserId)
 				}
 			}
 
@@ -410,12 +410,12 @@ func (sessions *wSessions) Remove(sid string) {
 
 			cnt := 0 // count wide sessions associated with HTTP session
 			for _, ses := range *sessions {
-				if ses.Username == s.Username {
+				if ses.UserId == s.UserId {
 					cnt++
 				}
 			}
 
-			logger.Debugf("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
+			logger.Debugf("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.UserId, cnt)
 
 			return
 		}
@@ -423,14 +423,14 @@ func (sessions *wSessions) Remove(sid string) {
 }
 
 // GetByUsername gets wide sessions.
-func (sessions *wSessions) GetByUsername(username string) []*WideSession {
+func (sessions *wSessions) GetByUserId(userId string) []*WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	ret := []*WideSession{}
 
 	for _, s := range *sessions {
-		if s.Username == username {
+		if s.UserId == userId {
 			ret = append(ret, s)
 		}
 	}
@@ -443,12 +443,12 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 	now := time.Now()
 
 	ret := &WideSession{
 		ID:          sid,
-		Username:    username,
+		UserId:      uid,
 		HTTPSession: httpSession,
 		EventQueue:  nil,
 		State:       sessionStateActive,
@@ -459,7 +459,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 
 	*sessions = append(*sessions, ret)
 
-	if "playground" == username {
+	if "playground" == uid {
 		return ret
 	}
 
@@ -526,7 +526,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 	go func() {
 		defer util.Recover()
 
-		workspaces := filepath.SplitList(conf.GetUserWorkspace(username))
+		workspaces := filepath.SplitList(conf.GetUserWorkspace(uid))
 		for _, workspace := range workspaces {
 			filepath.Walk(filepath.Join(workspace, "src"), func(dirPath string, f os.FileInfo, err error) error {
 				if strings.HasPrefix(f.Name(), ".") || "node_modules" == f.Name() || "vendor" == f.Name() {

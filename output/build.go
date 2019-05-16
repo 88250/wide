@@ -44,8 +44,8 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	user := conf.GetUser(username)
+	uid := httpSession.Values["uid"].(string)
+	user := conf.GetUser(uid)
 	locale := user.Locale
 
 	var args map[string]interface{}
@@ -61,7 +61,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["file"].(string)
 
-	if util.Go.IsAPI(filePath) || !session.CanAccess(username, filePath) {
+	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -101,7 +101,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	executable := filepath.Base(curDir) + suffix
 	executable = filepath.Join(curDir, executable)

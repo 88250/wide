@@ -52,7 +52,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	locale := conf.Wide.Locale
 
@@ -92,9 +92,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"code":          template.HTML(code), "ver": conf.WideVersion, "year": time.Now().Year(),
 		"embed": embed, "disqus": disqus, "fileName": fileName}
 
-	wideSessions := session.WideSessions.GetByUsername(username)
+	wideSessions := session.WideSessions.GetByUserId(uid)
 
-	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
+	logger.Debugf("User [%s] has [%d] sessions", uid, len(wideSessions))
 
 	t, err := template.ParseFiles("views/playground/index.html")
 

@@ -41,8 +41,8 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	var args map[string]interface{}
 
@@ -61,7 +61,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", "test", "-v")
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
@@ -114,7 +114,7 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 	go func(runningId int) {
 		defer util.Recover()
 
-		logger.Debugf("User [%s, %s] is running [go test] [runningId=%d]", username, sid, runningId)
+		logger.Debugf("User [%s, %s] is running [go test] [runningId=%d]", uid, sid, runningId)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go test"
@@ -126,11 +126,11 @@ func GoTestHandler(w http.ResponseWriter, r *http.Request) {
 		cmd.Wait()
 
 		if !cmd.ProcessState.Success() {
-			logger.Debugf("User [%s, %s] 's running [go test] [runningId=%d] has done (with error)", username, sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go test] [runningId=%d] has done (with error)", uid, sid, runningId)
 
 			channelRet["output"] = "<span class='test-error'>" + i18n.Get(locale, "test-error").(string) + "</span>\n" + string(buf)
 		} else {
-			logger.Debugf("User [%s, %s] 's running [go test] [runningId=%d] has done", username, sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go test] [runningId=%d] has done", uid, sid, runningId)
 
 			channelRet["output"] = "<span class='test-succ'>" + i18n.Get(locale, "test-succ").(string) + "</span>\n" + string(buf)
 		}

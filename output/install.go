@@ -43,8 +43,8 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	var args map[string]interface{}
 
@@ -63,7 +63,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", "install")
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	logger.Debugf("go install %s", curDir)
 
@@ -119,7 +119,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		logger.Debugf("User [%s, %s] is running [go install] [id=%d, dir=%s]", username, sid, runningId, curDir)
+		logger.Debugf("User [%s, %s] is running [go install] [id=%d, dir=%s]", uid, sid, runningId, curDir)
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
@@ -183,7 +183,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if nil != session.OutputWS[sid] {
-			logger.Debugf("User [%s, %s] 's running [go install] [id=%d, dir=%s] has done", username, sid, runningId, curDir)
+			logger.Debugf("User [%s, %s] 's running [go install] [id=%d, dir=%s] has done", uid, sid, runningId, curDir)
 
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)

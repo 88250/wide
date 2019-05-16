@@ -15,15 +15,11 @@
 package session
 
 import (
-	"crypto/md5"
-	"encoding/hex"
 	"encoding/json"
-	"math/rand"
 	"net/http"
 	"os"
 	"path/filepath"
 	"runtime"
-	"strconv"
 	"strings"
 	"sync"
 	"text/template"
@@ -38,7 +34,6 @@ const (
 	// TODO: i18n
 
 	userExists       = "user exists"
-	emailExists      = "email exists"
 	userCreated      = "user created"
 	userCreateError  = "user create error"
 	notAllowRegister = "not allow register"
@@ -63,8 +58,8 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	httpSession.Save(r, w)
 
-	username := httpSession.Values["username"].(string)
-	user := conf.GetUser(username)
+	uid := httpSession.Values["uid"].(string)
+	user := conf.GetUser(uid)
 
 	if "GET" == r.Method {
 		tmpLinux := user.GoBuildArgsForLinux
@@ -116,8 +111,6 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 		Keymap                string
 		Workspace             string
 		Username              string
-		Password              string
-		Email                 string
 		Locale                string
 		Theme                 string
 		EditorFontFamily      string
@@ -143,14 +136,6 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.Keymap = args.Keymap
 	// XXX: disallow change workspace at present
 	// user.Workspace = args.Workspace
-	if user.Password != args.Password {
-		user.Password = conf.Salt(args.Password, user.Salt)
-	}
-	user.Email = args.Email
-
-	hash := md5.New()
-	hash.Write([]byte(user.Email))
-	user.Gravatar = hex.EncodeToString(hash.Sum(nil))
 
 	user.Locale = args.Locale
 	user.Theme = args.Theme
@@ -160,73 +145,13 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.Editor.Theme = args.EditorTheme
 	user.Editor.TabSize = args.EditorTabSize
 
-	conf.UpdateCustomizedConf(username)
+	conf.UpdateCustomizedConf(uid)
 
 	now := time.Now().UnixNano()
 	user.Lived = now
 	user.Updated = now
 
 	result.Succ = user.Save()
-}
-
-// LoginHandler handles request of user login.
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-	if "GET" == r.Method {
-		// show the login page
-
-		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
-			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "year": time.Now().Year()}
-
-		t, err := template.ParseFiles("views/login.html")
-
-		if nil != err {
-			logger.Error(err)
-			http.Error(w, err.Error(), 500)
-
-			return
-		}
-
-		t.Execute(w, model)
-
-		return
-	}
-
-	// non-GET request as login request
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
-
-	args := struct {
-		Username string
-		Password string
-	}{}
-
-	args.Username = r.FormValue("username")
-	args.Password = r.FormValue("password")
-
-	result.Succ = false
-	for _, user := range conf.Users {
-		if user.Name == args.Username && user.Password == conf.Salt(args.Password, user.Salt) {
-			result.Succ = true
-
-			break
-		}
-	}
-
-	if !result.Succ {
-		return
-	}
-
-	// create a HTTP session
-	httpSession, _ := HTTPSession.Get(r, "wide-session")
-	httpSession.Values["username"] = args.Username
-	httpSession.Values["id"] = strconv.Itoa(rand.Int())
-	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
-	if "" != conf.Wide.Context {
-		httpSession.Options.Path = conf.Wide.Context
-	}
-	httpSession.Save(r, w)
-
-	logger.Debugf("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), args.Username)
 }
 
 // LogoutHandler handles request of user logout (exit).
@@ -237,66 +162,6 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession, _ := HTTPSession.Get(r, "wide-session")
 
 	httpSession.Options.MaxAge = -1
-	httpSession.Save(r, w)
-}
-
-// SignUpUserHandler handles request of registering user.
-func SignUpUserHandler(w http.ResponseWriter, r *http.Request) {
-	if "GET" == r.Method {
-		// show the user sign up page
-
-		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
-			"locale": conf.Wide.Locale, "ver": conf.WideVersion, "dir": conf.Wide.UsersWorkspaces,
-			"pathSeparator": conf.PathSeparator, "year": time.Now().Year()}
-
-		t, err := template.ParseFiles("views/sign_up.html")
-
-		if nil != err {
-			logger.Error(err)
-			http.Error(w, err.Error(), 500)
-
-			return
-		}
-
-		t.Execute(w, model)
-
-		return
-	}
-
-	// non-GET request as add user request
-
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
-
-	var args map[string]interface{}
-
-	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
-		logger.Error(err)
-		result.Succ = false
-
-		return
-	}
-
-	username := args["username"].(string)
-	password := args["password"].(string)
-	email := args["email"].(string)
-
-	msg := addUser(username, password, email)
-	if userCreated != msg {
-		result.Succ = false
-		result.Msg = msg
-
-		return
-	}
-
-	// create a HTTP session
-	httpSession, _ := HTTPSession.Get(r, "wide-session")
-	httpSession.Values["username"] = username
-	httpSession.Values["id"] = strconv.Itoa(rand.Int())
-	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
-	if "" != conf.Wide.Context {
-		httpSession.Options.Path = conf.Wide.Context
-	}
 	httpSession.Save(r, w)
 }
 
@@ -313,11 +178,11 @@ func FixedTimeSave() {
 	}()
 }
 
-// CanAccess determines whether the user specified by the given username can access the specified path.
-func CanAccess(username, path string) bool {
+// CanAccess determines whether the user specified by the given user id can access the specified path.
+func CanAccess(userId, path string) bool {
 	path = filepath.FromSlash(path)
 
-	userWorkspace := conf.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(userId)
 	workspaces := filepath.SplitList(userWorkspace)
 
 	for _, workspace := range workspaces {
@@ -342,20 +207,20 @@ func SaveOnlineUsers() {
 func getOnlineUsers() []*conf.User {
 	ret := []*conf.User{}
 
-	usernames := map[string]string{} // distinct username
+	uids := map[string]string{} // distinct uid
 	for _, s := range WideSessions {
-		usernames[s.Username] = s.Username
+		uids[s.UserId] = s.UserId
 	}
 
-	for _, username := range usernames {
-		u := conf.GetUser(username)
+	for _, uid := range uids {
+		u := conf.GetUser(uid)
 
-		if "playground" == username { // user [playground] is a reserved mock user
+		if "playground" == uid { // user [playground] is a reserved mock user
 			continue
 		}
 
 		if nil == u {
-			logger.Warnf("Not found user [%s]", username)
+			logger.Warnf("Not found user [%s]", uid)
 
 			continue
 		}
@@ -366,7 +231,7 @@ func getOnlineUsers() []*conf.User {
 	return ret
 }
 
-// addUser add a user with the specified username, password and email.
+// addUser add a user with the specified user id, username and avatar.
 //
 //  1. create the user's workspace
 //  2. generate 'Hello, 世界' demo code in the workspace (a console version and a HTTP version)
@@ -374,12 +239,12 @@ func getOnlineUsers() []*conf.User {
 //  4. serve files of the user's workspace via HTTP
 //
 // Note: user [playground] is a reserved mock user
-func addUser(username, password, email string) string {
+func addUser(userId, userName, userAvatar string) string {
 	if !conf.Wide.AllowRegister {
 		return notAllowRegister
 	}
 
-	if "playground" == username {
+	if "playground" == userId {
 		return userExists
 	}
 
@@ -387,32 +252,26 @@ func addUser(username, password, email string) string {
 	defer addUserMutex.Unlock()
 
 	for _, user := range conf.Users {
-		if strings.ToLower(user.Name) == strings.ToLower(username) {
+		if strings.ToLower(user.Id) == strings.ToLower(userId) {
 			return userExists
-		}
-
-		if strings.ToLower(user.Email) == strings.ToLower(email) {
-			return emailExists
 		}
 	}
 
-	workspace := filepath.Join(conf.Wide.UsersWorkspaces, username)
-
-	newUser := conf.NewUser(username, password, email, workspace)
+	workspace := filepath.Join(conf.Wide.UsersWorkspaces, userId)
+	newUser := conf.NewUser(userId, userName, userAvatar, workspace)
 	conf.Users = append(conf.Users, newUser)
-
 	if !newUser.Save() {
 		return userCreateError
 	}
 
 	conf.CreateWorkspaceDir(workspace)
 	helloWorld(workspace)
-	conf.UpdateCustomizedConf(username)
+	conf.UpdateCustomizedConf(userId)
 
-	http.Handle("/workspace/"+username+"/",
-		http.StripPrefix("/workspace/"+username+"/", http.FileServer(http.Dir(newUser.WorkspacePath()))))
+	http.Handle("/workspace/"+userId+"/",
+		http.StripPrefix("/workspace/"+userId+"/", http.FileServer(http.Dir(newUser.WorkspacePath()))))
 
-	logger.Infof("Created a user [%s]", username)
+	logger.Infof("Created a user [%s]", userId)
 
 	return userCreated
 }
