@@ -258,9 +258,9 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				wsChannel.Refresh()
 			}
 		}
-	}(rand.Int())
 
-	logger.Warn("process", cmd.ProcessState)
+		logger.Warn("process", cmd.ProcessState)
+	}(rand.Int())
 }
 
 // StopHandler handles request of stoping a running process.
