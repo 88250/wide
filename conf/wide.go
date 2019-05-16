@@ -214,6 +214,14 @@ func initWide(confPath, confUsers, confServer, confLogLevel, confPlayground stri
 	if "" != confPlayground {
 		Wide.Playground = confPlayground
 	}
+	Wide.Playground = filepath.FromSlash(Wide.Playground)
+	if !util.File.IsExist(Wide.Playground) {
+		if err := os.MkdirAll(Wide.Playground, 0775); nil != err {
+			logger.Errorf("Create Playground [%s] error", err)
+
+			os.Exit(-1)
+		}
+	}
 
 	// Users' workspaces directory
 	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${WD}", Wide.WD, 1)
@@ -221,15 +229,15 @@ func initWide(confPath, confUsers, confServer, confLogLevel, confPlayground stri
 	if "" != confUsersWorkspaces {
 		Wide.UsersWorkspaces = confUsersWorkspaces
 	}
-	Wide.UsersWorkspaces = filepath.Clean(Wide.UsersWorkspaces)
-
-	if !util.File.IsExist(Wide.Playground) {
-		if err := os.Mkdir(Wide.Playground, 0775); nil != err {
-			logger.Errorf("Create Playground [%s] error", err)
+	Wide.UsersWorkspaces = filepath.FromSlash(Wide.UsersWorkspaces)
+	if !util.File.IsExist(Wide.UsersWorkspaces) {
+		if err := os.MkdirAll(Wide.UsersWorkspaces, 0775); nil != err {
+			logger.Errorf("Create Workspaces [%s] error", err)
 
 			os.Exit(-1)
 		}
 	}
+
 
 	// Server
 	if "" != confServer {
