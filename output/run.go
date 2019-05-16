@@ -63,12 +63,11 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("docker", "run", "--rm", "-v", filePath+":/"+fileName, "busybox", "timeout", "10", "/"+fileName)
+		cmd = exec.Command("timeout", "5", "docker", "run", "--rm", "-v", filePath+":/"+fileName, "busybox", "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
 		cmd.Dir = curDir
-		logger.Warnf("Executing user's program [" + filePath + "] without docker sandbox")
 	}
 
 	stdout, err := cmd.StdoutPipe()
