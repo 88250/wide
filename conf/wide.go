@@ -63,7 +63,6 @@ type conf struct {
 	StaticResourceVersion string // version of static resources
 	MaxProcs              int    // Go max procs
 	RuntimeMode           string // runtime mode (dev/prod)
-	WD                    string // current working direcitory, ${pwd}
 	Locale                string // default locale
 	Playground            string // playground directory
 	Users                 string // users directory
@@ -189,10 +188,6 @@ func initWide(confPath, confUsers, confServer, confLogLevel, confPlayground stri
 
 	logger.Debug("Conf: \n" + string(bytes))
 
-	// Working Directory
-	Wide.WD = util.OS.Pwd()
-	logger.Debugf("${pwd} [%s]", Wide.WD)
-
 	// User Home
 	home, err := util.OS.Home()
 	if nil != err {
@@ -224,7 +219,6 @@ func initWide(confPath, confUsers, confServer, confLogLevel, confPlayground stri
 	}
 
 	// Users' workspaces directory
-	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${WD}", Wide.WD, 1)
 	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${home}", home, 1)
 	if "" != confUsersWorkspaces {
 		Wide.UsersWorkspaces = confUsersWorkspaces
@@ -237,7 +231,6 @@ func initWide(confPath, confUsers, confServer, confLogLevel, confPlayground stri
 			os.Exit(-1)
 		}
 	}
-
 
 	// Server
 	if "" != confServer {
@@ -376,8 +369,7 @@ func UpdateCustomizedConf(userId string) {
 		os.Exit(-1)
 	}
 
-	wd := util.OS.Pwd()
-	dir := filepath.Clean(wd + "/static/user/" + u.Id)
+	dir := filepath.Clean(Wide.UsersWorkspaces + "/" + userId + "/static/")
 	if err := os.MkdirAll(dir, 0755); nil != err {
 		logger.Error(err)
 

@@ -122,7 +122,7 @@ func NewUser(id, name, avatar, workspace string) *User {
 //  2. Replace ${GOPATH} with enviorment variable GOPATH
 //  3. Replace "/" with "\\" (Windows)
 func (u *User) WorkspacePath() string {
-	w := strings.Replace(u.Workspace, "{WD}", Wide.WD, 1)
+	w := u.Workspace
 	w = strings.Replace(w, "${GOPATH}", os.Getenv("GOPATH"), 1)
 
 	return filepath.FromSlash(w)
