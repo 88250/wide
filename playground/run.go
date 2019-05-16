@@ -124,7 +124,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
 				channelRet["cmd"] = "run"
 				channelRet["output"] = oneRuneStr
-				wsChannel := session.OutputWS[sid]
+				wsChannel := session.PlaygroundWS[sid]
 				if nil != wsChannel {
 					wsChannel.WriteJSON(&channelRet)
 					wsChannel.Refresh()
@@ -142,8 +142,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 			oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
 			oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
 			channelRet["cmd"] = "run"
-			channelRet["output"] = "<span class='stderr'>" + oneRuneStr + "</span>"
-			wsChannel := session.OutputWS[sid]
+			channelRet["output"] = oneRuneStr
+			wsChannel := session.PlaygroundWS[sid]
 			if nil != wsChannel {
 				wsChannel.WriteJSON(&channelRet)
 				wsChannel.Refresh()
@@ -157,9 +157,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 		channelRet["cmd"] = "run-done"
 		if 124 == cmd.ProcessState.ExitCode() {
-			channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
-		} else {
-			channelRet["output"] = "\n<span class='stderr'>run program complete</span>\n"
+			channelRet["output"] = "\nrun program timeout in 5s\n"
 		}
 		if nil != wsChannel {
 			wsChannel.WriteJSON(&channelRet)
