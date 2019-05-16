@@ -96,6 +96,8 @@ func Load(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confS
 	_, err := cmd.CombinedOutput()
 	if nil != err {
 		logger.Warn("Not found 'docker' installed, running user's code will cause security problem")
+	} else {
+		Docker = true
 	}
 }
 
