@@ -83,14 +83,19 @@ var Wide *conf
 // configurations of users.
 var Users []*User
 
-// Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
-func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confUsersWorkspaces string) {
-	// XXX: ugly args list....
+// Indicates whether Docker is available.
+var Docker bool
 
-	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-		confPlayground, confUsersWorkspaces)
+// Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
+func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
+	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground, confUsersWorkspaces)
 	initUsers()
+
+	cmd := exec.Command("docker", "version")
+	_, err := cmd.CombinedOutput()
+	if nil != err {
+		logger.Warn("Not found 'docker' installed, running user's code will cause security problem")
+	}
 }
 
 func initUsers() {

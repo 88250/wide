@@ -480,7 +480,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 		for {
 			ch := SessionWS[sid]
 			if nil == ch {
-				return // release this gorutine
+				return // release this goroutine
 			}
 
 			select {
@@ -506,17 +506,13 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 						}
 					}
 
-					cmd := map[string]interface{}{"path": path, "dir": dir,
-						"cmd": "create-file", "type": fileType}
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "create-file", "type": fileType}
 					ch.WriteJSON(&cmd)
 				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
-					cmd := map[string]interface{}{"path": path, "dir": dir,
-						"cmd": "remove-file", "type": ""}
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "remove-file", "type": ""}
 					ch.WriteJSON(&cmd)
-
 				} else if event.Op&fsnotify.Rename == fsnotify.Rename {
-					cmd := map[string]interface{}{"path": path, "dir": dir,
-						"cmd": "rename-file", "type": ""}
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "rename-file", "type": ""}
 					ch.WriteJSON(&cmd)
 				}
 			case err := <-watcher.Errors:
