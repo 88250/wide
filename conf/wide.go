@@ -69,6 +69,7 @@ type conf struct {
 	WD                    string // current working direcitory, ${pwd}
 	Locale                string // default locale
 	Playground            string // playground directory
+	Users                 string // users directory
 	UsersWorkspaces       string // users' workspaces directory (admin defaults to ${GOPATH}, others using this)
 	AllowRegister         bool   // allow register or not
 	Autocomplete          bool   // default autocomplete
@@ -88,8 +89,8 @@ var Docker bool
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
 func Load(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
-	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground, confUsersWorkspaces)
-	initUsers(confUsers)
+	initWide(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground, confUsersWorkspaces)
+	initUsers()
 
 	cmd := exec.Command("docker", "version")
 	_, err := cmd.CombinedOutput()
@@ -98,8 +99,8 @@ func Load(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confS
 	}
 }
 
-func initUsers(confUsers string) {
-	f, err := os.Open(confUsers)
+func initUsers() {
+	f, err := os.Open(Wide.Users)
 	if nil != err {
 		logger.Error(err)
 
@@ -125,7 +126,7 @@ func initUsers(confUsers string) {
 
 		user := &User{}
 
-		bytes, _ := ioutil.ReadFile(filepath.Join(confUsers, name))
+		bytes, _ := ioutil.ReadFile(filepath.Join(Wide.Users, name))
 		err := json.Unmarshal(bytes, user)
 		if err != nil {
 			logger.Errorf("Parses [%s] error: %v, skip loading this user", name, err)
@@ -156,7 +157,7 @@ func initUsers(confUsers string) {
 	initCustomizedConfs()
 }
 
-func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
+func initWide(confPath, confUsers, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -196,13 +197,19 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 
 	logger.Debugf("${user.home} [%s]", home)
 
-	// Playground Directory
+	// Users directory
+	if "" != confUsers {
+		Wide.Users = confUsers
+	}
+	Wide.Users = filepath.Clean(Wide.Users)
+
+	// Playground directory
 	Wide.Playground = strings.Replace(Wide.Playground, "${home}", home, 1)
 	if "" != confPlayground {
 		Wide.Playground = confPlayground
 	}
 
-	// Users' workspaces Directory
+	// Users' workspaces directory
 	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${WD}", Wide.WD, 1)
 	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${home}", home, 1)
 	if "" != confUsersWorkspaces {
