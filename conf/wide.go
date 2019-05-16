@@ -157,8 +157,7 @@ func initUsers(confUsers string) {
 	initCustomizedConfs()
 }
 
-func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confUsersWorkspaces string) {
+func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel, confPlayground string, confUsersWorkspaces string) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
