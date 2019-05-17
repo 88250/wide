@@ -8,21 +8,20 @@
         <meta name="description" content="A Web-based Go IDE , do your development anytime, anywrhere."/>
         <meta name="author" content="B3log">
 
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/base.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/sign.css?{{.conf.StaticResourceVersion}}">
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
     <body>
         <div class="header">
             <div class="wrapper fn-clear">
                 <a href="/login" rel="login">
-                    <img title="A Web-based Go IDE" src="{{.conf.StaticServer}}/static/images/wide-logo.png" class="logo"/></a>
+                    <img title="A Web-based Go IDE" src="/static/images/wide-logo.png" class="logo"/></a>
                 <ul class="fn-right">
                     <li><a href="/playground" target="_blank" style="color: #cd504a">Play</a></li>
                     <li><a rel="bookmark" href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
                     <li><a rel="help" href="https://hacpai.com/article/1538873544275" target="_blank">{{.i18n.help}}</a></li>
                     <li><a rel="bookmark" href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.issues}}</a></li>
-                    <li><button class="btn" onclick="window.location.href = '/signup'">{{.i18n.sign_up}}</button></li>
                 </ul>
             </div>
         </div>
@@ -50,72 +49,5 @@
                 <iframe src="https://ghbtns.com/github-btn.html?user=b3log&repo=wide&type=star&count=true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
             </div>
         </div>
-
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="{{.conf.StaticServer}}/static/js/lib/jquery.form.js"></script>
-        <script type="text/javascript">
-                        (function () {
-                            var contentH = $(window).height() - $(".footer").height() - $(".header").height() - 18;
-                            $(".content").outerHeight(contentH)
-                                    .css("padding-top", (contentH - $(".content .fn-left").height()) / 2 + "px");
-
-                            $('#loginForm').submit(function () {
-                                var options = {
-                                    url: '/login',
-                                    type: 'POST',
-                                    dataType: 'json',
-                                    beforeSubmit: function () {
-                                        var username = $.trim($("#username").val());
-                                        var password = $.trim($("#password").val());
-
-                                        if (username === "") {
-                                            $("#msg").text("{{.i18n.login_error}}").show();
-                                            $("#username").focus();
-                                            return false;
-                                        } else if (password === "") {
-                                            $("#msg").text("{{.i18n.login_error}}").show();
-                                            $("#password").focus();
-                                            return false;
-                                        }
-                                    },
-                                    success: function (result) {
-                                        if (!result.succ) {
-                                            $("#msg").text('{{.i18n.login_error}}').show();
-                                            return;
-                                        }
-
-                                        window.location.href = "/";
-                                    }
-                                };
-
-                                $('#loginForm').ajaxSubmit(options);
-                                return false;
-                            });
-
-
-                            $("#username").keydown(function (event) {
-                                if (event.which === 13) {
-                                    if ($.trim($(this).val()) === "") {
-                                        $("#msg").text("{{.i18n.login_error}}").show();
-                                    } else {
-                                        $("#password").focus();
-                                        return false;
-                                    }
-                                } else {
-                                    $("#msg").hide();
-                                }
-                            }).focus();
-
-                            $("#password").keydown(function (event) {
-                                if (event.which === 13) {
-                                    if ($.trim($(this).val()) === "") {
-                                        $("#msg").text("{{.i18n.login_error}}").show();
-                                    }
-                                } else {
-                                    $("#msg").hide();
-                                }
-                            });
-                        })();
-        </script>        
     </body>
 </html>

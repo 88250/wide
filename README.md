@@ -1,6 +1,6 @@
 # [Wide](https://github.com/b3log/wide) [![Build Status](https://img.shields.io/travis/b3log/wide.svg?style=flat)](https://travis-ci.org/b3log/wide) [![Go Report Card](https://goreportcard.com/badge/github.com/b3log/wide)](https://goreportcard.com/report/github.com/b3log/wide) [![Coverage Status](https://img.shields.io/coveralls/b3log/wide.svg?style=flat)](https://coveralls.io/r/b3log/wide) [![Apache License](https://img.shields.io/badge/license-apache2-orange.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0) [![API Documentation](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/b3log/wide) [![Download](https://img.shields.io/badge/download-~4.3K-red.svg?style=flat)](https://pan.baidu.com/s/1dD3XwOT)
 
-先试试我们搭建好的[在线服务](https://wide.b3log.org/signup)，你可以在这里[下载](https://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
+先试试我们搭建好的[在线服务](https://wide.b3log.org)，你可以在这里[下载](https://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
 
 ## 简介
 

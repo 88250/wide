@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
 .wrapper {
     margin: 0 auto;
     width: 980px;
@@ -50,9 +56,10 @@
 .content {
     border-top: 1px solid #A4A4A4;
     border-bottom: 1px solid #919191;
-    background-color: #202021;
-    height: 632px;
-    padding-top: 222px;
+    background-color: #3b3e43;
+    flex: 1;
+    display: flex;
+    align-items: center;
 }
 
 .content h2 {
@@ -62,7 +69,7 @@
 }
 
 .content h3 {
-    color: #4183c4;
+    color: #4285f4;
     font-size: 21px;
 }
 
