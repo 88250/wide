@@ -66,15 +66,10 @@ func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
 	state := util.Rand.String(16) + referer
 	states[state] = state
 	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state + "&scope=public_repo,read:user,user:follow"
-
-	logger.Infof("redirect to github [" + path + "]")
-
 	http.Redirect(w, r, path, http.StatusSeeOther)
 }
 
 func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
-	logger.Infof("Github callback [" + r.URL.String() + "]")
-
 	state := r.URL.Query().Get("state")
 	if _, exist := states[state]; !exist {
 		http.Error(w, "Get state param failed", http.StatusBadRequest)
@@ -121,7 +116,7 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	httpSession.Save(r, w)
 
-	logger.Debugf("Created a HTTP session [%s] for user [%s]", httpSession.Values["id"].(string), githubId)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // GitHubUserInfo returns GitHub user info specified by the given access token.
