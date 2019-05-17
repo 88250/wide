@@ -91,7 +91,7 @@ func main() {
 
 	// static resources
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
-	http.Handle("/static/users/", http.StripPrefix("/static/", http.FileServer(http.Dir("C:\\Users\\DL882\\wide\\static\\"))))
+	http.Handle("/static/users/", http.StripPrefix("/static/", http.FileServer(http.Dir(conf.Wide.Data+"/static"))))
 	serveSingle("/favicon.ico", "./static/images/favicon.png")
 
 	// oauth
