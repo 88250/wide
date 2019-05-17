@@ -55,11 +55,9 @@ func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
 	clientId := data["clientId"].(string)
 	loginAuthURL := data["loginAuthURL"].(string)
 
-	referer := r.URL.Query().Get("referer")
-	if "" == referer || !strings.Contains(referer, "://") {
-		referer = conf.Wide.Server + referer
-	}
-	state := util.Rand.String(16) + referer
+	state := r.URL.Query().Get("state")
+	referer := conf.Wide.Server + "__" + state
+	state = util.Rand.String(16) + referer
 	states[state] = state
 	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state + "&scope=public_repo,read:user,user:follow"
 	http.Redirect(w, r, path, http.StatusSeeOther)

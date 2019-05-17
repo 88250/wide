@@ -55,8 +55,7 @@
 <script type="text/javascript" src="/static/js/lib/jquery-2.1.1.min.js"></script>
 <script>
   $('.oauth').click(function () {
-    window.location.href = '/oauth/github/redirect?referer=' + document.referrer + '__' +
-      ($('input').prop('checked') ? '0' : '1')
+    window.location.href = '/oauth/github/redirect?state=' + ($('input').prop('checked') ? '0' : '1')
   })
 </script>
 </body>
