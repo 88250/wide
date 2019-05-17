@@ -162,8 +162,7 @@ func main() {
 
 	logger.Infof("Wide is running [%s]", conf.Wide.Server)
 
-	listen := conf.Wide.Server[strings.Index(conf.Wide.Server, "://")+3:]
-	err := http.ListenAndServe(listen, nil)
+	err := http.ListenAndServe("127.0.0.1:7070", nil)
 	if err != nil {
 		logger.Error(err)
 	}
