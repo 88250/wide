@@ -1,22 +1,43 @@
-# [Wide](https://github.com/b3log/wide) [![Build Status](https://img.shields.io/travis/b3log/wide.svg?style=flat)](https://travis-ci.org/b3log/wide) [![Go Report Card](https://goreportcard.com/badge/github.com/b3log/wide)](https://goreportcard.com/report/github.com/b3log/wide) [![Coverage Status](https://img.shields.io/coveralls/b3log/wide.svg?style=flat)](https://coveralls.io/r/b3log/wide) [![Apache License](https://img.shields.io/badge/license-apache2-orange.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0) [![API Documentation](https://img.shields.io/badge/godoc-reference-blue.svg?style=flat)](https://godoc.org/github.com/b3log/wide) [![Download](https://img.shields.io/badge/download-~4.3K-red.svg?style=flat)](https://pan.baidu.com/s/1dD3XwOT)
+<p align = "center">
+<img alt="Wide" src="https://user-images.githubusercontent.com/873584/57901570-5355ba00-7898-11e9-96ca-45b75b1d70db.png">
+<br><br>
+一款基于 Web 的 Go 语言 IDE
+<br><br>
+<a title="Build Status" target="_blank" href="https://travis-ci.org/b3log/wide"><img src="https://img.shields.io/travis/b3log/wide.svg?style=flat-square"></a>
+<a title="Go Report Card" target="_blank" href="https://goreportcard.com/report/github.com/b3log/wide"><img src="https://goreportcard.com/badge/github.com/b3log/wide"></a>
+<a title="Coverage Status" target="_blank" href="https://coveralls.io/repos/github/b3log/wide/badge.svg?branch=master"><img src="https://img.shields.io/coveralls/github/b3log/wide.svg?style=flat-square&color=CC9933"></a>
+<a title="Code Size" target="_blank" href="https://github.com/b3log/wide"><img src="https://img.shields.io/github/languages/code-size/b3log/wide.svg?style=flat-square"></a>
+<a title="Apache License" target="_blank" href="https://github.com/b3log/wide/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-apache2-orange.svg?style=flat-square"></a>
+<br>
+<a title="Releases" target="_blank" href="https://github.com/b3log/wide/releases"><img src="https://img.shields.io/github/release/b3log/wide.svg?style=flat-square"></a>
+<a title="Release Date" target="_blank" href="https://github.com/b3log/wide/releases"><img src="https://img.shields.io/github/release-date/b3log/wide.svg?style=flat-square&color=99CCFF"></a>
+<a title="GitHub Commits" target="_blank" href="https://github.com/b3log/wide/commits/master"><img src="https://img.shields.io/github/commit-activity/m/b3log/wide.svg?style=flat-square"></a>
+<a title="Last Commit" target="_blank" href="https://github.com/b3log/wide/commits/master"><img src="https://img.shields.io/github/last-commit/b3log/wide.svg?style=flat-square&color=FF9900"></a>
+<a title="GitHub Pull Requests" target="_blank" href="https://github.com/b3log/wide/pulls"><img src="https://img.shields.io/github/issues-pr-closed/b3log/wide.svg?style=flat-square&color=FF9966"></a>
+<a title="Hits" target="_blank" href="https://github.com/b3log/hits"><img src="https://hits.b3log.org/b3log/wide.svg"></a>
+<br><br>
+<a title="GitHub Watchers" target="_blank" href="https://github.com/b3log/wide/watchers"><img src="https://img.shields.io/github/watchers/b3log/wide.svg?label=Watchers&style=social"></a>&nbsp;&nbsp;
+<a title="GitHub Stars" target="_blank" href="https://github.com/b3log/wide/stargazers"><img src="https://img.shields.io/github/stars/b3log/wide.svg?label=Stars&style=social"></a>&nbsp;&nbsp;
+<a title="GitHub Forks" target="_blank" href="https://github.com/b3log/wide/network/members"><img src="https://img.shields.io/github/forks/b3log/wide.svg?label=Forks&style=social"></a>&nbsp;&nbsp;
+<a title="Author GitHub Followers" target="_blank" href="https://github.com/88250"><img src="https://img.shields.io/github/followers/88250.svg?label=Followers&style=social"></a>
+</p>
 
 先试试我们搭建好的[在线服务](https://wide.b3log.org/signup)，你可以在这里[下载](https://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
 
 ## 简介
 
-Wide 是一个基于 **W**eb 的 Go 语言 **IDE**。
-
-![](https://cloud.githubusercontent.com/assets/873584/4606377/d0ca3c2a-521b-11e4-912c-d955ab05850b.png)
+Wide 是一款基于 **W**eb 的 Go 语言 **IDE**。
 
 ## 动机
 
 目前较为流行的 Go IDE 都有一些缺陷或遗憾：
+
   * 文本编辑器类（vim/emacs/sublime/Atom 等）：对于新手门槛太高，搭建复杂
   * 插件类（goclipse、IDEA 等）：需要原 IDE 支持，不够专业
   * LiteIDE 界面不够 modern、goland 收费
   * **缺少网络分享、嵌入网站可运行功能**
 
-另外，Go IDE 很少，用 Go 本身开发的 IDE 更是没有，这是一个很好的尝试。关于产品定位的讨论请看[这里](https://hacpai.com/article/1438407961481)。
+另外，Go IDE 很少，用 Go 本身开发的 IDE 更是没有，这是一次很好的尝试。关于产品定位的讨论请看[这里](https://hacpai.com/article/1438407961481)。
 
 ## 特性
 
