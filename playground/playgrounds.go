@@ -97,7 +97,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}

@@ -106,7 +106,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -125,7 +125,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -135,7 +135,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -168,7 +168,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	output, err := cmd.CombinedOutput()
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -188,7 +188,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -233,7 +233,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	output, err := cmd.CombinedOutput()
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -264,7 +264,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -309,7 +309,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	output, err := cmd.CombinedOutput()
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -353,7 +353,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -397,7 +397,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	output, err := cmd.CombinedOutput()
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}

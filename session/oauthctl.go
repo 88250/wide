@@ -16,6 +16,8 @@ package session
 
 import (
 	"crypto/tls"
+	"github.com/b3log/wide/i18n"
+	"html/template"
 	"math/rand"
 	"net/http"
 	"os"
@@ -139,6 +141,22 @@ func GitHubUserInfo(accessToken string) (ret map[string]interface{}) {
 	}
 
 	return result["data"].(map[string]interface{})
+}
+
+// LoginHandler handles request of show login page.
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
+		"locale": conf.Wide.Locale, "ver": conf.WideVersion, "year": time.Now().Year()}
+
+	t, err := template.ParseFiles("views/login.html")
+	if nil != err {
+		logger.Error(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+
+		return
+	}
+
+	t.Execute(w, model)
 }
 
 // LogoutHandler handles request of user logout (exit).

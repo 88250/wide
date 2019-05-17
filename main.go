@@ -150,6 +150,7 @@ func main() {
 	http.HandleFunc("/notification/ws", handlerWrapper(notification.WSHandler))
 
 	// user
+	http.HandleFunc("/login", handlerWrapper(session.LoginHandler))
 	http.HandleFunc("/logout", handlerWrapper(session.LogoutHandler))
 	http.HandleFunc("/preference", handlerWrapper(session.PreferenceHandler))
 
@@ -219,7 +220,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("views/index.html")
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -279,7 +280,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -308,7 +309,7 @@ func keyboardShortcutsHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
@@ -338,7 +339,7 @@ func aboutHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		http.Error(w, err.Error(), 500)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
 		return
 	}
