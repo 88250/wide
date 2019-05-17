@@ -115,6 +115,8 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Values["id"] = strconv.Itoa(rand.Int())
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	httpSession.Save(r, w)
+
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
 // GitHubUserInfo returns GitHub user info specified by the given access token.
