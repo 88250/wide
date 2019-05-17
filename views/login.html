@@ -22,7 +22,7 @@
                     <li><a rel="bookmark" href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
                     <li><a rel="help" href="https://hacpai.com/article/1538873544275" target="_blank">{{.i18n.help}}</a></li>
                     <li><a rel="bookmark" href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.issues}}</a></li>
-                    <li><button class="btn" onclick="window.location.href = '{{.conf.Context}}/signup'">{{.i18n.sign_up}}</button></li>
+                    <li><button class="btn" onclick="window.location.href = '/signup'">{{.i18n.sign_up}}</button></li>
                 </ul>
             </div>
         </div>
@@ -61,7 +61,7 @@
 
                             $('#loginForm').submit(function () {
                                 var options = {
-                                    url: '{{.conf.Context}}/login',
+                                    url: '/login',
                                     type: 'POST',
                                     dataType: 'json',
                                     beforeSubmit: function () {
@@ -84,7 +84,7 @@
                                             return;
                                         }
 
-                                        window.location.href = "{{.conf.Context}}/";
+                                        window.location.href = "/";
                                     }
                                 };
 
