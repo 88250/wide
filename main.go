@@ -99,7 +99,7 @@ func main() {
 	serveSingle("/favicon.ico", "./static/images/favicon.png")
 
 	// oauth
-	http.HandleFunc("/oauth/github", session.RedirectGitHubHandler)
+	http.HandleFunc("/oauth/github/redirect", session.RedirectGitHubHandler)
 	http.HandleFunc("/oauth/github/callback", session.GithubCallbackHandler)
 
 	// session
@@ -133,10 +133,9 @@ func main() {
 	// outline
 	http.HandleFunc("/outline", handlerWrapper(file.GetOutlineHandler))
 
-	// file export/import
+	// file export
 	http.HandleFunc("/file/zip/new", handlerWrapper(file.CreateZipHandler))
 	http.HandleFunc("/file/zip", handlerWrapper(file.GetZipHandler))
-	http.HandleFunc("/file/decompress", handlerWrapper(file.DecompressHandler))
 
 	// editor
 	http.HandleFunc("/editor/ws", handlerWrapper(editor.WSHandler))

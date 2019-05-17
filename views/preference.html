@@ -101,24 +101,13 @@
                     {{end}}
                 </select>
             </label>
-            <label>
-                {{.i18n.email}}{{.i18n.colon}}
-                <input data-value="{{.user.Email}}" value="{{.user.Email}}" name="email"/>
-            </label>
             <input data-value="{{.user.Locale}}" value="{{.user.Locale}}" name="locale" hidden="hidden" />
             <label>
                 {{.i18n.workspace}}{{.i18n.colon}}
                 <input data-value="{{.user.Workspace}}" value="{{.user.Workspace}}" name="workspace" readonly="readonly" />
             </label>
-            <label>
-                {{.i18n.password}}{{.i18n.colon}}
-                <input data-value="{{.user.Password}}" value="{{.user.Password}}" name="password" type="password"/>
-            </label>
             <label class="fn-clear">
-                <img onerror="this.src='/static/images/user-thumbnail.png'"
-                     src="https://secure.gravatar.com/avatar/{{.user.Gravatar}}?s=48&d=https://hacpai.com/images/user-thumbnail.png" 
-                     title="{{.user.Name}}" class='gravatar'/>
-                <a href="http://gravatar.com/" target="_blank">{{.i18n.change_avatar}} Gravatar.com</a>
+                <img onerror="this.src='/static/images/user-thumbnail.png'" src="{{.user.Gravatar}}" title="{{.user.Name}}" class='gravatar'/>
             </label>
         </div>
     </div>

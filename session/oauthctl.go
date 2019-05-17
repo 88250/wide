@@ -59,10 +59,6 @@ func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
 	if "" == referer || !strings.Contains(referer, "://") {
 		referer = conf.Wide.Server + referer
 	}
-	if strings.HasSuffix(referer, "/") {
-		referer = referer[:len(referer)-1]
-	}
-	referer += "__1"
 	state := util.Rand.String(16) + referer
 	states[state] = state
 	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state + "&scope=public_repo,read:user,user:follow"

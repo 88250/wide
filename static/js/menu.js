@@ -448,7 +448,6 @@ var menu = {
                         "GoBuildArgsForDarwin": $GoBuildArgsForDarwin.val(),
                         "workspace": $workspace.val(),
                         "password": $password.val(),
-                        "email": $email.val(),
                         "locale": $locale.val(),
                         "theme": $theme.val(),
                         "editorFontFamily": $editorFontFamily.val(),
