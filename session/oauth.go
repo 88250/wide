@@ -16,7 +16,6 @@ package session
 
 import (
 	"crypto/tls"
-	"github.com/b3log/wide/i18n"
 	"html/template"
 	"math/rand"
 	"net/http"
@@ -27,6 +26,7 @@ import (
 	"time"
 
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
 	"github.com/parnurzeal/gorequest"
 )
@@ -55,11 +55,9 @@ func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
 	clientId := data["clientId"].(string)
 	loginAuthURL := data["loginAuthURL"].(string)
 
-	referer := r.URL.Query().Get("referer")
-	if "" == referer || !strings.Contains(referer, "://") {
-		referer = conf.Wide.Server + referer
-	}
-	state := util.Rand.String(16) + referer
+	state := r.URL.Query().Get("state")
+	referer := conf.Wide.Server + "__" + state
+	state = util.Rand.String(16) + referer
 	states[state] = state
 	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state + "&scope=public_repo,read:user,user:follow"
 	http.Redirect(w, r, path, http.StatusSeeOther)
@@ -91,15 +89,14 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	userName := githubUser["userName"].(string)
 	avatar := githubUser["userAvatarURL"].(string)
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
-
 	user := conf.GetUser(githubId)
 	if nil == user {
 		msg := addUser(githubId, userName, avatar)
 		if userCreated != msg {
+			result := util.NewResult()
 			result.Succ = false
 			result.Msg = msg
+			util.RetResult(w, r, result)
 
 			return
 		}
