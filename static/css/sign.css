@@ -23,6 +23,8 @@ body {
 .wrapper {
     margin: 0 auto;
     width: 980px;
+    display: flex;
+    align-items: center;
 }
 
 .header .logo {
@@ -50,7 +52,11 @@ body {
 }
 
 .header a:hover {
-    color: #4183C4;
+    color: #4285f4;
+}
+
+.fn-left {
+    flex: 1;
 }
 
 .content {
@@ -74,89 +80,74 @@ body {
 }
 
 .content .form {
+    padding: 24px 15px;
+    background-color: #fff;
+    border-radius: 6px;
     width: 320px;
-    margin-top: -18px;
     position: relative;
 }
 
-.content .form input {
-    border: 1px solid #ccc;
-    border-radius: 3px;
-    width: 100%;
-    background-color: #fafafa; 
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset;
-    color: #333;
-    min-height: 34px;
-    outline: medium none;
-    vertical-align: middle;
-    font-size: 16px;
-    border: 1px solid #FFF;
-    padding: 10px;
-    margin-top: 20px;
+.content a {
+    color: #4285f4;
 }
 
-.content .form input:focus {
-    background-color: #FFF;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075) inset, 0 0 12px rgba(255, 255, 255, 0.75);
+
+.login__github {
+    cursor: pointer;
+    background-image: url("/static/images/github.png");
+    height: 200px;
+    width: 200px;
+    background-size: cover;
+    margin: 20px auto;
+    background-position: center center;
+}
+
+.login__github:hover {
+    background-image: url("/static/images/github.gif");
 }
 
 .btn {
     width: 100%;
-    color: #fff;
-    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
-    background-color: #60b044;
-    background-image: linear-gradient(#8add6d, #60b044);
-    border: 1px solid #5ca941;
+    color: #fff !important;
+    background-color: #2ebc4f;
     padding: 10px;
     border-radius: 3px;
     cursor: pointer;
+    border: 0;
+    display: block;
+    text-align: center;
 }
 
 .btn:hover {
-    background-color: #569e3d;
-    background-image: linear-gradient(#79d858, #569e3d);
-    border-color: #4a993e;
+    text-decoration: none;
+    background-color: #28a745;
 }
 
-.btn.btn-white,
-.btn.btn-red {
-    color: #333;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.9);
-    background-color: #eee;
-    background-image: linear-gradient(#fcfcfc, #eee);
-    border-color: #d5d5d5;
+.btn:focus {
+    box-shadow: 0 0 0 0.2em rgba(40, 167, 69, .3);
 }
 
-.btn.btn-red {
-    color: #9d0000;
+.desc {
+    color: #6a737d;
+    font-size: 12px;
 }
 
-.btn.btn-white:hover {
-    color: #333;
-    text-shadow: 0 1px 0 rgba(255,255,255,0.9);
-    background-color: #ddd;
-    background-image: linear-gradient(#eee, #ddd);
-    border-color: #ccc;
+.more-detail {
+    display: none;
+    margin: 0 0 8px 60px;
 }
 
-.btn.btn-red:hover {
-    background-color: #b33630;
-    background-image: linear-gradient(#dc5f59, #b33630);
-    background-repeat: repeat-x;
-    border-color: #cd504a;
-    color: #fff;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.3);
+.checkbox {
+    margin-top: 8px;
+    display: block;
 }
 
-#msg {
-    background-color: #fcdede;
-    border: 1px solid #d2b2b2;
-    padding: 15px;
-    font-size: 14px;
-    color: #911;
-    position: absolute;
-    width: 100%;
-    top: -48px;
+.view-more {
+    cursor: pointer;
+    display: block;
+    text-align: center;
+    color: #4285f4;
+    margin-top: 8px;
 }
 
 .footer {
@@ -169,7 +160,7 @@ body {
 
 .footer a {
     text-decoration: none;
-    color: #4183c4;
+    color: #4285f4;
 }
 
 .footer a:hover {
@@ -185,14 +176,14 @@ body {
 
 /* start sign up */
 .dir {
-    color: #4183c4;
+    color: #4285f4;
     font-size: 18px;
     word-wrap: break-word;
     margin-top: 20px;
 }
 
 #dir {
-    color: #999; 
+    color: #999;
     font-size: 13px;
 }
 
@@ -205,4 +196,5 @@ body {
     margin-top: 20px;
     font-size: 16px;
 }
+
 /* end sign up */

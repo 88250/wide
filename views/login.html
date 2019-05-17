@@ -1,53 +1,77 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
+<head>
+    <meta charset="UTF-8">
+    <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
 
-        <meta name="keywords" content="Wide, Golang, IDE, Team, Cloud, B3log, Login"/>
-        <meta name="description" content="A Web-based Go IDE , do your development anytime, anywrhere."/>
-        <meta name="author" content="B3log">
+    <meta name="keywords" content="Wide, Golang, IDE, Team, Cloud, B3log, Login"/>
+    <meta name="description" content="A Web-based Go IDE , do your development anytime, anywrhere."/>
+    <meta name="author" content="B3log">
 
-        <link rel="stylesheet" href="/static/css/base.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/css/sign.css?{{.conf.StaticResourceVersion}}">
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    </head>
-    <body>
-        <div class="header">
-            <div class="wrapper fn-clear">
-                <a href="/login" rel="login">
-                    <img title="A Web-based Go IDE" src="/static/images/wide-logo.png" class="logo"/></a>
-                <ul class="fn-right">
-                    <li><a href="/playground" target="_blank" style="color: #cd504a">Play</a></li>
-                    <li><a rel="bookmark" href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
-                    <li><a rel="help" href="https://hacpai.com/article/1538873544275" target="_blank">{{.i18n.help}}</a></li>
-                    <li><a rel="bookmark" href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.issues}}</a></li>
-                </ul>
-            </div>
+    <link rel="stylesheet" href="/static/css/base.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/sign.css?{{.conf.StaticResourceVersion}}">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+</head>
+<body>
+<div class="header">
+    <div class="wrapper fn-clear">
+        <a href="/login" rel="login" style="flex:1">
+            <img title="A Web-based Go IDE" src="/static/images/wide-logo.png" class="logo"/></a>
+        <ul>
+            <li><a href="/playground" target="_blank" style="color: #cd504a">Play</a></li>
+            <li><a rel="bookmark" href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
+            <li><a rel="help" href="https://hacpai.com/article/1538873544275" target="_blank">{{.i18n.help}}</a></li>
+            <li><a rel="bookmark" href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.issues}}</a>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="content">
+    <div class="wrapper fn-clear">
+        <div class="fn-left">
+            <h2>Hello, 世界</h2>
+            <h3>Coding with Go on the Wide way.</h3>
         </div>
-        <div class="content">
-            <div class="wrapper fn-clear">
-                <div class="fn-left">
-                    <h2>Hello, 世界</h2>
-                    <h3>Coding with Go on the Wide way.</h3>
+        <div class="form fn-right">
+            <form>
+                <div class="login__github oauth"></div>
+                <img style="display: none" src="/static/images/github.gif"/>
+                <button class="btn oauth">登录 GitHub 账号后即可开始使用</button>
+                <div class="desc">
+                    <div class="view-more" onclick="$(this).next().slideToggle()">查看 GitHub 数据使用说明</div>
+                    <ul class="more-detail">
+                        <li>获取用户名、头像等用于初始化</li>
+                        <li>获取公开仓库信息用于展示</li>
+                        <li>不会对你的已有数据进行写入</li>
+                    </ul>
+                    <label class="checkbox">
+                        <input type="checkbox"/>
+                        是否愿意在 GitHub 上收藏该<a href="https://github.com/b3log/pipe" target="_blank">项目</a>、关注<a
+                            href="https://github.com/88250" target="_blank">开发者</a>并加入 <a
+                            href="https://github.com/b3log" target="_blank">B3log
+                        开源组织</a>
+                    </label>
                 </div>
-                <div class="form fn-right">
-                    <div id="msg" class="fn-none"></div>
-                    <form id="loginForm">
-                        <input id="username" name="username" placeholder="Username"/><br/>
-                        <input id="password" name="password" type="password" placeholder="Password"/><br/>
-                        <button id="loginBtn" type="submit" class="btn-white btn">{{.i18n.login}}</button>
-                    </form>
-                </div>
-            </div>
+            </form>
         </div>
-        <div class="footer">
+    </div>
+</div>
+<div class="footer">
             <span class="wrapper">
-                Ver {{.ver}}, &copy; {{.year}} <a rel="copyright" href="https://b3log.org" target="_blank">B3LOG.ORG</a>, <a href="https://github.com/b3log/wide/blob/master/TERMS.md" target="_blank">{{.i18n.terms}}</a>
+                Ver {{.ver}}, &copy; {{.year}} <a rel="copyright" href="https://b3log.org" target="_blank">B3LOG.ORG</a>, <a
+                    href="https://github.com/b3log/wide/blob/master/TERMS.md" target="_blank">{{.i18n.terms}}</a>
             </span>
-            <div class="github-btns">
-                <iframe src="https://ghbtns.com/github-btn.html?user=b3log&repo=wide&type=star&count=true" frameborder="0" scrolling="0" width="100" height="20"></iframe>
-            </div>
-        </div>
-    </body>
+    <div class="github-btns">
+        <iframe src="https://ghbtns.com/github-btn.html?user=b3log&repo=wide&type=star&count=true" frameborder="0"
+                scrolling="0" width="100" height="20"></iframe>
+    </div>
+</div>
+<script type="text/javascript" src="/static/js/lib/jquery-2.1.1.min.js"></script>
+<script>
+  $('.oauth').click(function () {
+    window.location.href = '/oauth/github/redirect?referer=' + document.referrer + '__' +
+      ($('input').prop('checked') ? '0' : '1')
+  })
+</script>
+</body>
 </html>
