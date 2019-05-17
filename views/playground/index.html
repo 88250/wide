@@ -81,7 +81,7 @@
         <div id="dialogAbout" class="fn-none"></div>
         <div id="dialogShare" class="fn-none"></div>
         <script>
-            var channelScheme = "https" === window.location.protocol ? "wss":"ws";
+            var channelScheme = -1 < window.location.protocol.indexOf("https") ? "wss":"ws";
             var channel = channelScheme + "://" + window.location.hostname + ":" + window.location.port;
                     var config = {
                             "channel": channel,

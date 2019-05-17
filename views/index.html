@@ -547,7 +547,7 @@
             </div>
         </div>
         <script>
-            var channelScheme = "https" === window.location.protocol ? "wss":"ws";
+            var channelScheme = -1 < window.location.protocol.indexOf("https") ? "wss":"ws";
             var channel = channelScheme + "://" + window.location.hostname + ":" + window.location.port;
             var config = {
                     "pathSeparator": '{{.pathSeparator}}',
