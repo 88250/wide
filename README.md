@@ -4,7 +4,7 @@
 一款基于 Web 的 Go 语言 IDE
 <br><br>
 <a title="Build Status" target="_blank" href="https://travis-ci.org/b3log/wide"><img src="https://img.shields.io/travis/b3log/wide.svg?style=flat-square"></a>
-<a title="Go Report Card" target="_blank" href="https://goreportcard.com/report/github.com/b3log/wide"><img src="https://goreportcard.com/badge/github.com/b3log/wide"></a>
+<a title="Go Report Card" target="_blank" href="https://goreportcard.com/report/github.com/b3log/wide"><img src="https://goreportcard.com/badge/github.com/b3log/wide?style=flat-square"></a>
 <a title="Coverage Status" target="_blank" href="https://coveralls.io/repos/github/b3log/wide/badge.svg?branch=master"><img src="https://img.shields.io/coveralls/github/b3log/wide.svg?style=flat-square&color=CC9933"></a>
 <a title="Code Size" target="_blank" href="https://github.com/b3log/wide"><img src="https://img.shields.io/github/languages/code-size/b3log/wide.svg?style=flat-square"></a>
 <a title="Apache License" target="_blank" href="https://github.com/b3log/wide/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-apache2-orange.svg?style=flat-square"></a>
@@ -21,8 +21,6 @@
 <a title="GitHub Forks" target="_blank" href="https://github.com/b3log/wide/network/members"><img src="https://img.shields.io/github/forks/b3log/wide.svg?label=Forks&style=social"></a>&nbsp;&nbsp;
 <a title="Author GitHub Followers" target="_blank" href="https://github.com/88250"><img src="https://img.shields.io/github/followers/88250.svg?label=Followers&style=social"></a>
 </p>
-
-先试试我们搭建好的[在线服务](https://wide.b3log.org)，你可以在这里[下载](https://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
 
 ## 简介
 
