@@ -51,7 +51,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("timeout", "5", "docker", "run", "--rm", "--cpus", "0.1", "--memory", "32m", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+		cmd = exec.Command("timeout", "5", "docker", "run", "--rm", "--cpus", "0.1", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
