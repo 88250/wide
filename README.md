@@ -154,4 +154,9 @@ Wide 使用 [Apache License, Version 2](https://www.apache.org/licenses/LICENSE-
 
 ----
 
-<img src="https://cloud.githubusercontent.com/assets/873584/4606328/4e848b96-5219-11e4-8db1-fa12774b57b4.png" width="256px" />
+## 开源项目推荐
+
+* 如果你需要搭建一个个人博客系统，可以考虑使用 [Solo](https://github.com/b3log/solo)
+* 如果你需要搭建一个多用户博客平台，可以考虑使用 [Pipe](https://github.com/b3log/pipe)
+* 如果你需要搭建一个社区平台，可以考虑使用 [Sym](https://github.com/b3log/symphony)
+* 欢迎加入我们的小众开源社区，详情请看[这里](https://hacpai.com/article/1463025124998)
