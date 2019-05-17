@@ -16,7 +16,6 @@ package session
 
 import (
 	"crypto/tls"
-	"github.com/b3log/wide/i18n"
 	"html/template"
 	"math/rand"
 	"net/http"
@@ -27,6 +26,7 @@ import (
 	"time"
 
 	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/util"
 	"github.com/parnurzeal/gorequest"
 )
@@ -89,15 +89,14 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	userName := githubUser["userName"].(string)
 	avatar := githubUser["userAvatarURL"].(string)
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
-
 	user := conf.GetUser(githubId)
 	if nil == user {
 		msg := addUser(githubId, userName, avatar)
 		if userCreated != msg {
+			result := util.NewResult()
 			result.Succ = false
 			result.Msg = msg
+			util.RetResult(w, r, result)
 
 			return
 		}
