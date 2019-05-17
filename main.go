@@ -154,7 +154,6 @@ func main() {
 	http.HandleFunc("/playground/", handlerWrapper(playground.IndexHandler))
 	http.HandleFunc("/playground/ws", handlerWrapper(playground.WSHandler))
 	http.HandleFunc("/playground/save", handlerWrapper(playground.SaveHandler))
-	http.HandleFunc("/playground/short-url", handlerWrapper(playground.ShortURLHandler))
 	http.HandleFunc("/playground/build", handlerWrapper(playground.BuildHandler))
 	http.HandleFunc("/playground/run", handlerWrapper(playground.RunHandler))
 	http.HandleFunc("/playground/stop", handlerWrapper(playground.StopHandler))

@@ -373,31 +373,16 @@ var playground = {
 
                 var request = newWideRequest();
                 request.url = url;
-                $.ajax({
-                    type: 'POST',
-                    url: '/playground/short-url',
-                    data: JSON.stringify(request),
-                    dataType: "json",
-                    success: function (result) {
-                        if (!result.succ) {
-                            console.log(result);
-                            return;
-                        }
+                var html = '<div class="fn-clear"><label>' + config.label.url
+                    + config.label.colon + '</label><a href="'
+                    + url + '" target="_blank">' + url + "</a><br/>";
+                html += '<label>' + config.label.embeded + config.label.colon
+                    + '</label><br/><textarea rows="5" style="width:100%" readonly><iframe style="border:1px solid" src="'
+                    + url + '" width="99%" height="600"></iframe></textarea>';
+                html += '</div>';
 
-                        var html = '<div class="fn-clear"><label>' + config.label.url
-                                + config.label.colon + '</label><a href="'
-                                + url + '" target="_blank">' + url + "</a><br/>";
-                        html += '<label>' + config.label.short_url + config.label.colon
-                                + '</label><a href="' + result.data + '" target="_blank">'
-                                + result.data + '</a><br/>';
-                        html += '<label>' + config.label.embeded + config.label.colon
-                                + '</label><br/><textarea rows="5" style="width:100%" readonly><iframe style="border:1px solid" src="'
-                                + url + '" width="99%" height="600"></iframe></textarea>';
-                        html += '</div>';
-
-                        $("#dialogShare").html(html);
-                        $("#dialogShare").dialog("open");
-                    }});
+                $("#dialogShare").html(html);
+                $("#dialogShare").dialog("open");
             }
         });
     },
