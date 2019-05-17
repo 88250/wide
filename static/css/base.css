@@ -187,9 +187,6 @@ button {
 .ico-report:before {
     content: "\e605";
 }
-.ico-signup:before {
-    content: "\e606";
-}
 .ico-git:before {
     content: "\e624";
 }

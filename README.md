@@ -22,7 +22,7 @@
 <a title="Author GitHub Followers" target="_blank" href="https://github.com/88250"><img src="https://img.shields.io/github/followers/88250.svg?label=Followers&style=social"></a>
 </p>
 
-先试试我们搭建好的[在线服务](https://wide.b3log.org/signup)，你可以在这里[下载](https://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
+先试试我们搭建好的[在线服务](https://wide.b3log.org)，你可以在这里[下载](https://pan.baidu.com/s/1dD3XwOT)并在本地环境运行，然后邀请小伙伴们来玩吧！
 
 ## 简介
 
