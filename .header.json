@@ -10,11 +10,12 @@
     ],
     "Excludes": [
         "static/js/lib/*",
-        "static/user/*"
+        "static/user/*",
+	"vendor/**"
     ],
     "UseDefaultExcludes": true,
     "Properties": {
-        "Year": "2014-2017",
+        "Year": "2014-2019",
         "Owner": "b3log.org & hacpai.com"
     }
 }

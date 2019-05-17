@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -35,14 +35,14 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	var args map[string]interface{}
 
@@ -61,7 +61,7 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", "vet", ".")
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
@@ -114,7 +114,7 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 	go func(runningId int) {
 		defer util.Recover()
 
-		logger.Debugf("User [%s, %s] is running [go vet] [runningId=%d]", username, sid, runningId)
+		logger.Debugf("User [%s, %s] is running [go vet] [runningId=%d]", uid, sid, runningId)
 
 		channelRet := map[string]interface{}{}
 		channelRet["cmd"] = "go vet"
@@ -126,11 +126,11 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 		cmd.Wait()
 
 		if !cmd.ProcessState.Success() {
-			logger.Debugf("User [%s, %s] 's running [go vet] [runningId=%d] has done (with error)", username, sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go vet] [runningId=%d] has done (with error)", uid, sid, runningId)
 
 			channelRet["output"] = "<span class='vet-error'>" + i18n.Get(locale, "vet-error").(string) + "</span>\n" + string(buf)
 		} else {
-			logger.Debugf("User [%s, %s] 's running [go vet] [runningId=%d] has done", username, sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go vet] [runningId=%d] has done", uid, sid, runningId)
 
 			channelRet["output"] = "<span class='vet-succ'>" + i18n.Get(locale, "vet-succ").(string) + "</span>\n" + string(buf)
 		}

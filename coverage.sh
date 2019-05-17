@@ -8,7 +8,7 @@ set -e
 echo "mode: count" > profile.cov
  
 # Standard go tooling behavior is to ignore dirs with leading underscors
-for dir in $(find . -maxdepth 10 -not -path './.git*' -not -path '*/_*' -type d);
+for dir in $(find . -maxdepth 10 -not -path './.git*' -not -path '*/_*' -not -path './vendor*' -type d);
 do
 if ls $dir/*.go &> /dev/null; then
     go test -covermode=count -coverprofile=$dir/profile.tmp $dir

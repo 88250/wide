@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -40,19 +40,16 @@ var logger = log.NewLogger(os.Stdout)
 // IndexHandler handles request of Playground index.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	// create a HTTP session
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		httpSession.Values["id"] = strconv.Itoa(rand.Int())
-		httpSession.Values["username"] = "playground"
+		httpSession.Values["uid"] = "playground"
 	}
 
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
-	if "" != conf.Wide.Context {
-		httpSession.Options.Path = conf.Wide.Context
-	}
 	httpSession.Save(r, w)
 
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	locale := conf.Wide.Locale
 
@@ -62,7 +59,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	if strings.HasSuffix(r.URL.Path, ".go") {
 		fileNameArg := r.URL.Path[len("/playground/"):]
-		filePath := filepath.Clean(conf.Wide.Playground + "/" + fileNameArg)
+		filePath := filepath.Clean(conf.Wide.Data+ "/playground" + fileNameArg)
 
 		bytes, err := ioutil.ReadFile(filePath)
 		if nil != err {
@@ -92,9 +89,9 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		"code":          template.HTML(code), "ver": conf.WideVersion, "year": time.Now().Year(),
 		"embed": embed, "disqus": disqus, "fileName": fileName}
 
-	wideSessions := session.WideSessions.GetByUsername(username)
+	wideSessions := session.WideSessions.GetByUserId(uid)
 
-	logger.Debugf("User [%s] has [%d] sessions", username, len(wideSessions))
+	logger.Debugf("User [%s] has [%d] sessions", uid, len(wideSessions))
 
 	t, err := template.ParseFiles("views/playground/index.html")
 

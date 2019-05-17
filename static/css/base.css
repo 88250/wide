@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2014-2017, b3log.org & hacpai.com
+ * Copyright (c) 2014-2019, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -18,7 +18,7 @@
  * themes for base.
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 0.1.0.0, Dec 6, 2015
+ * @version 0.2.0.0, Oct 5, 2018
  */
 /* start reset & function */
 ::-webkit-scrollbar {
@@ -140,18 +140,24 @@ button {
 /* start icon */
 @font-face {
     font-family: 'icomoon';
-    src:url('fonts/icomoon.eot?35cb2z');
-    src:url('fonts/icomoon.eot?#iefix35cb2z') format('embedded-opentype'),
-        url('fonts/icomoon.woff?35cb2z') format('woff'),
-        url('fonts/icomoon.ttf?35cb2z') format('truetype'),
-        url('fonts/icomoon.svg?35cb2z#icomoon') format('svg');
+    src:  url('fonts/icomoon.eot?lqk80d');
+    src:  url('fonts/icomoon.eot?lqk80d#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?lqk80d') format('truetype'),
+    url('fonts/icomoon.woff?lqk80d') format('woff'),
+    url('fonts/icomoon.svg?lqk80d#icomoon') format('svg');
     font-weight: normal;
     font-style: normal;
 }
 
-.font-ico,
-[class^="ico-"] {
-    font-family: 'icomoon';
+[class^="ico-"], [class*=" ico-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+
     /* Better Font Rendering =========== */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -160,177 +166,143 @@ button {
     line-height: 20px;
 }
 
-.ico-book:before {
-    content: "\e623";
+.ico-qqz:before {
+    content: "\e900";
 }
-
-.ico-price:before {
-    content: "\e616";
-}
-
-.ico-start:before {
-    content: "\e9d7";
-}
-
-.ico-share:before {
-    content: "\e61f";
-}
-
-.ico-github:before {
-    content: "\f00a";
-}
-
-.ico-git:before {
-    content: "\e624";
-}
-
-.ico-tencent:before {
-    content: "\e622";
-}
-
-.ico-weibo:before {
-    content: "\e621";
-}
-
-.ico-googleplus:before {
-    content: "\e61a";
-}
-
-.ico-twitter:before {
-    content: "\e61c";
-}
-
-.ico-email:before {
-    content: "\e619";
-}
-
-.ico-facebook:before {
-    content: "\e61b";
-}
-
-.ico-moveup:before {
-    content: "\f148";
-}
-
-.ico-movedown:before {
-    content: "\f149";
-}
-
-.ico-keyboard:before {
-    content: "\f11c";
-}
-
-.ico-findfiles:before {
-    content: "\e603";
-}
-
 .ico-find:before {
     content: "\e602";
 }
-
+.ico-findfiles:before {
+    content: "\e603";
+}
 .ico-editor:before {
     content: "\e604";
 }
-
-.ico-tree:before {
-    content: "\e600";
-}
-
-.ico-build:before {
-    content: "\e601";
-}
-
 .ico-notification:before {
     content: "\e607";
 }
-
+.ico-price:before {
+    content: "\e616";
+}
 .ico-report:before {
     content: "\e605";
 }
-
-.ico-comment:before {
-    content: "\e620";
-}
-
-.ico-goline:before {
-    content: "\e61e";
-}
-
-.ico-info:before {
-    content: "\e61d";
-}
-
 .ico-signup:before {
     content: "\e606";
 }
-
-.ico-signout:before {
-    content: "\e618";
+.ico-git:before {
+    content: "\e624";
 }
-
-.ico-redo:before {
-    content: "\e615";
+.ico-book:before {
+    content: "\e623";
 }
-
-.ico-undo:before {
-    content: "\e60e";
+.ico-start:before {
+    content: "\e9d7";
+    text-shadow: 0 0 rgba(0, 0, 0, 0.4);
 }
-
-.ico-about:before {
-    content: "\e60d";
+.ico-tree:before {
+    content: "\e600";
 }
-
-.ico-import:before {
-    content: "\f0ee";
+.ico-build:before {
+    content: "\e601";
 }
-
 .ico-export:before {
     content: "\f0ed";
 }
-
-.ico-refresh:before {
-    content: "\f021";
+.ico-import:before {
+    content: "\f0ee";
 }
-
-.ico-remove:before {
-    content: "\e60b";
+.ico-keyboard:before {
+    content: "\f11c";
 }
-
-.ico-save:before {
-    content: "\f0c7";
+.ico-moveup:before {
+    content: "\f148";
 }
-
+.ico-movedown:before {
+    content: "\f149";
+}
+.ico-weibo:before {
+    content: "\e621";
+}
+.ico-uniE608:before {
+    content: "\e608";
+}
 .ico-max:before {
     content: "\e609";
 }
-
-.ico-format:before {
-    content: "\e612";
+.ico-remove:before {
+    content: "\e60b";
 }
-
 .ico-buildrun:before {
     content: "\e60c";
 }
-
+.ico-about:before {
+    content: "\e60d";
+}
+.ico-undo:before {
+    content: "\e60e";
+}
 .ico-stop:before {
     content: "\e60f";
 }
-
+.ico-close:before {
+    content: "\e611";
+    text-shadow: 0 0 rgba(0, 0, 0, 0.4);
+}
+.ico-format:before {
+    content: "\e612";
+}
 .ico-restore:before {
     content: "\e613";
 }
-
 .toolbars .ico-restore:before {
     content: "\e60a";
 }
-
 .ico-min:before {
     content: "\e614";
     position: absolute;
     right: 5px;
 }
-
-.ico-close:before {
-    content: "\e611";
+.ico-redo:before {
+    content: "\e615";
+}
+.ico-uniE617:before {
+    content: "\e617";
+}
+.ico-signout:before {
+    content: "\e618";
+}
+.ico-email:before {
+    content: "\e619";
+}
+.ico-googleplus:before {
+    content: "\e61a";
+}
+.ico-facebook:before {
+    content: "\e61b";
+}
+.ico-twitter:before {
+    content: "\e61c";
+}
+.ico-info:before {
+    content: "\e61d";
+}
+.ico-goline:before {
+    content: "\e61e";
+}
+.ico-share:before {
+    content: "\e61f";
+}
+.ico-comment:before {
+    content: "\e620";
+}
+.ico-github:before {
+    content: "\f00a";
+}
+.ico-refresh:before {
+    content: "\f021";
+}
+.ico-save:before {
+    content: "\f0c7";
 }
 /* end ico */

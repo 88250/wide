@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -29,16 +29,16 @@ var retLogger = log.NewLogger(os.Stdout)
 // Result.
 type Result struct {
 	Succ bool        `json:"succ"` // successful or not
-	Code string      `json:"code"` // return code
+	Code int      `json:"code"` // return code
 	Msg  string      `json:"msg"`  // message
 	Data interface{} `json:"data"` // data object
 }
 
-// NewResult creates a result with Succ=true, Code="0", Msg="", Data=nil.
+// NewResult creates a result with Succ=true, Code=0, Msg="", Data=nil.
 func NewResult() *Result {
 	return &Result{
 		Succ: true,
-		Code: "0",
+		Code: 0,
 		Msg:  "",
 		Data: nil,
 	}

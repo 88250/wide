@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2014-2017, b3log.org & hacpai.com
+ * Copyright (c) 2014-2019, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,7 +38,7 @@ var wide = {
         $.ajax({
             type: 'POST',
             async: false,
-            url: config.context + '/outline',
+            url: '/outline',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -121,7 +121,7 @@ var wide = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/file/remove',
+                    url: '/file/remove',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -159,7 +159,7 @@ var wide = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/file/new',
+                    url: '/file/new',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -203,7 +203,7 @@ var wide = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/file/new',
+                    url: '/file/new',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -264,7 +264,7 @@ var wide = {
 
                     $.ajax({
                         type: 'POST',
-                        url: config.context + '/file/find/name',
+                        url: '/file/find/name',
                         data: JSON.stringify(request),
                         dataType: "json",
                         success: function (result) {
@@ -339,35 +339,6 @@ var wide = {
                 editor.focus();
             }
         });
-
-        $("#dialogGitClonePrompt").dialog({
-            "modal": true,
-            "height": 52,
-            "width": 360,
-            "title": config.label.git_clone,
-            "okText": config.label.confirm,
-            "cancelText": config.label.cancel,
-            "afterOpen": function () {
-                $("#dialogGitClonePrompt > input").val('').focus();
-                $("#dialogGitClonePrompt").closest(".dialog-main").find(".dialog-footer > button:eq(0)").prop("disabled", true);
-            },
-            "ok": function () {
-                $("#dialogGitClonePrompt").dialog("close");
-
-                var request = newWideRequest();
-                request.path = wide.curNode.path;
-                request.repository = $("#dialogGitClonePrompt > input").val();
-
-                $.ajax({
-                    type: 'POST',
-                    url: config.context + '/git/clone',
-                    data: JSON.stringify(request),
-                    dataType: "json",
-                    success: function (result) {
-                    }
-                });
-            }
-        });
     },
     _initWS: function () {
         var outputWS = new ReconnectingWebSocket(config.channel + '/output/ws?sid=' + config.wideSessionId);
@@ -389,7 +360,7 @@ var wide = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/run',
+                    url: '/run',
                     data: JSON.stringify(request),
                     dataType: "json"
                 });
@@ -420,7 +391,6 @@ var wide = {
                 case 'start-vet':
                 case 'start-install':
                 case 'start-get':
-                case 'start-git_clone':
                     bottomGroup.fillOutput(data.output);
 
                     break;
@@ -471,7 +441,7 @@ var wide = {
                             $.ajax({
                                 async: false,
                                 type: 'POST',
-                                url: config.context + '/file/zip/new',
+                                url: '/file/zip/new',
                                 data: JSON.stringify(request),
                                 dataType: "json",
                                 success: function (result) {
@@ -486,7 +456,7 @@ var wide = {
                             });
 
                             if (path) {
-                                window.open(config.context + '/file/zip?path=' + path + ".zip");
+                                window.open('/file/zip?path=' + path + ".zip");
                             }
                         }
                     }
@@ -551,7 +521,7 @@ var wide = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/file/save',
+            url: '/file/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -587,7 +557,7 @@ var wide = {
             request.nextCmd = ""; // build only, no following operation
             $.ajax({
                 type: 'POST',
-                url: config.context + '/build',
+                url: '/build',
                 data: JSON.stringify(request),
                 dataType: "json",
                 beforeSend: function () {
@@ -620,7 +590,7 @@ var wide = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/stop',
+            url: '/stop',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -642,7 +612,7 @@ var wide = {
         $.ajax({
             async: false, // sync
             type: 'POST',
-            url: config.context + '/go/fmt',
+            url: '/go/fmt',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -675,7 +645,7 @@ var wide = {
                 $.ajax({
                     async: false, // sync
                     type: 'POST',
-                    url: config.context + '/go/fmt',
+                    url: '/go/fmt',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {

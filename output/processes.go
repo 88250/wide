@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -86,7 +86,7 @@ func (procs *procs) Kill(wSession *session.WideSession, pid int) {
 	for i, p := range userProcesses {
 		if p.Pid == pid {
 			if err := p.Kill(); nil != err {
-				logger.Errorf("Kill a process [pid=%d] of user [%s, %s] failed [error=%v]", pid, wSession.Username, sid, err)
+				logger.Errorf("Kill a process [pid=%d] of user [%s, %s] failed [error=%v]", pid, wSession.UserId, sid, err)
 			} else {
 				var newProcesses []*os.Process
 
@@ -96,7 +96,7 @@ func (procs *procs) Kill(wSession *session.WideSession, pid int) {
 				// bind process with wide session
 				wSession.SetProcesses(newProcesses)
 
-				logger.Debugf("Killed a process [pid=%d] of user [%s, %s]", pid, wSession.Username, sid)
+				logger.Debugf("Killed a process [pid=%d] of user [%s, %s]", pid, wSession.UserId, sid)
 			}
 
 			return

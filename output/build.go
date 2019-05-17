@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -38,14 +38,14 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	user := conf.GetUser(username)
+	uid := httpSession.Values["uid"].(string)
+	user := conf.GetUser(uid)
 	locale := user.Locale
 
 	var args map[string]interface{}
@@ -61,7 +61,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["file"].(string)
 
-	if util.Go.IsAPI(filePath) || !session.CanAccess(username, filePath) {
+	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -95,13 +95,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	goBuildArgs := []string{}
-	goBuildArgs = append(goBuildArgs, "build")
+	goBuildArgs = append(goBuildArgs, "build", "-i")
 	goBuildArgs = append(goBuildArgs, user.BuildArgs(runtime.GOOS)...)
 
 	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	executable := filepath.Base(curDir) + suffix
 	executable = filepath.Join(curDir, executable)
@@ -155,8 +155,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// logger.Debugf("User [%s, %s] is building [id=%d, dir=%s]", username, sid, runningId, curDir)
-
 	channelRet["cmd"] = "build"
 	channelRet["executable"] = executable
 
@@ -188,6 +186,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			err = wsChannel.WriteJSON(&channelRet)
 			if nil != err {
 				logger.Warn(err)
+
 				break
 			}
 
@@ -196,7 +195,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}()
 
 	errReader := bufio.NewReader(stderr)
-	lines := []string{}
+	var lines []string
 	for {
 		wsChannel := session.OutputWS[sid]
 		if nil == wsChannel {
@@ -232,20 +231,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	if nil == cmd.Wait() {
 		channelRet["nextCmd"] = args["nextCmd"]
 		channelRet["output"] = "<span class='build-succ'>" + i18n.Get(locale, "build-succ").(string) + "</span>\n"
-
-		go func() { // go install, for subsequent gocode lib-path
-			defer util.Recover()
-
-			cmd := exec.Command("go", "install")
-			cmd.Dir = curDir
-
-			setCmdEnv(cmd, username)
-
-			out, _ := cmd.CombinedOutput()
-			if len(out) > 0 {
-				logger.Warn(string(out))
-			}
-		}()
 	} else {
 		channelRet["output"] = "<span class='build-error'>" + i18n.Get(locale, "build-error").(string) + "</span>\n"
 

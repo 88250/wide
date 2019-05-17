@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,6 +31,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -38,14 +39,16 @@ import (
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/util"
-	"github.com/go-fsnotify/fsnotify"
+	"github.com/fsnotify/fsnotify"
 	"github.com/gorilla/sessions"
 	"github.com/gorilla/websocket"
 )
 
 const (
 	sessionStateActive = iota
-	sessionStateClosed // (not used so far)
+	sessionStateClosed  // (not used so far)
+
+	CookieName = "wide-sess"
 )
 
 // Logger.
@@ -74,7 +77,7 @@ var HTTPSession = sessions.NewCookieStore([]byte("BEYOND"))
 // WideSession represents a session associated with a browser tab.
 type WideSession struct {
 	ID          string                     // id
-	Username    string                     // username
+	UserId      string                     // user id
 	HTTPSession *sessions.Session          // HTTP session related
 	Processes   []*os.Process              // process set
 	EventQueue  *event.UserEventQueue      // event queue
@@ -110,7 +113,7 @@ func FixedTimeRelease() {
 
 			for _, s := range WideSessions {
 				if s.Updated.Before(threshold) {
-					logger.Debugf("Removes a invalid session [%s], user [%s]", s.ID, s.Username)
+					logger.Debugf("Removes a invalid session [%s], user [%s]", s.ID, s.UserId)
 
 					WideSessions.Remove(s.ID)
 				}
@@ -121,7 +124,7 @@ func FixedTimeRelease() {
 
 // Online user statistic report.
 type userReport struct {
-	username   string
+	userId     string
 	sessionCnt int
 	processCnt int
 	updated    time.Time
@@ -129,7 +132,7 @@ type userReport struct {
 
 // report returns a online user statistics in pretty format.
 func (u *userReport) report() string {
-	return "[" + u.username + "] has [" + strconv.Itoa(u.sessionCnt) + "] sessions and [" + strconv.Itoa(u.processCnt) +
+	return "[" + u.userId + "] has [" + strconv.Itoa(u.sessionCnt) + "] sessions and [" + strconv.Itoa(u.processCnt) +
 		"] running processes, latest activity [" + u.updated.Format("2006-01-02 15:04:05") + "]"
 }
 
@@ -138,7 +141,7 @@ func FixedTimeReport() {
 	go func() {
 		defer util.Recover()
 
-		for _ = range time.Tick(10 * time.Minute) {
+		for _ = range time.Tick(10*time.Minute) {
 			users := userReports{}
 			processSum := 0
 
@@ -146,7 +149,7 @@ func FixedTimeReport() {
 				processCnt := len(s.Processes)
 				processSum += processCnt
 
-				if report, exists := contains(users, s.Username); exists {
+				if report, exists := contains(users, s.UserId); exists {
 					if s.Updated.After(report.updated) {
 						report.updated = s.Updated
 					}
@@ -154,7 +157,7 @@ func FixedTimeReport() {
 					report.sessionCnt++
 					report.processCnt += processCnt
 				} else {
-					users = append(users, &userReport{username: s.Username, sessionCnt: 1, processCnt: processCnt, updated: s.Updated})
+					users = append(users, &userReport{userId: s.UserId, sessionCnt: 1, processCnt: processCnt, updated: s.Updated})
 				}
 			}
 
@@ -173,9 +176,9 @@ func FixedTimeReport() {
 	}()
 }
 
-func contains(reports []*userReport, username string) (*userReport, bool) {
+func contains(reports []*userReport, userId string) (*userReport, bool) {
 	for _, ur := range reports {
-		if username == ur.username {
+		if userId == ur.userId {
 			return ur, true
 		}
 	}
@@ -219,7 +222,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	wSession := WideSessions.Get(sid)
 	if nil == wSession {
-		httpSession, _ := HTTPSession.Get(r, "wide-session")
+		httpSession, _ := HTTPSession.Get(r, CookieName)
 
 		if httpSession.IsNew {
 			return
@@ -230,7 +233,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		wSession = WideSessions.new(httpSession, sid)
 
-		logger.Tracef("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.Username)
+		logger.Tracef("Created a wide session [%s] for websocket reconnecting, user [%s]", sid, wSession.UserId)
 	}
 
 	logger.Tracef("Open a new [Session Channel] with session [%s], %d", sid, len(SessionWS))
@@ -262,7 +265,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 	for {
 		if err := wsChan.ReadJSON(&input); err != nil {
-			logger.Tracef("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]", sid, wSession.Username)
+			logger.Tracef("[Session Channel] of session [%s] disconnected, releases all resources with it, user [%s]", sid, wSession.UserId)
 
 			return
 		}
@@ -306,7 +309,7 @@ func SaveContentHandler(w http.ResponseWriter, r *http.Request) {
 	wSession.Content = args.LatestSessionContent
 
 	for _, user := range conf.Users {
-		if user.Name == wSession.Username {
+		if user.Id == wSession.UserId {
 			// update the variable in-memory, session.FixedTimeSave() function will persist it periodically
 			user.LatestSessionContent = wSession.Content
 
@@ -375,9 +378,9 @@ func (sessions *wSessions) Remove(sid string) {
 			// kill processes
 			for _, p := range s.Processes {
 				if err := p.Kill(); nil != err {
-					logger.Errorf("Can't kill process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
+					logger.Errorf("Can't kill process [%d] of session [%s], user [%s]", p.Pid, sid, s.UserId)
 				} else {
-					logger.Debugf("Killed a process [%d] of session [%s], user [%s]", p.Pid, sid, s.Username)
+					logger.Debugf("Killed a process [%d] of session [%s], user [%s]", p.Pid, sid, s.UserId)
 				}
 			}
 
@@ -409,12 +412,12 @@ func (sessions *wSessions) Remove(sid string) {
 
 			cnt := 0 // count wide sessions associated with HTTP session
 			for _, ses := range *sessions {
-				if ses.Username == s.Username {
+				if ses.UserId == s.UserId {
 					cnt++
 				}
 			}
 
-			logger.Debugf("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.Username, cnt)
+			logger.Debugf("Removed a session [%s] of user [%s], it has [%d] sessions currently", sid, s.UserId, cnt)
 
 			return
 		}
@@ -422,14 +425,14 @@ func (sessions *wSessions) Remove(sid string) {
 }
 
 // GetByUsername gets wide sessions.
-func (sessions *wSessions) GetByUsername(username string) []*WideSession {
+func (sessions *wSessions) GetByUserId(userId string) []*WideSession {
 	mutex.Lock()
 	defer mutex.Unlock()
 
 	ret := []*WideSession{}
 
 	for _, s := range *sessions {
-		if s.Username == username {
+		if s.UserId == userId {
 			ret = append(ret, s)
 		}
 	}
@@ -442,12 +445,12 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 	mutex.Lock()
 	defer mutex.Unlock()
 
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 	now := time.Now()
 
 	ret := &WideSession{
 		ID:          sid,
-		Username:    username,
+		UserId:      uid,
 		HTTPSession: httpSession,
 		EventQueue:  nil,
 		State:       sessionStateActive,
@@ -458,7 +461,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 
 	*sessions = append(*sessions, ret)
 
-	if "playground" == username {
+	if "playground" == uid {
 		return ret
 	}
 
@@ -479,7 +482,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 		for {
 			ch := SessionWS[sid]
 			if nil == ch {
-				return // release this gorutine
+				return // release this goroutine
 			}
 
 			select {
@@ -505,17 +508,13 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 						}
 					}
 
-					cmd := map[string]interface{}{"path": path, "dir": dir,
-						"cmd": "create-file", "type": fileType}
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "create-file", "type": fileType}
 					ch.WriteJSON(&cmd)
 				} else if event.Op&fsnotify.Remove == fsnotify.Remove {
-					cmd := map[string]interface{}{"path": path, "dir": dir,
-						"cmd": "remove-file", "type": ""}
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "remove-file", "type": ""}
 					ch.WriteJSON(&cmd)
-
 				} else if event.Op&fsnotify.Rename == fsnotify.Rename {
-					cmd := map[string]interface{}{"path": path, "dir": dir,
-						"cmd": "rename-file", "type": ""}
+					cmd := map[string]interface{}{"path": path, "dir": dir, "cmd": "rename-file", "type": ""}
 					ch.WriteJSON(&cmd)
 				}
 			case err := <-watcher.Errors:
@@ -529,10 +528,10 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 	go func() {
 		defer util.Recover()
 
-		workspaces := filepath.SplitList(conf.GetUserWorkspace(username))
+		workspaces := filepath.SplitList(conf.GetUserWorkspace(uid))
 		for _, workspace := range workspaces {
 			filepath.Walk(filepath.Join(workspace, "src"), func(dirPath string, f os.FileInfo, err error) error {
-				if ".git" == f.Name() { // XXX: discard other unconcered dirs
+				if strings.HasPrefix(f.Name(), ".") || "node_modules" == f.Name() || "vendor" == f.Name() {
 					return filepath.SkipDir
 				}
 

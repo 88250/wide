@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -104,18 +104,27 @@ func parsePath(curDir, outputLine string) string {
 	return tagStart + text + tagEnd + msgPart
 }
 
-func setCmdEnv(cmd *exec.Cmd, username string) {
-	userWorkspace := conf.GetUserWorkspace(username)
+func setCmdEnv(cmd *exec.Cmd, uid string) {
+	userWorkspace := conf.GetUserWorkspace(uid)
+	cache, err := os.UserCacheDir()
+	if nil != err {
+		logger.Warnf("Get user cache dir failed [" + err.Error() + "]")
+		cache = os.TempDir()
+	}
 
 	cmd.Env = append(cmd.Env,
 		"GOPATH="+userWorkspace,
 		"GOOS="+runtime.GOOS,
 		"GOARCH="+runtime.GOARCH,
 		"GOROOT="+runtime.GOROOT(),
+		"GOCACHE="+cache,
 		"PATH="+os.Getenv("PATH"))
 
 	if util.OS.IsWindows() {
 		// FIXME: for some weird issues on Windows, such as: The requested service provider could not be loaded or initialized.
 		cmd.Env = append(cmd.Env, os.Environ()...)
+	} else {
+		// 编译链接时找不到依赖的动态库 https://github.com/b3log/wide/issues/352
+		cmd.Env = append(cmd.Env, "LD_LIBRARY_PATH="+os.Getenv("LD_LIBRARY_PATH"))
 	}
 }

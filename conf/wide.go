@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -39,9 +39,11 @@ const (
 	PathListSeparator = string(os.PathListSeparator)
 
 	// WideVersion holds the current Wide's version.
-	WideVersion = "1.5.2"
+	WideVersion = "1.5.3"
 	// CodeMirrorVer holds the current editor version.
 	CodeMirrorVer = "5.1"
+	// UserAgent represents HTTP client user agent.
+	UserAgent = "Wide/" + WideVersion + "; +https://github.com/b3log/wide"
 
 	HelloWorld = `package main
 
@@ -55,22 +57,14 @@ func main() {
 
 // Configuration.
 type conf struct {
-	IP                    string // server ip, ${ip}
-	Port                  string // server port
-	Context               string // server context
-	Server                string // server host and port ({IP}:{Port})
-	StaticServer          string // static resources server scheme, host and port (http://{IP}:{Port})
+	Server                string // server
 	LogLevel              string // logging level: trace/debug/info/warn/error
-	Channel               string // channel (ws://{IP}:{Port})
+	Data                  string // data directory
+	RuntimeMode           string // runtime mode (dev/prod)
 	HTTPSessionMaxAge     int    // HTTP session max age (in seciond)
 	StaticResourceVersion string // version of static resources
 	MaxProcs              int    // Go max procs
-	RuntimeMode           string // runtime mode (dev/prod)
-	WD                    string // current working direcitory, ${pwd}
 	Locale                string // default locale
-	Playground            string // playground directory
-	UsersWorkspaces       string // users' workspaces directory (admin defaults to ${GOPATH}, others using this)
-	AllowRegister         bool   // allow register or not
 	Autocomplete          bool   // default autocomplete
 }
 
@@ -83,21 +77,34 @@ var Wide *conf
 // configurations of users.
 var Users []*User
 
-// Indicates whether runs via Docker.
+// Indicates whether Docker is available.
 var Docker bool
 
-// Load loads the Wide configurations from wide.json and users' configurations from users/{username}.json.
-func Load(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confDocker bool, confUsersWorkspaces string) {
-	// XXX: ugly args list....
+// Docker image to run user's program
+const DockerImageGo = "golang"
 
-	initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-		confPlayground, confDocker, confUsersWorkspaces)
+// Load loads the Wide configurations from wide.json and users' configurations from users/{userId}.json.
+func Load(confPath, confData, confServer, confLogLevel string) {
+	initWide(confPath, confData, confServer, confLogLevel)
 	initUsers()
+
+	cmd := exec.Command("docker", "version")
+	_, err := cmd.CombinedOutput()
+	if nil != err {
+		if !util.OS.IsWindows() {
+			logger.Errorf("Not found 'docker' installed, running user's code will cause security problem")
+
+			os.Exit(-1)
+		}
+	} else {
+		Docker = true
+	}
 }
 
 func initUsers() {
-	f, err := os.Open("conf/users")
+	os.MkdirAll(Wide.Data+PathSeparator+"users", 0755)
+
+	f, err := os.Open(Wide.Data + PathSeparator + "users")
 	if nil != err {
 		logger.Error(err)
 
@@ -123,8 +130,7 @@ func initUsers() {
 
 		user := &User{}
 
-		bytes, _ := ioutil.ReadFile("conf/users/" + name)
-
+		bytes, _ := ioutil.ReadFile(filepath.Join(Wide.Data, "users", name))
 		err := json.Unmarshal(bytes, user)
 		if err != nil {
 			logger.Errorf("Parses [%s] error: %v, skip loading this user", name, err)
@@ -155,8 +161,7 @@ func initUsers() {
 	initCustomizedConfs()
 }
 
-func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticServer, confContext, confChannel,
-	confPlayground string, confDocker bool, confUsersWorkspaces string) {
+func initWide(confPath, confData, confServer, confLogLevel string) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -182,10 +187,6 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 
 	logger.Debug("Conf: \n" + string(bytes))
 
-	// Working Directory
-	Wide.WD = util.OS.Pwd()
-	logger.Debugf("${pwd} [%s]", Wide.WD)
-
 	// User Home
 	home, err := util.OS.Home()
 	if nil != err {
@@ -193,82 +194,30 @@ func initWide(confPath, confIP, confPort, confServer, confLogLevel, confStaticSe
 
 		os.Exit(-1)
 	}
-
 	logger.Debugf("${user.home} [%s]", home)
 
-	// Playground Directory
-	Wide.Playground = strings.Replace(Wide.Playground, "${home}", home, 1)
-	if "" != confPlayground {
-		Wide.Playground = confPlayground
+	// Data directory
+	if "" != confData {
+		Wide.Data = confData
 	}
-
-	// Users' workspaces Directory
-	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${WD}", Wide.WD, 1)
-	Wide.UsersWorkspaces = strings.Replace(Wide.UsersWorkspaces, "${home}", home, 1)
-	if "" != confUsersWorkspaces {
-		Wide.UsersWorkspaces = confUsersWorkspaces
-	}
-	Wide.UsersWorkspaces = filepath.Clean(Wide.UsersWorkspaces)
-
-	if !util.File.IsExist(Wide.Playground) {
-		if err := os.Mkdir(Wide.Playground, 0775); nil != err {
-			logger.Errorf("Create Playground [%s] error", err)
+	Wide.Data = strings.Replace(Wide.Data, "${home}", home, -1)
+	Wide.Data = filepath.Clean(Wide.Data)
+	if !util.File.IsExist(Wide.Data) {
+		if err := os.MkdirAll(Wide.Data, 0775); nil != err {
+			logger.Errorf("Create data directory [%s] error", err)
 
 			os.Exit(-1)
 		}
 	}
-
-	// IP
-	if "" != confIP {
-		Wide.IP = confIP
-	} else {
-		ip, err := util.Net.LocalIP()
-		if nil != err {
-			logger.Error(err)
-
-			os.Exit(-1)
-		}
-
-		logger.Debugf("${ip} [%s]", ip)
-		Wide.IP = strings.Replace(Wide.IP, "${ip}", ip, 1)
-	}
-
-	if "" != confPort {
-		Wide.Port = confPort
-	}
-
-	// Docker flag
-	Docker = confDocker
 
 	// Server
-	Wide.Server = strings.Replace(Wide.Server, "{IP}", Wide.IP, 1)
-	Wide.Server = strings.Replace(Wide.Server, "{Port}", Wide.Port, 1)
 	if "" != confServer {
 		Wide.Server = confServer
-	}
-
-	// Static Server
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{IP}", Wide.IP, 1)
-	Wide.StaticServer = strings.Replace(Wide.StaticServer, "{Port}", Wide.Port, 1)
-	if "" != confStaticServer {
-		Wide.StaticServer = confStaticServer
-	}
-
-	// Context
-	if "" != confContext {
-		Wide.Context = confContext
 	}
 
 	time := strconv.FormatInt(time.Now().UnixNano(), 10)
 	logger.Debugf("${time} [%s]", time)
 	Wide.StaticResourceVersion = strings.Replace(Wide.StaticResourceVersion, "${time}", time, 1)
-
-	// Channel
-	Wide.Channel = strings.Replace(Wide.Channel, "{IP}", Wide.IP, 1)
-	Wide.Channel = strings.Replace(Wide.Channel, "{Port}", Wide.Port, 1)
-	if "" != confChannel {
-		Wide.Channel = confChannel
-	}
 }
 
 // FixedTimeCheckEnv checks Wide runtime enviorment periodically (7 minutes).
@@ -279,7 +228,7 @@ func FixedTimeCheckEnv() {
 	checkEnv() // check immediately
 
 	go func() {
-		for _ = range time.Tick(time.Minute * 7) {
+		for _ = range time.Tick(time.Minute*7) {
 			checkEnv()
 		}
 	}()
@@ -322,10 +271,10 @@ func checkEnv() {
 	}
 }
 
-// GetUserWorkspace gets workspace path with the specified username, returns "" if not found.
-func GetUserWorkspace(username string) string {
+// GetUserWorkspace gets workspace path with the specified user id, returns "" if not found.
+func GetUserWorkspace(userId string) string {
 	for _, user := range Users {
-		if user.Name == username {
+		if user.Id == userId {
 			return user.WorkspacePath()
 		}
 	}
@@ -334,9 +283,9 @@ func GetUserWorkspace(username string) string {
 }
 
 // GetGoFmt gets the path of Go format tool, returns "gofmt" if not found "goimports".
-func GetGoFmt(username string) string {
+func GetGoFmt(userId string) string {
 	for _, user := range Users {
-		if user.Name == username {
+		if user.Id == userId {
 			switch user.GoFormat {
 			case "gofmt":
 				return "gofmt"
@@ -352,15 +301,14 @@ func GetGoFmt(username string) string {
 	return "gofmt"
 }
 
-// GetUser gets configuration of the user specified by the given username, returns nil if not found.
-func GetUser(username string) *User {
-	if "playground" == username { // reserved user for Playground
-		// mock it
-		return NewUser("playground", "", "", "")
+// GetUser gets configuration of the user specified by the given user id, returns nil if not found.
+func GetUser(id string) *User {
+	if "playground" == id { // reserved user for Playground
+		return NewUser("playground", "playground", "", "")
 	}
 
 	for _, user := range Users {
-		if user.Name == username {
+		if user.Id == id {
 			return user
 		}
 	}
@@ -371,17 +319,17 @@ func GetUser(username string) *User {
 // initCustomizedConfs initializes the user customized configurations.
 func initCustomizedConfs() {
 	for _, user := range Users {
-		UpdateCustomizedConf(user.Name)
+		UpdateCustomizedConf(user.Id)
 	}
 }
 
 // UpdateCustomizedConf creates (if not exists) or updates user customized configuration files.
 //
-//  1. /static/user/{username}/style.css
-func UpdateCustomizedConf(username string) {
+//  1. /static/users/{userId}/style.css
+func UpdateCustomizedConf(userId string) {
 	var u *User
 	for _, user := range Users { // maybe it is a beauty of the trade-off of the another world between design and implementation
-		if user.Name == username {
+		if user.Id == userId {
 			u = user
 		}
 	}
@@ -399,8 +347,7 @@ func UpdateCustomizedConf(username string) {
 		os.Exit(-1)
 	}
 
-	wd := util.OS.Pwd()
-	dir := filepath.Clean(wd + "/static/user/" + u.Name)
+	dir := filepath.Clean(Wide.Data + "/static/users/" + userId)
 	if err := os.MkdirAll(dir, 0755); nil != err {
 		logger.Error(err)
 

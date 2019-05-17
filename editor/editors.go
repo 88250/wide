@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -41,7 +41,7 @@ var logger = log.NewLogger(os.Stdout)
 // WSHandler handles request of creating editor channel.
 // XXX: NOT used at present
 func WSHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -111,13 +111,13 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	path := args["path"].(string)
 
@@ -147,7 +147,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	logger.Tracef("offset: %d", offset)
 
-	userWorkspace := conf.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(uid)
 	workspaces := filepath.SplitList(userWorkspace)
 	libPath := ""
 	for _, workspace := range workspaces {
@@ -182,8 +182,8 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
-	username := session.Values["username"].(string)
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
+	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -228,7 +228,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
@@ -253,13 +253,13 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -304,7 +304,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
@@ -341,13 +341,13 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
 
@@ -392,7 +392,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {
@@ -453,8 +453,8 @@ func getCursorOffset(code string, line, ch int) (offset int) {
 	return offset
 }
 
-func setCmdEnv(cmd *exec.Cmd, username string) {
-	userWorkspace := conf.GetUserWorkspace(username)
+func setCmdEnv(cmd *exec.Cmd, userId string) {
+	userWorkspace := conf.GetUserWorkspace(userId)
 
 	cmd.Env = append(cmd.Env,
 		"GOPATH="+userWorkspace,

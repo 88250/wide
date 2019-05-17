@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -37,14 +37,14 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
-	locale := conf.GetUser(username).Locale
+	uid := httpSession.Values["uid"].(string)
+	locale := conf.GetUser(uid).Locale
 
 	var args map[string]interface{}
 
@@ -58,7 +58,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 	filePath := args["path"].(string)
 
-	if util.Go.IsAPI(filePath) || !session.CanAccess(username, filePath) {
+	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -75,7 +75,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 		suffix = ".exe"
 	}
 
-	user := conf.GetUser(username)
+	user := conf.GetUser(uid)
 	goBuildArgs := []string{}
 	goBuildArgs = append(goBuildArgs, "build")
 	goBuildArgs = append(goBuildArgs, user.BuildArgs(goos)...)
@@ -83,7 +83,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
 
-	setCmdEnv(cmd, username)
+	setCmdEnv(cmd, uid)
 
 	for i, env := range cmd.Env {
 		if strings.HasPrefix(env, "GOOS=") {
@@ -154,8 +154,6 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	go func(runningId int) {
 		defer util.Recover()
 		defer cmd.Wait()
-
-		// logger.Debugf("User [%s, %s] is building [id=%d, dir=%s]", username, sid, runningId, curDir)
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
@@ -235,8 +233,6 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if nil != session.OutputWS[sid] {
-			// logger.Debugf("User [%s, %s] 's build [id=%d, dir=%s] has done", username, sid, runningId, curDir)
-
 			wsChannel := session.OutputWS[sid]
 			err := wsChannel.WriteJSON(&channelRet)
 			if nil != err {

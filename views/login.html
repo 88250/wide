@@ -5,7 +5,7 @@
         <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
 
         <meta name="keywords" content="Wide, Golang, IDE, Team, Cloud, B3log, Login"/>
-        <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
+        <meta name="description" content="A Web-based Go IDE , do your development anytime, anywrhere."/>
         <meta name="author" content="B3log">
 
         <link rel="stylesheet" href="{{.conf.StaticServer}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
@@ -16,15 +16,12 @@
         <div class="header">
             <div class="wrapper fn-clear">
                 <a href="/login" rel="login">
-                    <img title="Wide, a Web-based IDE for Teams using Golang." src="{{.conf.StaticServer}}/static/images/wide-logo.png" 
-                         class="logo"/></a>
+                    <img title="A Web-based Go IDE" src="{{.conf.StaticServer}}/static/images/wide-logo.png" class="logo"/></a>
                 <ul class="fn-right">
                     <li><a href="/playground" target="_blank" style="color: #cd504a">Play</a></li>
                     <li><a rel="bookmark" href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
-                    <li><a href="http://pan.baidu.com/s/1dD3XwOT" target="_blank">{{.i18n.download}}</a></li>
-                    <li><a rel="help" href="https://www.gitbook.com/book/88250/wide-user-guide" target="_blank">{{.i18n.help}}</a></li>
+                    <li><a rel="help" href="https://hacpai.com/article/1538873544275" target="_blank">{{.i18n.help}}</a></li>
                     <li><a rel="bookmark" href="https://github.com/b3log/wide/issues/new" target="_blank">{{.i18n.issues}}</a></li>
-                    <!--<li><button class="btn btn-red" onclick="window.open('http://b3log.org/services')">{{.i18n.pricing}}</button></li>-->
                     <li><button class="btn" onclick="window.location.href = '{{.conf.Context}}/signup'">{{.i18n.sign_up}}</button></li>
                 </ul>
             </div>
@@ -47,7 +44,7 @@
         </div>
         <div class="footer">
             <span class="wrapper">
-                Ver {{.ver}}, &copy; {{.year}} <a rel="copyright" href="http://b3log.org" target="_blank">B3LOG.ORG</a>, <a href="https://github.com/b3log/wide/blob/master/TERMS.md" target="_blank">{{.i18n.terms}}</a>
+                Ver {{.ver}}, &copy; {{.year}} <a rel="copyright" href="https://b3log.org" target="_blank">B3LOG.ORG</a>, <a href="https://github.com/b3log/wide/blob/master/TERMS.md" target="_blank">{{.i18n.terms}}</a>
             </span>
             <div class="github-btns">
                 <iframe src="https://ghbtns.com/github-btn.html?user=b3log&repo=wide&type=star&count=true" frameborder="0" scrolling="0" width="100" height="20"></iframe>

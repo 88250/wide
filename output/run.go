@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -22,23 +22,11 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 )
-
-const (
-	outputBufMax   = 1024 // 1024 string(rune)
-	outputTimeout  = 100  // 100ms
-	outputCountMax = 30   // 30 reads
-)
-
-type outputBuf struct {
-	content     string
-	millisecond int64
-}
 
 // RunHandler handles request of executing a binary file.
 func RunHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,13 +47,15 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	filePath := args["executable"].(string)
-	curDir := filepath.Dir(filePath)
 
-	cmd := exec.Command(filePath)
-	cmd.Dir = curDir
-
+	var cmd *exec.Cmd
 	if conf.Docker {
-		SetNamespace(cmd)
+		fileName := filepath.Base(filePath)
+		cmd = exec.Command("timeout", "5", "docker", "run", "--rm", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+	} else {
+		cmd = exec.Command(filePath)
+		curDir := filepath.Dir(filePath)
+		cmd.Dir = curDir
 	}
 
 	stdout, err := cmd.StdoutPipe()
@@ -87,24 +77,13 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		logger.Error(err)
 		result.Succ = false
 	}
-
 	wsChannel := session.OutputWS[sid]
-
 	channelRet := map[string]interface{}{}
-
 	if !result.Succ {
-		if nil != wsChannel {
-			channelRet["cmd"] = "run-done"
-			channelRet["output"] = ""
-
-			err := wsChannel.WriteJSON(&channelRet)
-			if nil != err {
-				logger.Warn(err)
-				return
-			}
-
-			wsChannel.Refresh()
-		}
+		channelRet["cmd"] = "run-done"
+		channelRet["output"] = ""
+		wsChannel.WriteJSON(&channelRet)
+		wsChannel.Refresh()
 
 		return
 	}
@@ -114,147 +93,75 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	// add the process to user's process set
 	Processes.Add(wSession, cmd.Process)
 
-	go func(runningId int) {
-		defer util.Recover()
-		defer cmd.Wait()
-
-		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.Username, sid, runningId, filePath)
-
-		// push once for front-end to get the 'run' state and pid
+	// push once for front-end to get the 'run' state and pid
+	if nil != wsChannel {
+		channelRet["cmd"] = "run"
+		channelRet["output"] = ""
 		if nil != wsChannel {
-			channelRet["cmd"] = "run"
-			channelRet["output"] = ""
-			err := wsChannel.WriteJSON(&channelRet)
-			if nil != err {
-				logger.Warn(err)
-				return
-			}
-
+			wsChannel.WriteJSON(&channelRet)
 			wsChannel.Refresh()
 		}
+	}
+
+	go func(runningId int) {
+		defer util.Recover()
+
+		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.UserId, sid, runningId, filePath)
 
 		go func() {
 			defer util.Recover()
 
-			buf := outputBuf{}
-			count := 0
-
 			for {
-				wsChannel := session.OutputWS[sid]
-				if nil == wsChannel {
-					break
-				}
-
 				r, _, err := outReader.ReadRune()
-				count++
-
 				if nil != err {
-					// remove the exited process from user's process set
-					Processes.Remove(wSession, cmd.Process)
-
-					logger.Debugf("User [%s, %s] 's running [id=%d, file=%s] has done [stdout %v], ",
-						wSession.Username, sid, runningId, filePath, err)
-
-					channelRet["cmd"] = "run-done"
-					channelRet["output"] = buf.content
-					err := wsChannel.WriteJSON(&channelRet)
-					if nil != err {
-						logger.Warn(err)
-						break
-					}
-
-					wsChannel.Refresh()
-
 					break
 				}
 
 				oneRuneStr := string(r)
 				oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
 				oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
-
-				buf.content += oneRuneStr
-
-				now := time.Now().UnixNano() / int64(time.Millisecond)
-
-				if 0 == buf.millisecond {
-					buf.millisecond = now
-				}
-
-				flood := count > outputCountMax
-
-				if "\n" == oneRuneStr && !flood {
-					channelRet["cmd"] = "run"
-					channelRet["output"] = buf.content
-
-					buf = outputBuf{} // a new buffer
-					count = 0         // clear count
-
-					err = wsChannel.WriteJSON(&channelRet)
-					if nil != err {
-						logger.Warn(err)
-						break
-					}
-
+				channelRet["cmd"] = "run"
+				channelRet["output"] = oneRuneStr
+				wsChannel := session.OutputWS[sid]
+				if nil != wsChannel {
+					wsChannel.WriteJSON(&channelRet)
 					wsChannel.Refresh()
-
-					continue
-				}
-
-				if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax {
-					channelRet["cmd"] = "run"
-					channelRet["output"] = buf.content
-
-					buf = outputBuf{} // a new buffer
-					count = 0         // clear count
-
-					err = wsChannel.WriteJSON(&channelRet)
-					if nil != err {
-						logger.Warn(err)
-						break
-					}
-
-					wsChannel.Refresh()
-
-					continue
 				}
 			}
 		}()
 
-		buf := outputBuf{}
 		for {
 			r, _, err := errReader.ReadRune()
-
-			wsChannel := session.OutputWS[sid]
-			if nil != err || nil == wsChannel {
+			if nil != err {
 				break
 			}
 
 			oneRuneStr := string(r)
 			oneRuneStr = strings.Replace(oneRuneStr, "<", "&lt;", -1)
 			oneRuneStr = strings.Replace(oneRuneStr, ">", "&gt;", -1)
-
-			buf.content += oneRuneStr
-
-			now := time.Now().UnixNano() / int64(time.Millisecond)
-
-			if 0 == buf.millisecond {
-				buf.millisecond = now
-			}
-
-			if now-outputTimeout >= buf.millisecond || len(buf.content) > outputBufMax || oneRuneStr == "\n" {
-				channelRet["cmd"] = "run"
-				channelRet["output"] = "<span class='stderr'>" + buf.content + "</span>"
-
-				buf = outputBuf{} // a new buffer
-
-				err = wsChannel.WriteJSON(&channelRet)
-				if nil != err {
-					logger.Warn(err)
-					break
-				}
-
+			channelRet["cmd"] = "run"
+			channelRet["output"] = "<span class='stderr'>" + oneRuneStr + "</span>"
+			wsChannel := session.OutputWS[sid]
+			if nil != wsChannel {
+				wsChannel.WriteJSON(&channelRet)
 				wsChannel.Refresh()
 			}
+		}
+
+		cmd.Wait()
+
+		// remove the exited process from user's process set
+		Processes.Remove(wSession, cmd.Process)
+
+		channelRet["cmd"] = "run-done"
+		if 124 == cmd.ProcessState.ExitCode() {
+			channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
+		} else {
+			channelRet["output"] = "\n<span class='stderr'>run program complete</span>\n"
+		}
+		if nil != wsChannel {
+			wsChannel.WriteJSON(&channelRet)
+			wsChannel.Refresh()
 		}
 	}(rand.Int())
 }

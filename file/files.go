@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -74,18 +74,18 @@ func initAPINode() {
 // The Go API source code package also as a child node,
 // so that users can easily view the Go API source code in file tree.
 func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetGzResult(w, r, result)
 
-	userWorkspace := conf.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(uid)
 	workspaces := filepath.SplitList(userWorkspace)
 
 	root := Node{Name: "root", Path: "", IconSkin: "ico-ztree-dir ", Type: "d", IsParent: true, Children: []*Node{}}
@@ -123,18 +123,18 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 
 // RefreshDirectoryHandler handles request of refresh a directory of file tree.
 func RefreshDirectoryHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	r.ParseForm()
 	path := r.FormValue("path")
 
-	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -156,13 +156,13 @@ func RefreshDirectoryHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetFileHandler handles request of opening file by editor.
 func GetFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -178,7 +178,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -204,15 +204,15 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 		data["mode"] = "img"
 
-		username := conf.GetOwner(path)
-		if "" == username {
-			logger.Warnf("The path [%s] has no owner")
+		userId := conf.GetOwner(path)
+		if "" == userId {
+			logger.Warnf("The path [%s] has no owner", path)
 			data["path"] = ""
 
 			return
 		}
 
-		user := conf.GetUser(username)
+		user := conf.GetUser(uid)
 
 		data["path"] = "/workspace/" + user.Name + "/" + strings.Replace(path, user.WorkspacePath(), "", 1)
 
@@ -232,13 +232,13 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 // SaveFileHandler handles request of saving file.
 func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -255,7 +255,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 	sid := args["sid"].(string)
 
-	if util.Go.IsAPI(filePath) || !session.CanAccess(username, filePath) {
+	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -288,13 +288,13 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 // NewFileHandler handles request of creating file or directory.
 func NewFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -310,7 +310,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if util.Go.IsAPI(path) || !session.CanAccess(username, path) {
+	if util.Go.IsAPI(path) || !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -331,22 +331,22 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if "f" == fileType {
-		logger.Debugf("Created a file [%s] by user [%s]", path, wSession.Username)
+		logger.Debugf("Created a file [%s] by user [%s]", path, wSession.UserId)
 	} else {
-		logger.Debugf("Created a dir [%s] by user [%s]", path, wSession.Username)
+		logger.Debugf("Created a dir [%s] by user [%s]", path, wSession.UserId)
 	}
 
 }
 
 // RemoveFileHandler handles request of removing file or directory.
 func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -362,7 +362,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if util.Go.IsAPI(path) || !session.CanAccess(username, path) {
+	if util.Go.IsAPI(path) || !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -381,18 +381,18 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logger.Debugf("Removed a file [%s] by user [%s]", path, wSession.Username)
+	logger.Debugf("Removed a file [%s] by user [%s]", path, wSession.UserId)
 }
 
 // RenameFileHandler handles request of renaming file or directory.
 func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -408,14 +408,14 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	oldPath := args["oldPath"].(string)
 	if util.Go.IsAPI(oldPath) ||
-		!session.CanAccess(username, oldPath) {
+		!session.CanAccess(uid, oldPath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
 
 	newPath := args["newPath"].(string)
-	if util.Go.IsAPI(newPath) || !session.CanAccess(username, newPath) {
+	if util.Go.IsAPI(newPath) || !session.CanAccess(uid, newPath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -434,7 +434,7 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	logger.Debugf("Renamed a file [%s] to [%s] by user [%s]", oldPath, newPath, wSession.Username)
+	logger.Debugf("Renamed a file [%s] to [%s] by user [%s]", oldPath, newPath, wSession.UserId)
 }
 
 // Use to find results sorting.
@@ -451,13 +451,13 @@ func (f foundPaths) Less(i, j int) bool { return f[i].score > f[j].score }
 
 // FindHandler handles request of find files under the specified directory with the specified filename pattern.
 func FindHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := httpSession.Values["username"].(string)
+	uid := httpSession.Values["uid"].(string)
 
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
@@ -471,7 +471,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string) // path of selected file in file tree
-	if !util.Go.IsAPI(path) && !session.CanAccess(username, path) {
+	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -479,7 +479,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 
 	name := args["name"].(string)
 
-	userWorkspace := conf.GetUserWorkspace(username)
+	userWorkspace := conf.GetUserWorkspace(uid)
 	workspaces := filepath.SplitList(userWorkspace)
 
 	if "" != path && !util.File.IsDir(path) {
@@ -505,7 +505,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 
 // SearchTextHandler handles request of searching files under the specified directory with the specified keyword.
 func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -536,7 +536,7 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 
 	dir := args["dir"].(string)
 	if "" == dir {
-		userWorkspace := conf.GetUserWorkspace(wSession.Username)
+		userWorkspace := conf.GetUserWorkspace(wSession.UserId)
 		workspaces := filepath.SplitList(userWorkspace)
 		dir = workspaces[0]
 	}

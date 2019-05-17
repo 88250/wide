@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -34,13 +34,13 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	session, _ := session.HTTPSession.Get(r, "wide-session")
+	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
-	username := session.Values["username"].(string)
+	uid := session.Values["uid"].(string)
 
 	var args map[string]interface{}
 
@@ -85,7 +85,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	result.Data = data
 
-	fmt := conf.GetGoFmt(username)
+	fmt := conf.GetGoFmt(uid)
 
 	argv := []string{filePath}
 	cmd := exec.Command(fmt, argv...)

@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,9 +16,10 @@ package util
 
 import (
 	"runtime"
-	"strconv"
 	"strings"
 	"testing"
+
+	"github.com/hashicorp/go-version"
 )
 
 func TestGetCrossPlatforms(t *testing.T) {
@@ -33,17 +34,22 @@ func TestGetAPIPath(t *testing.T) {
 	apiPath := Go.GetAPIPath()
 
 	v := runtime.Version()[2:]
-	v = v[:3]
 
-	verNum, err := strconv.ParseFloat(v, 64)
-
+	ver, err := version.NewVersion(v)
 	if nil != err {
 		t.Error(err)
 
 		return
 	}
 
-	if verNum >= 1.4 {
+	constraints, err := version.NewConstraint(">= 1.4")
+	if nil != err {
+		t.Error(err)
+
+		return
+	}
+
+	if constraints.Check(ver) {
 		if !strings.HasSuffix(apiPath, "src") {
 			t.Error("api path should end with \"src\"")
 

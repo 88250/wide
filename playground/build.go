@@ -1,10 +1,10 @@
-// Copyright (c) 2014-2017, b3log.org & hacpai.com
+// Copyright (c) 2014-2019, b3log.org & hacpai.com
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
 // You may obtain a copy of the License at
 //
-//     http://www.apache.org/licenses/LICENSE-2.0
+//     https://www.apache.org/licenses/LICENSE-2.0
 //
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
@@ -32,7 +32,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
-	httpSession, _ := session.HTTPSession.Get(r, "wide-session")
+	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -48,7 +48,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fileName := args["fileName"].(string)
-	filePath := filepath.Clean(conf.Wide.Playground + "/" + fileName)
+	filePath := filepath.Clean(conf.Wide.Data + "/playground/" + fileName)
 
 	suffix := ""
 	if util.OS.IsWindows() {
@@ -58,7 +58,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	data := map[string]interface{}{}
 	result.Data = &data
 
-	executable := filepath.Clean(conf.Wide.Playground + "/" + strings.Replace(fileName, ".go", suffix, -1))
+	executable := filepath.Clean(conf.Wide.Data + "/playground/" + strings.Replace(fileName, ".go", suffix, -1))
 
 	cmd := exec.Command("go", "build", "-o", executable, filePath)
 	out, err := cmd.CombinedOutput()

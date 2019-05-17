@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2014-2017, b3log.org & hacpai.com
+ * Copyright (c) 2014-2019, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Dec 8, 2015
+ * @version 1.0.0.2, Oct 5, 2018
  */
 var playground = {
     autocompleteMutex: false,
@@ -53,10 +53,9 @@ var playground = {
             var title = encodeURIComponent($('title').text() + '. \n' + $('meta[name=description]').attr('content')
                     + " #golang#");
             urls.weibo = "http://v.t.sina.com.cn/share/share.php?title=" + title + "&url=" + url + "&pic=" + pic;
-            urls.tencent = "http://share.v.t.qq.com/index.php?c=share&a=index&title=" + title +
-                    "&url=" + url + "&pic=" + pic;
+            urls.qqz = "https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?url=" + url + "&sharesource=qzone&title=" + title+ "&pics=" + pic;
 
-            window.open(urls[key], "_blank", "top=100,left=200,width=648,height=618");
+          window.open(urls[key], "_blank", "top=100,left=200,width=648,height=618");
 
             $(".menu .share-panel").hide();
         });
@@ -92,7 +91,7 @@ var playground = {
             $.ajax({
                 async: false, // 同步执行
                 type: 'POST',
-                url: config.context + '/playground/autocomplete',
+                url: '/playground/autocomplete',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
@@ -357,7 +356,7 @@ var playground = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/playground/save',
+            url: '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -376,7 +375,7 @@ var playground = {
                 request.url = url;
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/playground/short-url',
+                    url: '/playground/short-url',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -421,7 +420,7 @@ var playground = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/playground/stop',
+            url: '/playground/stop',
             data: JSON.stringify(request),
             dataType: "json"
         });
@@ -444,7 +443,7 @@ var playground = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/playground/save',
+            url: '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -463,7 +462,7 @@ var playground = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/playground/build',
+                    url: '/playground/build',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -483,7 +482,7 @@ var playground = {
 
                         $.ajax({
                             type: 'POST',
-                            url: config.context + '/playground/run',
+                            url: '/playground/run',
                             data: JSON.stringify(request),
                             dataType: "json",
                             success: function (result) {
@@ -510,7 +509,7 @@ var playground = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/playground/save',
+            url: '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {

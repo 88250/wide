@@ -1,11 +1,11 @@
 /*
- * Copyright (c) 2014-2017, b3log.org & hacpai.com
+ * Copyright (c) 2014-2019, b3log.org & hacpai.com
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -160,7 +160,7 @@ var tree = {
         $.ajax({
             async: false,
             type: 'POST',
-            url: config.context + '/file/zip/new',
+            url: '/file/zip/new',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -175,7 +175,7 @@ var tree = {
         });
 
         if (isSucc) {
-            window.open(config.context + '/file/zip?path=' + wide.curNode.path + ".zip");
+            window.open('/file/zip?path=' + wide.curNode.path + ".zip");
         }
     },
     crossCompile: function (platform) {
@@ -186,7 +186,7 @@ var tree = {
         $.ajax({
             async: false,
             type: 'POST',
-            url: config.context + '/cross',
+            url: '/cross',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -195,28 +195,6 @@ var tree = {
 
                     return false;
                 }
-            }
-        });
-    },
-    decompress: function () {
-        var request = newWideRequest();
-        request.path = wide.curNode.path;
-
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: config.context + '/file/decompress',
-            data: JSON.stringify(request),
-            dataType: "json",
-            success: function (result) {
-                if (!result.succ) {
-                    $("#dialogAlert").dialog("open", result.msg);
-
-                    return false;
-                }
-
-                var dir = wide.curNode.getParentNode();
-                tree.fileTree.reAsyncChildNodes(dir, "refresh");
             }
         });
     },
@@ -229,31 +207,6 @@ var tree = {
 
         tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh", true);
     },
-    gitClone: function (it) {
-        if (it) {
-            if ($(it).hasClass("disabled")) {
-                return false;
-            }
-        }
-
-        $("#dialogGitClonePrompt").dialog('open');
-    },
-    import: function () {
-        var request = newWideRequest();
-        request.path = wide.curNode.path;
-
-        $('#importFileupload').fileupload({
-            url: "/file/upload?path=" + request.path,
-            dataType: 'json',
-            formData: request,
-            done: function (e, result) {
-                tree.fileTree.reAsyncChildNodes(wide.curNode, "refresh");
-            },
-            fail: function () {
-                console.log(arguments);
-            }
-        });
-    },
     init: function () {
         $("#file").click(function () {
             $(this).focus();
@@ -263,7 +216,7 @@ var tree = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/files',
+            url: '/files',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -282,7 +235,7 @@ var tree = {
                         },
                         async: {
                             enable: true,
-                            url: config.context + "/file/refresh",
+                            url: "/file/refresh",
                             autoParam: ["path"]
                         },
                         callback: {
@@ -417,7 +370,7 @@ var tree = {
             $.ajax({
                 async: false,
                 type: 'POST',
-                url: config.context + '/file',
+                url: '/file',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (result) {
@@ -444,7 +397,7 @@ var tree = {
 
                     if ("img" === data.mode) { // 是图片文件的话新建 tab 打开
                         // 最好是开 tab，但这个最终取决于浏览器设置
-                        var w = window.open(config.context + data.path);
+                        var w = window.open(data.path);
                         return false;
                     }
 
@@ -506,7 +459,7 @@ var tree = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/file/search/text',
+                    url: '/file/search/text',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -542,7 +495,7 @@ var tree = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/file/rename',
+                    url: '/file/rename',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
