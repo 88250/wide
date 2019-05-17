@@ -160,7 +160,7 @@ var tree = {
         $.ajax({
             async: false,
             type: 'POST',
-            url: config.context + '/file/zip/new',
+            url: '/file/zip/new',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -175,7 +175,7 @@ var tree = {
         });
 
         if (isSucc) {
-            window.open(config.context + '/file/zip?path=' + wide.curNode.path + ".zip");
+            window.open('/file/zip?path=' + wide.curNode.path + ".zip");
         }
     },
     crossCompile: function (platform) {
@@ -186,7 +186,7 @@ var tree = {
         $.ajax({
             async: false,
             type: 'POST',
-            url: config.context + '/cross',
+            url: '/cross',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -195,28 +195,6 @@ var tree = {
 
                     return false;
                 }
-            }
-        });
-    },
-    decompress: function () {
-        var request = newWideRequest();
-        request.path = wide.curNode.path;
-
-        $.ajax({
-            async: false,
-            type: 'POST',
-            url: config.context + '/file/decompress',
-            data: JSON.stringify(request),
-            dataType: "json",
-            success: function (result) {
-                if (!result.succ) {
-                    $("#dialogAlert").dialog("open", result.msg);
-
-                    return false;
-                }
-
-                var dir = wide.curNode.getParentNode();
-                tree.fileTree.reAsyncChildNodes(dir, "refresh");
             }
         });
     },
@@ -238,7 +216,7 @@ var tree = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/files',
+            url: '/files',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -257,7 +235,7 @@ var tree = {
                         },
                         async: {
                             enable: true,
-                            url: config.context + "/file/refresh",
+                            url: "/file/refresh",
                             autoParam: ["path"]
                         },
                         callback: {
@@ -392,7 +370,7 @@ var tree = {
             $.ajax({
                 async: false,
                 type: 'POST',
-                url: config.context + '/file',
+                url: '/file',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (result) {
@@ -419,7 +397,7 @@ var tree = {
 
                     if ("img" === data.mode) { // 是图片文件的话新建 tab 打开
                         // 最好是开 tab，但这个最终取决于浏览器设置
-                        var w = window.open(config.context + data.path);
+                        var w = window.open(data.path);
                         return false;
                     }
 
@@ -481,7 +459,7 @@ var tree = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/file/search/text',
+                    url: '/file/search/text',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -517,7 +495,7 @@ var tree = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/file/rename',
+                    url: '/file/rename',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {

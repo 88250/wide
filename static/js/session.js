@@ -74,7 +74,7 @@ var session = {
 
             $.ajax({
                 type: 'POST',
-                url: config.context + '/session/save',
+                url: '/session/save',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (result) {

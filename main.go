@@ -95,17 +95,12 @@ func main() {
 
 	// static resources
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
+	http.Handle("/static/users/", http.StripPrefix("/static/", http.FileServer(http.Dir("C:\\Users\\DL882\\wide\\static\\"))))
 	serveSingle("/favicon.ico", "./static/favicon.ico")
 
 	// oauth
 	http.HandleFunc("/oauth/github", session.RedirectGitHubHandler)
 	http.HandleFunc("/oauth/github/callback", session.GithubCallbackHandler)
-
-	// workspaces
-	for _, user := range conf.Users {
-		http.Handle("/workspace/"+user.Id+"/", http.StripPrefix("/workspace/"+user.Id+"/", http.FileServer(http.Dir(user.WorkspacePath()))))
-		http.Handle("/static/user/", http.StripPrefix("/workspace/"+user.Id+"/", http.FileServer(http.Dir(conf.Wide.Data + conf.PathSeparator + "static"))))
-	}
 
 	// session
 	http.HandleFunc("/session/ws", handlerWrapper(session.WSHandler))

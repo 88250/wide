@@ -102,7 +102,7 @@ func Load(confPath, confData, confServer, confLogLevel string) {
 }
 
 func initUsers() {
-	os.MkdirAll(Wide.Data + PathSeparator + "users", 0755)
+	os.MkdirAll(Wide.Data+PathSeparator+"users", 0755)
 
 	f, err := os.Open(Wide.Data + PathSeparator + "users")
 	if nil != err {
@@ -325,7 +325,7 @@ func initCustomizedConfs() {
 
 // UpdateCustomizedConf creates (if not exists) or updates user customized configuration files.
 //
-//  1. /static/user/{userId}/style.css
+//  1. /static/users/{userId}/style.css
 func UpdateCustomizedConf(userId string) {
 	var u *User
 	for _, user := range Users { // maybe it is a beauty of the trade-off of the another world between design and implementation
@@ -347,7 +347,7 @@ func UpdateCustomizedConf(userId string) {
 		os.Exit(-1)
 	}
 
-	dir := filepath.Clean(Wide.Data + "/static/" + userId)
+	dir := filepath.Clean(Wide.Data + "/static/users/" + userId)
 	if err := os.MkdirAll(dir, 0755); nil != err {
 		logger.Error(err)
 

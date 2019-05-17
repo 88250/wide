@@ -8,20 +8,20 @@
         <meta name="description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
         <meta name="author" content="B3log">
 
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css?{{.conf.StaticResourceVersion}}">       
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
         <link rel="stylesheet" href="{{$.conf.Server}}/static/js/overwrite/codemirror/theme/wide.css?{{.conf.StaticResourceVersion}}">
 
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/wide.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/sign.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/playground.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/base.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/wide.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/about.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/sign.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/side.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/playground.css?{{.conf.StaticResourceVersion}}">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
@@ -30,7 +30,7 @@
             <ul class="fn-left">
                 <li>
                     <a href="/" target="_blank">
-                        <img title="Wide, a Web-based IDE for Teams using Golang." src="{{.conf.Server}}/static/images/wide-logo.png" 
+                        <img title="Wide, a Web-based IDE for Teams using Golang." src="{{.conf.Server}}/static/images/wide-logo.png"
                              class="logo"/></a>
                 </li>
                 <li>
@@ -82,10 +82,10 @@
         <div id="dialogAbout" class="fn-none"></div>
         <div id="dialogShare" class="fn-none"></div>
         <script>
+            var channelScheme = "https" === window.location.protocol ? "wss":"ws";
+            var channel = channelScheme + "://" + window.location.hostname;
                     var config = {
-                    "context": "{{.conf.Context}}",
-                            "staticServer": "{{.conf.Server}}",
-                            "channel": "{{.conf.Channel}}",
+                            "channel": channel,
                             "wideSessionId": "{{.sid}}",
                             "label": {{.i18n}},
                             "autocomplete": {{.conf.Autocomplete}}

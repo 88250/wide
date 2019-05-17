@@ -8,27 +8,27 @@
         <meta name="author" content="B3log">
         <meta property="og:description" content="A Web-based IDE for Teams using Golang, do your development anytime, anywhere."/>
         {{if eq $.conf.RuntimeMode "dev"}}
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/jquery-layout/layout-default-latest.css">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/lint.css">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
+        <link rel="stylesheet" href="/static/js/lib/jquery-layout/layout-default-latest.css">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/lint/lint.css">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
+        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
         {{range $index, $theme := .editorThemes}}
-        <link rel="stylesheet" href="{{$.conf.Server}}/static/js/overwrite/codemirror/theme/{{$theme}}.css">{{end}}
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/base.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/wide.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/side.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/start.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/about.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/js/overwrite/codemirror/theme/{{$theme}}.css">{{end}}
+        <link rel="stylesheet" href="/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/base.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/wide.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/side.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/start.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/about.css?{{.conf.StaticResourceVersion}}">
         {{else}}
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/lib.min.css">        
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/wide.min.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/lib.min.css">
+        <link rel="stylesheet" href="/static/css/wide.min.css?{{.conf.StaticResourceVersion}}">
         {{end}}
-        <link rel="stylesheet" href="{{.conf.Server}}/static/js/lib/ztree/zTreeStyle.min.css">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/user/{{.uid}}/style.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="{{.conf.Server}}/static/css/themes/{{.user.Theme}}.css?{{.conf.StaticResourceVersion}}" id="themesLink">
+        <link rel="stylesheet" href="/static/js/lib/ztree/zTreeStyle.min.css">
+        <link rel="stylesheet" href="/static/users/{{.uid}}/style.css?{{.conf.StaticResourceVersion}}">
+        <link rel="stylesheet" href="/static/css/themes/{{.user.Theme}}.css?{{.conf.StaticResourceVersion}}" id="themesLink">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     </head>
@@ -558,12 +558,12 @@
             </div>
         </div>
         <script>
+            var channelScheme = "https" === window.location.protocol ? "wss":"ws";
+            var channel = channelScheme + "://" + window.location.hostname;
             var config = {
-            "context": {{.conf.Context}},
-                    "staticServer": '{{.conf.Server}}',
                     "pathSeparator": '{{.pathSeparator}}',
                     "label": {{.i18n}},
-                    "channel": {{.conf.Channel}},
+                    "channel": channel,
                     "wideSessionId": '{{.sid}}',
                     "editorTheme": '{{.user.Editor.Theme}}',
                     "latestSessionContent": {{.latestSessionContent}},

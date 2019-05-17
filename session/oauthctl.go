@@ -185,9 +185,6 @@ func addUser(userId, userName, userAvatar string) string {
 	helloWorld(workspace)
 	conf.UpdateCustomizedConf(userId)
 
-	http.Handle("/workspace/"+userId+"/",
-		http.StripPrefix("/workspace/"+userId+"/", http.FileServer(http.Dir(newUser.WorkspacePath()))))
-
 	logger.Infof("Created a user [%s]", userId)
 
 	return userCreated

@@ -91,7 +91,7 @@ var playground = {
             $.ajax({
                 async: false, // 同步执行
                 type: 'POST',
-                url: config.context + '/playground/autocomplete',
+                url: '/playground/autocomplete',
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (data) {
@@ -356,7 +356,7 @@ var playground = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/playground/save',
+            url: '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -375,7 +375,7 @@ var playground = {
                 request.url = url;
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/playground/short-url',
+                    url: '/playground/short-url',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -420,7 +420,7 @@ var playground = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/playground/stop',
+            url: '/playground/stop',
             data: JSON.stringify(request),
             dataType: "json"
         });
@@ -443,7 +443,7 @@ var playground = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/playground/save',
+            url: '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
@@ -462,7 +462,7 @@ var playground = {
 
                 $.ajax({
                     type: 'POST',
-                    url: config.context + '/playground/build',
+                    url: '/playground/build',
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
@@ -482,7 +482,7 @@ var playground = {
 
                         $.ajax({
                             type: 'POST',
-                            url: config.context + '/playground/run',
+                            url: '/playground/run',
                             data: JSON.stringify(request),
                             dataType: "json",
                             success: function (result) {
@@ -509,7 +509,7 @@ var playground = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/playground/save',
+            url: '/playground/save',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {

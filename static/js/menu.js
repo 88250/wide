@@ -61,7 +61,7 @@ var menu = {
         });
     },
     _initAbout: function () {
-        $("#dialogAbout").load(config.context + '/about', function () {
+        $("#dialogAbout").load('/about', function () {
             $("#dialogAbout").dialog({
                 "modal": true,
                 "title": config.label.about,
@@ -159,12 +159,12 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/logout',
+            url: '/logout',
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
                 if (result.succ) {
-                    window.location.href = config.context + "/login";
+                    window.location.href = "/login";
                 }
             }
         });
@@ -189,7 +189,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/go/get',
+            url: '/go/get',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function () {
@@ -216,7 +216,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/go/install',
+            url: '/go/install',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function () {
@@ -244,7 +244,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/go/test',
+            url: '/go/test',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function () {
@@ -272,7 +272,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/go/vet',
+            url: '/go/vet',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function () {
@@ -307,7 +307,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/build',
+            url: '/build',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function () {
@@ -340,7 +340,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: config.context + '/build',
+            url: '/build',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function () {
@@ -351,7 +351,7 @@ var menu = {
         });
     },
     _initPreference: function () {
-        $("#dialogPreference").load(config.context + '/preference', function () {
+        $("#dialogPreference").load('/preference', function () {
             $("#dialogPreference input").keyup(function () {
                 var isChange = false,
                         emptys = [],
@@ -465,7 +465,7 @@ var menu = {
 
                     $.ajax({
                         type: 'POST',
-                        url: config.context + '/preference',
+                        url: '/preference',
                         data: JSON.stringify(request),
                         success: function (result, textStatus, jqXHR) {
                             if (!result.succ) {
@@ -496,7 +496,7 @@ var menu = {
                             var $okBtn = $("#dialogPreference").closest(".dialog-main").find(".dialog-footer > button:eq(0)");
                             $okBtn.prop("disabled", true);
 
-                            $("#themesLink").attr("href", config.staticServer + '/static/css/themes/' + $theme.val() + '.css');
+                            $("#themesLink").attr("href", '/static/css/themes/' + $theme.val() + '.css');
 
                             config.editorTheme = $editorTheme.val();
                             for (var i = 0, ii = editors.data.length; i < ii; i++) {
