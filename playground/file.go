@@ -85,7 +85,7 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	data["fileName"] = fileName
 
 	// Step3. write file
-	filePath := filepath.Clean(conf.Wide.Data + "/playground" + fileName)
+	filePath := filepath.Clean(conf.Wide.Data + "/playground/" + fileName)
 	fout, err := os.Create(filePath)
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {

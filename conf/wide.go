@@ -102,8 +102,6 @@ func Load(confPath, confData, confServer, confLogLevel string) {
 }
 
 func initUsers() {
-	os.MkdirAll(Wide.Data+PathSeparator+"users", 0755)
-
 	f, err := os.Open(Wide.Data + PathSeparator + "users")
 	if nil != err {
 		logger.Error(err)
@@ -202,12 +200,20 @@ func initWide(confPath, confData, confServer, confLogLevel string) {
 	}
 	Wide.Data = strings.Replace(Wide.Data, "${home}", home, -1)
 	Wide.Data = filepath.Clean(Wide.Data)
-	if !util.File.IsExist(Wide.Data) {
-		if err := os.MkdirAll(Wide.Data, 0775); nil != err {
-			logger.Errorf("Create data directory [%s] error", err)
+	if err := os.MkdirAll(Wide.Data+"/playground/", 0755); nil != err {
+		logger.Errorf("Create data directory [%s] error", err)
 
-			os.Exit(-1)
-		}
+		os.Exit(-1)
+	}
+	if err := os.MkdirAll(Wide.Data+"/users/", 0755); nil != err {
+		logger.Errorf("Create data directory [%s] error", err)
+
+		os.Exit(-1)
+	}
+	if err := os.MkdirAll(Wide.Data+"/workspaces/", 0755); nil != err {
+		logger.Errorf("Create data directory [%s] error", err)
+
+		os.Exit(-1)
 	}
 
 	// Server

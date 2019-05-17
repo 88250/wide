@@ -218,7 +218,7 @@ var playground = {
                 if (!hovered) {
                     $(".menu .share-panel").hide();
                 }
-            }, http.StatusInternalServerError;
+            }, 500);
         });
 
         $(".menu .share-panel").hover(function () {

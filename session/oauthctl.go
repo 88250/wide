@@ -209,14 +209,7 @@ func addUser(userId, userName, userAvatar string) string {
 }
 
 // helloWorld generates the 'Hello, 世界' source code.
-//  1. src/hello/main.go
-//  2. src/web/main.go
 func helloWorld(workspace string) {
-	consoleHello(workspace)
-	webHello(workspace)
-}
-
-func consoleHello(workspace string) {
 	dir := workspace + conf.PathSeparator + "src" + conf.PathSeparator + "hello"
 	if err := os.MkdirAll(dir, 0755); nil != err {
 		logger.Error(err)
@@ -232,59 +225,5 @@ func consoleHello(workspace string) {
 	}
 
 	fout.WriteString(conf.HelloWorld)
-
-	fout.Close()
-}
-
-func webHello(workspace string) {
-	dir := workspace + conf.PathSeparator + "src" + conf.PathSeparator + "web"
-	if err := os.MkdirAll(dir, 0755); nil != err {
-		logger.Error(err)
-
-		return
-	}
-
-	fout, err := os.Create(dir + conf.PathSeparator + "main.go")
-	if nil != err {
-		logger.Error(err)
-
-		return
-	}
-
-	code := `package main
-
-import (
-	"fmt"
-	"math/rand"
-	"net/http"
-	"strconv"
-	"time"
-)
-
-func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, 世界"))
-	})
-
-	port := getPort()
-
-	// you may need to change the address
-	fmt.Println("Open https://wide.b3log.org:" + port + " in your browser to see the result") 
-
-	if err := http.ListenAndServe(":"+port, nil); nil != err {
-		fmt.Println(err)
-	}
-}
-
-func getPort() string {
-	rand.Seed(time.Now().UnixNano())
-
-	return strconv.Itoa(7000 + rand.Intn(8000-7000))
-}
-
-`
-
-	fout.WriteString(code)
-
 	fout.Close()
 }

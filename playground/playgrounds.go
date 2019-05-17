@@ -59,7 +59,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	if strings.HasSuffix(r.URL.Path, ".go") {
 		fileNameArg := r.URL.Path[len("/playground/"):]
-		filePath := filepath.Clean(conf.Wide.Data+ "/playground" + fileNameArg)
+		filePath := filepath.Clean(conf.Wide.Data+ "/playground/" + fileNameArg)
 
 		bytes, err := ioutil.ReadFile(filePath)
 		if nil != err {
@@ -94,7 +94,6 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Debugf("User [%s] has [%d] sessions", uid, len(wideSessions))
 
 	t, err := template.ParseFiles("views/playground/index.html")
-
 	if nil != err {
 		logger.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
