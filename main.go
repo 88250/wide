@@ -96,7 +96,7 @@ func main() {
 	// static resources
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 	http.Handle("/static/users/", http.StripPrefix("/static/", http.FileServer(http.Dir("C:\\Users\\DL882\\wide\\static\\"))))
-	serveSingle("/favicon.ico", "./static/favicon.ico")
+	serveSingle("/favicon.ico", "./static/images/favicon.png")
 
 	// oauth
 	http.HandleFunc("/oauth/github", session.RedirectGitHubHandler)
