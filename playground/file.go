@@ -23,7 +23,6 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"strings"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
@@ -116,23 +115,24 @@ func ShortURLHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	url := args["url"].(string)
+	result.Data = args["url"].(string)
 
-	resp, _ := http.Post("http://dwz.cn/create.php", "application/x-www-form-urlencoded",
-		strings.NewReader("url="+url))
-
-	var response map[string]interface{}
-	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
-		logger.Error(err)
-		result.Succ = false
-
-		return
-	}
-
-	shortURL := url
-	if 0 == response["status"].(float64) {
-		shortURL = response["tinyurl"].(string)
-	}
-
-	result.Data = shortURL
+	// 百度短网址服务需要认证才可以使用
+	//resp, _ := http.Post("http://dwz.cn/create.php", "application/x-www-form-urlencoded",
+	//	strings.NewReader("url="+url))
+	//
+	//var response map[string]interface{}
+	//if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+	//	logger.Error(err)
+	//	result.Succ = false
+	//
+	//	return
+	//}
+	//
+	//shortURL := url
+	//if 0 == response["status"].(float64) {
+	//	shortURL = response["tinyurl"].(string)
+	//}
+	//
+	//result.Data = shortURL
 }
