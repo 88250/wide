@@ -82,7 +82,7 @@
         <div id="dialogShare" class="fn-none"></div>
         <script>
             var channelScheme = "https" === window.location.protocol ? "wss":"ws";
-            var channel = channelScheme + "://" + window.location.hostname;
+            var channel = channelScheme + "://" + window.location.hostname + ":" + window.location.port;
                     var config = {
                             "channel": channel,
                             "wideSessionId": "{{.sid}}",

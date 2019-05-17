@@ -1,4 +1,4 @@
-// Copyright (c) 2014-2019, b3log.org & hacpai.com
+// Copyright (c) 2014-present, b3log.org
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -85,7 +85,7 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	data["fileName"] = fileName
 
 	// Step3. write file
-	filePath := filepath.Clean(conf.Wide.Data + "/playground" + fileName)
+	filePath := filepath.Clean(conf.Wide.Data + "/playground/" + fileName)
 	fout, err := os.Create(filePath)
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {
