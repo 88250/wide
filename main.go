@@ -51,7 +51,6 @@ func init() {
 	confData := flag.String("data", "", "path of data dir")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
 	confLogLevel := flag.String("log_level", "", "this will overwrite Wide.LogLevel if specified")
-	confStat := flag.Bool("stat", false, "whether report statistics periodically")
 
 	flag.Parse()
 
@@ -72,10 +71,7 @@ func init() {
 	conf.FixedTimeCheckEnv()
 	session.FixedTimeSave()
 	session.FixedTimeRelease()
-
-	if *confStat {
-		session.FixedTimeReport()
-	}
+	session.FixedTimeReport()
 
 	logger.Debug("host ["+runtime.Version()+", "+runtime.GOOS+"_"+runtime.GOARCH+"], cross-compilation ", util.Go.GetCrossPlatforms())
 }
