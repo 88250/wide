@@ -66,7 +66,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.1", "--name", rid, "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.05", "--name", rid, "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
