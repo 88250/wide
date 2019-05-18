@@ -179,7 +179,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 			cmd.Process.Kill()
 		}
 
-		channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
+		channelRet["output"] = "\n<span class='stderr'>run program timeout in 5s</span>\n"
 		kill = true
 	case <-done:
 		channelRet["output"] = "\n<span class='stderr'>run program complete</span>\n"

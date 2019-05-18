@@ -305,8 +305,11 @@ var playground = {
 
             playground.pid = data.pid;
 
-            var val = $("#output").val();
-            $("#output").val(val + data.output);
+            var output = data.output;
+            output = output.replace(/\r/g, '');
+            output = output.replace(/\n/g, '<br/>');
+            var oldOutput = $("#output").html();
+            $("#output").html(oldOutput + output);
         };
         playgroundWS.onclose = function (e) {
             console.log('[playground onclose] disconnected (' + e.code + ')');
@@ -424,7 +427,7 @@ var playground = {
         var request = newWideRequest();
         request.code = code;
 
-        $("#output").val("");
+        $("#output").html("");
 
         $.ajax({
             type: 'POST',
@@ -455,7 +458,7 @@ var playground = {
                         
                         var data = result.data;
 
-                        $("#output").val(data.output);
+                        $("#output").html(data.output);
 
                         if (!result.succ) {
                             return;
