@@ -112,10 +112,10 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	go func(runningId string) {
+	go func() {
 		defer util.Recover()
 
-		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.UserId, sid, runningId, filePath)
+		logger.Debugf("User [%s, %s] is running [id=%s, file=%s]", wSession.UserId, sid, rid, filePath)
 
 		go func() {
 			defer util.Recover()
@@ -156,7 +156,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				wsChannel.Refresh()
 			}
 		}
-	}(rid)
+	}()
 
 	after := time.After(5 * time.Second)
 	channelRet["cmd"] = "run-done"
@@ -177,7 +177,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	output.Processes.Remove(wSession, cmd.Process)
-	logger.Debugf("User [%s, %s] done running [id=%d, file=%s]", wSession.UserId, sid, rid, filePath)
+	logger.Debugf("User [%s, %s] done running [id=%s, file=%s]", wSession.UserId, sid, rid, filePath)
 
 	if nil != wsChannel {
 		wsChannel.WriteJSON(&channelRet)

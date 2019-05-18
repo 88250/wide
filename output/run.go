@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -49,10 +50,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["executable"].(string)
 
+	randInt := rand.Int()
+	rid := strconv.Itoa(randInt)
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.1", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.1", "--name", rid, "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
@@ -107,11 +110,10 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	rid := rand.Int()
-	go func(runningId int) {
+	go func() {
 		defer util.Recover()
 
-		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.UserId, sid, runningId, filePath)
+		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.UserId, sid, rid, filePath)
 
 		go func() {
 			defer util.Recover()
@@ -152,13 +154,20 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				wsChannel.Refresh()
 			}
 		}
-	}(rid)
+	}()
 
 	after := time.After(5 * time.Second)
 	channelRet["cmd"] = "run-done"
 	select {
 	case <-after:
-		cmd.Process.Kill()
+		if conf.Docker {
+			killCmd := exec.Command("docker", "rm", "-f", rid)
+			if err := killCmd.Run(); nil != err {
+				logger.Errorf("executes [docker rm -f " + rid + "] failed [" + err.Error() + "], this will cause resource leaking")
+			}
+		} else {
+			cmd.Process.Kill()
+		}
 
 		channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
 	case <-done:
@@ -166,7 +175,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	Processes.Remove(wSession, cmd.Process)
-	logger.Debugf("User [%s, %s] done running [id=%d, file=%s]", wSession.UserId, sid, rid, filePath)
+	logger.Debugf("User [%s, %s] done running [id=%s, file=%s]", wSession.UserId, sid, rid, filePath)
 
 	if nil != wsChannel {
 		wsChannel.WriteJSON(&channelRet)
