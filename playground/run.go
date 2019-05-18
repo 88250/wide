@@ -22,6 +22,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"strings"
+	"time"
 
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/output"
@@ -52,7 +53,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("timeout", "-s", "9", "5", "docker", "run", "--rm", "--cpus", "0.1", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.1", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
@@ -90,6 +91,9 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	done := make(chan error)
+	go func() { done <- cmd.Wait() }()
+
 	channelRet["pid"] = cmd.Process.Pid
 
 	// add the process to user's process set
@@ -105,6 +109,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	rid := rand.Int()
 	go func(runningId int) {
 		defer util.Recover()
 
@@ -149,23 +154,26 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 				wsChannel.Refresh()
 			}
 		}
+	}(rid)
 
-		cmd.Wait()
+	after := time.After(5 * time.Second)
+	channelRet["cmd"] = "run-done"
+	select {
+	case <-after:
+		cmd.Process.Kill()
 
-		// remove the exited process from user's process set
-		output.Processes.Remove(wSession, cmd.Process)
+		channelRet["output"] = "\nrun program timeout in 5s\n"
+	case <-done:
+		channelRet["output"] = "\nrun program complete\n"
+	}
 
-		channelRet["cmd"] = "run-done"
-		// timeout: https://www.gnu.org/software/coreutils/manual/html_node/timeout-invocation.html
-		exitCode := cmd.ProcessState.ExitCode()
-		if 124 == exitCode || 125 == exitCode || 137 == exitCode {
-			channelRet["output"] = "\nrun program timeout in 5s\n"
-		}
-		if nil != wsChannel {
-			wsChannel.WriteJSON(&channelRet)
-			wsChannel.Refresh()
-		}
-	}(rand.Int())
+	output.Processes.Remove(wSession, cmd.Process)
+	logger.Debugf("User [%s, %s] done running [id=%d, file=%s]", wSession.UserId, sid, rid, filePath)
+
+	if nil != wsChannel {
+		wsChannel.WriteJSON(&channelRet)
+		wsChannel.Refresh()
+	}
 }
 
 // StopHandler handles request of stoping a running process.
