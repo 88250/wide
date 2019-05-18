@@ -167,6 +167,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 
 	after := time.After(5 * time.Second)
 	channelRet["cmd"] = "run-done"
+	kill := false
 	select {
 	case <-after:
 		if conf.Docker {
@@ -179,12 +180,13 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 		}
 
 		channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
+		kill = true
 	case <-done:
 		channelRet["output"] = "\n<span class='stderr'>run program complete</span>\n"
 	}
 
 	Processes.Remove(wSession, cmd.Process)
-	logger.Debugf("User [%s, %s] done running [id=%s, file=%s]", wSession.UserId, sid, rid, filePath)
+	logger.Debugf("User [%s, %s] done running [id=%s, file=%s, kill=%v]", wSession.UserId, sid, rid, filePath, kill)
 
 	if nil != wsChannel {
 		wsChannel.WriteJSON(&channelRet)
