@@ -21,6 +21,7 @@ import (
 	"net/http"
 	"os/exec"
 	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
 
@@ -50,10 +51,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["executable"].(string)
 
+	randInt := rand.Int()
+	rid := strconv.Itoa(randInt)
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.1", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.1", "--name", rid, "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
@@ -109,8 +112,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	rid := rand.Int()
-	go func(runningId int) {
+	go func(runningId string) {
 		defer util.Recover()
 
 		logger.Debugf("User [%s, %s] is running [id=%d, file=%s]", wSession.UserId, sid, runningId, filePath)
@@ -160,7 +162,14 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet["cmd"] = "run-done"
 	select {
 	case <-after:
-		cmd.Process.Kill()
+		if conf.Docker {
+			killCmd := exec.Command("docker", "rm", "-f", rid)
+			if err := killCmd.Run(); nil != err {
+				logger.Errorf("executes [docker rm -f " + rid + "] failed [" + err.Error() + "], this will cause resource leaking")
+			}
+		} else {
+			cmd.Process.Kill()
+		}
 
 		channelRet["output"] = "\nrun program timeout in 5s\n"
 	case <-done:
