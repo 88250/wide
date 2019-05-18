@@ -51,7 +51,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("timeout", "5", "docker", "run", "--rm", "--cpus", "0.1", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+		cmd = exec.Command("timeout", "-s", "9", "5", "docker", "run", "--rm", "--cpus", "0.1", "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
@@ -154,7 +154,9 @@ func RunHandler(w http.ResponseWriter, r *http.Request) {
 		Processes.Remove(wSession, cmd.Process)
 
 		channelRet["cmd"] = "run-done"
-		if 124 == cmd.ProcessState.ExitCode() {
+		// timeout: https://www.gnu.org/software/coreutils/manual/html_node/timeout-invocation.html
+		exitCode := cmd.ProcessState.ExitCode()
+		if 124 == exitCode || 125 == exitCode || 137 == exitCode {
 			channelRet["output"] = "<span class='stderr'>run program timeout in 5s</span>\n"
 		} else {
 			channelRet["output"] = "\n<span class='stderr'>run program complete</span>\n"
