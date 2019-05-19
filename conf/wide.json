@@ -6,6 +6,6 @@
     "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "${time}",
     "MaxProcs": 4,
-    "Locale": "en_US",
+    "Locale": "zh_CN",
     "Autocomplete": true
 }
