@@ -78,8 +78,6 @@ func init() {
 
 // Main.
 func main() {
-	runtime.GOMAXPROCS(conf.Wide.MaxProcs)
-
 	initMime()
 	handleSignal()
 

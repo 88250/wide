@@ -5,7 +5,6 @@
     "RuntimeMode": "dev",
     "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "${time}",
-    "MaxProcs": 4,
     "Locale": "zh_CN",
     "Autocomplete": true
 }

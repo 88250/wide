@@ -63,7 +63,6 @@ type conf struct {
 	RuntimeMode           string // runtime mode (dev/prod)
 	HTTPSessionMaxAge     int    // HTTP session max age (in seciond)
 	StaticResourceVersion string // version of static resources
-	MaxProcs              int    // Go max procs
 	Locale                string // default locale
 	Autocomplete          bool   // default autocomplete
 }
