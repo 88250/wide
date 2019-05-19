@@ -166,7 +166,6 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 	}()
 
 	after := time.After(5 * time.Second)
-	channelRet["cmd"] = "run-done"
 	kill := false
 	select {
 	case <-after:
@@ -189,6 +188,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 	logger.Debugf("User [%s, %s] done running [id=%s, file=%s, kill=%v]", wSession.UserId, sid, rid, filePath, kill)
 
 	if nil != wsChannel {
+		channelRet["cmd"] = "run-done"
 		wsChannel.WriteJSON(&channelRet)
 		wsChannel.Refresh()
 	}
