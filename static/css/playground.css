@@ -74,8 +74,12 @@ body{
     height: 70%;
 }
 
-#output {
+.bottom-window-group {
     height: 30%;
+}
+
+#output {
+    height: 100%;
     width: 100%;
     border-width: 0;
     margin: 0;
@@ -112,6 +116,10 @@ body{
     width: 30%;
     overflow: auto;
     border-left: 1px solid #919191;
+}
+
+#goNews::-webkit-scrollbar {
+    display: none;
 }
 
 #goNews li a {

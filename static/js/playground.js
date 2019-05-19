@@ -295,8 +295,6 @@ var playground = {
         };
 
         playgroundWS.onmessage = function (e) {
-            console.log('[playground onmessage]' + e.data);
-
             var data = JSON.parse(e.data);
 
             if ("init-playground" === data.cmd) {
