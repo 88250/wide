@@ -113,6 +113,7 @@ func setCmdEnv(cmd *exec.Cmd, uid string) {
 	}
 
 	cmd.Env = append(cmd.Env,
+		"GOPROXY=https://goproxy.cn",
 		"GO111MODULE=on",
 		"GOPATH="+userWorkspace,
 		"GOOS="+runtime.GOOS,
