@@ -260,21 +260,21 @@
 .bottom-window-group .output .start-build,
 .bottom-window-group .output .start-test, .start-vet,
 .bottom-window-group .output .start-install,
-.bottom-window-group .output .start-get {
+.bottom-window-group .output .start-mod {
     color: #999;
 }
 
 .bottom-window-group .output .build-succ,
 .bottom-window-group .output .test-succ, .vet-succ,
 .bottom-window-group .output .install-succ,
-.bottom-window-group .output .get-succ {
+.bottom-window-group .output .mod-succ {
     color: rgb(0,153,0);
 }
 
 .bottom-window-group .output .build-error,
 .bottom-window-group .output .test-error, .vet-error,
 .bottom-window-group .output .install-error, 
-.bottom-window-group .output .get-error {
+.bottom-window-group .output .mod-error {
     color: #9d0000;
 }
 

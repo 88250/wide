@@ -30,8 +30,8 @@ import (
 	"github.com/b3log/wide/util"
 )
 
-// GoGetHandler handles request of go get.
-func GoGetHandler(w http.ResponseWriter, r *http.Request) {
+// GoModHandler handles request of go mod.
+func GoModHandler(w http.ResponseWriter, r *http.Request) {
 	result := util.NewResult()
 	defer util.RetResult(w, r, result)
 
@@ -57,7 +57,7 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 	curDir := filepath.Dir(filePath)
 
-	cmd := exec.Command("go", "get")
+	cmd := exec.Command("go", "mod")
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, uid)
@@ -85,10 +85,10 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 	channelRet := map[string]interface{}{}
 
 	if nil != session.OutputWS[sid] {
-		// display "START [go get]" in front-end browser
+		// display "START [go mod]" in front-end browser
 
-		channelRet["output"] = "<span class='start-get'>" + i18n.Get(locale, "start-get").(string) + "</span>\n"
-		channelRet["cmd"] = "start-get"
+		channelRet["output"] = "<span class='start-mod'>" + i18n.Get(locale, "start-mod").(string) + "</span>\n"
+		channelRet["cmd"] = "start-mod"
 
 		wsChannel := session.OutputWS[sid]
 
@@ -114,22 +114,22 @@ func GoGetHandler(w http.ResponseWriter, r *http.Request) {
 		defer util.Recover()
 		defer cmd.Wait()
 
-		logger.Debugf("User [%s, %s] is running [go get] [runningId=%d]", uid, sid, runningId)
+		logger.Debugf("User [%s, %s] is running [go mod] [runningId=%d]", uid, sid, runningId)
 
 		channelRet := map[string]interface{}{}
-		channelRet["cmd"] = "go get"
+		channelRet["cmd"] = "go mod"
 
 		// read all
 		buf, _ := ioutil.ReadAll(reader)
 
 		if 0 != len(buf) {
-			logger.Debugf("User [%s, %s] 's [go get] [runningId=%d] has done (with error)", uid, sid, runningId)
+			logger.Debugf("User [%s, %s] 's [go mod] [runningId=%d] has done (with error)", uid, sid, runningId)
 
-			channelRet["output"] = "<span class='get-error'>" + i18n.Get(locale, "get-error").(string) + "</span>\n" + string(buf)
+			channelRet["output"] = "<span class='mod-error'>" + i18n.Get(locale, "mod-error").(string) + "</span>\n" + string(buf)
 		} else {
-			logger.Debugf("User [%s, %s] 's running [go get] [runningId=%d] has done", uid, sid, runningId)
+			logger.Debugf("User [%s, %s] 's running [go mod] [runningId=%d] has done", uid, sid, runningId)
 
-			channelRet["output"] = "<span class='get-succ'>" + i18n.Get(locale, "get-succ").(string) + "</span>\n"
+			channelRet["output"] = "<span class='mod-succ'>" + i18n.Get(locale, "mod-succ").(string) + "</span>\n"
 		}
 
 		if nil != session.OutputWS[sid] {

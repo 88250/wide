@@ -390,14 +390,14 @@ var wide = {
                 case 'start-test':
                 case 'start-vet':
                 case 'start-install':
-                case 'start-get':
+                case 'start-mod':
                     bottomGroup.fillOutput(data.output);
 
                     break;
                 case 'go test':
                 case 'go vet':
                 case 'go install':
-                case 'go get':
+                case 'go mod':
                     bottomGroup.fillOutput($('.bottom-window-group .output > div').html() + data.output);
 
                     break;

@@ -172,7 +172,7 @@ var menu = {
     openAbout: function () {
         $("#dialogAbout").dialog("open");
     },
-    goget: function () {
+    gomod: function () {
         menu.saveAllFiles();
 
         var currentPath = editors.getCurrentPath();
@@ -189,7 +189,7 @@ var menu = {
 
         $.ajax({
             type: 'POST',
-            url: '/go/get',
+            url: '/go/mod',
             data: JSON.stringify(request),
             dataType: "json",
             beforeSend: function () {

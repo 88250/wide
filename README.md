@@ -56,7 +56,7 @@ Wide 是一款基于 **W**eb 的 Go 语言 **IDE**。
 * 运行：支持同时运行多个程序
 * 代码导航：跳转到声明，查找使用，文件搜索等
 * Web 开发：前端（HTML/JS/CSS）开发支持
-* go tool：go get/install/fmt 等
+* go tool：go mod/install/fmt 等
 * 项目文件导出
 * UI/编辑器多主题
 * 支持交叉编译
