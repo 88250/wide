@@ -56,8 +56,9 @@ func GoModHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["file"].(string)
 	curDir := filepath.Dir(filePath)
+	curDirName := filepath.Base(curDir)
 
-	cmd := exec.Command("go", "mod")
+	cmd := exec.Command("go", "mod", "init", curDirName)
 	cmd.Dir = curDir
 
 	setCmdEnv(cmd, uid)
@@ -110,37 +111,26 @@ func GoModHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	go func(runningId int) {
-		defer util.Recover()
-		defer cmd.Wait()
+	runningId := rand.Int()
 
-		logger.Debugf("User [%s, %s] is running [go mod] [runningId=%d]", uid, sid, runningId)
+	logger.Debugf("User [%s, %s] is running [go mod] [runningId=%d]", uid, sid, runningId)
+	channelRet = map[string]interface{}{}
+	channelRet["cmd"] = "go mod"
 
-		channelRet := map[string]interface{}{}
-		channelRet["cmd"] = "go mod"
+	buf, _ := ioutil.ReadAll(reader)
+	output := string(buf)
+	err = cmd.Wait()
+	if nil != err || 0 != cmd.ProcessState.ExitCode() {
+		logger.Debugf("User [%s, %s] 's [go mod] [runningId=%d] has done (with error)", uid, sid, runningId)
+		channelRet["output"] = "<span class='mod-error'>" + i18n.Get(locale, "mod-error").(string) + "</span>\n" + output
+	} else {
+		logger.Debugf("User [%s, %s] 's running [go mod] [runningId=%d] has done", uid, sid, runningId)
+		channelRet["output"] = "<span class='mod-succ'>" + i18n.Get(locale, "mod-succ").(string) + "</span>\n" + output
+	}
 
-		// read all
-		buf, _ := ioutil.ReadAll(reader)
-
-		if 0 != len(buf) {
-			logger.Debugf("User [%s, %s] 's [go mod] [runningId=%d] has done (with error)", uid, sid, runningId)
-
-			channelRet["output"] = "<span class='mod-error'>" + i18n.Get(locale, "mod-error").(string) + "</span>\n" + string(buf)
-		} else {
-			logger.Debugf("User [%s, %s] 's running [go mod] [runningId=%d] has done", uid, sid, runningId)
-
-			channelRet["output"] = "<span class='mod-succ'>" + i18n.Get(locale, "mod-succ").(string) + "</span>\n"
-		}
-
-		if nil != session.OutputWS[sid] {
-			wsChannel := session.OutputWS[sid]
-
-			err := wsChannel.WriteJSON(&channelRet)
-			if nil != err {
-				logger.Warn(err)
-			}
-
-			wsChannel.Refresh()
-		}
-	}(rand.Int())
+	wsChannel := session.OutputWS[sid]
+	if nil != wsChannel {
+		wsChannel.WriteJSON(&channelRet)
+		wsChannel.Refresh()
+	}
 }

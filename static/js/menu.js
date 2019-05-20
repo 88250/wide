@@ -180,7 +180,7 @@ var menu = {
             return false;
         }
 
-        if ($(".menu li.go-get").hasClass("disabled")) {
+        if ($(".menu li.go-mod").hasClass("disabled")) {
             return false;
         }
 

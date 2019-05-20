@@ -178,7 +178,7 @@ var editors = {
                 }
 
                 if (editors.data.length === 0) { // 起始页可能存在，所以用编辑器数据判断
-                    menu.disabled(['save-all', 'build', 'run', 'go-test', 'go-vet', 'go-get', 'go-install',
+                    menu.disabled(['save-all', 'build', 'run', 'go-test', 'go-vet', 'go-mod', 'go-install',
                         'find', 'find-next', 'find-previous', 'replace', 'replace-all',
                         'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment',
                         'edit']);
@@ -732,7 +732,7 @@ var editors = {
             content: '<textarea id="editor' + id + '"></textarea>'
         });
 
-        menu.undisabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-vet', 'go-get', 'go-install',
+        menu.undisabled(['save-all', 'close-all', 'build', 'run', 'go-test', 'go-vet', 'go-mod', 'go-install',
             'find', 'find-next', 'find-previous', 'replace', 'replace-all',
             'format', 'autocomplete', 'jump-to-decl', 'expr-info', 'find-usages', 'toggle-comment',
             'edit']);
