@@ -113,6 +113,7 @@ func setCmdEnv(cmd *exec.Cmd, uid string) {
 	}
 
 	cmd.Env = append(cmd.Env,
+		"GO111MODULE=on",
 		"GOPATH="+userWorkspace,
 		"GOOS="+runtime.GOOS,
 		"GOARCH="+runtime.GOARCH,
