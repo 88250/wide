@@ -172,33 +172,6 @@ var menu = {
     openAbout: function () {
         $("#dialogAbout").dialog("open");
     },
-    gomod: function () {
-        menu.saveAllFiles();
-
-        var currentPath = editors.getCurrentPath();
-        if (!currentPath) {
-            return false;
-        }
-
-        if ($(".menu li.go-mod").hasClass("disabled")) {
-            return false;
-        }
-
-        var request = newWideRequest();
-        request.file = currentPath;
-
-        $.ajax({
-            type: 'POST',
-            url: '/go/mod',
-            data: JSON.stringify(request),
-            dataType: "json",
-            beforeSend: function () {
-                bottomGroup.resetOutput();
-            },
-            success: function (result) {
-            }
-        });
-    },
     goinstall: function () {
         menu.saveAllFiles();
 

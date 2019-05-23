@@ -259,22 +259,19 @@
 
 .bottom-window-group .output .start-build,
 .bottom-window-group .output .start-test, .start-vet,
-.bottom-window-group .output .start-install,
-.bottom-window-group .output .start-mod {
+.bottom-window-group .output .start-install {
     color: #999;
 }
 
 .bottom-window-group .output .build-succ,
 .bottom-window-group .output .test-succ, .vet-succ,
-.bottom-window-group .output .install-succ,
-.bottom-window-group .output .mod-succ {
+.bottom-window-group .output .install-succ {
     color: rgb(0,153,0);
 }
 
 .bottom-window-group .output .build-error,
 .bottom-window-group .output .test-error, .vet-error,
-.bottom-window-group .output .install-error, 
-.bottom-window-group .output .mod-error {
+.bottom-window-group .output .install-error {
     color: #9d0000;
 }
 

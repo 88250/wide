@@ -106,7 +106,6 @@ func main() {
 	http.HandleFunc("/stop", handlerWrapper(output.StopHandler))
 	http.HandleFunc("/go/test", handlerWrapper(output.GoTestHandler))
 	http.HandleFunc("/go/vet", handlerWrapper(output.GoVetHandler))
-	http.HandleFunc("/go/mod", handlerWrapper(output.GoModHandler))
 	http.HandleFunc("/go/install", handlerWrapper(output.GoInstallHandler))
 	http.HandleFunc("/output/ws", handlerWrapper(output.WSHandler))
 
