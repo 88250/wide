@@ -49,7 +49,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	locale := user.Locale
 
 	var args map[string]interface{}
-
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
 		result.Succ = false
@@ -58,9 +57,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	sid := args["sid"].(string)
-
 	filePath := args["file"].(string)
-
 	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -68,9 +65,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	curDir := filepath.Dir(filePath)
-
 	fout, err := os.Create(filePath)
-
 	if nil != err {
 		logger.Error(err)
 		result.Succ = false
@@ -79,7 +74,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	code := args["code"].(string)
-
 	fout.WriteString(code)
 
 	if err := fout.Close(); nil != err {
@@ -94,13 +88,15 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 		suffix = ".exe"
 	}
 
-	goBuildArgs := []string{}
-	goBuildArgs = append(goBuildArgs, "build", "-i")
+	var goBuildArgs []string
+	goBuildArgs = append(goBuildArgs, "build")
 	goBuildArgs = append(goBuildArgs, user.BuildArgs(runtime.GOOS)...)
+	if !util.Str.Contains("-i", goBuildArgs) {
+		goBuildArgs = append(goBuildArgs, "-i")
+	}
 
 	cmd := exec.Command("go", goBuildArgs...)
 	cmd.Dir = curDir
-
 	setCmdEnv(cmd, uid)
 
 	executable := filepath.Base(curDir) + suffix
