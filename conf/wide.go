@@ -50,7 +50,7 @@ const (
 import "fmt"
 
 func main() {
-	fmt.Println("Hello, 世界")
+	fmt.Println("欢迎通过《边看边练 Go 系列》来学习 Go 语言 https://hacpai.com/article/1437497122181")
 }
 `
 )
