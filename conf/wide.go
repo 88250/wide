@@ -64,6 +64,7 @@ type conf struct {
 	HTTPSessionMaxAge     int           // HTTP session max age (in seciond)
 	StaticResourceVersion string        // version of static resources
 	Locale                string        // default locale
+	Autocomplete          bool          // default autocomplete
 	SiteStatCode          template.HTML // site statistic code
 }
 
@@ -175,6 +176,8 @@ func initWide(confPath, confData, confServer, confLogLevel string, confSiteStatC
 		os.Exit(-1)
 	}
 
+	Wide.Autocomplete = true // default to true
+
 	// Logging Level
 	log.SetLevel(Wide.LogLevel)
 	if "" != confLogLevel {
@@ -238,7 +241,7 @@ func FixedTimeCheckEnv() {
 	checkEnv() // check immediately
 
 	go func() {
-		for _ = range time.Tick(time.Minute*7) {
+		for _ = range time.Tick(time.Minute * 7) {
 			checkEnv()
 		}
 	}()
