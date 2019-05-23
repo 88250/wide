@@ -17,6 +17,7 @@ package conf
 
 import (
 	"encoding/json"
+	"html/template"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -24,7 +25,6 @@ import (
 	"sort"
 	"strconv"
 	"strings"
-	"text/template"
 	"time"
 
 	"github.com/b3log/wide/event"
@@ -57,14 +57,14 @@ func main() {
 
 // Configuration.
 type conf struct {
-	Server                string // server
-	LogLevel              string // logging level: trace/debug/info/warn/error
-	Data                  string // data directory
-	RuntimeMode           string // runtime mode (dev/prod)
-	HTTPSessionMaxAge     int    // HTTP session max age (in seciond)
-	StaticResourceVersion string // version of static resources
-	Locale                string // default locale
-	Autocomplete          bool   // default autocomplete
+	Server                string        // server
+	LogLevel              string        // logging level: trace/debug/info/warn/error
+	Data                  string        // data directory
+	RuntimeMode           string        // runtime mode (dev/prod)
+	HTTPSessionMaxAge     int           // HTTP session max age (in seciond)
+	StaticResourceVersion string        // version of static resources
+	Locale                string        // default locale
+	SiteStatCode          template.HTML // site statistic code
 }
 
 // Logger.
@@ -83,8 +83,8 @@ var Docker bool
 const DockerImageGo = "golang"
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{userId}.json.
-func Load(confPath, confData, confServer, confLogLevel string) {
-	initWide(confPath, confData, confServer, confLogLevel)
+func Load(confPath, confData, confServer, confLogLevel string, confSiteStatCode template.HTML) {
+	initWide(confPath, confData, confServer, confLogLevel, confSiteStatCode)
 	initUsers()
 
 	cmd := exec.Command("docker", "version")
@@ -158,7 +158,7 @@ func initUsers() {
 	initCustomizedConfs()
 }
 
-func initWide(confPath, confData, confServer, confLogLevel string) {
+func initWide(confPath, confData, confServer, confLogLevel string, confSiteStatCode template.HTML) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -218,6 +218,11 @@ func initWide(confPath, confData, confServer, confLogLevel string) {
 	// Server
 	if "" != confServer {
 		Wide.Server = confServer
+	}
+
+	// SiteStatCode
+	if "" != confSiteStatCode {
+		Wide.SiteStatCode = confSiteStatCode
 	}
 
 	time := strconv.FormatInt(time.Now().UnixNano(), 10)

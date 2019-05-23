@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="/static/css/base.css?{{.conf.StaticResourceVersion}}">
     <link rel="stylesheet" href="/static/css/sign.css?{{.conf.StaticResourceVersion}}">
     <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+    {{if ne "" .conf.SiteStatCode}}
+        {{.conf.SiteStatCode}}
+    {{end}}
 </head>
 <body>
 <div class="header">

@@ -31,6 +31,9 @@
         <link rel="stylesheet" href="/static/css/themes/{{.user.Theme}}.css?{{.conf.StaticResourceVersion}}" id="themesLink">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        {{if ne "" .conf.SiteStatCode}}
+            {{.conf.SiteStatCode}}
+        {{end}}
     </head>
     <body>
         <!-- menu bar -->

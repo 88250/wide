@@ -9,6 +9,9 @@
         <meta name="author" content="B3log">
 
         <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        {{if ne "" .conf.SiteStatCode}}
+            {{.conf.SiteStatCode}}
+        {{end}}
     </head>
     <body>
         <h2>{{.i18n.editor}}</h2>

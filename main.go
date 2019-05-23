@@ -51,6 +51,7 @@ func init() {
 	confData := flag.String("data", "", "path of data dir")
 	confServer := flag.String("server", "", "this will overwrite Wide.Server if specified")
 	confLogLevel := flag.String("log_level", "", "this will overwrite Wide.LogLevel if specified")
+	confSiteStatCode := flag.String("site_stat_code", "", "this will overrite Wide.SiteStatCode if specified")
 
 	flag.Parse()
 
@@ -66,7 +67,7 @@ func init() {
 
 	i18n.Load()
 	event.Load()
-	conf.Load(*confPath, *confData, *confServer, *confLogLevel)
+	conf.Load(*confPath, *confData, *confServer, *confLogLevel, template.HTML(*confSiteStatCode))
 
 	conf.FixedTimeCheckEnv()
 	session.FixedTimeSave()
