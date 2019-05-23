@@ -303,11 +303,19 @@ var playground = {
 
             playground.pid = data.pid;
 
-            var output = data.output;
+            var output = $("#output").html();
+            if ("" === output) {
+                output = "<pre>" + data.output + "</pre>";
+            } else {
+                output = output.replace(/<\/pre>$/g, data.output + '</pre>');
+            }
             output = output.replace(/\r/g, '');
             output = output.replace(/\n/g, '<br/>');
-            var oldOutput = $("#output").html();
-            $("#output").html(oldOutput + output);
+            if (-1 !== output.indexOf("<br/>")) {
+                output = Autolinker.link(output);
+            }
+
+            $("#output").html(output);
         };
         playgroundWS.onclose = function (e) {
             console.log('[playground onclose] disconnected (' + e.code + ')');
