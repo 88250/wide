@@ -74,18 +74,45 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	code := args["code"].(string)
-	fout.WriteString(code)
-
-	if err := fout.Close(); nil != err {
+	if _, err := fout.WriteString(code); nil != err {
 		logger.Error(err)
 		result.Succ = false
 
 		return
 	}
+	fout.Close()
 
-	suffix := ""
-	if util.OS.IsWindows() {
-		suffix = ".exe"
+	channelRet := map[string]interface{}{}
+	if nil != session.OutputWS[sid] {
+		// display "START [go build]" in front-end browser
+
+		msg := i18n.Get(locale, "start-build").(string)
+		msg = strings.Replace(msg, "build]", "build "+fmt.Sprint(user.BuildArgs(runtime.GOOS))+"]", 1)
+
+		channelRet["output"] = "<span class='start-build'>" + msg + "</span>\n"
+		channelRet["cmd"] = "start-build"
+
+		wsChannel := session.OutputWS[sid]
+		wsChannel.WriteJSON(&channelRet)
+		wsChannel.Refresh()
+	}
+
+	var goModCmd *exec.Cmd
+	if !util.File.IsExist(filepath.Join(curDir, "go.mod")) {
+		curDirName := filepath.Base(curDir)
+		goModCmd = exec.Command("go", "mod", "init", curDirName)
+	} else {
+		goModCmd = exec.Command("go", "mod", "tidy")
+	}
+	goModCmd.Dir = curDir
+	setCmdEnv(goModCmd, uid)
+	outputBytes, err := goModCmd.CombinedOutput()
+	output := string(outputBytes)
+	if nil != err && strings.Contains(output, "go.mod already exists") {
+		logger.Error(err.Error() + ": " + output)
+		result.Succ = false
+
+		return
 	}
 
 	var goBuildArgs []string
@@ -99,6 +126,10 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	cmd.Dir = curDir
 	setCmdEnv(cmd, uid)
 
+	suffix := ""
+	if util.OS.IsWindows() {
+		suffix = ".exe"
+	}
 	executable := filepath.Base(curDir) + suffix
 	executable = filepath.Join(curDir, executable)
 
@@ -120,28 +151,6 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	if !result.Succ {
 		return
-	}
-
-	channelRet := map[string]interface{}{}
-
-	if nil != session.OutputWS[sid] {
-		// display "START [go build]" in front-end browser
-
-		msg := i18n.Get(locale, "start-build").(string)
-		msg = strings.Replace(msg, "build]", "build "+fmt.Sprint(user.BuildArgs(runtime.GOOS))+"]", 1)
-
-		channelRet["output"] = "<span class='start-build'>" + msg + "</span>\n"
-		channelRet["cmd"] = "start-build"
-
-		wsChannel := session.OutputWS[sid]
-
-		err := wsChannel.WriteJSON(&channelRet)
-		if nil != err {
-			logger.Error(err)
-			return
-		}
-
-		wsChannel.Refresh()
 	}
 
 	if err := cmd.Start(); nil != err {
