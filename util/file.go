@@ -76,6 +76,10 @@ func (*myfile) IsImg(extension string) bool {
 // IsDir determines whether the specified path is a directory.
 func (*myfile) IsDir(path string) bool {
 	fio, err := os.Lstat(path)
+	if os.IsNotExist(err) {
+		return false
+	}
+
 	if nil != err {
 		fileLogger.Warnf("Determines whether [%s] is a directory failed: [%v]", path, err)
 
