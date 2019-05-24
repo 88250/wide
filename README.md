@@ -5,7 +5,6 @@
 <br><br>
 <a title="Build Status" target="_blank" href="https://travis-ci.org/b3log/wide"><img src="https://img.shields.io/travis/b3log/wide.svg?style=flat-square"></a>
 <a title="Go Report Card" target="_blank" href="https://goreportcard.com/report/github.com/b3log/wide"><img src="https://goreportcard.com/badge/github.com/b3log/wide?style=flat-square"></a>
-<a title="Coverage Status" target="_blank" href="https://coveralls.io/repos/github/b3log/wide/badge.svg?branch=master"><img src="https://img.shields.io/coveralls/github/b3log/wide.svg?style=flat-square&color=CC9933"></a>
 <a title="Code Size" target="_blank" href="https://github.com/b3log/wide"><img src="https://img.shields.io/github/languages/code-size/b3log/wide.svg?style=flat-square"></a>
 <a title="Apache License" target="_blank" href="https://github.com/b3log/wide/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-apache2-orange.svg?style=flat-square"></a>
 <br>
