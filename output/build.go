@@ -181,7 +181,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			if nil != err {
-				logger.Warn(err)
+				logger.Warnf("%#v", err)
 
 				break
 			}
