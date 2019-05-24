@@ -2,7 +2,7 @@
     "Server": "http://127.0.0.1:7070",
     "LogLevel": "debug",
     "Data": "${home}/wide",
-    "RuntimeMode": "dev",
+    "RuntimeMode": "prod",
     "HTTPSessionMaxAge": 86400,
     "StaticResourceVersion": "${time}",
     "Locale": "zh_CN",
