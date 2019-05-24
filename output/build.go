@@ -176,7 +176,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			line, err := outReader.ReadString('\n')
-			if io.EOF == err {
+			if io.EOF == err || os.ErrClosed == err {
 				break
 			}
 
