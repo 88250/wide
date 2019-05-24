@@ -492,7 +492,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 
 				ch = SessionWS[sid]
 				if nil == ch {
-					return // release this gorutine
+					return // release this goroutine
 				}
 
 				logger.Trace(event)
