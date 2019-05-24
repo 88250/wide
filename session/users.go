@@ -117,7 +117,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -146,7 +146,11 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 	user.Lived = now
 	user.Updated = now
 
-	result.Succ = user.Save()
+	if user.Save() {
+		result.Code = 0
+	} else {
+		result.Code = -1
+	}
 }
 
 // FixedTimeSave saves online users' configurations periodically (1 minute).

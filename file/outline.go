@@ -41,7 +41,7 @@ func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -51,7 +51,7 @@ func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
 	fset := token.NewFileSet()
 	f, err := parser.ParseFile(fset, "", code, 0)
 	if err != nil {
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}

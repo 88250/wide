@@ -439,7 +439,7 @@ var editors = {
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (result) {
-                    if (!result.succ) {
+                    if (0 != result.code) {
                         return;
                     }
                     
@@ -587,7 +587,7 @@ var editors = {
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (result) {
-                    if (!result.succ) {
+                    if (0 != result.code) {
                         return;
                     }
                     
@@ -617,7 +617,7 @@ var editors = {
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (result) {
-                    if (!result.succ) {
+                    if (0 != result.code) {
                         return;
                     }
 

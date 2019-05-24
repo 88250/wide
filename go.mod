@@ -3,7 +3,7 @@ module github.com/b3log/wide
 go 1.12
 
 require (
-	github.com/b3log/gulu v0.0.0-20190524125155-0ed03084217c
+	github.com/b3log/gulu v0.0.0-20190524134307-1c13d074e5e7
 	github.com/elazarl/goproxy v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/fsnotify/fsnotify v1.4.7
@@ -18,5 +18,5 @@ require (
 	golang.org/x/crypto v0.0.0-20190513172903-22d7a77e9e5f // indirect
 	golang.org/x/net v0.0.0-20190522155817-f3200d17e092 // indirect
 	golang.org/x/sys v0.0.0-20190524122548-abf6ff778158 // indirect
-	golang.org/x/tools v0.0.0-20190523174634-38d8bcfa38af // indirect
+	golang.org/x/tools v0.0.0-20190524125531-991f2949994b // indirect
 )

@@ -42,7 +42,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
-                if (!result.succ) {
+                if (0 != result.code) {
                     return;
                 }
 
@@ -125,7 +125,7 @@ var wide = {
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
-                        if (!result.succ) {
+                        if (0 != result.code) {
                             $("#dialogRemoveConfirm").dialog("close");
                             bottomGroup.tabs.setCurrent("notification");
                             windows.flowBottom();
@@ -163,7 +163,7 @@ var wide = {
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
-                        if (!result.succ) {
+                        if (0 != result.code) {
                             $("#dialogNewFilePrompt").dialog("close");
                             bottomGroup.tabs.setCurrent("notification");
                             windows.flowBottom();
@@ -207,7 +207,7 @@ var wide = {
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
-                        if (!result.succ) {
+                        if (0 != result.code) {
                             $("#dialogNewDirPrompt").dialog("close");
                             bottomGroup.tabs.setCurrent("notification");
                             windows.flowBottom();
@@ -268,7 +268,7 @@ var wide = {
                         data: JSON.stringify(request),
                         dataType: "json",
                         success: function (result) {
-                            if (!result.succ) {
+                            if (0 != result.code) {
                                 return;
                             }
 
@@ -443,7 +443,7 @@ var wide = {
                                 data: JSON.stringify(request),
                                 dataType: "json",
                                 success: function (result) {
-                                    if (!result.succ) {
+                                    if (0 != result.code) {
                                         $("#dialogAlert").dialog("open", result.msg);
 
                                         return false;
@@ -614,7 +614,7 @@ var wide = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
-                if (result.succ) {
+                if (0 == result.code) {
                     editor.setValue(result.data.code);
                     editor.setCursor(cursor);
                     editor.scrollTo(null, scrollInfo.top);
@@ -647,7 +647,7 @@ var wide = {
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
-                        if (result.succ) {
+                        if (0 == result.code) {
                             formatted = result.data.code;
                         }
                     }

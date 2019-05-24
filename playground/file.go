@@ -44,7 +44,7 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -57,7 +57,7 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	stdin, err := cmd.StdinPipe()
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -89,7 +89,7 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}

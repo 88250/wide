@@ -52,13 +52,13 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 	}
 
 	sid := args["sid"].(string)
 	wSession := WideSessions.Get(sid)
 	if nil == wSession {
-		result.Succ = false
+		result.Code = -1
 	}
 
 	filePath := args["executable"].(string)
@@ -78,13 +78,13 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 	}
 
 	stderr, err := cmd.StderrPipe()
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 	}
 
 	outReader := bufio.NewReader(stdout)
@@ -92,11 +92,11 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 
 	if err := cmd.Start(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 	}
 	wsChannel := channel[sid]
 	channelRet := map[string]interface{}{}
-	if !result.Succ {
+	if 0 != result.Code {
 		channelRet["cmd"] = "run-done"
 		channelRet["output"] = ""
 		wsChannel.WriteJSON(&channelRet)
@@ -204,7 +204,7 @@ func StopHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -214,7 +214,7 @@ func StopHandler(w http.ResponseWriter, r *http.Request) {
 
 	wSession := WideSessions.Get(sid)
 	if nil == wSession {
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}

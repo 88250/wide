@@ -42,7 +42,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -66,7 +66,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	data["output"] = template.HTML(string(out))
 
 	if nil != err {
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}

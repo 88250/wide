@@ -163,7 +163,7 @@ var menu = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
-                if (result.succ) {
+                if (0 == result.code) {
                     window.location.href = "/login";
                 }
             }
@@ -440,7 +440,7 @@ var menu = {
                         url: '/preference',
                         data: JSON.stringify(request),
                         success: function (result, textStatus, jqXHR) {
-                            if (!result.succ) {
+                            if (0 != result.code) {
                                 return false;
                             }
 

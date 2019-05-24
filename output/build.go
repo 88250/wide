@@ -51,7 +51,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -68,7 +68,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	fout, err := os.Create(filePath)
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -76,7 +76,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	code := args["code"].(string)
 	if _, err := fout.WriteString(code); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -110,7 +110,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	output := string(outputBytes)
 	if nil != err && strings.Contains(output, "go.mod already exists") {
 		logger.Error(err.Error() + ": " + output)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -136,7 +136,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -144,18 +144,18 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	stderr, err := cmd.StderrPipe()
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
 
-	if !result.Succ {
+	if 0 != result.Code {
 		return
 	}
 
 	if err := cmd.Start(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}

@@ -164,7 +164,7 @@ var tree = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
-                if (!result.succ) {
+                if (0 != result.code) {
                     $("#dialogAlert").dialog("open", result.msg);
 
                     return false;
@@ -190,7 +190,7 @@ var tree = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
-                if (!result.succ) {
+                if (0 != result.code) {
                     $("#dialogAlert").dialog("open", result.msg);
 
                     return false;
@@ -220,7 +220,7 @@ var tree = {
             data: JSON.stringify(request),
             dataType: "json",
             success: function (result) {
-                if (result.succ) {
+                if (0 == result.code) {
                     var $dirRMenu = $("#dirRMenu");
                     var $fileRMenu = $("#fileRMenu");
                     var setting = {
@@ -374,7 +374,7 @@ var tree = {
                 data: JSON.stringify(request),
                 dataType: "json",
                 success: function (result) {
-                    if (!result.succ) {
+                    if (0 != result.code) {
                         $("#dialogAlert").dialog("open", result.msg);
 
                         return false;
@@ -463,7 +463,7 @@ var tree = {
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
-                        if (!result.succ) {
+                        if (0 != result.code) {
                             return;
                         }
 
@@ -499,7 +499,7 @@ var tree = {
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
-                        if (!result.succ) {
+                        if (0 != result.code) {
                             $("#dialogRenamePrompt").dialog("close");
                             bottomGroup.tabs.setCurrent("notification");
                             windows.flowBottom();

@@ -46,7 +46,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -54,7 +54,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 
 	if gulu.Go.IsAPI(filePath) {
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -63,7 +63,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -73,7 +73,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -94,7 +94,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	output := string(bytes)
 	if "" == output {
 		// format error, returns the original content
-		result.Succ = true
+		result.Code = 0
 
 		return
 	}
@@ -106,7 +106,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 	fout.WriteString(code)
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}

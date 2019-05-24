@@ -57,7 +57,7 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		data.Succ = false
+		data.Code = -1
 
 		return
 	}
@@ -76,7 +76,7 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	dir := filepath.Dir(path)
 
 	if !gulu.File.IsExist(path) {
-		data.Succ = false
+		data.Code = -1
 		data.Msg = "Can't find file [" + path + "]"
 
 		return
@@ -86,7 +86,7 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	zipFile, err := gulu.Zip.Create(zipPath + ".zip")
 	if nil != err {
 		logger.Error(err)
-		data.Succ = false
+		data.Code = -1
 
 		return
 	}

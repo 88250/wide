@@ -50,7 +50,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -70,7 +70,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	stdout, err := cmd.StdoutPipe()
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -78,12 +78,12 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	stderr, err := cmd.StderrPipe()
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
 
-	if !result.Succ {
+	if 0 != result.Code {
 		return
 	}
 
@@ -110,7 +110,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := cmd.Start(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}

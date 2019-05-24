@@ -373,7 +373,7 @@ var playground = {
                 
                 playground.editor.setValue(data.code);
 
-                if (!result.succ) {
+                if (0 != result.code) {
                     console.log(data);
                     return;
                 }
@@ -446,7 +446,7 @@ var playground = {
                 playground.editor.setValue(data.code);
                 playground.editor.setCursor(cursor);
 
-                if (!result.succ) {
+                if (0 != result.code) {
                     return;
                 }
 
@@ -466,7 +466,7 @@ var playground = {
 
                         $("#output").html(data.output);
 
-                        if (!result.succ) {
+                        if (0 != result.code) {
                             return;
                         }
 

@@ -94,7 +94,7 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 		msg := addUser(githubId, userName, avatar)
 		if userCreated != msg {
 			result := gulu.Ret.NewResult()
-			result.Succ = false
+			result.Code = -1
 			result.Msg = msg
 			gulu.Ret.RetResult(w, r, result)
 

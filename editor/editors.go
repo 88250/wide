@@ -201,7 +201,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -211,7 +211,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -240,7 +240,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	exprInfo := strings.TrimSpace(string(output))
 	if "" == exprInfo {
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -277,7 +277,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -287,7 +287,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -316,7 +316,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	found := strings.TrimSpace(string(output))
 	if "" == found {
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -366,7 +366,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -376,7 +376,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -404,7 +404,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 
 	out := strings.TrimSpace(string(output))
 	if "" == out {
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}

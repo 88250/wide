@@ -170,7 +170,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -185,7 +185,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	size := gulu.File.GetFileSize(path)
 	if size > 5242880 { // 5M
-		result.Succ = false
+		result.Code = -1
 		result.Msg = "This file is too large to open :("
 
 		return
@@ -221,7 +221,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	content := string(buf)
 
 	if gulu.File.IsBinary(content) {
-		result.Succ = false
+		result.Code = -1
 		result.Msg = "Can't open a binary file :("
 	} else {
 		data["content"] = content
@@ -246,7 +246,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -264,7 +264,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -275,7 +275,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		wSession := session.WideSessions.Get(sid)
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
@@ -302,7 +302,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -321,7 +321,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	wSession := session.WideSessions.Get(sid)
 
 	if !createFile(path, fileType) {
-		result.Succ = false
+		result.Code = -1
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't create file " + path}
@@ -354,7 +354,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -372,7 +372,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	wSession := session.WideSessions.Get(sid)
 
 	if !removeFile(path) {
-		result.Succ = false
+		result.Code = -1
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't remove file " + path}
@@ -400,7 +400,7 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -425,7 +425,7 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 	wSession := session.WideSessions.Get(sid)
 
 	if !renameFile(oldPath, newPath) {
-		result.Succ = false
+		result.Code = -1
 
 		wSession.EventQueue.Queue <- &event.Event{Code: event.EvtCodeServerInternalError, Sid: sid,
 			Data: "can't rename file " + oldPath}
@@ -464,7 +464,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -518,7 +518,7 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
@@ -526,7 +526,7 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 	wSession := session.WideSessions.Get(sid)
 	if nil == wSession {
-		result.Succ = false
+		result.Code = -1
 
 		return
 	}
