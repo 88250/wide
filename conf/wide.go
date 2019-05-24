@@ -39,7 +39,7 @@ const (
 	PathListSeparator = string(os.PathListSeparator)
 
 	// WideVersion holds the current Wide's version.
-	WideVersion = "1.5.3"
+	WideVersion = "1.6.0"
 	// CodeMirrorVer holds the current editor version.
 	CodeMirrorVer = "5.1"
 	// UserAgent represents HTTP client user agent.

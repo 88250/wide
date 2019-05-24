@@ -1,7 +1,7 @@
 {
   "name": "wide",
-  "version": "1.4.0",
-  "description": "A Web-based IDE for Teams using Go programming language/Golang.",
+  "version": "1.6.0",
+  "description": "A Web-based Go IDE , do your development anytime, anywhere.",
   "homepage": "https://wide.b3log.org",
   "repository": {
     "type": "git",
