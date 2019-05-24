@@ -26,16 +26,16 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // CrossCompilationHandler handles request of cross compilation.
 func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
@@ -58,7 +58,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	sid := args["sid"].(string)
 	filePath := args["path"].(string)
 
-	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
+	if gulu.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -152,7 +152,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	go func(runningId int) {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 		defer cmd.Wait()
 
 		// read all

@@ -24,15 +24,14 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
-	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // Logger.
-var logger = log.NewLogger(os.Stdout)
+var logger = gulu.Log.NewLogger(os.Stdout)
 
 // Node represents a file node in file tree.
 type Node struct {
@@ -61,7 +60,7 @@ var apiNode *Node
 
 // initAPINode builds the Go API file node.
 func initAPINode() {
-	apiPath := util.Go.GetAPIPath()
+	apiPath := gulu.Go.GetAPIPath()
 
 	apiNode = &Node{Name: "Go API", Path: apiPath, IconSkin: "ico-ztree-dir-api ", Type: "d",
 		Creatable: false, Removable: false, IsGoAPI: true, Children: []*Node{}}
@@ -82,8 +81,8 @@ func GetFilesHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uid := httpSession.Values["uid"].(string)
 
-	result := util.NewResult()
-	defer util.RetGzResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetGzResult(w, r, result)
 
 	userWorkspace := conf.GetUserWorkspace(uid)
 	workspaces := filepath.SplitList(userWorkspace)
@@ -134,7 +133,7 @@ func RefreshDirectoryHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 	path := r.FormValue("path")
 
-	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
+	if !gulu.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -164,8 +163,8 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uid := httpSession.Values["uid"].(string)
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
@@ -178,13 +177,13 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
+	if !gulu.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
 	}
 
-	size := util.File.GetFileSize(path)
+	size := gulu.File.GetFileSize(path)
 	if size > 5242880 { // 5M
 		result.Succ = false
 		result.Msg = "This file is too large to open :("
@@ -199,7 +198,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	extension := filepath.Ext(path)
 
-	if util.File.IsImg(extension) {
+	if gulu.File.IsImg(extension) {
 		// image file will be open in a browser tab
 
 		data["mode"] = "img"
@@ -221,7 +220,7 @@ func GetFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	content := string(buf)
 
-	if util.File.IsBinary(content) {
+	if gulu.File.IsBinary(content) {
 		result.Succ = false
 		result.Msg = "Can't open a binary file :("
 	} else {
@@ -240,8 +239,8 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uid := httpSession.Values["uid"].(string)
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
@@ -255,7 +254,7 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := args["file"].(string)
 	sid := args["sid"].(string)
 
-	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
+	if gulu.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -296,8 +295,8 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uid := httpSession.Values["uid"].(string)
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
@@ -310,7 +309,7 @@ func NewFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if util.Go.IsAPI(path) || !session.CanAccess(uid, path) {
+	if gulu.Go.IsAPI(path) || !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -348,8 +347,8 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uid := httpSession.Values["uid"].(string)
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
@@ -362,7 +361,7 @@ func RemoveFileHandler(w http.ResponseWriter, r *http.Request) {
 
 	path := args["path"].(string)
 
-	if util.Go.IsAPI(path) || !session.CanAccess(uid, path) {
+	if gulu.Go.IsAPI(path) || !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -394,8 +393,8 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uid := httpSession.Values["uid"].(string)
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
@@ -407,7 +406,7 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	oldPath := args["oldPath"].(string)
-	if util.Go.IsAPI(oldPath) ||
+	if gulu.Go.IsAPI(oldPath) ||
 		!session.CanAccess(uid, oldPath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
@@ -415,7 +414,7 @@ func RenameFileHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	newPath := args["newPath"].(string)
-	if util.Go.IsAPI(newPath) || !session.CanAccess(uid, newPath) {
+	if gulu.Go.IsAPI(newPath) || !session.CanAccess(uid, newPath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -459,8 +458,8 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	uid := httpSession.Values["uid"].(string)
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -471,7 +470,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	path := args["path"].(string) // path of selected file in file tree
-	if !util.Go.IsAPI(path) && !session.CanAccess(uid, path) {
+	if !gulu.Go.IsAPI(path) && !session.CanAccess(uid, path) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -482,7 +481,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 	userWorkspace := conf.GetUserWorkspace(uid)
 	workspaces := filepath.SplitList(userWorkspace)
 
-	if "" != path && !util.File.IsDir(path) {
+	if "" != path && !gulu.File.IsDir(path) {
 		path = filepath.Dir(path)
 	}
 
@@ -492,7 +491,7 @@ func FindHandler(w http.ResponseWriter, r *http.Request) {
 		rs := find(workspace+conf.PathSeparator+"src", name, []*string{})
 
 		for _, r := range rs {
-			substr := util.Str.LCS(path, *r)
+			substr := gulu.Str.LCS(path, *r)
 
 			founds = append(founds, &foundPath{Path: filepath.ToSlash(*r), score: len(substr)})
 		}
@@ -512,8 +511,8 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
@@ -545,7 +544,7 @@ func SearchTextHandler(w http.ResponseWriter, r *http.Request) {
 	text := args["text"].(string)
 
 	founds := []*Snippet{}
-	if util.File.IsDir(dir) {
+	if gulu.File.IsDir(dir) {
 		founds = search(dir, extension, text, []*Snippet{})
 	} else {
 		founds = searchInFile(dir, text)
@@ -644,7 +643,7 @@ func listFiles(dirname string) []string {
 //
 // Refers to the zTree document for CSS class names.
 func getIconSkin(filenameExtension string) string {
-	if util.File.IsImg(filenameExtension) {
+	if gulu.File.IsImg(filenameExtension) {
 		return "ico-ztree-img "
 	}
 
@@ -763,7 +762,7 @@ func find(dir, name string, results []*string) []*string {
 		path := dir + fname
 
 		if fileInfo.IsDir() {
-			if util.Str.Contains(fname, defaultExcludesFind) {
+			if gulu.Str.Contains(fname, defaultExcludesFind) {
 				continue
 			}
 
@@ -836,7 +835,7 @@ func searchInFile(path string, text string) []*Snippet {
 	}
 
 	content := string(bytes)
-	if util.File.IsBinary(content) {
+	if gulu.File.IsBinary(content) {
 		return ret
 	}
 

@@ -23,7 +23,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/b3log/wide/util"
+	"github.com/b3log/gulu"
 )
 
 type element struct {
@@ -34,8 +34,8 @@ type element struct {
 
 // GetOutlineHandler gets outfile of a go file.
 func GetOutlineHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 

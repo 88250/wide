@@ -1,4 +1,4 @@
-// Copyright (c) 2014-present, b3log.org
+// Copyright (c) 2014-present, b3gulu.Log.org
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,9 +27,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/event"
-	"github.com/b3log/wide/log"
-	"github.com/b3log/wide/util"
 )
 
 const (
@@ -69,7 +68,7 @@ type conf struct {
 }
 
 // Logger.
-var logger = log.NewLogger(os.Stdout)
+var logger = gulu.Log.NewLogger(os.Stdout)
 
 // Wide configurations.
 var Wide *conf
@@ -91,7 +90,7 @@ func Load(confPath, confData, confServer, confLogLevel string, confSiteStatCode 
 	cmd := exec.Command("docker", "version")
 	_, err := cmd.CombinedOutput()
 	if nil != err {
-		if !util.OS.IsWindows() {
+		if !gulu.OS.IsWindows() {
 			logger.Errorf("Not found 'docker' installed, running user's code will cause security problem")
 
 			os.Exit(-1)
@@ -179,16 +178,16 @@ func initWide(confPath, confData, confServer, confLogLevel string, confSiteStatC
 	Wide.Autocomplete = true // default to true
 
 	// Logging Level
-	log.SetLevel(Wide.LogLevel)
+	gulu.Log.SetLevel(Wide.LogLevel)
 	if "" != confLogLevel {
 		Wide.LogLevel = confLogLevel
-		log.SetLevel(confLogLevel)
+		gulu.Log.SetLevel(confLogLevel)
 	}
 
 	logger.Debug("Conf: \n" + string(bytes))
 
 	// User Home
-	home, err := util.OS.Home()
+	home, err := gulu.OS.Home()
 	if nil != err {
 		logger.Error("Can't get user's home, please report this issue to developer", err)
 
@@ -241,14 +240,14 @@ func FixedTimeCheckEnv() {
 	checkEnv() // check immediately
 
 	go func() {
-		for _ = range time.Tick(time.Minute * 7) {
+		for _ = range time.Tick(time.Minute*7) {
 			checkEnv()
 		}
 	}()
 }
 
 func checkEnv() {
-	defer util.Recover()
+	defer gulu.Panic.Recover()
 
 	cmd := exec.Command("go", "version")
 	buf, err := cmd.CombinedOutput()
@@ -265,7 +264,7 @@ func checkEnv() {
 		os.Exit(-1)
 	}
 
-	gocode := util.Go.GetExecutableInGOBIN("gocode")
+	gocode := gulu.Go.GetExecutableInGOBIN("gocode")
 	cmd = exec.Command(gocode)
 	_, err = cmd.Output()
 	if nil != err {
@@ -274,7 +273,7 @@ func checkEnv() {
 		logger.Warnf("Not found gocode [%s], please install it with this command: go get github.com/nsf/gocode", gocode)
 	}
 
-	ideStub := util.Go.GetExecutableInGOBIN("gotools")
+	ideStub := gulu.Go.GetExecutableInGOBIN("gotools")
 	cmd = exec.Command(ideStub, "version")
 	_, err = cmd.Output()
 	if nil != err {
@@ -303,7 +302,7 @@ func GetGoFmt(userId string) string {
 			case "gofmt":
 				return "gofmt"
 			case "goimports":
-				return util.Go.GetExecutableInGOBIN("goimports")
+				return gulu.Go.GetExecutableInGOBIN("goimports")
 			default:
 				logger.Errorf("Unsupported Go Format tool [%s]", user.GoFormat)
 				return "gofmt"
@@ -413,7 +412,7 @@ func CreateWorkspaceDir(path string) {
 
 // createDir creates a directory on the path if it not exists.
 func createDir(path string) {
-	if !util.File.IsExist(path) {
+	if !gulu.File.IsExist(path) {
 		if err := os.MkdirAll(path, 0775); nil != err {
 			logger.Error(err)
 

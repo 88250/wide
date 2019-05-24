@@ -20,7 +20,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/b3log/wide/util"
+	"github.com/b3log/gulu"
 )
 
 // GetZipHandler handles request of retrieving zip file.
@@ -34,7 +34,7 @@ func GetZipHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !util.File.IsExist(path) {
+	if !gulu.File.IsExist(path) {
 		http.Error(w, "Not Found", 404)
 
 		return
@@ -51,8 +51,8 @@ func GetZipHandler(w http.ResponseWriter, r *http.Request) {
 
 // CreateZipHandler handles request of creating zip.
 func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
-	data := util.NewResult()
-	defer util.RetResult(w, r, data)
+	data := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, data)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
@@ -75,7 +75,7 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 
 	dir := filepath.Dir(path)
 
-	if !util.File.IsExist(path) {
+	if !gulu.File.IsExist(path) {
 		data.Succ = false
 		data.Msg = "Can't find file [" + path + "]"
 
@@ -83,7 +83,7 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	zipPath := filepath.Join(dir, name)
-	zipFile, err := util.Zip.Create(zipPath + ".zip")
+	zipFile, err := gulu.Zip.Create(zipPath + ".zip")
 	if nil != err {
 		logger.Error(err)
 		data.Succ = false
@@ -92,7 +92,7 @@ func CreateZipHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer zipFile.Close()
 
-	if util.File.IsDir(path) {
+	if gulu.File.IsDir(path) {
 		zipFile.AddDirectory(base, path)
 	} else {
 		zipFile.AddEntry(base, path)

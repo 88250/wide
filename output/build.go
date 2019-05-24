@@ -18,6 +18,7 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
+	"github.com/b3log/gulu"
 	"io"
 	"net/http"
 	"os"
@@ -30,13 +31,12 @@ import (
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // BuildHandler handles request of building.
 func BuildHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
@@ -58,7 +58,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	sid := args["sid"].(string)
 	filePath := args["file"].(string)
-	if util.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
+	if gulu.Go.IsAPI(filePath) || !session.CanAccess(uid, filePath) {
 		http.Error(w, "Forbidden", http.StatusForbidden)
 
 		return
@@ -98,7 +98,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var goModCmd *exec.Cmd
-	if !util.File.IsExist(filepath.Join(curDir, "go.mod")) {
+	if !gulu.File.IsExist(filepath.Join(curDir, "go.mod")) {
 		curDirName := filepath.Base(curDir)
 		goModCmd = exec.Command("go", "mod", "init", curDirName)
 	} else {
@@ -118,7 +118,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	var goBuildArgs []string
 	goBuildArgs = append(goBuildArgs, "build")
 	goBuildArgs = append(goBuildArgs, user.BuildArgs(runtime.GOOS)...)
-	if !util.Str.Contains("-i", goBuildArgs) {
+	if !gulu.Str.Contains("-i", goBuildArgs) {
 		goBuildArgs = append(goBuildArgs, "-i")
 	}
 
@@ -127,7 +127,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	setCmdEnv(cmd, uid)
 
 	suffix := ""
-	if util.OS.IsWindows() {
+	if gulu.OS.IsWindows() {
 		suffix = ".exe"
 	}
 	executable := filepath.Base(curDir) + suffix
@@ -167,7 +167,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	/////////
 	go func() {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		for {
 			wsChannel := session.OutputWS[sid]

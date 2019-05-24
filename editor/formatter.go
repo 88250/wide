@@ -20,9 +20,9 @@ import (
 	"os"
 	"os/exec"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // GoFmtHandler handles request of formatting Go source code.
@@ -31,8 +31,8 @@ import (
 //  1. gofmt
 //  2. goimports
 func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
@@ -53,7 +53,7 @@ func GoFmtHandler(w http.ResponseWriter, r *http.Request) {
 
 	filePath := args["file"].(string)
 
-	if util.Go.IsAPI(filePath) {
+	if gulu.Go.IsAPI(filePath) {
 		result.Succ = false
 
 		return

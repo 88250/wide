@@ -18,8 +18,7 @@ package event
 import (
 	"os"
 
-	"github.com/b3log/wide/log"
-	"github.com/b3log/wide/util"
+	"github.com/b3log/gulu"
 )
 
 const (
@@ -39,7 +38,7 @@ const (
 const maxQueueLength = 10
 
 // Logger.
-var logger = log.NewLogger(os.Stdout)
+var logger = gulu.Log.NewLogger(os.Stdout)
 
 // Event represents an event.
 type Event struct {
@@ -70,7 +69,7 @@ var UserEventQueues = queues{}
 // Load initializes the event handling.
 func Load() {
 	go func() {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		for event := range EventQueue {
 			logger.Debugf("Received a global event [code=%d]", event.Code)
@@ -107,7 +106,7 @@ func (ueqs queues) New(sid string) *UserEventQueue {
 	ueqs[sid] = q
 
 	go func() { // start listening
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		for evt := range q.Queue {
 			logger.Debugf("Session [%s] received an event [%d]", sid, evt.Code)

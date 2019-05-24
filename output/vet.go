@@ -24,16 +24,16 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // GoVetHandler handles request of go vet.
 func GoVetHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
@@ -112,7 +112,7 @@ func GoVetHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	go func(runningId int) {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		logger.Debugf("User [%s, %s] is running [go vet] [runningId=%d]", uid, sid, runningId)
 

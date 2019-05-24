@@ -25,9 +25,9 @@ import (
 	"strings"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/util"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -35,7 +35,7 @@ var states = map[string]string{}
 
 // RedirectGitHubHandler redirects to GitHub auth page.
 func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
-	requestResult := util.NewResult()
+	requestResult := gulu.Ret.NewResult()
 	_, _, errs := gorequest.New().TLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
 		Get("https://hacpai.com/oauth/wide/client").
 		Set("user-agent", conf.UserAgent).Timeout(10 * time.Second).EndStruct(requestResult)
@@ -57,7 +57,7 @@ func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
 
 	state := r.URL.Query().Get("state")
 	referer := conf.Wide.Server + "__" + state
-	state = util.Rand.String(16) + referer
+	state = gulu.Rand.String(16) + referer
 	states[state] = state
 	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state + "&scope=public_repo,read:user,user:follow"
 	http.Redirect(w, r, path, http.StatusSeeOther)
@@ -93,10 +93,10 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	if nil == user {
 		msg := addUser(githubId, userName, avatar)
 		if userCreated != msg {
-			result := util.NewResult()
+			result := gulu.Ret.NewResult()
 			result.Succ = false
 			result.Msg = msg
-			util.RetResult(w, r, result)
+			gulu.Ret.RetResult(w, r, result)
 
 			return
 		}
@@ -149,8 +149,8 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 // LogoutHandler handles request of user logout (exit).
 func LogoutHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	httpSession, _ := HTTPSession.Get(r, CookieName)
 

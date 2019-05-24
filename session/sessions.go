@@ -35,9 +35,9 @@ import (
 	"sync"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
-	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/util"
 	"github.com/fsnotify/fsnotify"
 	"github.com/gorilla/sessions"
@@ -46,13 +46,13 @@ import (
 
 const (
 	sessionStateActive = iota
-	sessionStateClosed  // (not used so far)
+	sessionStateClosed // (not used so far)
 
 	CookieName = "wide-sess"
 )
 
 // Logger.
-var logger = log.NewLogger(os.Stdout)
+var logger = gulu.Log.NewLogger(os.Stdout)
 
 var (
 	// SessionWS holds all session channels. <sid, *util.WSChannel>
@@ -105,7 +105,7 @@ var mutex sync.Mutex
 // Invalid sessions: sessions that not used within 30 minutes, refers to WideSession.Updated field.
 func FixedTimeRelease() {
 	go func() {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		for _ = range time.Tick(time.Hour) {
 			hour, _ := time.ParseDuration("-30m")
@@ -139,9 +139,9 @@ func (u *userReport) report() string {
 // FixedTimeReport reports the Wide sessions status periodically (10 minutes).
 func FixedTimeReport() {
 	go func() {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
-		for _ = range time.Tick(10*time.Minute) {
+		for _ = range time.Tick(10 * time.Minute) {
 			users := userReports{}
 			processSum := 0
 
@@ -284,8 +284,8 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 // SaveContentHandler handles request of session content string.
 func SaveContentHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	args := struct {
 		Sid string
@@ -477,7 +477,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 	}
 
 	go func() {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		for {
 			ch := SessionWS[sid]
@@ -500,7 +500,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 				if event.Op&fsnotify.Create == fsnotify.Create {
 					fileType := "f"
 
-					if util.File.IsDir(path) {
+					if gulu.File.IsDir(path) {
 						fileType = "d"
 
 						if err = watcher.Add(path); nil != err {
@@ -526,7 +526,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 	}()
 
 	go func() {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		workspaces := filepath.SplitList(conf.GetUserWorkspace(uid))
 		for _, workspace := range workspaces {

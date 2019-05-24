@@ -29,21 +29,20 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/editor"
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/file"
 	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/notification"
 	"github.com/b3log/wide/output"
 	"github.com/b3log/wide/playground"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // Logger
-var logger *log.Logger
+var logger *gulu.Logger
 
 // The only one init function in Wide.
 func init() {
@@ -55,10 +54,10 @@ func init() {
 
 	flag.Parse()
 
-	log.SetLevel("warn")
-	logger = log.NewLogger(os.Stdout)
+	gulu.Log.SetLevel("warn")
+	logger = gulu.Log.NewLogger(os.Stdout)
 
-	//wd := util.OS.Pwd()
+	//wd := gulu.OS.Pwd()
 	//if strings.HasPrefix(wd, os.TempDir()) {
 	//	logger.Error("Don't run Wide in OS' temp directory or with `go run`")
 	//
@@ -74,7 +73,7 @@ func init() {
 	session.FixedTimeRelease()
 	session.FixedTimeReport()
 
-	logger.Debug("host ["+runtime.Version()+", "+runtime.GOOS+"_"+runtime.GOARCH+"], cross-compilation ", util.Go.GetCrossPlatforms())
+	logger.Debug("host ["+runtime.Version()+", "+runtime.GOOS+"_"+runtime.GOARCH+"], cross-compilation ", gulu.Go.GetCrossPlatforms())
 }
 
 // Main.
@@ -204,7 +203,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"uid": uid, "sid": session.WideSessions.GenId(), "latestSessionContent": user.LatestSessionContent,
 		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
-		"user": user, "editorThemes": conf.GetEditorThemes(), "crossPlatforms": util.Go.GetCrossPlatforms()}
+		"user": user, "editorThemes": conf.GetEditorThemes(), "crossPlatforms": gulu.Go.GetCrossPlatforms()}
 
 	logger.Debugf("User [%s] has [%d] sessions", uid, len(wideSessions))
 
@@ -409,7 +408,7 @@ func stopwatch(handler func(w http.ResponseWriter, r *http.Request)) func(w http
 // panicRecover wraps the panic recover process.
 func panicRecover(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		handler(w, r)
 	}

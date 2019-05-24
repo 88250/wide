@@ -25,8 +25,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/gorilla/websocket"
@@ -38,7 +38,7 @@ const (
 )
 
 // Logger.
-var logger = log.NewLogger(os.Stdout)
+var logger = gulu.Log.NewLogger(os.Stdout)
 
 // Lint represents a code lint.
 type Lint struct {
@@ -122,7 +122,7 @@ func setCmdEnv(cmd *exec.Cmd, uid string) {
 		"GOCACHE="+cache,
 		"PATH="+os.Getenv("PATH"))
 
-	if util.OS.IsWindows() {
+	if gulu.OS.IsWindows() {
 		// FIXME: for some weird issues on Windows, such as: The requested service provider could not be loaded or initialized.
 		cmd.Env = append(cmd.Env, os.Environ()...)
 	} else {

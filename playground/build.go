@@ -22,15 +22,15 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // BuildHandler handles request of Playground building.
 func BuildHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
@@ -51,7 +51,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	filePath := filepath.Clean(conf.Wide.Data + "/playground/" + fileName)
 
 	suffix := ""
-	if util.OS.IsWindows() {
+	if gulu.OS.IsWindows() {
 		suffix = ".exe"
 	}
 

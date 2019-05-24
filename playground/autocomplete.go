@@ -22,8 +22,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // AutocompleteHandler handles request of code autocompletion.
@@ -51,7 +51,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 
 	argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
-	gocode := util.Go.GetExecutableInGOBIN("gocode")
+	gocode := gulu.Go.GetExecutableInGOBIN("gocode")
 	cmd := exec.Command(gocode, argv...)
 
 	stdin, _ := cmd.StdinPipe()

@@ -24,17 +24,17 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/util"
 )
 
 const (
 	// TODO: i18n
 
-	userExists       = "user exists"
-	userCreated      = "user created"
-	userCreateError  = "user create error"
+	userExists      = "user exists"
+	userCreated     = "user created"
+	userCreateError = "user create error"
 )
 
 // Exclusive lock for adding user.
@@ -67,7 +67,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 		model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(user.Locale), "user": user,
 			"ver": conf.WideVersion, "goos": runtime.GOOS, "goarch": runtime.GOARCH, "gover": runtime.Version(),
-			"locales": i18n.GetLocalesNames(), "gofmts": util.Go.GetGoFormats(),
+			"locales": i18n.GetLocalesNames(), "gofmts": gulu.Go.GetGoFormats(),
 			"themes": conf.GetThemes(), "editorThemes": conf.GetEditorThemes()}
 
 		t, err := template.ParseFiles("views/preference.html")
@@ -93,8 +93,8 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 
 	// non-GET request as save request
 
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	args := struct {
 		FontFamily            string
@@ -154,7 +154,7 @@ func PreferenceHandler(w http.ResponseWriter, r *http.Request) {
 // Main goal of this function is to save user session content, for restoring session content while user open Wide next time.
 func FixedTimeSave() {
 	go func() {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		for _ = range time.Tick(time.Minute) {
 			SaveOnlineUsers()

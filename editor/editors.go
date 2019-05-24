@@ -27,16 +27,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/file"
-	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/gorilla/websocket"
 )
 
 // Logger.
-var logger = log.NewLogger(os.Stdout)
+var logger = gulu.Log.NewLogger(os.Stdout)
 
 // WSHandler handles request of creating editor channel.
 // XXX: NOT used at present
@@ -77,7 +77,7 @@ func WSHandler(w http.ResponseWriter, r *http.Request) {
 
 		logger.Tracef("offset: %d", offset)
 
-		gocode := util.Go.GetExecutableInGOBIN("gocode")
+		gocode := gulu.Go.GetExecutableInGOBIN("gocode")
 		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
 
 		var output bytes.Buffer
@@ -159,7 +159,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	logger.Tracef("gocode set lib-path [%s]", libPath)
 
 	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
-	gocode := util.Go.GetExecutableInGOBIN("gocode")
+	gocode := gulu.Go.GetExecutableInGOBIN("gocode")
 	exec.Command(gocode, []string{"set", "lib-path", libPath}...).Run()
 
 	argv := []string{"-f=json", "--in=" + path, "autocomplete", strconv.Itoa(offset)}
@@ -179,8 +179,8 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 // GetExprInfoHandler handles request of getting expression infomation.
 func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	uid := session.Values["uid"].(string)
@@ -223,7 +223,7 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 	logger.Tracef("offset [%d]", offset)
 
-	ideStub := util.Go.GetExecutableInGOBIN("gotools")
+	ideStub := gulu.Go.GetExecutableInGOBIN("gotools")
 	argv := []string{"types", "-pos", filename + ":" + strconv.Itoa(offset), "-info", "."}
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
@@ -250,8 +250,8 @@ func GetExprInfoHandler(w http.ResponseWriter, r *http.Request) {
 
 // FindDeclarationHandler handles request of finding declaration.
 func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
@@ -299,7 +299,7 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 	logger.Tracef("offset [%d]", offset)
 
-	ideStub := util.Go.GetExecutableInGOBIN("gotools")
+	ideStub := gulu.Go.GetExecutableInGOBIN("gotools")
 	argv := []string{"types", "-pos", filename + ":" + strconv.Itoa(offset), "-def", "."}
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir
@@ -338,8 +338,8 @@ func FindDeclarationHandler(w http.ResponseWriter, r *http.Request) {
 
 // FindUsagesHandler handles request of finding usages.
 func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
@@ -387,7 +387,7 @@ func FindUsagesHandler(w http.ResponseWriter, r *http.Request) {
 	offset := getCursorOffset(code, line, ch)
 	logger.Tracef("offset [%d]", offset)
 
-	ideStub := util.Go.GetExecutableInGOBIN("gotools")
+	ideStub := gulu.Go.GetExecutableInGOBIN("gotools")
 	argv := []string{"types", "-pos", filename + ":" + strconv.Itoa(offset), "-use", "."}
 	cmd := exec.Command(ideStub, argv...)
 	cmd.Dir = curDir

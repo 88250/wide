@@ -17,8 +17,6 @@ package session
 import (
 	"bufio"
 	"encoding/json"
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/util"
 	"math/rand"
 	"net/http"
 	"os"
@@ -28,6 +26,10 @@ import (
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/b3log/gulu"
+	"github.com/b3log/wide/conf"
+	"github.com/b3log/wide/util"
 )
 
 // Type of process set.
@@ -43,8 +45,8 @@ var procMutex sync.Mutex
 
 // RunHandler handles request of executing a binary file.
 func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util.WSChannel) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 
@@ -120,12 +122,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 	}
 
 	go func() {
-		defer util.Recover()
+		defer gulu.Panic.Recover()
 
 		logger.Debugf("User [%s, %s] is running [id=%s, file=%s]", wSession.UserId, sid, rid, filePath)
 
 		go func() {
-			defer util.Recover()
+			defer gulu.Panic.Recover()
 
 			for {
 				r, _, err := outReader.ReadRune()
@@ -196,8 +198,8 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 
 // StopHandler handles request of stopping a running process.
 func StopHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {

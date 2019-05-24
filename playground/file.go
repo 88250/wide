@@ -24,15 +24,15 @@ import (
 	"os/exec"
 	"path/filepath"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/session"
-	"github.com/b3log/wide/util"
 )
 
 // SaveHandler handles request of Playground code save.
 func SaveHandler(w http.ResponseWriter, r *http.Request) {
-	result := util.NewResult()
-	defer util.RetResult(w, r, result)
+	result := gulu.Ret.NewResult()
+	defer gulu.Ret.RetResult(w, r, result)
 
 	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {

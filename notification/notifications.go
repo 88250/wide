@@ -21,10 +21,10 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/event"
 	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/gorilla/websocket"
@@ -40,7 +40,7 @@ const (
 )
 
 // Logger.
-var logger = log.NewLogger(os.Stdout)
+var logger = gulu.Log.NewLogger(os.Stdout)
 
 // Notification represents a notification.
 type Notification struct {

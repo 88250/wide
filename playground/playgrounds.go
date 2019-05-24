@@ -26,16 +26,16 @@ import (
 	"strings"
 	"time"
 
+	"github.com/b3log/gulu"
 	"github.com/b3log/wide/conf"
 	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/log"
 	"github.com/b3log/wide/session"
 	"github.com/b3log/wide/util"
 	"github.com/gorilla/websocket"
 )
 
 // Logger.
-var logger = log.NewLogger(os.Stdout)
+var logger = gulu.Log.NewLogger(os.Stdout)
 
 // IndexHandler handles request of Playground index.
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +59,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 
 	if strings.HasSuffix(r.URL.Path, ".go") {
 		fileNameArg := r.URL.Path[len("/playground/"):]
-		filePath := filepath.Clean(conf.Wide.Data+ "/playground/" + fileNameArg)
+		filePath := filepath.Clean(conf.Wide.Data + "/playground/" + fileNameArg)
 
 		bytes, err := ioutil.ReadFile(filePath)
 		if nil != err {
