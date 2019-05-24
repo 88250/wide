@@ -176,7 +176,13 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			line, err := outReader.ReadString('\n')
-			if io.EOF == err || os.ErrClosed == err {
+			if io.EOF == err {
+				break
+			}
+
+			_, ok := err.(*os.PathError)
+			if ok {
+				// 构建时报 “read |0: file already closed” https://github.com/b3log/wide/issues/363
 				break
 			}
 
