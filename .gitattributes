@@ -1,4 +1,3 @@
 static/js/lib/* linguist-vendored
 static/js/overwrite/* linguist-vendored
 *.min.js linguist-vendored
-*.js linguist-vendored
