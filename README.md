@@ -138,7 +138,7 @@ Wide 是一款基于 **W**eb 的 Go 语言 **IDE**。
 
 ## 授权
 
-Wide 使用 [Apache License, Version 2](https://www.apache.org/licenses/LICENSE-2.0) 作为开源协议，请务必遵循该开源协议相关约定。
+Wide 使用 [Apache License, Version 2](https://www.apache.org/licenses/LICENSE-2.0) 开源协议。
 
 ## 鸣谢
 
