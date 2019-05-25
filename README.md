@@ -7,8 +7,8 @@
 <a title="Go Report Card" target="_blank" href="https://goreportcard.com/report/github.com/b3log/wide"><img src="https://goreportcard.com/badge/github.com/b3log/wide?style=flat-square"></a>
 <a title="Code Size" target="_blank" href="https://github.com/b3log/wide"><img src="https://img.shields.io/github/languages/code-size/b3log/wide.svg?style=flat-square"></a>
 <a title="Apache License" target="_blank" href="https://github.com/b3log/wide/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-apache2-orange.svg?style=flat-square"></a>
-<br>
 <a title="Releases" target="_blank" href="https://github.com/b3log/wide/releases"><img src="https://img.shields.io/github/release/b3log/wide.svg?style=flat-square"></a>
+<br>
 <a title="Release Date" target="_blank" href="https://github.com/b3log/wide/releases"><img src="https://img.shields.io/github/release-date/b3log/wide.svg?style=flat-square&color=99CCFF"></a>
 <a title="GitHub Commits" target="_blank" href="https://github.com/b3log/wide/commits/master"><img src="https://img.shields.io/github/commit-activity/m/b3log/wide.svg?style=flat-square"></a>
 <a title="Last Commit" target="_blank" href="https://github.com/b3log/wide/commits/master"><img src="https://img.shields.io/github/last-commit/b3log/wide.svg?style=flat-square&color=FF9900"></a>
