@@ -73,7 +73,7 @@ func init() {
 	session.FixedTimeRelease()
 	session.FixedTimeReport()
 
-	logger.Debug("host ["+runtime.Version()+", "+runtime.GOOS+"_"+runtime.GOARCH+"], cross-compilation ", gulu.Go.GetCrossPlatforms())
+	logger.Debug("host [" + runtime.Version() + ", " + runtime.GOOS + "_" + runtime.GOARCH + "]")
 }
 
 // Main.
@@ -203,7 +203,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
 		"uid": uid, "sid": session.WideSessions.GenId(), "latestSessionContent": user.LatestSessionContent,
 		"pathSeparator": conf.PathSeparator, "codeMirrorVer": conf.CodeMirrorVer,
-		"user": user, "editorThemes": conf.GetEditorThemes(), "crossPlatforms": gulu.Go.GetCrossPlatforms()}
+		"user": user, "editorThemes": conf.GetEditorThemes(), "crossPlatforms": []string{"darwin_amd64", "linux_amd64", "windows_amd64"}}
 
 	logger.Debugf("User [%s] has [%d] sessions", uid, len(wideSessions))
 
