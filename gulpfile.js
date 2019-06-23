@@ -22,7 +22,7 @@
  */
 var gulp = require('gulp')
 var concat = require('gulp-concat')
-var minifyCSS = require('gulp-minify-css')
+var cleanCSS = require('gulp-clean-css')
 var uglify = require('gulp-uglify')
 var sourcemaps = require('gulp-sourcemaps')
 
@@ -37,14 +37,14 @@ function minLibCSS () {
     './static/js/lib/codemirror-5.1/addon/dialog/dialog.css',
     './static/js/overwrite/codemirror/theme/*.css']
   return gulp.src(cssLibs).
-    pipe(minifyCSS()).
+    pipe(cleanCSS()).
     pipe(concat('lib.min.css')).
     pipe(gulp.dest('./static/css/'))
 }
 
 function minZTreeStyleCSS () {
   return gulp.src('./static/js/lib/ztree/zTreeStyle.css').
-    pipe(minifyCSS()).
+    pipe(cleanCSS()).
     pipe(concat('zTreeStyle.min.css')).
     pipe(gulp.dest('./static/js/lib/ztree/'))
 }
@@ -60,7 +60,7 @@ function minWideCSS () {
   ]
 
   return gulp.src(cssWide).
-    pipe(minifyCSS()).
+    pipe(cleanCSS()).
     pipe(concat('wide.min.css')).
     pipe(gulp.dest('./static/css/'))
 }
