@@ -14,8 +14,16 @@
  * limitations under the License.
  */
 
-body{ 
-    overflow: auto;
+body {
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+}
+
+.main {
+    flex: 1;
+    min-height: 1px;
+    display: flex;
 }
 
 .header {
@@ -61,7 +69,7 @@ body{
 }
 
 .share-panel .font-ico:hover {
-    transform:rotate(360deg);
+    transform: rotate(360deg);
 }
 
 .footer {

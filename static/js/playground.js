@@ -26,7 +26,6 @@ var playground = {
     editor: undefined,
     pid: undefined,
     _resize: function () {
-        $('#goNews, #editorDivWrap').height($(window).height() - 40 - $(".footer").height());
         playground.editor.setSize("auto", ($("#editorDiv").parent().height() * 0.7) + "px");
     },
     _initShare: function () {
