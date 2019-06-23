@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.2, Oct 5, 2018
+ * @version 1.0.0.3, Jun 23, 2019
  */
 var playground = {
     autocompleteMutex: false,
@@ -82,7 +82,6 @@ var playground = {
             var autocompleteHints = [];
 
             if (playground.autocompleteMutex && editor.state.completionActive) {
-                console.log(1);
                 return;
             }
 
@@ -275,23 +274,23 @@ var playground = {
         var sessionWS = new ReconnectingWebSocket(config.channel + '/session/ws?sid=' + config.wideSessionId);
 
         sessionWS.onopen = function () {
-            console.log('[session onopen] connected');
+            // console.log('[session onopen] connected');
         };
 
         sessionWS.onmessage = function (e) {
-            console.log('[session onmessage]' + e.data);
+            // console.log('[session onmessage]' + e.data);
         };
         sessionWS.onclose = function (e) {
-            console.log('[session onclose] disconnected (' + e.code + ')');
+            // console.log('[session onclose] disconnected (' + e.code + ')');
         };
         sessionWS.onerror = function (e) {
-            console.log('[session onerror] ' + JSON.parse(e));
+            // console.log('[session onerror] ' + JSON.parse(e));
         };
 
         var playgroundWS = new ReconnectingWebSocket(config.channel + '/playground/ws?sid=' + config.wideSessionId);
 
         playgroundWS.onopen = function () {
-            console.log('[playground onopen] connected');
+            // console.log('[playground onopen] connected');
         };
 
         playgroundWS.onmessage = function (e) {
@@ -318,10 +317,10 @@ var playground = {
             $("#output").html(output);
         };
         playgroundWS.onclose = function (e) {
-            console.log('[playground onclose] disconnected (' + e.code + ')');
+            // console.log('[playground onclose] disconnected (' + e.code + ')');
         };
         playgroundWS.onerror = function (e) {
-            console.log('[playground onerror] ' + JSON.parse(e));
+            console.log('[playground onerror] ', e);
         };
     },
     _initGoNews: function () {
@@ -374,7 +373,6 @@ var playground = {
                 playground.editor.setValue(data.code);
 
                 if (0 != result.code) {
-                    console.log(data);
                     return;
                 }
 
@@ -460,8 +458,6 @@ var playground = {
                     data: JSON.stringify(request),
                     dataType: "json",
                     success: function (result) {
-                        console.log(result);
-                        
                         var data = result.data;
 
                         $("#output").html(data.output);

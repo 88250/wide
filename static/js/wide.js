@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Dec 8, 2015
+ * @version 1.0.0.2, Jun 23, 2019
  */
 var wide = {
     curNode: undefined,
@@ -343,11 +343,11 @@ var wide = {
     _initWS: function () {
         var outputWS = new ReconnectingWebSocket(config.channel + '/output/ws?sid=' + config.wideSessionId);
         outputWS.onopen = function () {
-            console.log('[output onopen] connected');
+            // console.log('[output onopen] connected');
         };
 
         outputWS.onmessage = function (e) {
-            console.log('[output onmessage]' + e.data);
+            // console.log('[output onmessage]' + e.data);
             var data = JSON.parse(e.data);
 
             if (goLintFound) {
@@ -463,10 +463,10 @@ var wide = {
             }
         };
         outputWS.onclose = function (e) {
-            console.log('[output onclose] disconnected (' + e.code + ')');
+            // console.log('[output onclose] disconnected (' + e.code + ')');
         };
         outputWS.onerror = function (e) {
-            console.log('[output onerror]');
+            console.log('[output onerror]',e);
         };
     },
     _initFooter: function () {

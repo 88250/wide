@@ -18,7 +18,7 @@
  * @file session.js
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
- * @version 1.1.0.1, Dec 8, 2015
+ * @version 1.1.0.2, Jun 23, 2019
  */
 var session = {
     init: function () {
@@ -158,8 +158,6 @@ var session = {
         var sessionWS = new ReconnectingWebSocket(config.channel + '/session/ws?sid=' + config.wideSessionId);
 
         sessionWS.onopen = function () {
-            console.log('[session onopen] connected');
-
             var dateFormat = function (time, fmt) {
                 var date = new Date(time);
                 var dateObj = {
@@ -238,7 +236,7 @@ var session = {
             }
         };
         sessionWS.onclose = function (e) {
-            console.log('[session onclose] disconnected (' + e.code + ')');
+            // console.log('[session onclose] disconnected (' + e.code + ')');
 
             var data = {type: "Network", severity: "ERROR",
                 message: "Disconnected from server, trying to reconnect it [sid=" + config.wideSessionId + "]"},
@@ -253,7 +251,7 @@ var session = {
             $(".notification-count").show();
         };
         sessionWS.onerror = function (e) {
-            console.log('[session onerror]');
+            console.log('[session onerror]', e);
         };
     }
 };

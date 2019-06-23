@@ -19,7 +19,7 @@
  *
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @author <a href="http://88250.b3log.org">Liang Ding</a>
- * @version 1.0.0.1, Dec 8, 2015
+ * @version 1.0.0.2, Jun 23, 2019
  */
 var notification = {
     init: function () {
@@ -35,7 +35,7 @@ var notification = {
         var notificationWS = new ReconnectingWebSocket(config.channel + '/notification/ws?sid=' + config.wideSessionId);
 
         notificationWS.onopen = function () {
-            console.log('[notification onopen] connected');
+            // console.log('[notification onopen] connected');
         };
 
         notificationWS.onmessage = function (e) {
@@ -44,7 +44,7 @@ var notification = {
                     notificationHTML = '';
             
             if (data.cmd && "init-notification" === data.cmd) {
-                console.log('[notification onmessage]' + e.data);
+                // console.log('[notification onmessage]' + e.data);
                 
                 return;
             }
@@ -58,11 +58,11 @@ var notification = {
         };
 
         notificationWS.onclose = function (e) {
-            console.log('[notification onclose] disconnected (' + e.code + ')');
+            // console.log('[notification onclose] disconnected (' + e.code + ')');
         };
 
         notificationWS.onerror = function (e) {
-            console.log('[notification onerror]');
+            console.log('[notification onerror]', e);
         };
     }
 };
