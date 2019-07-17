@@ -1,130 +1,140 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
+<head>
+    <meta charset="UTF-8">
+    <title>{{.i18n.wide}} - {{.i18n.wide_title}}</title>
 
-        <meta name="keywords" content="Wide, Golang, IDE, Cloud, B3log, Playground"/>
-        <meta name="description" content="A Web-based Go IDE , do your development anytime, anywhere."/>
-        <meta name="author" content="B3log">
+    <meta name="keywords" content="Wide, Golang, IDE, Cloud, B3log, Playground"/>
+    <meta name="description" content="A Web-based Go IDE , do your development anytime, anywhere."/>
+    <meta name="author" content="B3log">
 
-        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
-        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
-        <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
-        <link rel="stylesheet" href="{{$.conf.Server}}/static/js/overwrite/codemirror/theme/wide.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet"
+          href="/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/show-hint.css">
+    <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.css">
+    <link rel="stylesheet" href="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.css">
+    <link rel="stylesheet"
+          href="{{$.conf.Server}}/static/js/overwrite/codemirror/theme/wide.css?{{.conf.StaticResourceVersion}}">
 
-        <link rel="stylesheet" href="/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/css/base.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/css/wide.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/css/about.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/css/sign.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/css/side.css?{{.conf.StaticResourceVersion}}">
-        <link rel="stylesheet" href="/static/css/playground.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/dialog.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/base.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/wide.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/about.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/themes/default.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/sign.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/side.css?{{.conf.StaticResourceVersion}}">
+    <link rel="stylesheet" href="/static/css/playground.css?{{.conf.StaticResourceVersion}}">
 
-        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-        {{if ne "" .conf.SiteStatCode}}
-            {{.conf.SiteStatCode}}
-        {{end}}
-    </head>
-    <body>
-        <div class="header menu fn-clear">
-            <ul class="fn-left">
-                <li>
-                    <a href="/" target="_blank">
-                        <img title="A Web-based Go IDE" src="/static/images/wide-logo.png" class="logo"/></a>
-                </li>
-                <li>
-                    <button class="btn" id="run" onclick="playground.run();">{{.i18n.run}}</button>
-                </li>
-                <li>
-                    <button class="btn btn-red" id="Format" onclick="playground.format();">{{.i18n.format}}</button>
-                </li>
-                <li>
-                    <button class="btn btn-red" id="stop" onclick="playground.stop();">{{.i18n.stop}}</button>
-                </li>
-                <li>
-                    <button class="btn-white btn" id="share" onclick="playground.share();">{{.i18n.share}}</button>
-                </li>
-            </ul>
-            <div class="fn-right">
-                <span class="font-ico ico-about" onclick='$("#dialogAbout").dialog("open");'></span> &nbsp;
-                <span class="font-ico ico-share"></span> &nbsp;
-                <span onclick="window.open('https://github.com/b3log/wide')"
-                      class="font-ico ico-github"></span>&nbsp;
-                <div class="share-panel frame" style="display: none;">
-                    <span title="Email" class="font-ico ico-email"></span>
-                    <span title="Twitter" class="font-ico ico-twitter"></span>
-                    <span title="Facebook" class="font-ico ico-facebook"></span>
-                    <span title="微博" class="font-ico ico-weibo"></span>
-                    <span title="QQ空间" class="font-ico ico-qqz"></span>
-                </div>
-            </div>
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+    {{if ne "" .conf.SiteStatCode}}
+    {{.conf.SiteStatCode}}
+    {{end}}
+</head>
+<body>
+<div class="header menu fn-clear">
+    <ul class="fn-left">
+        <li>
+            <a href="/" target="_blank">
+                <img title="A Web-based Go IDE" src="/static/images/wide-logo.png" class="logo"/></a>
+        </li>
+        <li>
+            <button class="btn" id="run" onclick="playground.run();">{{.i18n.run}}</button>
+        </li>
+        <li>
+            <button class="btn btn-red" id="Format" onclick="playground.format();">{{.i18n.format}}</button>
+        </li>
+        <li>
+            <button class="btn btn-red" id="stop" onclick="playground.stop();">{{.i18n.stop}}</button>
+        </li>
+        <li>
+            <button class="btn-white btn" id="share" onclick="playground.share();">{{.i18n.share}}</button>
+        </li>
+        <li>
+            <button class="btn btn-blue" onclick="window.open('https://hacpai.com/sponsor')">
+                {{.i18n.sponsor}}
+            </button>
+        </li>
+    </ul>
+    <div class="fn-right">
+        <span class="font-ico ico-about" onclick='$("#dialogAbout").dialog("open");'></span> &nbsp;
+        <span class="font-ico ico-share"></span> &nbsp;
+        <span onclick="window.open('https://github.com/b3log/wide')"
+              class="font-ico ico-github"></span>&nbsp;
+        <div class="share-panel frame" style="display: none;">
+            <span title="Email" class="font-ico ico-email"></span>
+            <span title="Twitter" class="font-ico ico-twitter"></span>
+            <span title="Facebook" class="font-ico ico-facebook"></span>
+            <span title="微博" class="font-ico ico-weibo"></span>
+            <span title="QQ空间" class="font-ico ico-qqz"></span>
         </div>
-        <div class="fn-clear">
-            <div class="fn-left" id="editorDivWrap">
-                <div id="editorDiv">
-                    <textarea rows="20" id='editor' class="fn-none">{{.code}}</textarea>
-                </div>
-                <div class="bottom-window-group">
-                    <div id="output" class="output"></div>
-                </div>
-            </div>
-            <div class="fn-right" id="goNews"></div>
+    </div>
+</div>
+<div class="fn-clear">
+    <div class="fn-left" id="editorDivWrap">
+        <div id="editorDiv">
+            <textarea rows="20" id='editor' class="fn-none">{{.code}}</textarea>
         </div>
-        <div class="footer">
-            <span class="wrapper">
-                Ver {{.ver}}, &copy; {{.year}}&nbsp;<a rel="copyright" href="https://b3log.org" target="_blank">B3log 开源</a>
-            </span>
+        <div class="bottom-window-group">
+            <div id="output" class="output"></div>
         </div>
+    </div>
+    <div class="fn-right" id="goNews"></div>
+</div>
+<div class="footer">
+    <span class="wrapper">
+        Ver {{.ver}}, &copy; {{.year}}&nbsp;<a rel="copyright" href="https://b3log.org"
+                                               target="_blank">B3log 开源</a>
+    </span>
+</div>
 
-        <div id="dialogAbout" class="fn-none"></div>
-        <div id="dialogShare" class="fn-none"></div>
-        <script>
-            var channelScheme = -1 < window.location.protocol.indexOf("https") ? "wss":"ws";
-            var channel = channelScheme + "://" + window.location.hostname + ":" + window.location.port;
-                    var config = {
-                            "channel": channel,
-                            "wideSessionId": "{{.sid}}",
-                            "label": {{.i18n}},
-                            "autocomplete": {{.conf.Autocomplete}}
-                    };
-                    function newWideRequest() {
-                        var ret = {
-                            sid: config.wideSessionId
-                        };
-                            return ret;
-                    }
+<div id="dialogAbout" class="fn-none"></div>
+<div id="dialogShare" class="fn-none"></div>
+<script>
+    var channelScheme = -1 < window.location.protocol.indexOf("https") ? "wss":"ws";
+    var channel = channelScheme + "://" + window.location.hostname + ":" + window.location.port;
+            var config = {
+                    "channel": channel,
+                    "wideSessionId": "{{.sid}}",
+                    "label": {{.i18n}},
+                    "autocomplete": {{.conf.Autocomplete}}
+            };
+            function newWideRequest() {
+                var ret = {
+                    sid: config.wideSessionId
+                };
+                    return ret;
+            }
 
-        </script>
+</script>
 
-        <script type="text/javascript" src="/static/js/lib/jquery-2.1.1.min.js"></script>
-        <script type="text/javascript" src="/static/js/lib/reconnecting-websocket.js"></script>
-        <script type="text/javascript" src="/static/js/lib/Autolinker.min.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.min.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/selection/active-line.js"></script>
-        <script type="text/javascript" src="/static/js/overwrite/codemirror/addon/hint/show-hint.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/anyword-hint.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/display/rulers.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closebrackets.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/matchbrackets.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closetag.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/searchcursor.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/search.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/match-highlighter.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldcode.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/brace-fold.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/comment-fold.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/mode/loadmode.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/comment/comment.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/meta.js"></script>
-        <script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/go/go.js"></script>
+<script type="text/javascript" src="/static/js/lib/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/reconnecting-websocket.js"></script>
+<script type="text/javascript" src="/static/js/lib/Autolinker.min.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/codemirror.min.js"></script>
+<script type="text/javascript"
+        src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/selection/active-line.js"></script>
+<script type="text/javascript" src="/static/js/overwrite/codemirror/addon/hint/show-hint.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/hint/anyword-hint.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/display/rulers.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closebrackets.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/matchbrackets.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/edit/closetag.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/searchcursor.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/search.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/dialog/dialog.js"></script>
+<script type="text/javascript"
+        src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/search/match-highlighter.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldcode.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/foldgutter.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/brace-fold.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/fold/comment-fold.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/mode/loadmode.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/addon/comment/comment.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/meta.js"></script>
+<script type="text/javascript" src="/static/js/lib/codemirror-{{.codeMirrorVer}}/mode/go/go.js"></script>
 
-        <script type="text/javascript" src="/static/js/dialog.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="/static/js/menu.js?{{.conf.StaticResourceVersion}}"></script>
-        <script type="text/javascript" src="/static/js/playground.js?{{.conf.StaticResourceVersion}}"></script>
-    </body>
+<script type="text/javascript" src="/static/js/dialog.js?{{.conf.StaticResourceVersion}}"></script>
+<script type="text/javascript" src="/static/js/menu.js?{{.conf.StaticResourceVersion}}"></script>
+<script type="text/javascript" src="/static/js/playground.js?{{.conf.StaticResourceVersion}}"></script>
+</body>
 </html>

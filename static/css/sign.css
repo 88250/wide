@@ -127,6 +127,14 @@ body {
     box-shadow: 0 0 0 0.2em rgba(40, 167, 69, .3);
 }
 
+.btn-blue {
+    background-color: #4285f4;
+}
+
+.btn-blue:hover {
+    background-color: #2a75f3;
+}
+
 .btn.btn-white,
 .btn.btn-red {
     color: #333;
