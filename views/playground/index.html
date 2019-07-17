@@ -69,8 +69,8 @@
         </div>
     </div>
 </div>
-<div class="fn-clear">
-    <div class="fn-left" id="editorDivWrap">
+<div class="main">
+    <div id="editorDivWrap">
         <div id="editorDiv">
             <textarea rows="20" id='editor' class="fn-none">{{.code}}</textarea>
         </div>
@@ -78,7 +78,7 @@
             <div id="output" class="output"></div>
         </div>
     </div>
-    <div class="fn-right" id="goNews"></div>
+    <div id="goNews"></div>
 </div>
 <div class="footer">
     <span class="wrapper">
@@ -90,21 +90,20 @@
 <div id="dialogAbout" class="fn-none"></div>
 <div id="dialogShare" class="fn-none"></div>
 <script>
-    var channelScheme = -1 < window.location.protocol.indexOf("https") ? "wss":"ws";
-    var channel = channelScheme + "://" + window.location.hostname + ":" + window.location.port;
-            var config = {
-                    "channel": channel,
-                    "wideSessionId": "{{.sid}}",
-                    "label": {{.i18n}},
-                    "autocomplete": {{.conf.Autocomplete}}
-            };
-            function newWideRequest() {
-                var ret = {
-                    sid: config.wideSessionId
-                };
-                    return ret;
-            }
-
+  var channelScheme = -1 < window.location.protocol.indexOf("https") ? "wss":"ws";
+  var channel = channelScheme + "://" + window.location.hostname + ":" + window.location.port;
+  var config = {
+    "channel": channel,
+    "wideSessionId": "{{.sid}}",
+    "label": {{.i18n}},
+  "autocomplete": {{.conf.Autocomplete}}
+  };
+  function newWideRequest() {
+    var ret = {
+      sid: config.wideSessionId
+    };
+    return ret;
+  }
 </script>
 
 <script type="text/javascript" src="/static/js/lib/jquery-2.1.1.min.js"></script>
