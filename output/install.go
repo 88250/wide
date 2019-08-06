@@ -116,7 +116,7 @@ func GoInstallHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	go func(runningId int) {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 		defer cmd.Wait()
 
 		logger.Debugf("User [%s, %s] is running [go install] [id=%d, dir=%s]", uid, sid, runningId, curDir)

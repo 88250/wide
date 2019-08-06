@@ -122,12 +122,12 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 	}
 
 	go func() {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		logger.Debugf("User [%s, %s] is running [id=%s, file=%s]", wSession.UserId, sid, rid, filePath)
 
 		go func() {
-			defer gulu.Panic.Recover()
+			defer gulu.Panic.Recover(nil)
 
 			for {
 				r, _, err := outReader.ReadRune()

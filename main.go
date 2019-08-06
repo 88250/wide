@@ -408,7 +408,7 @@ func stopwatch(handler func(w http.ResponseWriter, r *http.Request)) func(w http
 // panicRecover wraps the panic recover process.
 func panicRecover(handler func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		handler(w, r)
 	}

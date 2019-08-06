@@ -167,7 +167,7 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 
 	/////////
 	go func() {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		for {
 			wsChannel := session.OutputWS[sid]

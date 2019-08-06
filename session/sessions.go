@@ -105,7 +105,7 @@ var mutex sync.Mutex
 // Invalid sessions: sessions that not used within 30 minutes, refers to WideSession.Updated field.
 func FixedTimeRelease() {
 	go func() {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		for _ = range time.Tick(time.Hour) {
 			hour, _ := time.ParseDuration("-30m")
@@ -139,7 +139,7 @@ func (u *userReport) report() string {
 // FixedTimeReport reports the Wide sessions status periodically (10 minutes).
 func FixedTimeReport() {
 	go func() {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		for _ = range time.Tick(10 * time.Minute) {
 			users := userReports{}
@@ -477,7 +477,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 	}
 
 	go func() {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		for {
 			ch := SessionWS[sid]
@@ -526,7 +526,7 @@ func (sessions *wSessions) new(httpSession *sessions.Session, sid string) *WideS
 	}()
 
 	go func() {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		workspaces := filepath.SplitList(conf.GetUserWorkspace(uid))
 		for _, workspace := range workspaces {

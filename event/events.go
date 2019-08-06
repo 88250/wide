@@ -69,7 +69,7 @@ var UserEventQueues = queues{}
 // Load initializes the event handling.
 func Load() {
 	go func() {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		for event := range EventQueue {
 			logger.Debugf("Received a global event [code=%d]", event.Code)
@@ -106,7 +106,7 @@ func (ueqs queues) New(sid string) *UserEventQueue {
 	ueqs[sid] = q
 
 	go func() { // start listening
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 
 		for evt := range q.Queue {
 			logger.Debugf("Session [%s] received an event [%d]", sid, evt.Code)

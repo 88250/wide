@@ -152,7 +152,7 @@ func CrossCompilationHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	go func(runningId int) {
-		defer gulu.Panic.Recover()
+		defer gulu.Panic.Recover(nil)
 		defer cmd.Wait()
 
 		// read all

@@ -247,7 +247,7 @@ func FixedTimeCheckEnv() {
 }
 
 func checkEnv() {
-	defer gulu.Panic.Recover()
+	defer gulu.Panic.Recover(nil)
 
 	cmd := exec.Command("go", "version")
 	buf, err := cmd.CombinedOutput()
