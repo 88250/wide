@@ -27,8 +27,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/b3log/gulu"
-	"github.com/b3log/wide/event"
+	"github.com/88250/gulu"
+	"github.com/88250/wide/event"
 )
 
 const (
@@ -240,7 +240,7 @@ func FixedTimeCheckEnv() {
 	checkEnv() // check immediately
 
 	go func() {
-		for _ = range time.Tick(time.Minute*7) {
+		for _ = range time.Tick(time.Minute * 7) {
 			checkEnv()
 		}
 	}()

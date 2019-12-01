@@ -22,8 +22,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/b3log/gulu"
-	"github.com/b3log/wide/session"
+	"github.com/88250/gulu"
+	"github.com/88250/wide/session"
 )
 
 // AutocompleteHandler handles request of code autocompletion.

@@ -1,5 +1,5 @@
-github.com/b3log/gulu v0.0.0-20190806034141-2b1d1b33ff3d h1:Ns7H97LVniGzx1DW2T0+eUtmuroZDo6nzjEj486w4+0=
-github.com/b3log/gulu v0.0.0-20190806034141-2b1d1b33ff3d/go.mod h1:UmyB0pe8jv1K3dZy/4UE3uCpM8zYkB4nbiIgjemuQ7A=
+github.com/88250/gulu v0.0.0-20191129115942-f593513f6ed6 h1:RZG7yVJ1ZIJAmx+cEUXs5R+saYRfnTWrVTGjflmI1zs=
+github.com/88250/gulu v0.0.0-20191129115942-f593513f6ed6/go.mod h1:a2POIziN+QFeNT4Mj7FHH2lz1HEaFlMRF6wPE0NHM4U=
 github.com/elazarl/goproxy v0.0.0-20190711103511-473e67f1d7d2 h1:aZtFdDNWY/yH86JPR2WX/PN63635VsE/f/nXNPAbYxY=
 github.com/elazarl/goproxy v0.0.0-20190711103511-473e67f1d7d2/go.mod h1:/Zj4wYkgs4iZTTu3o/KG3Itv/qCCa8VVMlb3i9OVuzc=
 github.com/elazarl/goproxy/ext v0.0.0-20190711103511-473e67f1d7d2 h1:dWB6v3RcOy03t/bUadywsbyrQwCqZeNIEX6M1OtSZOM=

@@ -18,7 +18,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	"github.com/b3log/gulu"
 	"io"
 	"net/http"
 	"os"
@@ -28,9 +27,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/i18n"
-	"github.com/b3log/wide/session"
+	"github.com/88250/gulu"
+	"github.com/88250/wide/conf"
+	"github.com/88250/wide/i18n"
+	"github.com/88250/wide/session"
 )
 
 // BuildHandler handles request of building.

@@ -24,10 +24,10 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/b3log/gulu"
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/event"
-	"github.com/b3log/wide/session"
+	"github.com/88250/gulu"
+	"github.com/88250/wide/conf"
+	"github.com/88250/wide/event"
+	"github.com/88250/wide/session"
 )
 
 // Logger.

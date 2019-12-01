@@ -25,9 +25,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/b3log/gulu"
-	"github.com/b3log/wide/conf"
-	"github.com/b3log/wide/i18n"
+	"github.com/88250/gulu"
+	"github.com/88250/wide/conf"
+	"github.com/88250/wide/i18n"
 	"github.com/parnurzeal/gorequest"
 )
 
@@ -59,7 +59,7 @@ func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
 	referer := conf.Wide.Server + "__" + state
 	state = gulu.Rand.String(16) + referer
 	states[state] = state
-	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state + "&scope=public_repo,read:user,user:follow"
+	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state
 	http.Redirect(w, r, path, http.StatusSeeOther)
 }
 
