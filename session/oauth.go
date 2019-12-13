@@ -15,7 +15,6 @@
 package session
 
 import (
-	"crypto/tls"
 	"html/template"
 	"math/rand"
 	"net/http"
@@ -24,46 +23,24 @@ import (
 	"strconv"
 	"strings"
 	"time"
-
 	"github.com/88250/gulu"
 	"github.com/88250/wide/conf"
 	"github.com/88250/wide/i18n"
-	"github.com/parnurzeal/gorequest"
 )
 
 var states = map[string]string{}
 
-// RedirectGitHubHandler redirects to GitHub auth page.
-func RedirectGitHubHandler(w http.ResponseWriter, r *http.Request) {
-	requestResult := gulu.Ret.NewResult()
-	_, _, errs := gorequest.New().TLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
-		Get("https://hacpai.com/oauth/wide/client").
-		Set("user-agent", conf.UserAgent).Timeout(10 * time.Second).EndStruct(requestResult)
-	if nil != errs {
-		logger.Errorf("Get oauth client id failed: %+v", errs)
-		http.Error(w, "Get oauth info failed", http.StatusInternalServerError)
+// LoginRedirectHandler redirects to HacPai auth page.
+func LoginRedirectHandler(w http.ResponseWriter, r *http.Request) {
+	loginAuthURL := "https://hacpai.com/login?goto=" + conf.Wide.Server + "/login/callback"
 
-		return
-	}
-	if 0 != requestResult.Code {
-		logger.Errorf("get oauth client id failed [code=%d, msg=%s]", requestResult.Code, requestResult.Msg)
-		http.Error(w, "Get oauth info failed", http.StatusNotFound)
-
-		return
-	}
-	data := requestResult.Data.(map[string]interface{})
-	clientId := data["clientId"].(string)
-	loginAuthURL := data["loginAuthURL"].(string)
-
-	state := r.URL.Query().Get("state")
-	referer := conf.Wide.Server + "__" + state
-	state = gulu.Rand.String(16) + referer
+	state := gulu.Rand.String(16)
 	states[state] = state
-	path := loginAuthURL + "?client_id=" + clientId + "&state=" + state
+	path := loginAuthURL + "?state=" + state
 	http.Redirect(w, r, path, http.StatusSeeOther)
 }
 
-func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
+func LoginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	state := r.URL.Query().Get("state")
 	if _, exist := states[state]; !exist {
 		http.Error(w, "Get state param failed", http.StatusBadRequest)
@@ -72,26 +49,13 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	delete(states, state)
 
-	referer := state[16:]
-	if strings.Contains(referer, "__0") || strings.Contains(referer, "__1") {
-		referer = referer[:len(referer)-len("__0")]
-	}
-	accessToken := r.URL.Query().Get("ak")
-	githubUser := GitHubUserInfo(accessToken)
-	if nil == githubUser {
-		logger.Warnf("Can not get user info with token [" + accessToken + "]")
-		http.Error(w, "Get user info failed", http.StatusUnauthorized)
+	userId := r.URL.Query().Get("userId")
+	userName := r.URL.Query().Get("userName")
+	avatar := r.URL.Query().Get("avatar")
 
-		return
-	}
-
-	githubId := githubUser["userId"].(string)
-	userName := githubUser["userName"].(string)
-	avatar := githubUser["userAvatarURL"].(string)
-
-	user := conf.GetUser(githubId)
+	user := conf.GetUser(userId)
 	if nil == user {
-		msg := addUser(githubId, userName, avatar)
+		msg := addUser(userId, userName, avatar)
 		if userCreated != msg {
 			result := gulu.Ret.NewResult()
 			result.Code = -1
@@ -104,7 +68,7 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 
 	// create a HTTP session
 	httpSession, _ := HTTPSession.Get(r, CookieName)
-	httpSession.Values["uid"] = githubId
+	httpSession.Values["uid"] = userId
 	httpSession.Values["id"] = strconv.Itoa(rand.Int())
 	httpSession.Options.MaxAge = conf.Wide.HTTPSessionMaxAge
 	httpSession.Save(r, w)

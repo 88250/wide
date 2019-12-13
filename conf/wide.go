@@ -42,7 +42,7 @@ const (
 	// CodeMirrorVer holds the current editor version.
 	CodeMirrorVer = "5.1"
 	// UserAgent represents HTTP client user agent.
-	UserAgent = "Wide/" + WideVersion + "; +https://github.com/b3log/wide"
+	UserAgent = "Wide/" + WideVersion + "; +https://github.com/88250/wide"
 
 	HelloWorld = `package main
 

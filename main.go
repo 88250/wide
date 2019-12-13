@@ -93,8 +93,8 @@ func main() {
 	serveSingle("/favicon.ico", "./static/images/favicon.png")
 
 	// oauth
-	http.HandleFunc("/oauth/github/redirect", session.RedirectGitHubHandler)
-	http.HandleFunc("/oauth/github/callback", session.GithubCallbackHandler)
+	http.HandleFunc("/login/redirect", session.LoginRedirectHandler)
+	http.HandleFunc("/login/callback", session.LoginCallbackHandler)
 
 	// session
 	http.HandleFunc("/session/ws", handlerWrapper(session.WSHandler))

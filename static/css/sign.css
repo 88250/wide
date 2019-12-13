@@ -94,7 +94,7 @@ body {
 
 .login__github {
     cursor: pointer;
-    background-image: url("/static/images/github.png");
+    background-image: url("/static/images/hacpai.png");
     height: 200px;
     width: 200px;
     background-size: cover;
@@ -103,7 +103,7 @@ body {
 }
 
 .login__github:hover {
-    background-image: url("/static/images/github.gif");
+    background-image: url("/static/images/hacpai.png");
 }
 
 .btn {

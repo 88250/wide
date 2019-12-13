@@ -22,7 +22,7 @@
             <img title="A Web-based Go IDE" src="/static/images/wide-logo.png" class="logo"/></a>
         <ul>
             <li><a href="/playground" target="_blank" style="color: #cd504a">Play</a></li>
-            <li><a rel="bookmark" href="https://github.com/b3log/wide" target="_blank">GitHub</a></li>
+            <li><a rel="bookmark" href="https://github.com/88250/wide" target="_blank">GitHub</a></li>
             <li><a rel="help" href="https://hacpai.com/article/1538873544275" target="_blank">{{.i18n.help}}</a></li>
             <li><a rel="bookmark" href="https://hacpai.com" target="_blank">{{.i18n.community}}</a></li>
         </ul>
@@ -37,8 +37,8 @@
         <div class="form fn-right">
             <div style="text-align: center"><a href="https://hacpai.com/article/1558097702072" target="_blank">2019-05-17 关于账号迁移的公告</a></div>
             <div class="login__github oauth"></div>
-            <img style="display: none" src="/static/images/github.gif"/>
-            <button class="btn oauth">登录 GitHub 账号后即可开始使用</button>
+            <img style="display: none" src="/static/images/hacpai.png"/>
+            <button class="btn oauth">登录黑客派社区账号后即可开始使用</button>
         </div>
     </div>
 </div>
@@ -50,7 +50,7 @@
 <script type="text/javascript" src="/static/js/lib/jquery-2.1.1.min.js"></script>
 <script>
   $('.oauth').click(function () {
-    window.location.href = '/oauth/github/redirect?state=' + ($('input').prop('checked') ? '0' : '1')
+    window.location.href = '/login/redirect'
   })
 </script>
 </body>
