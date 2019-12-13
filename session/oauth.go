@@ -112,25 +112,6 @@ func GithubCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
-// GitHubUserInfo returns GitHub user info specified by the given access token.
-func GitHubUserInfo(accessToken string) (ret map[string]interface{}) {
-	result := map[string]interface{}{}
-	response, data, errors := gorequest.New().TLSClientConfig(&tls.Config{InsecureSkipVerify: true}).
-		Get("https://hacpai.com/github/user?ak="+accessToken).Timeout(7*time.Second).
-		Set("User-Agent", conf.UserAgent).EndStruct(&result)
-	if nil != errors || http.StatusOK != response.StatusCode {
-		logger.Errorf("Get github user info failed: %+v, %s", errors, data)
-
-		return nil
-	}
-
-	if 0 != result["sc"].(float64) {
-		return nil
-	}
-
-	return result["data"].(map[string]interface{})
-}
-
 // LoginHandler handles request of show login page.
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(conf.Wide.Locale),
