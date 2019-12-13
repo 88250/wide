@@ -254,7 +254,8 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	httpSession.Save(r, w)
 
 	uid := httpSession.Values["uid"].(string)
-	locale := conf.GetUser(uid).Locale
+	user := conf.GetUser(uid)
+	locale := user.Locale
 	userWorkspace := conf.GetUserWorkspace(uid)
 
 	sid := r.URL.Query()["sid"][0]
@@ -264,7 +265,7 @@ func startHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	model := map[string]interface{}{"conf": conf.Wide, "i18n": i18n.GetAll(locale), "locale": locale,
-		"uid": uid, "workspace": userWorkspace, "ver": conf.WideVersion, "sid": sid}
+		"uid": uid, "workspace": userWorkspace, "ver": conf.WideVersion, "sid": sid, "username": user.Name}
 
 	t, err := template.ParseFiles("views/start.html")
 
