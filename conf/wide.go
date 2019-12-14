@@ -90,11 +90,7 @@ func Load(confPath, confData, confServer, confLogLevel string, confSiteStatCode 
 	cmd := exec.Command("docker", "version")
 	_, err := cmd.CombinedOutput()
 	if nil != err {
-		if !gulu.OS.IsWindows() {
-			logger.Errorf("Not found 'docker' installed, running user's code will cause security problem")
-
-			os.Exit(-1)
-		}
+		logger.Warnf("Not found 'docker' installed, running user's code will cause security problem")
 	} else {
 		Docker = true
 	}
