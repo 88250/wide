@@ -92,18 +92,18 @@ body {
 }
 
 
-.login__github {
-    cursor: pointer;
-    background-image: url("/static/images/hacpai.png");
+.login__icon {
     height: 200px;
     width: 200px;
-    background-size: cover;
     margin: 20px auto;
-    background-position: center center;
+    transition: all .15s ease-in-out;
+    padding-right: 24px;
+    color: #3b3e43;
+    fill: currentColor;
 }
 
-.login__github:hover {
-    background-image: url("/static/images/hacpai.png");
+.login__icon:hover {
+    transform: scale(1.1);
 }
 
 .btn {
@@ -224,4 +224,20 @@ body {
     font-size: 16px;
 }
 
+.start {
+    text-align: center;
+}
+
+.start .btn {
+    color: #fff;
+}
+
+.start svg {
+    fill: currentColor;
+}
+
+.start__aciton {
+    display: flex;
+    align-items: center;
+}
 /* end sign up */
