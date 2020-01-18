@@ -68,7 +68,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.05", "--name", rid, "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+		cmd = exec.Command("docker", "run", "-t", "--rm", "--cpus", "0.05", "--name", rid, "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
@@ -123,12 +123,10 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 
 	go func() {
 		defer gulu.Panic.Recover(nil)
-
 		logger.Debugf("User [%s, %s] is running [id=%s, file=%s]", wSession.UserId, sid, rid, filePath)
 
 		go func() {
 			defer gulu.Panic.Recover(nil)
-
 			for {
 				r, _, err := outReader.ReadRune()
 				if nil != err {
