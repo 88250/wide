@@ -127,7 +127,6 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 
 				if 1 > outBuf.Len() {
 					time.Sleep(7 * time.Millisecond)
-					logger.Info("out buf is empty")
 					continue
 				}
 
