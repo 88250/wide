@@ -15,7 +15,7 @@
 package session
 
 import (
-	"bufio"
+	"bytes"
 	"encoding/json"
 	"math/rand"
 	"net/http"
@@ -68,27 +68,17 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 	var cmd *exec.Cmd
 	if conf.Docker {
 		fileName := filepath.Base(filePath)
-		cmd = exec.Command("docker", "run", "-t", "--rm", "--cpus", "0.05", "--name", rid, "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
+		cmd = exec.Command("docker", "run", "--rm", "--cpus", "0.05", "--name", rid, "-v", filePath+":/"+fileName, conf.DockerImageGo, "/"+fileName)
 	} else {
 		cmd = exec.Command(filePath)
 		curDir := filepath.Dir(filePath)
 		cmd.Dir = curDir
 	}
 
-	stdout, err := cmd.StdoutPipe()
-	if nil != err {
-		logger.Error(err)
-		result.Code = -1
-	}
-
-	stderr, err := cmd.StderrPipe()
-	if nil != err {
-		logger.Error(err)
-		result.Code = -1
-	}
-
-	outReader := bufio.NewReader(stdout)
-	errReader := bufio.NewReader(stderr)
+	outBuf := &bytes.Buffer{}
+	errBuf := &bytes.Buffer{}
+	cmd.Stdout = outBuf
+	cmd.Stderr = errBuf
 
 	if err := cmd.Start(); nil != err {
 		logger.Error(err)
@@ -110,6 +100,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 
 	channelRet["pid"] = cmd.Process.Pid
 	Processes.Add(wSession, cmd.Process)
+	shouldExitBuf := false
 
 	// push once for front-end to get the 'run' state and pid
 	if nil != wsChannel {
@@ -128,9 +119,19 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 		go func() {
 			defer gulu.Panic.Recover(nil)
 			for {
-				r, _, err := outReader.ReadRune()
-				if nil != err {
+				if shouldExitBuf {
 					break
+				}
+
+				if 1 > outBuf.Len() {
+					time.Sleep(7 * time.Millisecond)
+					continue
+				}
+
+				r, _, err := outBuf.ReadRune()
+				if nil != err {
+					time.Sleep(7 * time.Millisecond)
+					continue
 				}
 
 				oneRuneStr := string(r)
@@ -147,9 +148,19 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 		}()
 
 		for {
-			r, _, err := errReader.ReadRune()
-			if nil != err {
+			if shouldExitBuf {
 				break
+			}
+
+			if 1 > errBuf.Len() {
+				time.Sleep(7 * time.Millisecond)
+				continue
+			}
+
+			r, _, err := errBuf.ReadRune()
+			if nil != err {
+				time.Sleep(7 * time.Millisecond)
+				continue
 			}
 
 			oneRuneStr := string(r)
@@ -184,6 +195,7 @@ func RunHandler(w http.ResponseWriter, r *http.Request, channel map[string]*util
 		channelRet["output"] = "\n<span class='stderr'>run program complete</span>\n"
 	}
 
+	shouldExitBuf = true
 	Processes.Remove(wSession, cmd.Process)
 	logger.Debugf("User [%s, %s] done running [id=%s, file=%s, kill=%v]", wSession.UserId, sid, rid, filePath, kill)
 
