@@ -93,9 +93,7 @@ body {
 
 
 .login__icon {
-    height: 200px;
     width: 200px;
-    margin: 20px auto;
     transition: all .15s ease-in-out;
     padding-right: 24px;
     color: #3b3e43;
