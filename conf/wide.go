@@ -266,7 +266,7 @@ func checkEnv() {
 	if nil != err {
 		event.EventQueue <- &event.Event{Code: event.EvtCodeGocodeNotFound}
 
-		logger.Warnf("Not found gocode [%s], please install it with this command: go get github.com/nsf/gocode", gocode)
+		logger.Warnf("Not found gocode [%s], please install it with this command: go get github.com/stamblerre/gocode", gocode)
 	}
 
 	ideStub := gulu.Go.GetExecutableInGOBIN("gotools")

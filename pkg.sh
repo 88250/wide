@@ -24,7 +24,7 @@ export GOARCH=amd64
 echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
-go build github.com/nsf/gocode
+go build github.com/stamblerre/gocode
 tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide gotools gocode
 
@@ -33,7 +33,7 @@ export GOARCH=386
 echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
-go build github.com/nsf/gocode
+go build github.com/stamblerre/gocode
 tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide gotools gocode
 
@@ -45,7 +45,7 @@ export GOARCH=amd64
 echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
-go build github.com/nsf/gocode
+go build github.com/stamblerre/gocode
 tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide gotools gocode
 
@@ -54,7 +54,7 @@ export GOARCH=386
 echo wide-${ver}-${GOOS}-${GOARCH}.tar.gz
 go build
 go build github.com/visualfc/gotools
-go build github.com/nsf/gocode
+go build github.com/stamblerre/gocode
 tar zcf ${target}/wide-${ver}-${GOOS}-${GOARCH}.tar.gz ${list} gotools gocode wide --exclude-vcs --exclude='conf/*.go' --exclude='i18n/*.go'
 rm -f wide gotools gocode
 
@@ -66,7 +66,7 @@ export GOARCH=amd64
 echo wide-${ver}-${GOOS}-${GOARCH}.zip
 go build
 go build github.com/visualfc/gotools
-go build github.com/nsf/gocode
+go build github.com/stamblerre/gocode
 zip -r -q ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} gotools.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
 rm -f wide.exe gotools.exe gocode.exe
 
@@ -75,6 +75,6 @@ export GOARCH=386
 echo wide-${ver}-${GOOS}-${GOARCH}.zip
 go build
 go build github.com/visualfc/gotools
-go build github.com/nsf/gocode
+go build github.com/stamblerre/gocode
 zip -r -q ${target}/wide-${ver}-${GOOS}-${GOARCH}.zip ${list} gotools.exe gocode.exe wide.exe --exclude=conf/*.go --exclude=i18n/*.go
 rm -f wide.exe gotools.exe gocode.exe
