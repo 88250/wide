@@ -25,85 +25,19 @@ import (
 	"runtime"
 	"strconv"
 	"strings"
-	"time"
 
 	"github.com/88250/gulu"
 	"github.com/88250/wide/conf"
 	"github.com/88250/wide/file"
 	"github.com/88250/wide/session"
-	"github.com/88250/wide/util"
-	"github.com/gorilla/websocket"
 )
 
 // Logger.
 var logger = gulu.Log.NewLogger(os.Stdout)
 
-// WSHandler handles request of creating editor channel.
-// XXX: NOT used at present
-func WSHandler(w http.ResponseWriter, r *http.Request) {
-	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
-	if httpSession.IsNew {
-		http.Error(w, "Forbidden", http.StatusForbidden)
-
-		return
-	}
-
-	sid := httpSession.Values["id"].(string)
-
-	conn, _ := websocket.Upgrade(w, r, nil, 1024, 1024)
-	editorChan := util.WSChannel{Sid: sid, Conn: conn, Request: r, Time: time.Now()}
-
-	ret := map[string]interface{}{"output": "Editor initialized", "cmd": "init-editor"}
-	err := editorChan.WriteJSON(&ret)
-	if nil != err {
-		return
-	}
-
-	session.EditorWS[sid] = &editorChan
-
-	logger.Tracef("Open a new [Editor] with session [%s], %d", sid, len(session.EditorWS))
-
-	args := map[string]interface{}{}
-	for {
-		if err := session.EditorWS[sid].ReadJSON(&args); err != nil {
-			return
-		}
-
-		code := args["code"].(string)
-		line := int(args["cursorLine"].(float64))
-		ch := int(args["cursorCh"].(float64))
-
-		offset := getCursorOffset(code, line, ch)
-
-		logger.Tracef("offset: %d", offset)
-
-		gocode := gulu.Go.GetExecutableInGOBIN("gocode")
-		argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
-
-		var output bytes.Buffer
-
-		cmd := exec.Command(gocode, argv...)
-		cmd.Stdout = &output
-
-		stdin, _ := cmd.StdinPipe()
-		cmd.Start()
-		stdin.Write([]byte(code))
-		stdin.Close()
-		cmd.Wait()
-
-		ret = map[string]interface{}{"output": string(output.Bytes()), "cmd": "autocomplete"}
-
-		if err := session.EditorWS[sid].WriteJSON(&ret); err != nil {
-			logger.Error("Editor WS ERROR: " + err.Error())
-			return
-		}
-	}
-}
-
 // AutocompleteHandler handles request of code autocompletion.
 func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
-
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -120,9 +54,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	uid := session.Values["uid"].(string)
 
 	path := args["path"].(string)
-
 	fout, err := os.Create(path)
-
 	if nil != err {
 		logger.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -132,7 +64,6 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	code := args["code"].(string)
 	fout.WriteString(code)
-
 	if err := fout.Close(); nil != err {
 		logger.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -142,9 +73,7 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	line := int(args["cursorLine"].(float64))
 	ch := int(args["cursorCh"].(float64))
-
 	offset := getCursorOffset(code, line, ch)
-
 	logger.Tracef("offset: %d", offset)
 
 	userWorkspace := conf.GetUserWorkspace(uid)
@@ -158,8 +87,8 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 
 	logger.Tracef("gocode set lib-path [%s]", libPath)
 
-	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
 	gocode := gulu.Go.GetExecutableInGOBIN("gocode")
+	// FIXME: using gocode set lib-path has some issues while accrossing workspaces
 	exec.Command(gocode, []string{"set", "lib-path", libPath}...).Run()
 
 	argv := []string{"-f=json", "--in=" + path, "autocomplete", strconv.Itoa(offset)}

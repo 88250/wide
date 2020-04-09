@@ -18,6 +18,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"os"
 	"os/exec"
 	"strconv"
 	"strings"
@@ -29,7 +30,6 @@ import (
 // AutocompleteHandler handles request of code autocompletion.
 func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	var args map[string]interface{}
-
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -48,15 +48,23 @@ func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
 	line := int(args["cursorLine"].(float64))
 	ch := int(args["cursorCh"].(float64))
 
-	offset := getCursorOffset(code, line, ch)
+	file, err := os.Create("wide_autocomplete_" + gulu.Rand.String(16) + ".go")
+	if nil != err {
+		logger.Error(err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 
-	argv := []string{"-f=json", "autocomplete", strconv.Itoa(offset)}
+		return
+	}
+	file.WriteString(code)
+	file.Close()
+
+	path := file.Name()
+	defer os.Remove(path)
+
+	offset := getCursorOffset(code, line, ch)
+	argv := []string{"-f=json", "--in=" + path, "autocomplete", strconv.Itoa(offset)}
 	gocode := gulu.Go.GetExecutableInGOBIN("gocode")
 	cmd := exec.Command(gocode, argv...)
-
-	stdin, _ := cmd.StdinPipe()
-	stdin.Write([]byte(code))
-	stdin.Close()
 
 	output, err := cmd.CombinedOutput()
 	if nil != err {

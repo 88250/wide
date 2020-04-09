@@ -131,7 +131,6 @@ func main() {
 	http.HandleFunc("/file/zip", handlerWrapper(file.GetZipHandler))
 
 	// editor
-	http.HandleFunc("/editor/ws", handlerWrapper(editor.WSHandler))
 	http.HandleFunc("/go/fmt", handlerWrapper(editor.GoFmtHandler))
 	http.HandleFunc("/autocomplete", handlerWrapper(editor.AutocompleteHandler))
 	http.HandleFunc("/exprinfo", handlerWrapper(editor.GetExprInfoHandler))
