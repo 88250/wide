@@ -23,9 +23,11 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
 	"github.com/88250/gulu"
 	"github.com/88250/wide/conf"
 	"github.com/88250/wide/i18n"
+	"github.com/88250/wide/util"
 )
 
 var states = map[string]string{}
@@ -36,7 +38,7 @@ func LoginRedirectHandler(w http.ResponseWriter, r *http.Request) {
 
 	state := gulu.Rand.String(16)
 	states[state] = state
-	path := loginAuthURL + "?state=" + state
+	path := loginAuthURL + "&state=" + state + "&v=" + conf.WideVersion
 	http.Redirect(w, r, path, http.StatusSeeOther)
 }
 
@@ -49,10 +51,12 @@ func LoginCallbackHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	delete(states, state)
 
-	userId := r.URL.Query().Get("userId")
-	userName := r.URL.Query().Get("userName")
-	avatar := r.URL.Query().Get("avatar")
+	accessToken := r.URL.Query().Get("access_token")
+	userInfo := util.HacPaiUserInfo(accessToken)
 
+	userId := userInfo["userId"].(string)
+	userName := userInfo["userName"].(string)
+	avatar := userInfo["avatar"].(string)
 	user := conf.GetUser(userId)
 	if nil == user {
 		msg := addUser(userId, userName, avatar)
