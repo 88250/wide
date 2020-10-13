@@ -28,7 +28,7 @@ import (
 var logger = gulu.Log.NewLogger(os.Stdout)
 
 // HacPaiURL is the URL of HacPai community.
-const HacPaiURL = "https://hacpai.com"
+const HacPaiURL = "https://ld246.com"
 
 // HacPaiUserInfo returns HacPai community user info specified by the given access token.
 func HacPaiUserInfo(accessToken string) (ret map[string]interface{}) {
