@@ -1,5 +1,5 @@
-* [Wide 用户指南](https://hacpai.com/article/1538873544275)
-* [Wide 开发指南](https://hacpai.com/article/1538876422995)
+* [Wide 用户指南](https://ld246.com/article/1538873544275)
+* [Wide 开发指南](https://ld246.com/article/1538876422995)
  
 ![Overview](https://cloud.githubusercontent.com/assets/873584/5450620/1d51831e-8543-11e4-930b-670871902425.png)
   

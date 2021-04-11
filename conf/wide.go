@@ -49,7 +49,7 @@ const (
 import "fmt"
 
 func main() {
-	fmt.Println("欢迎通过《边看边练 Go 系列》来学习 Go 语言 https://hacpai.com/article/1437497122181")
+	fmt.Println("欢迎通过《边看边练 Go 系列》来学习 Go 语言 https://ld246.com/article/1437497122181")
 }
 `
 )

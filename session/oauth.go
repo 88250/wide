@@ -34,7 +34,7 @@ var states = map[string]string{}
 
 // LoginRedirectHandler redirects to HacPai auth page.
 func LoginRedirectHandler(w http.ResponseWriter, r *http.Request) {
-	loginAuthURL := "https://hacpai.com/login?goto=" + conf.Wide.Server + "/login/callback"
+	loginAuthURL := "https://ld246.com/login?goto=" + conf.Wide.Server + "/login/callback"
 
 	state := gulu.Rand.String(16)
 	states[state] = state

@@ -248,7 +248,7 @@ var editors = {
             after: function () {
                 $("#startPage").load('/start?sid=' + config.wideSessionId);
                 $.ajax({
-                    url: "https://hacpai.com/apis/articles?tags=wide,golang&p=1&size=20",
+                    url: "https://ld246.com/apis/articles?tags=wide,golang&p=1&size=20",
                     type: "GET",
                     dataType: "jsonp",
                     jsonp: "callback",
@@ -265,7 +265,7 @@ var editors = {
                         }
 
                         var listHTML = "<ul><li class='title'>" + config.label.community +
-                            "<a href='https://hacpai.com/article/1437497122181' target='_blank' class='fn-right'>边看边练</li>";
+                            "<a href='https://ld246.com/article/1437497122181' target='_blank' class='fn-right'>边看边练</li>";
                         for (var i = 0; i < length; i++) {
                             var article = articles[i];
                             listHTML += "<li>"
