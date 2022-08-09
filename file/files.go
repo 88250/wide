@@ -242,6 +242,12 @@ func SaveFileHandler(w http.ResponseWriter, r *http.Request) {
 	result := gulu.Ret.NewResult()
 	defer gulu.Ret.RetResult(w, r, result)
 
+	if conf.Wide.ReadOnly {
+		result.Code = -1
+		result.Msg = "readonly mode"
+		return
+	}
+
 	var args map[string]interface{}
 
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {

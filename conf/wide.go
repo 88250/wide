@@ -65,6 +65,7 @@ type conf struct {
 	Locale                string        // default locale
 	Autocomplete          bool          // default autocomplete
 	SiteStatCode          template.HTML // site statistic code
+	ReadOnly              bool          // read-only mode
 }
 
 // Logger.

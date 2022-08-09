@@ -38,6 +38,12 @@ func BuildHandler(w http.ResponseWriter, r *http.Request) {
 	result := gulu.Ret.NewResult()
 	defer gulu.Ret.RetResult(w, r, result)
 
+	if conf.Wide.ReadOnly {
+		result.Code = -1
+		result.Msg = "readonly mode"
+		return
+	}
+
 	httpSession, _ := session.HTTPSession.Get(r, session.CookieName)
 	if httpSession.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)

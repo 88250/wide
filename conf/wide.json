@@ -6,5 +6,6 @@
   "HTTPSessionMaxAge": 86400,
   "StaticResourceVersion": "${time}",
   "Locale": "zh_CN",
-  "SiteStatCode": ""
+  "SiteStatCode": "",
+  "ReadOnly": false
 }
