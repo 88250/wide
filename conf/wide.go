@@ -84,8 +84,8 @@ var Docker bool
 const DockerImageGo = "golang"
 
 // Load loads the Wide configurations from wide.json and users' configurations from users/{userId}.json.
-func Load(confPath, confData, confServer, confLogLevel string, confSiteStatCode template.HTML) {
-	initWide(confPath, confData, confServer, confLogLevel, confSiteStatCode)
+func Load(confPath, confData, confServer, confLogLevel, confReadOnly string, confSiteStatCode template.HTML) {
+	initWide(confPath, confData, confServer, confLogLevel, confReadOnly, confSiteStatCode)
 	initUsers()
 
 	cmd := exec.Command("docker", "version")
@@ -155,7 +155,7 @@ func initUsers() {
 	initCustomizedConfs()
 }
 
-func initWide(confPath, confData, confServer, confLogLevel string, confSiteStatCode template.HTML) {
+func initWide(confPath, confData, confServer, confLogLevel, confReadOnly string, confSiteStatCode template.HTML) {
 	bytes, err := ioutil.ReadFile(confPath)
 	if nil != err {
 		logger.Error(err)
@@ -217,6 +217,10 @@ func initWide(confPath, confData, confServer, confLogLevel string, confSiteStatC
 	// Server
 	if "" != confServer {
 		Wide.Server = confServer
+	}
+
+	if "" != confReadOnly {
+		Wide.ReadOnly, _ = strconv.ParseBool(confReadOnly)
 	}
 
 	// SiteStatCode
