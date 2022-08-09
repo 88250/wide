@@ -34,6 +34,12 @@ func SaveHandler(w http.ResponseWriter, r *http.Request) {
 	result := gulu.Ret.NewResult()
 	defer gulu.Ret.RetResult(w, r, result)
 
+	if conf.Wide.ReadOnly {
+		result.Code = -1
+		result.Msg = "readonly mode"
+		return
+	}
+
 	session, _ := session.HTTPSession.Get(r, session.CookieName)
 	if session.IsNew {
 		http.Error(w, "Forbidden", http.StatusForbidden)
