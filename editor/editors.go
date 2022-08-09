@@ -37,6 +37,11 @@ var logger = gulu.Log.NewLogger(os.Stdout)
 
 // AutocompleteHandler handles request of code autocompletion.
 func AutocompleteHandler(w http.ResponseWriter, r *http.Request) {
+	if conf.Wide.ReadOnly {
+		http.Error(w, "Forbidden", http.StatusForbidden)
+		return
+	}
+
 	var args map[string]interface{}
 	if err := json.NewDecoder(r.Body).Decode(&args); err != nil {
 		logger.Error(err)
